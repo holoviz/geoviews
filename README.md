@@ -1,2 +1,3 @@
 # cube-explorer
-browser based exploration of iris cubes
+
+Web browser based exploration of https://github.com/SciTools/iris cubes.

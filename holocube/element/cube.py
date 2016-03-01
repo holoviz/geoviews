@@ -29,25 +29,25 @@ class Cube(Element):
     group = param.String(default='Cube')
     
     def __init__(self, data, **params):
-        if isinstance(data, iris.cube.Cube):
-            if 'kdims' in params:
-                kdims = params['kdims']
-                if len(kdims) != len(data.dim_coords):
-                    raise ValueError('Supplied key dimensions must match Cube dim_coords.')
-                coords = []
-                for kd in kdims:
-                    coord = data.coords(kd.name if isinstance(kd, Dimension) else kd)
-                    if len(coord) == 0:
-                        raise ValueError('Key dimension %s not found in Iris cube.' % kd)
-                    coords.append(coord[0])
-            else:
-                coords = data.dim_coords
-            params['kdims'] = [coord_to_dimension(coord)
-                               for coord in coords]
-            if 'vdims' not in params:
-                params['vdims'] = [Dimension(data.name(), unit=str(data.units))]
+        if not isinstance(data, iris.cube.Cube):
+            raise TypeError('Cube data must be of Iris Cube type.')
+
+        if 'kdims' in params:
+            kdims = params['kdims']
+            if len(kdims) != len(data.dim_coords):
+                raise ValueError('Supplied key dimensions must match Cube dim_coords.')
+            coords = []
+            for kd in kdims:
+                coord = data.coords(kd.name if isinstance(kd, Dimension) else kd)
+                if len(coord) == 0:
+                    raise ValueError('Key dimension %s not found in Iris cube.' % kd)
+                coords.append(coord[0])
         else:
-            raise ValueError('Cube data must be of Iris Cube type.')
+            coords = data.dim_coords
+        params['kdims'] = [coord_to_dimension(coord)
+                           for coord in coords]
+        if 'vdims' not in params:
+            params['vdims'] = [Dimension(data.name(), unit=str(data.units))]
         super(Cube, self).__init__(data, **params)
 
 

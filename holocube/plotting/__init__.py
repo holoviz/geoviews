@@ -25,28 +25,46 @@ class GeoPlot(ElementPlot):
         self.apply_ranges = False
 
     def teardown_handles(self):
+        """
+        Until cartopy artists can be updated directly
+        the bottom layer clears the axis.
+        """
         if self.zorder == 0:
             self.handles['axis'].cla()
     
-    
-class GeoContoursPlot(GeoPlot, ColorbarPlot):
-    
+
+class GeoContourPlot(GeoPlot, ColorbarPlot):
+    """
+    Draws a contour or contourf plot from the data in
+    a GeoContour.
+    """
+
+    filled = param.Boolean(default=True, doc="""
+        Whether to draw filled or unfilled contours""")
+
+    levels = param.ClassSelector(default=5, class_=(int, list))
+
     style_opts = ['antialiased', 'alpha', 'cmap']
     
     def get_data(self, element, ranges, style):
         args = (element.data,)
-        if isinstance(element.levels, int):
-            args += (element.levels,)
+        if isinstance(self.levels, int):
+            args += (self.levels,)
         else:
-            style['levels'] = element.levels
+            style['levels'] = self.levels
         return args, style, {}
-    
+
     def init_artists(self, ax, plot_args, plot_kwargs):
-        artists = {'artist': iplt.contourf(*plot_args, axes=ax, **plot_kwargs)}
+        plotfn = iplt.contourf if self.filled else iplt.contour
+        artists = {'artist': plotfn(*plot_args, axes=ax, **plot_kwargs)}
         return artists
     
 
 class GeoImagePlot(GeoPlot, ColorbarPlot):
+
+    """
+    Draws a pcolormesh plot from the data in a GeoImage Element.
+    """
 
     style_opts = ['alpha', 'cmap', 'interpolation', 'visible',
                   'filterrad', 'clims', 'norm']
@@ -60,9 +78,14 @@ class GeoImagePlot(GeoPlot, ColorbarPlot):
 
 
 class GeoPointPlot(GeoPlot, PointPlot):
+    """
+    Draws a scatter plot from the data in a GeoPoints Element.
+    """
+
     
     def get_data(self, element, ranges, style):
-        args, style, axis_kwargs = super(GeoPointPlot, self).get_data(element, ranges, style)
+        data = super(GeoPointPlot, self).get_data(element, ranges, style)
+        args, style, axis_kwargs = data
         style['transform'] = element.crs
         return args, style, axis_kwargs
 
@@ -73,6 +96,9 @@ class GeoPointPlot(GeoPlot, PointPlot):
 
     
 class GeoFeaturePlot(GeoPlot):
+    """
+    Draws a feature from a GeoFeatures Element.
+    """
     
     def get_data(self, element, ranges, style):
         return (element.data,), style, {}
@@ -82,25 +108,33 @@ class GeoFeaturePlot(GeoPlot):
 
 
 class WMTSPlot(GeoPlot):
+    """
+    Adds a Web Map Tile Service from a WMTS Element.
+    """
     
     def get_data(self, element, ranges, style):
-        return element.data, style, {}
+        return (element.data, element.layer), style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
         return {'artist': ax.add_wmts(*plot_args)}    
     
 
 class GeoTilePlot(GeoPlot):
+    """
+    Draws image tiles specified by a GeoTiles Element.
+    """
+
+    zoom = param.Integer(default=8)
     
     def get_data(self, element, ranges, style):
-        return (element.data, element.zoom), style, {}
+        return (element.data, self.zoom), style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
         return {'artist': ax.add_image(*plot_args)}
-    
+
 
 # Register plots with HoloViews
-Store.register({GeoContour: GeoContoursPlot,
+Store.register({GeoContour: GeoContourPlot,
                 GeoImage: GeoImagePlot,
                 GeoFeature: GeoFeaturePlot,
                 WMTS: WMTSPlot,

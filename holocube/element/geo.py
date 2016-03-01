@@ -12,13 +12,16 @@ from .cube  import Cube
 
 class GeoElement(Element2D):
     """
-    Baseclass for Element2D types with associated cartopy coordinate
-    reference system.
+    Baseclass for Element2D types with associated cartopy
+    coordinate reference system.
     """
 
     _abstract = True
     
-    crs = param.ClassSelector(class_=crs.CRS)
+    crs = param.ClassSelector(class_=crs.CRS, doc="""
+        Cartopy coordinate-reference-system specifying the
+        coordinate system of the data. Inferred automatically
+        when GeoElement wraps Iris Feature object.""")
     
     def __init__(self, data, **kwargs):
         crs = None
@@ -31,41 +34,91 @@ class GeoElement(Element2D):
 
         supplied_crs = kwargs.get('crs', None)
         if supplied_crs and crs and crs != supplied_crs:
-            raise ValueError('Supplied coordinate reference system must match crs of the data.')
+            raise ValueError('Supplied coordinate reference '
+                             'system must match crs of the data.')
         elif crs:
             kwargs['crs'] = crs
         super(GeoElement, self).__init__(data, **kwargs)
 
 
-class GeoPoints(Points, GeoElement):
-    
-    group = param.String(default='GeoPoints')
-
-
 class GeoFeature(GeoElement):
-    
+    """
+    A GeoFeature represents a geographical feature
+    specified as a cartopy Feature type.
+    """
+
     group = param.String(default='GeoFeature')
+
+    def __init__(self, data, **params):
+        if not isinstance(data, Feature):
+            raise TypeError('%s data has to be an cartopy Feature type'
+                            % type(data).__name__)
+        super(GeoFeature, self).__init__(data, **params)
     
 
 class WMTS(GeoElement):
-    
+    """
+    The WMTS Element represents a Web Map Tile Service
+    specified as a tuple of the API URL and
+    """
+
     group = param.String(default='WMTS')
-    
+
+    layer = param.String(doc="The layer on the tile service")
+
+    def __init__(self, data, **params):
+        if not isinstance(data, basestring):
+            raise TypeError('%s data has to be a tile service URL'
+                            % type(data).__name__)
+        super(WMTS, self).__init__(data, **params)
+
     
 class GeoTiles(GeoElement):
-    
+    """
+    GeoTiles represents an image tile source to dynamically
+    load data from depending on the zoom level.
+    """
+
     group = param.String(default='GeoTiles')
-    
-    zoom = param.Integer(default=8)
+
+    def __init__(self, data, **params):
+        if not isinstance(data, GoogleTiles):
+            raise TypeError('%s data has to be a cartopy GoogleTiles type'
+                            % type(data).__name__)
+        super(GeoTiles, self).__init__(data, **params)
 
 
-class GeoContour(Cube, GeoElement):
-    
+class GeoPoints(GeoElement, Points):
+    """
+    GeoPoints represent a collection of points with
+    an associated cartopy coordinate-reference system.
+    """
+
+    group = param.String(default='GeoPoints')
+
+
+class GeoContour(GeoElement, Cube):
+    """
+    GeoContour represents a 2D array of some quantity with
+    some associated coordinates, which may be discretized
+    into one or more contours.
+    """
+
+    kdims = param.List(default=[Dimension('x'), Dimension('y')])
+
+    vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
+
     group = param.String(default='GeoContour')
 
-    levels = param.ClassSelector(default=5, class_=(int, list))
 
-    
-class GeoImage(Cube, GeoElement):
+class GeoImage(GeoElement, Cube):
+    """
+    GeoImage represents a 2D array of some quantity with
+    some associated coordinates.
+    """
+
+    kdims = param.List(default=[Dimension('x'), Dimension('y')])
+
+    vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
 
     group = param.String(default='GeoImage')

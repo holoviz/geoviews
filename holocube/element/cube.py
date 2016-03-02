@@ -1,4 +1,5 @@
 import iris
+from iris.util import guess_coord_axis
 import numpy as np
 
 import param
@@ -15,6 +16,17 @@ def coord_to_dimension(coord):
     else:
         kwargs['unit'] = str(coord.units)
     return Dimension(coord.name(), **kwargs)
+
+def sort_coords(coord):
+    """
+    Sorts a list of DimCoords trying to ensure that
+    dates and pressure levels appear first and the
+    longitude and latitude appear last in the correct
+    order.
+    """
+    order = {'T': -2, 'Z': -1, 'X': 1, 'Y': 2}
+    axis = guess_coord_axis(coord)
+    return (order.get(axis, 0), coord and coord.name())
 
 
 class Cube(Element):
@@ -44,6 +56,7 @@ class Cube(Element):
                 coords.append(coord[0])
         else:
             coords = data.dim_coords
+            coords = sorted(coords, key=sort_coords)
         params['kdims'] = [coord_to_dimension(coord)
                            for coord in coords]
         if 'vdims' not in params:

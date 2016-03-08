@@ -3,8 +3,19 @@ from iris.util import guess_coord_axis
 import numpy as np
 
 import param
-from holoviews.core import Dimension, Element, HoloMap
+from holoviews.core.dimension import Dimension
+from holoviews.core.data import DataColumns
+from holoviews.core.ndmapping import (NdMapping, item_check,
+                                      sorted_context)
+from holoviews.core.spaces import HoloMap
+from holoviews.core import util
+from holoviews.element.tabular import Table
 
+
+def get_date_format(coord):
+    def date_formatter(val, pos=None):
+        return coord.units.num2date(val)
+    return date_formatter
 
 def coord_to_dimension(coord):
     """
@@ -12,7 +23,7 @@ def coord_to_dimension(coord):
     """
     kwargs = {}
     if coord.units.is_time_reference():
-        kwargs['value_format'] = coord.units.num2date
+        kwargs['value_format'] = get_date_format(coord)
     else:
         kwargs['unit'] = str(coord.units)
     return Dimension(coord.name(), **kwargs)
@@ -29,7 +40,7 @@ def sort_coords(coord):
     return (order.get(axis, 0), coord and coord.name())
 
 
-class Cube(Element):
+class Cube(Table):
     """
     The Cube Element provides an interface to wrap and display
     :class:`Iris.cube.Cube` objects. The Cube automatically
@@ -38,14 +49,24 @@ class Cube(Element):
     and slicing the data.
     """
 
-    group = param.String(default='Cube')
-    
-    def __init__(self, data, **params):
-        if not isinstance(data, iris.cube.Cube):
-            raise TypeError('Cube data must be of Iris Cube type.')
+    datatype = param.List(default=['cube'])
 
-        if 'kdims' in params:
-            kdims = params['kdims']
+    group = param.String(default='Cube')
+
+
+
+class CubeData(DataColumns):
+
+    types = (iris.cube.Cube,)
+
+    datatype = 'cube'
+
+    @classmethod
+    def reshape(cls, eltype, data, kdims, vdims):
+        if not isinstance(data, iris.cube.Cube):
+            raise TypeError('Cube data must be be an iris Cube type.')
+
+        if kdims:
             if len(kdims) != len(data.dim_coords):
                 raise ValueError('Supplied key dimensions must match Cube dim_coords.')
             coords = []
@@ -57,37 +78,51 @@ class Cube(Element):
         else:
             coords = data.dim_coords
             coords = sorted(coords, key=sort_coords)
-        params['kdims'] = [coord_to_dimension(coord)
-                           for coord in coords]
-        if 'vdims' not in params:
-            params['vdims'] = [Dimension(data.name(), unit=str(data.units))]
-        super(Cube, self).__init__(data, **params)
+        kdims = [coord_to_dimension(coord) for coord in coords]
+        if vdims is None:
+            vdims = [Dimension(data.name(), unit=str(data.units))]
+
+        return data, kdims, vdims
 
 
-    def dimension_values(self, dim, unique=True):
+    @classmethod
+    def validate(cls, columns):
+        pass
+
+
+    @classmethod
+    def values(cls, columns, dim, expanded=True, flat=True):
         """
         Returns an array of the values along the supplied dimension.
         """
-        dim = self.get_dimension(dim)
-        if dim in self.vdims:
-            return self.data.data
+        dim = columns.get_dimension(dim)
+        if dim in columns.vdims:
+            data = columns.data.data
+        elif expanded:
+            idx = columns.get_dimension_index(dim)
+            data = util.cartesian_product([columns.data.coords(d.name)[0].points
+                                           for d in columns.kdims])[:, idx]
         else:
-            return self.data.coords(dim.name)[0].points
+            data = columns.data.coords(dim.name)[0].points
+        return data.flatten() if flat else data
 
 
-    def reindex(self, kdims=None):
+    @classmethod
+    def reindex(cls, columns, kdims=None, vdims=None):
         """
         Reorders the key dimensions of the Cube, does
         not support dropping dimensions.
         """
-        if len(kdims) != self.ndims:
-            raise ValueError('Reindexed dimensions must be same length as '
-                             'existing dimensions.')
-        kdims = [self.get_dimension(kd) for kd in kdims]
-        return self.clone(kdims=kdims)
+        return columns
 
 
-    def groupby(self, dims, container_type=HoloMap, group_type=None, **kwargs):
+    @classmethod
+    def sort(cls, columns, dims):
+        return columns
+
+
+    @classmethod
+    def groupby(cls, columns, dims, container_type=HoloMap, group_type=None, **kwargs):
         """
         Groups the data by one or more dimensions returning a container
         indexed by the grouped dimensions containing slices of the
@@ -95,26 +130,35 @@ class Cube(Element):
         break up a high-dimensional Cube into smaller viewable chunks.
         """
         if not isinstance(dims, list): dims = [dims]
-        dims = [self.get_dimension(d) for d in dims]
-        slice_dims = [d for d in self.kdims if d not in dims]
+        dims = [columns.get_dimension(d) for d in dims]
+        slice_dims = [d for d in columns.kdims if d not in dims]
         data = []
-        for cube in self.data.slices([d.name for d in slice_dims]):
+        for cube in columns.data.slices([d.name for d in slice_dims]):
             key = tuple(cube.coord(kd.name).points[0] for kd in dims)
-            data.append((key, self.clone(cube, kdims=slice_dims, new_type=group_type, **kwargs)))
-        return container_type(data, kdims=dims)
+            data.append((key, columns.clone(cube, new_type=group_type, **dict(kwargs, kdims=slice_dims))))
+        if issubclass(container_type, NdMapping):
+            with item_check(False), sorted_context(False):
+                return container_type(data, kdims=dims)
+        else:
+            return container_type(data)
 
 
-    def range(self, dimension):
+    @classmethod
+    def range(cls, columns, dimension):
         """
         Computes the range along a particular dimension.
         """
-        dim = self.get_dimension(dimension)
-        values = self.dimension_values(dim)
+        dim = columns.get_dimension(dimension)
+        values = columns.dimension_values(dim)
         return (np.min(values), np.max(values))
 
 
-    def __len__(self):
+    @classmethod
+    def length(cls, columns):
         """
         Returns the total number of samples in the Cube.
         """
-        return np.product([len(d.points) for d in self.data.coords()])
+        return np.product([len(d.points) for d in columns.data.coords()])
+
+
+DataColumns.register(CubeData)

@@ -24,6 +24,7 @@ install:
   - if [[ "$TRAVIS_PYTHON_VERSION" == "3.4" ]]; then
       conda install python=3.4.3;
     fi
+  - pip install coveralls
   - conda install -c scitools iris
   - python setup.py install
 

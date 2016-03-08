@@ -19,7 +19,7 @@ class TestCube(ComparisonTestCase):
     def test_initialize_cube(self):
         cube = Cube(self.cube)
         self.assertEqual(cube.dimensions(label=True),
-                         ['latitude', 'longitude', 'unknown'])
+                         ['longitude', 'latitude', 'unknown'])
 
     def test_initialize_cube_with_kdims(self):
         cube = Cube(self.cube, kdims=['longitude', 'latitude'])

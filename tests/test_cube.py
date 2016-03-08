@@ -1,5 +1,3 @@
-import unittest
-
 import numpy as np
 from holocube.element.cube import Cube, coord_to_dimension
 from iris.tests.stock import lat_lon_cube

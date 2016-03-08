@@ -31,14 +31,19 @@ class TestCube(ComparisonTestCase):
         self.assertEqual(cube.dimensions('value', True),
                          ['Quantity'])
 
-    def test_dimension_values_kdim(self):
+    def test_dimension_values_kdim_expanded(self):
         cube = Cube(self.cube, kdims=['longitude', 'latitude'])
         self.assertEqual(cube.dimension_values('longitude'),
                          np.array([-1,  0,  1, 2], dtype=np.int32))
 
+    def test_dimension_values_kdim(self):
+        cube = Cube(self.cube, kdims=['longitude', 'latitude'])
+        self.assertEqual(cube.dimension_values('longitude', expanded=False),
+                         np.array([-1,  0,  1, 2], dtype=np.int32))
+
     def test_dimension_values_vdim(self):
         cube = Cube(self.cube, kdims=['longitude', 'latitude'])
-        self.assertEqual(cube.dimension_values('unknown'),
+        self.assertEqual(cube.dimension_values('unknown', flat=False),
                          np.array([[ 0,  1,  2,  3],
                                    [ 4,  5,  6,  7],
                                    [ 8,  9, 10, 11]], dtype=np.int32))

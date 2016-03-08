@@ -19,12 +19,13 @@ install:
   - conda update -q conda
   # Useful for debugging any issues with conda
   - conda info -a
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION nose numpy matplotlib bokeh pandas scipy jupyter ipython param freetype=2.5.2 holoviews flake8
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION nose numpy matplotlib bokeh pandas scipy jupyter ipython param freetype=2.5.2 flake8
   - source activate test-environment
   - if [[ "$TRAVIS_PYTHON_VERSION" == "3.4" ]]; then
       conda install python=3.4.3;
     fi
   - pip install coveralls
+  - pip install git+https://github.com/ioam/holoviews.git
   - conda install -c scitools iris
   - python setup.py install
 

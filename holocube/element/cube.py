@@ -78,7 +78,7 @@ class CubeData(DataColumns):
         else:
             coords = data.dim_coords
             coords = sorted(coords, key=sort_coords)
-        kdims = [coord_to_dimension(coord) for coord in coords]
+        kdims = [coord_to_dimension(crd) for crd in coords]
         if vdims is None:
             vdims = [Dimension(data.name(), unit=str(data.units))]
 

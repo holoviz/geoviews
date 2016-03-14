@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os
+import os
 try:
     from setuptools import setup
 except ImportError:

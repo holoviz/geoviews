@@ -62,7 +62,7 @@ class CubeData(DataColumns):
     datatype = 'cube'
 
     @classmethod
-    def reshape(cls, eltype, data, kdims, vdims):
+    def init(cls, eltype, data, kdims, vdims):
         if not isinstance(data, iris.cube.Cube):
             raise TypeError('Cube data must be be an iris Cube type.')
 

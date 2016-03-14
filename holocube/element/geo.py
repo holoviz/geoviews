@@ -5,9 +5,10 @@ from cartopy import crs
 from cartopy.feature import Feature
 from cartopy.io.img_tiles import GoogleTiles
 from holoviews.core import Element2D, Dimension
+from holoviews.core import util
 from holoviews.element import Points
 
-from .cube  import Cube
+from .cube import Cube
 
 
 class GeoElement(Element2D):
@@ -67,7 +68,7 @@ class WMTS(GeoElement):
     layer = param.String(doc="The layer on the tile service")
 
     def __init__(self, data, **params):
-        if not isinstance(data, basestring):
+        if not isinstance(data, util.basestring):
             raise TypeError('%s data has to be a tile service URL'
                             % type(data).__name__)
         super(WMTS, self).__init__(data, **params)

@@ -34,7 +34,8 @@ class TestCube(ComparisonTestCase):
     def test_dimension_values_kdim_expanded(self):
         cube = Cube(self.cube, kdims=['longitude', 'latitude'])
         self.assertEqual(cube.dimension_values('longitude'),
-                         np.array([-1,  0,  1, 2], dtype=np.int32))
+                         np.array([-1, -1, -1, 0,  0,  0,
+                                   1,  1,  1, 2,  2,  2], dtype=np.int32))
 
     def test_dimension_values_kdim(self):
         cube = Cube(self.cube, kdims=['longitude', 'latitude'])

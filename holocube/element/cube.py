@@ -9,7 +9,7 @@ from holoviews.core.ndmapping import (NdMapping, item_check,
                                       sorted_context)
 from holoviews.core.spaces import HoloMap
 from holoviews.core import util
-from holoviews.element.tabular import Table
+from holoviews.element.tabular import Table, TableConversion
 
 
 def get_date_format(coord):
@@ -52,6 +52,47 @@ class Cube(Table):
     datatype = param.List(default=['cube'])
 
     group = param.String(default='Cube')
+
+    @property
+    def to(self):
+        """
+        Property to create a conversion table with methods to convert
+        to any type.
+        """
+        return CubeConversion(self)
+
+
+
+class CubeConversion(TableConversion):
+    """
+    CubeConversion is a very simple container object which can
+    be given an existing Cube and provides methods to convert
+    the Cube into most other Element types. If the requested
+    key dimensions correspond to geographical coordinates the
+    conversion interface will automatically use a geographical
+    Element type while all other plot will use regular HoloViews
+    Elements.
+    """
+
+    def __init__(self, cube):
+        self._table = cube
+
+    def contours(self, kdims=None, vdims=None, mdims=None, **kwargs):
+        from .geo import Contours
+        return self(Contours, kdims, vdims, mdims, **kwargs)
+
+    def image(self, kdims=None, vdims=None, mdims=None, **kwargs):
+        from .geo import Image
+        return self(Image, kdims, vdims, mdims, **kwargs)
+
+    def points(self, kdims=None, vdims=None, mdims=None, **kwargs):
+        if kdims is None: kdims = self._table.kdims
+        kdims = [self._table.get_dimension(d) for d in kdims]
+        if len(kdims) == 2 and all(self._table.data.coord(kd.name).coord_system for kd in kdims):
+            from .geo import Points as Points
+        else:
+            from holoviews.element import Points
+        return self(Points, kdims, vdims, mdims, **kwargs)
 
 
 

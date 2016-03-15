@@ -101,7 +101,7 @@ class CubeData(DataColumns):
         elif expanded:
             idx = columns.get_dimension_index(dim)
             data = util.cartesian_product([columns.data.coords(d.name)[0].points
-                                           for d in columns.kdims])[:, idx]
+                                           for d in columns.kdims])[idx]
         else:
             data = columns.data.coords(dim.name)[0].points
         return data.flatten() if flat else data

@@ -1,3 +1,3 @@
-from .cube import Cube                                # noqa (API import)
-from .geo import GeoElement, GeoPoints, GeoFeature    # noqa (API import)
-from .geo import WMTS, GeoTiles, GeoImage, GeoContour # noqa (API import)
+from .cube import Cube                              # noqa (API import)
+from .geo import (GeoElement, GeoFeature, GeoTiles,
+                  WMTS, Points, Image, Contours)    # noqa (API import)

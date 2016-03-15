@@ -5,7 +5,7 @@ from holoviews.core import Store, HoloMap
 from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     OverlayPlot)
 
-from ..element import (GeoContour, GeoImage, GeoPoints, GeoFeature,
+from ..element import (Contours, Image, Points, GeoFeature,
                        WMTS, GeoTiles)
 
 
@@ -36,7 +36,7 @@ class GeoPlot(ElementPlot):
 class GeoContourPlot(GeoPlot, ColorbarPlot):
     """
     Draws a contour or contourf plot from the data in
-    a GeoContour.
+    a Contours.
     """
 
     filled = param.Boolean(default=True, doc="""
@@ -63,7 +63,7 @@ class GeoContourPlot(GeoPlot, ColorbarPlot):
 class GeoImagePlot(GeoPlot, ColorbarPlot):
 
     """
-    Draws a pcolormesh plot from the data in a GeoImage Element.
+    Draws a pcolormesh plot from the data in a Image Element.
     """
 
     style_opts = ['alpha', 'cmap', 'interpolation', 'visible',
@@ -79,7 +79,7 @@ class GeoImagePlot(GeoPlot, ColorbarPlot):
 
 class GeoPointPlot(GeoPlot, PointPlot):
     """
-    Draws a scatter plot from the data in a GeoPoints Element.
+    Draws a scatter plot from the data in a Points Element.
     """
 
     
@@ -134,12 +134,12 @@ class GeoTilePlot(GeoPlot):
 
 
 # Register plots with HoloViews
-Store.register({GeoContour: GeoContourPlot,
-                GeoImage: GeoImagePlot,
+Store.register({Contours: GeoContourPlot,
+                Image: GeoImagePlot,
                 GeoFeature: GeoFeaturePlot,
                 WMTS: WMTSPlot,
                 GeoTiles: GeoTilePlot,
-                GeoPoints: GeoPointPlot}, 'matplotlib')
+                Points: GeoPointPlot}, 'matplotlib')
 
 
 # Define plot and style options

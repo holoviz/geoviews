@@ -89,18 +89,18 @@ class GeoTiles(GeoElement):
         super(GeoTiles, self).__init__(data, **params)
 
 
-class GeoPoints(GeoElement, Points):
+class Points(GeoElement, Points):
     """
-    GeoPoints represent a collection of points with
+    Points represent a collection of points with
     an associated cartopy coordinate-reference system.
     """
 
-    group = param.String(default='GeoPoints')
+    group = param.String(default='Points')
 
 
-class GeoContour(GeoElement, Cube):
+class Contours(GeoElement, Cube):
     """
-    GeoContour represents a 2D array of some quantity with
+    Contours represents a 2D array of some quantity with
     some associated coordinates, which may be discretized
     into one or more contours.
     """
@@ -109,12 +109,12 @@ class GeoContour(GeoElement, Cube):
 
     vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
 
-    group = param.String(default='GeoContour')
+    group = param.String(default='Contours')
 
 
-class GeoImage(GeoElement, Cube):
+class Image(GeoElement, Cube):
     """
-    GeoImage represents a 2D array of some quantity with
+    Image represents a 2D array of some quantity with
     some associated coordinates.
     """
 
@@ -122,4 +122,4 @@ class GeoImage(GeoElement, Cube):
 
     vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
 
-    group = param.String(default='GeoImage')
+    group = param.String(default='Image')

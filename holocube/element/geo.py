@@ -28,7 +28,7 @@ class GeoElement(Element2D):
         crs = None
         if isinstance(data, iris.cube.Cube):
             coord_sys = data.coord_system()
-            if hasattr(coord_sys, 'as_cartopy_crs'):
+            if hasattr(coord_sys, 'as_cartopy_projection'):
                 crs = coord_sys.as_cartopy_projection()
         elif isinstance(data, (Feature, GoogleTiles)):
             crs = data.crs
@@ -40,6 +40,12 @@ class GeoElement(Element2D):
         elif crs:
             kwargs['crs'] = crs
         super(GeoElement, self).__init__(data, **kwargs)
+
+
+
+    def clone(self, data=None, shared_data=True, new_type=None, *args, **overrides):
+        if 'crs' not in overrides: overrides['crs'] = self.crs
+        return super(GeoElement, self).clone(data, shared_data, new_type, *args, **overrides)
 
 
 class GeoFeature(GeoElement):

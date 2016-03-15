@@ -66,11 +66,11 @@ class GeoImagePlot(GeoPlot, ColorbarPlot):
     Draws a pcolormesh plot from the data in a Image Element.
     """
 
-    style_opts = ['alpha', 'cmap', 'interpolation', 'visible',
-                  'filterrad', 'clims', 'norm']
+    style_opts = ['alpha', 'cmap', 'visible', 'filterrad', 'clims', 'norm']
 
     def get_data(self, element, ranges, style):
         self._norm_kwargs(element, ranges, style, element.vdims[0])
+        style.pop('interpolation')
         return (element.data,), style, {}
     
     def init_artists(self, ax, plot_args, plot_kwargs):

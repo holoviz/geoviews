@@ -69,14 +69,14 @@ class CubeConversion(TableConversion):
 
 
 
-class CubeData(GridColumns):
+class CubeInterface(GridColumns):
     """
-    CubeData provides the interface, which allows HoloViews to
-    interact with iris Cube data. When passing an iris Cube
-    to a HoloViews Element the init method will infer the
-    dimensions of the HoloCube from its coordinates. Currently
-    the interface only provides the basic methods required for
-    HoloViews to work with an object.
+    The CubeInterface provides allows HoloViews to interact
+    with iris Cube data. When passing an iris Cube to a
+    HoloViews Element the init method will infer the
+    dimensions of the HoloCube from its coordinates.
+    Currently the interface only provides the basic methods
+    required for HoloViews to work with an object.
     """
 
     types = (iris.cube.Cube,)
@@ -182,4 +182,4 @@ class CubeData(GridColumns):
         return np.product([len(d.points) for d in holocube.data.coords()])
 
 
-DataColumns.register(CubeData)
+DataColumns.register(CubeInterface)

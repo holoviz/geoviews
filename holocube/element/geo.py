@@ -6,9 +6,8 @@ from cartopy.feature import Feature
 from cartopy.io.img_tiles import GoogleTiles
 from holoviews.core import Element2D, Dimension
 from holoviews.core import util
-from holoviews.element import Points
 
-from .cube import Cube
+from .cube import HoloCube
 
 
 class GeoElement(Element2D):
@@ -42,10 +41,10 @@ class GeoElement(Element2D):
         super(GeoElement, self).__init__(data, **kwargs)
 
 
-
     def clone(self, data=None, shared_data=True, new_type=None, *args, **overrides):
         if 'crs' not in overrides: overrides['crs'] = self.crs
-        return super(GeoElement, self).clone(data, shared_data, new_type, *args, **overrides)
+        return super(GeoElement, self).clone(data, shared_data, new_type,
+                                             *args, **overrides)
 
 
 class GeoFeature(GeoElement):
@@ -95,16 +94,18 @@ class GeoTiles(GeoElement):
         super(GeoTiles, self).__init__(data, **params)
 
 
-class Points(GeoElement, Points):
+class Points(GeoElement, HoloCube):
     """
     Points represent a collection of points with
     an associated cartopy coordinate-reference system.
     """
 
+    kdims = param.List(default=['longitude', 'latitude'])
+
     group = param.String(default='Points')
 
 
-class Contours(GeoElement, Cube):
+class Contours(GeoElement, HoloCube):
     """
     Contours represents a 2D array of some quantity with
     some associated coordinates, which may be discretized
@@ -118,7 +119,7 @@ class Contours(GeoElement, Cube):
     group = param.String(default='Contours')
 
 
-class Image(GeoElement, Cube):
+class Image(GeoElement, HoloCube):
     """
     Image represents a 2D array of some quantity with
     some associated coordinates.

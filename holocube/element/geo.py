@@ -6,7 +6,6 @@ from cartopy.feature import Feature
 from cartopy.io.img_tiles import GoogleTiles
 from holoviews.core import Element2D, Dimension
 from holoviews.core import util
-from holoviews.element import Points
 
 from .cube import HoloCube
 

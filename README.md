@@ -5,8 +5,6 @@
 
 Exploration and visualization of https://github.com/SciTools/iris cubes in a web browser, including a Jupyter notebook.
 
-Web browser based exploration of https://github.com/SciTools/iris cubes.
-
 To install, first install HoloViews and Iris:
 
 ```

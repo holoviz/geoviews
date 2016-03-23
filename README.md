@@ -5,11 +5,18 @@
 
 Exploration and visualization of https://github.com/SciTools/iris cubes in a web browser, including a Jupyter notebook.
 
-To install, first install HoloViews and Iris:
+To install, first install HoloViews and Iris.  At the moment, cube-explorer relies on the latest git version of both those packages, and the easiest way to get all their dependencies is to install them via conda:
 
 ```
 conda install -c ioam holoviews
 conda install -c scitools iris
+```
+
+and then install the latest git version of the two packages, e.g. via:
+
+```
+pip install https://github.com/ioam/holoviews/zipball/master
+pip install https://github.com/CubeBrowser/cube-explorer/zipball/master
 ```
 
 Then run setup on a copy of this git repository:

@@ -6,6 +6,7 @@ from cartopy.feature import Feature
 from cartopy.io.img_tiles import GoogleTiles
 from holoviews.core import Element2D, Dimension
 from holoviews.core import util
+from holoviews.element import Text as HVText
 
 from .cube import HoloCube
 
@@ -130,3 +131,10 @@ class Image(GeoElement, HoloCube):
     vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
 
     group = param.String(default='Image')
+
+
+class Text(HVText, GeoElement):
+    """
+    An annotation containing some text at an x, y coordinate
+    along with a coordinate reference system.
+    """

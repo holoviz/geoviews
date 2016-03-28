@@ -3,10 +3,10 @@ import iris.plot as iplt
 from cartopy import crs
 from holoviews.core import Store, HoloMap
 from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
-                                    OverlayPlot)
+                                    OverlayPlot, AnnotationPlot, TextPlot)
 
 from ..element import (Contours, Image, Points, GeoFeature,
-                       WMTS, GeoTiles)
+                       WMTS, GeoTiles, Text, util)
 
 
 class GeoPlot(ElementPlot):
@@ -133,13 +133,55 @@ class GeoTilePlot(GeoPlot):
         return {'artist': ax.add_image(*plot_args)}
 
 
+class GeoAnnotationPlot(AnnotationPlot):
+    """
+    AnnotationPlot handles the display of all annotation elements.
+    """
+
+    def initialize_plot(self, ranges=None):
+        annotation = self.hmap.last
+        key = self.keys[-1]
+        ranges = self.compute_ranges(self.hmap, key, ranges)
+        ranges = util.match_spec(annotation, ranges)
+        axis = self.handles['axis']
+        opts = self.style[self.cyclic_index]
+        handles = self.draw_annotation(axis, annotation.data, annotation.crs, opts)
+        self.handles['annotations'] = handles
+        return self._finalize_axis(key, ranges=ranges)
+
+    def update_handles(self, key, axis, annotation, ranges, style):
+        # Clear all existing annotations
+        for element in self.handles['annotations']:
+            element.remove()
+
+        self.handles['annotations'] = self.draw_annotation(axis,
+                                                           annotation.data,
+                                                           annotation.crs, style)
+
+
+class GeoTextPlot(GeoAnnotationPlot, TextPlot):
+    "Draw the Text annotation object"
+
+    def draw_annotation(self, axis, data, crs, opts):
+        (x,y, text, fontsize,
+         horizontalalignment, verticalalignment, rotation) = data
+        opts['fontsize'] = fontsize
+        x, y = axis.projection.transform_point(x, y, src_crs=crs)
+        return [axis.text(x, y, text,
+                          horizontalalignment=horizontalalignment,
+                          verticalalignment=verticalalignment,
+                          rotation=rotation, **opts)]
+
+
+
 # Register plots with HoloViews
 Store.register({Contours: GeoContourPlot,
                 Image: GeoImagePlot,
                 GeoFeature: GeoFeaturePlot,
                 WMTS: WMTSPlot,
                 GeoTiles: GeoTilePlot,
-                Points: GeoPointPlot}, 'matplotlib')
+                Points: GeoPointPlot,
+                Text: GeoTextPlot}, 'matplotlib')
 
 
 # Define plot and style options

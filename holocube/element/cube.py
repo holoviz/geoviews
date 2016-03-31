@@ -1,3 +1,4 @@
+from itertools import product
 import iris
 import numpy as np
 
@@ -151,12 +152,17 @@ class CubeInterface(GridColumns):
         """
         if not isinstance(dims, list): dims = [dims]
         dims = [holocube.get_dimension(d) for d in dims]
+        constraints = [d.name for d in dims]
         slice_dims = [d for d in holocube.kdims if d not in dims]
+        unique_coords = product(*[cls.values(holocube, d, expanded=False)
+                                 for d in dims])
         data = []
-        for cube in holocube.data.slices([d.name for d in slice_dims]):
-            key = tuple(cube.coord(kd.name).points[0] for kd in dims)
-            data.append((key, holocube.clone(cube, new_type=group_type,
-                                             **dict(kwargs, kdims=slice_dims))))
+        for key in unique_coords:
+            constraint = iris.Constraint(**dict(zip(constraints, key)))
+            cube = holocube.clone(holocube.data.extract(constraint),
+                                  new_type=group_type,
+                                  **dict(kwargs, kdims=slice_dims))
+            data.append((key, cube))
         if issubclass(container_type, NdMapping):
             with item_check(False), sorted_context(False):
                 return container_type(data, kdims=dims)

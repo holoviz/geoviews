@@ -4,16 +4,16 @@ import numpy as np
 
 import param
 from holoviews.core.dimension import Dimension
-from holoviews.core.data import DataColumns, GridColumns
+from holoviews.core.data import Columns, DataColumns, GridColumns
 from holoviews.core.ndmapping import (NdMapping, item_check,
                                       sorted_context)
 from holoviews.core.spaces import HoloMap
-from holoviews.element.tabular import Table, TableConversion
+from holoviews.element.tabular import TableConversion
 from . import util
 
 
 
-class HoloCube(Table):
+class HoloCube(Columns):
     """
     The HoloCube Element provides an interface to wrap and display
     :class:`Iris.cube.Cube` objects. The Cube automatically
@@ -22,7 +22,7 @@ class HoloCube(Table):
     and slicing the data.
     """
 
-    datatype = param.List(default=Table.datatype+['cube'])
+    datatype = param.List(default=Columns.datatype+['cube'])
 
     group = param.String(default='HoloCube')
 
@@ -72,12 +72,13 @@ class CubeConversion(TableConversion):
 
 class CubeInterface(GridColumns):
     """
-    The CubeInterface provides allows HoloViews to interact
-    with iris Cube data. When passing an iris Cube to a
-    HoloViews Element the init method will infer the
-    dimensions of the HoloCube from its coordinates.
-    Currently the interface only provides the basic methods
-    required for HoloViews to work with an object.
+    The CubeInterface provides allows HoloViews
+    to interact with iris Cube data. When passing
+    an iris Cube to a HoloViews Element the init
+    method will infer the dimensions of the HoloCube
+    from its coordinates. Currently the interface
+    only provides the basic methods required for
+    HoloViews to work with an object.
     """
 
     types = (iris.cube.Cube,)

@@ -47,7 +47,7 @@ class GeoContourPlot(GeoPlot, ColorbarPlot):
     style_opts = ['antialiased', 'alpha', 'cmap']
     
     def get_data(self, element, ranges, style):
-        args = (element.data,)
+        args = (element.data.copy(),)
         if isinstance(self.levels, int):
             args += (self.levels,)
         else:
@@ -71,7 +71,7 @@ class GeoImagePlot(GeoPlot, ColorbarPlot):
     def get_data(self, element, ranges, style):
         self._norm_kwargs(element, ranges, style, element.vdims[0])
         style.pop('interpolation')
-        return (element.data,), style, {}
+        return (element.data.copy(),), style, {}
     
     def init_artists(self, ax, plot_args, plot_kwargs):
         return {'artist': iplt.pcolormesh(*plot_args, axes=ax, **plot_kwargs)}

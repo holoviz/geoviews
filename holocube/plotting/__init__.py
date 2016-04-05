@@ -1,3 +1,5 @@
+import copy
+
 import param
 import iris.plot as iplt
 from cartopy import crs
@@ -81,7 +83,6 @@ class GeoPointPlot(GeoPlot, PointPlot):
     """
     Draws a scatter plot from the data in a Points Element.
     """
-
     
     def get_data(self, element, ranges, style):
         data = super(GeoPointPlot, self).get_data(element, ranges, style)
@@ -99,24 +100,35 @@ class GeoFeaturePlot(GeoPlot):
     """
     Draws a feature from a GeoFeatures Element.
     """
-    
+
+    scale = param.ObjectSelector(default='110m', objects=['10m', '50m', '110m'],
+                                 doc="The scale of the GeoFeature in meters.")
+
+    style_opts = ['alpha', 'facecolor', 'edgecolor', 'linestyle', 'linewidth',
+                  'visible']
+
     def get_data(self, element, ranges, style):
-        return (element.data,), style, {}
+        feature = copy.copy(element.data)
+        feature.scale = self.scale
+        return (feature,), style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
-        return {'artist': ax.add_feature(*plot_args)}
+        return {'artist': ax.add_feature(*plot_args, **plot_kwargs)}
 
 
 class WMTSPlot(GeoPlot):
     """
     Adds a Web Map Tile Service from a WMTS Element.
     """
-    
+
+    style_opts = ['alpha', 'cmap', 'interpolation', 'visible',
+                  'filterrad', 'clims', 'norm']
+
     def get_data(self, element, ranges, style):
         return (element.data, element.layer), style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
-        return {'artist': ax.add_wmts(*plot_args)}    
+        return {'artist': ax.add_wmts(*plot_args, **plot_kwargs)}
     
 
 class GeoTilePlot(GeoPlot):
@@ -124,13 +136,17 @@ class GeoTilePlot(GeoPlot):
     Draws image tiles specified by a GeoTiles Element.
     """
 
-    zoom = param.Integer(default=8)
+    zoom = param.Integer(default=8, doc="""
+        Controls the zoom level of the tile source.""")
+
+    style_opts = ['alpha', 'cmap', 'interpolation', 'visible',
+                  'filterrad', 'clims', 'norm']
     
     def get_data(self, element, ranges, style):
         return (element.data, self.zoom), style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
-        return {'artist': ax.add_image(*plot_args)}
+        return {'artist': ax.add_image(*plot_args, **plot_kwargs)}
 
 
 class GeoAnnotationPlot(AnnotationPlot):

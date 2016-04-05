@@ -31,7 +31,7 @@ install:
   - python setup.py install
 
 script:
-  - nosetests --with-doctest --with-coverage
+  - nosetests --with-doctest --with-coverage --cover-package=holocube
   - flake8 --ignore=E,W .
 
 after_success: coveralls

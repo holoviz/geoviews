@@ -124,6 +124,10 @@ class CubeInterface(GridColumns):
         dim = holocube.get_dimension(dim)
         if dim in holocube.vdims:
             data = holocube.data.copy().data
+            coord_names = [c.name() for c in holocube.data.dim_coords
+                           if c.name() in holocube.kdims]
+            dim_inds = [coord_names.index(d.name) for d in holocube.kdims]
+            data = data.transpose(dim_inds)
         elif expanded:
             idx = holocube.get_dimension_index(dim)
             data = util.cartesian_product([holocube.data.coords(d.name)[0].points

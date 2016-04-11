@@ -7,7 +7,7 @@ from holoviews.core.dimension import Dimension
 from holoviews.core.data import Columns, DataColumns, GridColumns
 from holoviews.core.ndmapping import (NdMapping, item_check,
                                       sorted_context)
-from holoviews.core.spaces import HoloMap
+from holoviews.core.spaces import HoloMap, DynamicMap
 from holoviews.element.tabular import TableConversion
 from . import util
 
@@ -156,11 +156,22 @@ class CubeInterface(GridColumns):
         break up a high-dimensional HoloCube into smaller viewable chunks.
         """
         if not isinstance(dims, list): dims = [dims]
+        dynamic = kwargs.get('dynamic', False)
         dims = [holocube.get_dimension(d) for d in dims]
         constraints = [d.name for d in dims]
         slice_dims = [d for d in holocube.kdims if d not in dims]
+
+        if dynamic:
+            def load_subset(*args):
+                constraint = iris.Constraint(**dict(zip(constraints, args)))
+                return holocube.clone(holocube.data.extract(constraint),
+                                      new_type=group_type,
+                                      **dict(kwargs, kdims=slice_dims))
+            dynamic_dims = [d(values=list(cls.values(holocube, d, False))) for d in dims]
+            return DynamicMap(load_subset, kdims=dynamic_dims)
+
         unique_coords = product(*[cls.values(holocube, d, expanded=False)
-                                 for d in dims])
+                                  for d in dims])
         data = []
         for key in unique_coords:
             constraint = iris.Constraint(**dict(zip(constraints, key)))

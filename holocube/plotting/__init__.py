@@ -17,7 +17,7 @@ class GeoPlot(ElementPlot):
     """
 
     projection = param.Parameter(default=crs.PlateCarree())
-    
+
     def __init__(self, element, **params):
         if 'projection' not in params:
             el = element.last if isinstance(element, HoloMap) else element
@@ -28,12 +28,13 @@ class GeoPlot(ElementPlot):
 
     def teardown_handles(self):
         """
-        Until cartopy artists can be updated directly
-        the bottom layer clears the axis.
+        Delete artist handle so it can be redrawn.
         """
-        if self.zorder == 0:
-            self.handles['axis'].cla()
-    
+        try:
+            self.handles['artist'].remove()
+        except ValueError:
+            pass
+
 
 class GeoContourPlot(GeoPlot, ColorbarPlot):
     """
@@ -60,6 +61,18 @@ class GeoContourPlot(GeoPlot, ColorbarPlot):
         plotfn = iplt.contourf if self.filled else iplt.contour
         artists = {'artist': plotfn(*plot_args, axes=ax, **plot_kwargs)}
         return artists
+
+    def teardown_handles(self):
+        """
+        Until cartopy artists can be updated directly
+        the bottom layer clears the axis.
+        """
+        if 'artist' in self.handles:
+            for coll in self.handles['artist'].collections:
+                try:
+                    coll.remove()
+                except ValueError:
+                    pass
     
 
 class GeoImagePlot(GeoPlot, ColorbarPlot):
@@ -74,9 +87,10 @@ class GeoImagePlot(GeoPlot, ColorbarPlot):
         self._norm_kwargs(element, ranges, style, element.vdims[0])
         style.pop('interpolation')
         return (element.data.copy(),), style, {}
-    
+
     def init_artists(self, ax, plot_args, plot_kwargs):
         return {'artist': iplt.pcolormesh(*plot_args, axes=ax, **plot_kwargs)}
+
 
 
 class GeoPointPlot(GeoPlot, PointPlot):
@@ -114,6 +128,7 @@ class GeoFeaturePlot(GeoPlot):
 
     def init_artists(self, ax, plot_args, plot_kwargs):
         return {'artist': ax.add_feature(*plot_args, **plot_kwargs)}
+
 
 
 class WMTSPlot(GeoPlot):

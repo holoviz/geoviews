@@ -67,3 +67,6 @@ target/
 
 # pyenv
 .python-version
+
+# Website
+doc/_build

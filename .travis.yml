@@ -32,6 +32,6 @@ install:
 
 script:
   - nosetests --with-doctest --with-coverage --cover-package=holocube
-  - flake8 --ignore=E,W .
+  - flake8 --ignore=E,W . --exclude=./doc
 
 after_success: coveralls

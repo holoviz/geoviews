@@ -2,17 +2,12 @@ import copy
 
 import param
 import iris.plot as iplt
-from cartopy import crs
 from holoviews.core import (Store, HoloMap, Layout, Overlay,
                             CompositeOverlay, Element)
-from holoviews.core.options import Options
-from holoviews.plotting.plot import DimensionedPlot
 from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
-                                    OverlayPlot, AnnotationPlot, TextPlot)
-
-from holoviews.plotting.mpl import (LayoutPlot as HvLayoutPlot,
+                                    AnnotationPlot, TextPlot,
+                                    LayoutPlot as HvLayoutPlot,
                                     OverlayPlot as HvOverlayPlot)
-
 
 from ..element import (Contours, Image, Points, GeoFeature,
                        WMTS, GeoTiles, Text, util)

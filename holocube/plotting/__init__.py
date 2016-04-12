@@ -3,20 +3,75 @@ import copy
 import param
 import iris.plot as iplt
 from cartopy import crs
-from holoviews.core import Store, HoloMap
+from holoviews.core import (Store, HoloMap, Layout, Overlay,
+                            CompositeOverlay, Element)
+from holoviews.core.options import Options
+from holoviews.plotting.plot import DimensionedPlot
 from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     OverlayPlot, AnnotationPlot, TextPlot)
+
+from holoviews.plotting.mpl import (LayoutPlot as HvLayoutPlot,
+                                    OverlayPlot as HvOverlayPlot)
+
 
 from ..element import (Contours, Image, Points, GeoFeature,
                        WMTS, GeoTiles, Text, util)
 
 
-class GeoPlot(ElementPlot):
+def _get_projection(el):
+    """
+    Get coordinate reference system from non-auxiliary elements
+    """
+    return el.crs if hasattr(el, 'crs') and not el._auxiliary_component else None
+
+
+class ProjectionPlot(object):
+    """
+    Implements custom _get_projection method to make the coordinate
+    reference system available to HoloViews plots as a projection.
+    """
+
+    def _get_projection(cls, obj):
+        # Look up custom projection in options
+        isoverlay = lambda x: isinstance(x, CompositeOverlay)
+        opts = cls._traverse_options(obj, 'plot', ['projection'],
+                                     [CompositeOverlay, Element],
+                                     keyfn=isoverlay, defaults=False)
+        from_overlay = not all(p is None for p in opts[True]['projection'])
+        projections = opts[from_overlay]['projection']
+        custom_projs = [p for p in projections if p is not None]
+        if len(set([type(p) for p in custom_projs])) > 1:
+            raise Exception("An axis may only be assigned one projection type")
+        elif custom_projs:
+            return custom_projs[0]
+
+        # If no custom projection is supplied traverse object to get
+        # the custom projections
+        projections = [p for p in obj.traverse(_get_projection, [Element])
+                       if p is not None]
+        if projections:
+            return projections[0]
+        else:
+            return None
+
+
+class LayoutPlot(ProjectionPlot, HvLayoutPlot):
+    """
+    Extends HoloViews LayoutPlot with functionality to determine
+    the correct projection for each axis.
+    """
+
+class OverlayPlot(ProjectionPlot, HvOverlayPlot):
+    """
+    Extends HoloViews OverlayPlot with functionality to determine
+    the correct projection for each axis.
+    """
+
+
+class GeoPlot(ProjectionPlot, ElementPlot):
     """
     Plotting baseclass for geographic plots with a cartopy projection.
     """
-
-    projection = param.Parameter(default=crs.PlateCarree())
 
     def __init__(self, element, **params):
         if 'projection' not in params:
@@ -212,7 +267,9 @@ Store.register({Contours: GeoContourPlot,
                 WMTS: WMTSPlot,
                 GeoTiles: GeoTilePlot,
                 Points: GeoPointPlot,
-                Text: GeoTextPlot}, 'matplotlib')
+                Text: GeoTextPlot,
+                Layout: LayoutPlot,
+                Overlay: OverlayPlot}, 'matplotlib')
 
 
 # Define plot and style options

@@ -15,9 +15,11 @@ from ..element import (Contours, Image, Points, GeoFeature,
 
 def _get_projection(el):
     """
-    Get coordinate reference system from non-auxiliary elements
+    Get coordinate reference system from non-auxiliary elements.
+    Return value is a tuple of a precedence integer and the projection,
+    to allow non-auxiliary components to take precedence.
     """
-    return el.crs if hasattr(el, 'crs') and not el._auxiliary_component else None
+    return (int(el._auxiliary_component), el.crs) if hasattr(el, 'crs') else None
 
 
 class ProjectionPlot(object):
@@ -41,11 +43,11 @@ class ProjectionPlot(object):
             return custom_projs[0]
 
         # If no custom projection is supplied traverse object to get
-        # the custom projections
-        projections = [p for p in obj.traverse(_get_projection, [Element])
-                       if p is not None]
+        # the custom projections and sort by precedence
+        projections = sorted([p for p in obj.traverse(_get_projection, [Element])
+                              if p is not None])
         if projections:
-            return projections[0]
+            return projections[0][1]
         else:
             return None
 

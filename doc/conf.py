@@ -79,7 +79,7 @@ intersphinx_mapping = {'http://docs.python.org/': None,
                        'http://ipython.org/ipython-doc/2/': None,
                        'http://ioam.github.io/param/': None}
 
-js_includes = ['require.js', 'bootstrap.js', 'custom.js', 'js/theme.js']
+js_includes = ['js/theme.js', 'bootstrap.js', 'custom.js', 'require.js']
 
 from builder.paramdoc import param_formatter
 from nbpublisher import nbbuild

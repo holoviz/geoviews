@@ -26,14 +26,13 @@ class GeoElement(Element2D):
     
     def __init__(self, data, **kwargs):
         crs = None
-        if isinstance(data, GeoElement):
-            crs = data.crs
-        elif isinstance(data, iris.cube.Cube):
-            coord_sys = data.coord_system()
+        crs_data = data.data if isinstance(data, HoloCube) else data
+        if isinstance(crs_data, iris.cube.Cube):
+            coord_sys = crs_data.coord_system()
             if hasattr(coord_sys, 'as_cartopy_projection'):
                 crs = coord_sys.as_cartopy_projection()
-        elif isinstance(data, (Feature, GoogleTiles)):
-            crs = data.crs
+        elif isinstance(crs_data, (Feature, GoogleTiles)):
+            crs = crs_data.crs
 
         supplied_crs = kwargs.get('crs', None)
         if supplied_crs and crs and crs != supplied_crs:

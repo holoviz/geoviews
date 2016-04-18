@@ -2,9 +2,17 @@ from iris.util import guess_coord_axis
 from holoviews.core.dimension import Dimension
 from holoviews.core.util import * # noqa (API import)
 
+import datetime
+
 def get_date_format(coord):
     def date_formatter(val, pos=None):
-        return coord.units.num2date(val)
+        date = coord.units.num2date(val)
+        date_format = Dimension.type_formatters.get(datetime.datetime, None)
+        if date_format:
+            return date.strftime(date_format)
+        else:
+            return date
+
     return date_formatter
 
 def coord_to_dimension(coord):

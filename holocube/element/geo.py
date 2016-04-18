@@ -56,6 +56,8 @@ class GeoFeature(GeoElement):
 
     group = param.String(default='GeoFeature')
 
+    _auxiliary_component = True
+
     def __init__(self, data, **params):
         if not isinstance(data, Feature):
             raise TypeError('%s data has to be an cartopy Feature type'
@@ -73,6 +75,8 @@ class WMTS(GeoElement):
 
     layer = param.String(doc="The layer on the tile service")
 
+    _auxiliary_component = True
+
     def __init__(self, data, **params):
         if not isinstance(data, util.basestring):
             raise TypeError('%s data has to be a tile service URL'
@@ -87,6 +91,8 @@ class GeoTiles(GeoElement):
     """
 
     group = param.String(default='GeoTiles')
+
+    _auxiliary_component = True
 
     def __init__(self, data, **params):
         if not isinstance(data, GoogleTiles):

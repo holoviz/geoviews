@@ -67,3 +67,7 @@ target/
 
 # pyenv
 .python-version
+
+.DS_Store
+# Website
+doc/_build

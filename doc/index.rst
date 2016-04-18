@@ -10,6 +10,9 @@ ____________
 
 ------------
 
+This website is still under construction but you can get a taste of what
+is to come in our `first tutorial <Introductory_Tutorial.html>`_.
+
 Installation
 ____________
 
@@ -35,6 +38,5 @@ bug reports and feature requests on our
    :maxdepth: 2
 
    Home <self>
-..   Tutorials <Tutorials/index>
-..   Reference Manual <Reference_Manual/index>
+   Introductory Tutorial <Introductory_Tutorial> 
    Github source <https://github.com/CubeBrowser/cube-explorer>

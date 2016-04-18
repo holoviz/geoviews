@@ -8,7 +8,7 @@ except ImportError:
 
 
 setup_args = {}
-install_requires = ['param>=1.3.2', 'numpy>=1.0', 'iris>=1.9.2', 'holoviews>=1.4.3']
+install_requires = ['param>=1.3.2', 'numpy>=1.0', 'holoviews>=1.4.3']
 extras_require={}
 
 # Notebook dependencies of IPython

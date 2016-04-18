@@ -46,7 +46,7 @@ class ProjectionPlot(object):
         # If no custom projection is supplied traverse object to get
         # the custom projections and sort by precedence
         projections = sorted([p for p in obj.traverse(_get_projection, [Element])
-                              if p is not None])
+                              if p is not None and p[1] is not None])
         if projections:
             return projections[0][1]
         else:

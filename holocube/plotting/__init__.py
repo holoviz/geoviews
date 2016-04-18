@@ -2,6 +2,7 @@ import copy
 
 import param
 import iris.plot as iplt
+from cartopy import crs as ccrs
 from holoviews.core import (Store, HoloMap, Layout, Overlay,
                             CompositeOverlay, Element)
 from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
@@ -70,7 +71,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     Plotting baseclass for geographic plots with a cartopy projection.
     """
 
-    projection = param.Parameter(default=crs.PlateCarree())
+    projection = param.Parameter(default=ccrs.PlateCarree())
 
     def __init__(self, element, **params):
         if 'projection' not in params:

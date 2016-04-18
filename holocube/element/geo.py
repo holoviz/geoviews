@@ -26,7 +26,9 @@ class GeoElement(Element2D):
     
     def __init__(self, data, **kwargs):
         crs = None
-        if isinstance(data, iris.cube.Cube):
+        if isinstance(data, GeoElement):
+            crs = data.crs
+        elif isinstance(data, iris.cube.Cube):
             coord_sys = data.coord_system()
             if hasattr(coord_sys, 'as_cartopy_projection'):
                 crs = coord_sys.as_cartopy_projection()

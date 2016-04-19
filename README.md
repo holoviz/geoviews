@@ -1,7 +1,10 @@
 [![Travis](https://api.travis-ci.org/CubeBrowser/cube-explorer.svg?branch=master)](https://travis-ci.org/CubeBrowser/cube-explorer)
 [![Coveralls](https://img.shields.io/coveralls/CubeBrowser/cube-explorer.svg)](https://coveralls.io/github/CubeBrowser/cube-explorer)
 [![Waffle](https://badge.waffle.io/CubeBrowser/cube-explorer.png?label=ready&title=ready)](https://waffle.io/CubeBrowser/cube-explorer)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CubeBrowser/cube-explorer)
+
 # cube-explorer
+
 
 Exploration and visualization of https://github.com/SciTools/iris cubes in a web browser, including a Jupyter notebook.
 

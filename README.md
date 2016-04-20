@@ -1,9 +1,8 @@
-[![Travis](https://api.travis-ci.org/CubeBrowser/cube-explorer.svg?branch=master)](https://travis-ci.org/CubeBrowser/cube-explorer)
-[![Coveralls](https://img.shields.io/coveralls/CubeBrowser/cube-explorer.svg)](https://coveralls.io/github/CubeBrowser/cube-explorer)
-[![Waffle](https://badge.waffle.io/CubeBrowser/cube-explorer.png?label=ready&title=ready)](https://waffle.io/CubeBrowser/cube-explorer)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/CubeBrowser/cube-explorer)
+[![Travis](https://api.travis-ci.org/ioam/geoviews.svg?branch=master)](https://travis-ci.org/ioam/geoviews)
+[![Coveralls](https://img.shields.io/coveralls/ioam/geoviews.svg)](https://coveralls.io/github/ioam/geoviews)
+[![Waffle](https://badge.waffle.io/ioam/geoviews.png?label=ready&title=ready)](https://waffle.io/ioam/geoviews)
 
-# cube-explorer
+# GeoViews
 
 
 Exploration and visualization of https://github.com/SciTools/iris cubes in a web browser, including a Jupyter notebook.

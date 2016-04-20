@@ -14,8 +14,8 @@ def is_geographic(dataset, kdims):
 
     kdims = [dataset.get_dimension(d) for d in kdims]
     if (len(kdims) == 2 and
-        ((isinstance(GeoElement) and kdims == dataset.kdims) or
-        (isinstance(dataset, iris.cube.Cube) and all(dataset.data.coord(
+        ((isinstance(dataset, _Element) and kdims == dataset.kdims) or
+        (isinstance(dataset.data, iris.cube.Cube) and all(dataset.data.coord(
             kd.name).coord_system for kd in kdims)))):
         return True
     return False

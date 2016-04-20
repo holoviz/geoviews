@@ -146,7 +146,12 @@ class GeoImagePlot(GeoPlot, ColorbarPlot):
     def get_data(self, element, ranges, style):
         self._norm_kwargs(element, ranges, style, element.vdims[0])
         style.pop('interpolation')
-        return (element.data.copy(),), style, {}
+        cube = element.data.copy()
+        # Make sure both coordinates have bounds to avoid iris warning.
+        for coord in cube.dim_coords:
+            if not coord.has_bounds():
+                coord.guess_bounds()
+        return (cube,), style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
         return {'artist': iplt.pcolormesh(*plot_args, axes=ax, **plot_kwargs)}

@@ -1,37 +1,37 @@
 import param
 
-import iris
-from cartopy import crs
-from cartopy.feature import Feature
-from cartopy.io.img_tiles import GoogleTiles
+from cartopy import crs as ccrs
+from cartopy.feature import Feature as cFeature
+from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
 from holoviews.core import Element2D, Dimension
 from holoviews.core import util
 from holoviews.element import Text as HVText
+from iris.cube import Cube
 
 from .cube import HoloCube
 
 
-class GeoElement(Element2D):
+class _Element(Element2D):
     """
     Baseclass for Element2D types with associated cartopy
     coordinate reference system.
     """
 
     _abstract = True
-    
-    crs = param.ClassSelector(class_=crs.CRS, doc="""
+
+    crs = param.ClassSelector(class_=ccrs.CRS, doc="""
         Cartopy coordinate-reference-system specifying the
         coordinate system of the data. Inferred automatically
-        when GeoElement wraps Iris Feature object.""")
-    
+        when _Element wraps cartopy Feature object.""")
+
     def __init__(self, data, **kwargs):
         crs = None
         crs_data = data.data if isinstance(data, HoloCube) else data
-        if isinstance(crs_data, iris.cube.Cube):
+        if isinstance(crs_data, Cube):
             coord_sys = crs_data.coord_system()
             if hasattr(coord_sys, 'as_cartopy_projection'):
                 crs = coord_sys.as_cartopy_projection()
-        elif isinstance(crs_data, (Feature, GoogleTiles)):
+        elif isinstance(crs_data, (cFeature, cGoogleTiles)):
             crs = crs_data.crs
 
         supplied_crs = kwargs.get('crs', None)
@@ -40,33 +40,34 @@ class GeoElement(Element2D):
                              'system must match crs of the data.')
         elif crs:
             kwargs['crs'] = crs
-        super(GeoElement, self).__init__(data, **kwargs)
+        super(_Element, self).__init__(data, **kwargs)
+
+    def clone(self, data=None, shared_data=True, new_type=None,
+              *args, **overrides):
+        if 'crs' not in overrides:
+            overrides['crs'] = self.crs
+        return super(_Element, self).clone(data, shared_data, new_type,
+                                           *args, **overrides)
 
 
-    def clone(self, data=None, shared_data=True, new_type=None, *args, **overrides):
-        if 'crs' not in overrides: overrides['crs'] = self.crs
-        return super(GeoElement, self).clone(data, shared_data, new_type,
-                                             *args, **overrides)
-
-
-class GeoFeature(GeoElement):
+class Feature(_Element):
     """
-    A GeoFeature represents a geographical feature
+    A Feature represents a geographical feature
     specified as a cartopy Feature type.
     """
 
-    group = param.String(default='GeoFeature')
+    group = param.String(default='Feature')
 
     _auxiliary_component = True
 
     def __init__(self, data, **params):
-        if not isinstance(data, Feature):
+        if not isinstance(data, cFeature):
             raise TypeError('%s data has to be an cartopy Feature type'
                             % type(data).__name__)
-        super(GeoFeature, self).__init__(data, **params)
-    
+        super(Feature, self).__init__(data, **params)
 
-class WMTS(GeoElement):
+
+class WMTS(_Element):
     """
     The WMTS Element represents a Web Map Tile Service
     specified as a tuple of the API URL and
@@ -84,25 +85,25 @@ class WMTS(GeoElement):
                             % type(data).__name__)
         super(WMTS, self).__init__(data, **params)
 
-    
-class GeoTiles(GeoElement):
+
+class Tiles(_Element):
     """
-    GeoTiles represents an image tile source to dynamically
+    Tiles represents an image tile source to dynamically
     load data from depending on the zoom level.
     """
 
-    group = param.String(default='GeoTiles')
+    group = param.String(default='Tiles')
 
     _auxiliary_component = True
 
     def __init__(self, data, **params):
-        if not isinstance(data, GoogleTiles):
+        if not isinstance(data, cGoogleTiles):
             raise TypeError('%s data has to be a cartopy GoogleTiles type'
                             % type(data).__name__)
-        super(GeoTiles, self).__init__(data, **params)
+        super(Tiles, self).__init__(data, **params)
 
 
-class Points(GeoElement, HoloCube):
+class Points(_Element, HoloCube):
     """
     Points represent a collection of points with
     an associated cartopy coordinate-reference system.
@@ -113,7 +114,7 @@ class Points(GeoElement, HoloCube):
     group = param.String(default='Points')
 
 
-class Contours(GeoElement, HoloCube):
+class Contours(_Element, HoloCube):
     """
     Contours represents a 2D array of some quantity with
     some associated coordinates, which may be discretized
@@ -127,7 +128,7 @@ class Contours(GeoElement, HoloCube):
     group = param.String(default='Contours')
 
 
-class Image(GeoElement, HoloCube):
+class Image(_Element, HoloCube):
     """
     Image represents a 2D array of some quantity with
     some associated coordinates.
@@ -140,7 +141,7 @@ class Image(GeoElement, HoloCube):
     group = param.String(default='Image')
 
 
-class Text(HVText, GeoElement):
+class Text(HVText, _Element):
     """
     An annotation containing some text at an x, y coordinate
     along with a coordinate reference system.

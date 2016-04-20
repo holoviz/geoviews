@@ -10,8 +10,8 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     LayoutPlot as HvLayoutPlot,
                                     OverlayPlot as HvOverlayPlot)
 
-from ..element import (Contours, Image, Points, GeoFeature,
-                       WMTS, GeoTiles, Text, util)
+from ..element import (Contours, Image, Points, Feature,
+                       WMTS, Tiles, Text, util)
 
 
 def _get_projection(el):
@@ -20,7 +20,10 @@ def _get_projection(el):
     Return value is a tuple of a precedence integer and the projection,
     to allow non-auxiliary components to take precedence.
     """
-    return (int(el._auxiliary_component), el.crs) if hasattr(el, 'crs') else None
+    result = None
+    if hasattr(el, 'crs'):
+        result = (int(el._auxiliary_component), el.crs)
+    return result
 
 
 class ProjectionPlot(object):
@@ -58,6 +61,7 @@ class LayoutPlot(ProjectionPlot, HvLayoutPlot):
     Extends HoloViews LayoutPlot with functionality to determine
     the correct projection for each axis.
     """
+
 
 class OverlayPlot(ProjectionPlot, HvOverlayPlot):
     """
@@ -103,7 +107,7 @@ class GeoContourPlot(GeoPlot, ColorbarPlot):
     levels = param.ClassSelector(default=5, class_=(int, list))
 
     style_opts = ['antialiased', 'alpha', 'cmap']
-    
+
     def get_data(self, element, ranges, style):
         args = (element.data.copy(),)
         if isinstance(self.levels, int):
@@ -128,7 +132,7 @@ class GeoContourPlot(GeoPlot, ColorbarPlot):
                     coll.remove()
                 except ValueError:
                     pass
-    
+
 
 class GeoImagePlot(GeoPlot, ColorbarPlot):
 
@@ -147,12 +151,11 @@ class GeoImagePlot(GeoPlot, ColorbarPlot):
         return {'artist': iplt.pcolormesh(*plot_args, axes=ax, **plot_kwargs)}
 
 
-
 class GeoPointPlot(GeoPlot, PointPlot):
     """
     Draws a scatter plot from the data in a Points Element.
     """
-    
+
     def get_data(self, element, ranges, style):
         data = super(GeoPointPlot, self).get_data(element, ranges, style)
         args, style, axis_kwargs = data
@@ -164,14 +167,15 @@ class GeoPointPlot(GeoPlot, PointPlot):
 #  Geographic features and annotations #
 ########################################
 
-    
-class GeoFeaturePlot(GeoPlot):
+
+class FeaturePlot(GeoPlot):
     """
-    Draws a feature from a GeoFeatures Element.
+    Draws a feature from a Features Element.
     """
 
-    scale = param.ObjectSelector(default='110m', objects=['10m', '50m', '110m'],
-                                 doc="The scale of the GeoFeature in meters.")
+    scale = param.ObjectSelector(default='110m',
+                                 objects=['10m', '50m', '110m'],
+                                 doc="The scale of the Feature in meters.")
 
     style_opts = ['alpha', 'facecolor', 'edgecolor', 'linestyle', 'linewidth',
                   'visible']
@@ -183,7 +187,6 @@ class GeoFeaturePlot(GeoPlot):
 
     def init_artists(self, ax, plot_args, plot_kwargs):
         return {'artist': ax.add_feature(*plot_args, **plot_kwargs)}
-
 
 
 class WMTSPlot(GeoPlot):
@@ -199,11 +202,11 @@ class WMTSPlot(GeoPlot):
 
     def init_artists(self, ax, plot_args, plot_kwargs):
         return {'artist': ax.add_wmts(*plot_args, **plot_kwargs)}
-    
 
-class GeoTilePlot(GeoPlot):
+
+class TilePlot(GeoPlot):
     """
-    Draws image tiles specified by a GeoTiles Element.
+    Draws image tiles specified by a Tiles Element.
     """
 
     zoom = param.Integer(default=8, doc="""
@@ -211,7 +214,7 @@ class GeoTilePlot(GeoPlot):
 
     style_opts = ['alpha', 'cmap', 'interpolation', 'visible',
                   'filterrad', 'clims', 'norm']
-    
+
     def get_data(self, element, ranges, style):
         return (element.data, self.zoom), style, {}
 
@@ -231,7 +234,8 @@ class GeoAnnotationPlot(AnnotationPlot):
         ranges = util.match_spec(annotation, ranges)
         axis = self.handles['axis']
         opts = self.style[self.cyclic_index]
-        handles = self.draw_annotation(axis, annotation.data, annotation.crs, opts)
+        handles = self.draw_annotation(axis, annotation.data,
+                                       annotation.crs, opts)
         self.handles['annotations'] = handles
         return self._finalize_axis(key, ranges=ranges)
 
@@ -242,14 +246,15 @@ class GeoAnnotationPlot(AnnotationPlot):
 
         self.handles['annotations'] = self.draw_annotation(axis,
                                                            annotation.data,
-                                                           annotation.crs, style)
+                                                           annotation.crs,
+                                                           style)
 
 
 class GeoTextPlot(GeoAnnotationPlot, TextPlot):
     "Draw the Text annotation object"
 
     def draw_annotation(self, axis, data, crs, opts):
-        (x,y, text, fontsize,
+        (x, y, text, fontsize,
          horizontalalignment, verticalalignment, rotation) = data
         opts['fontsize'] = fontsize
         x, y = axis.projection.transform_point(x, y, src_crs=crs)
@@ -259,13 +264,12 @@ class GeoTextPlot(GeoAnnotationPlot, TextPlot):
                           rotation=rotation, **opts)]
 
 
-
 # Register plots with HoloViews
 Store.register({Contours: GeoContourPlot,
                 Image: GeoImagePlot,
-                GeoFeature: GeoFeaturePlot,
+                Feature: FeaturePlot,
                 WMTS: WMTSPlot,
-                GeoTiles: GeoTilePlot,
+                Tiles: TilePlot,
                 Points: GeoPointPlot,
                 Text: GeoTextPlot,
                 Layout: LayoutPlot,

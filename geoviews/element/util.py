@@ -1,8 +1,9 @@
 from iris.util import guess_coord_axis
 from holoviews.core.dimension import Dimension
-from holoviews.core.util import * # noqa (API import)
+from holoviews.core.util import *  # noqa (API import)
 
 import datetime
+
 
 def get_date_format(coord):
     def date_formatter(val, pos=None):
@@ -15,6 +16,7 @@ def get_date_format(coord):
 
     return date_formatter
 
+
 def coord_to_dimension(coord):
     """
     Converts an iris coordinate to a HoloViews dimension.
@@ -25,6 +27,7 @@ def coord_to_dimension(coord):
     else:
         kwargs['unit'] = str(coord.units)
     return Dimension(coord.name(), **kwargs)
+
 
 def sort_coords(coord):
     """

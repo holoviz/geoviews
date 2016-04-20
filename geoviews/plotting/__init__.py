@@ -5,13 +5,14 @@ import iris.plot as iplt
 from cartopy import crs as ccrs
 from holoviews.core import (Store, HoloMap, Layout, Overlay,
                             CompositeOverlay, Element)
+from holoviews.core import util
 from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     AnnotationPlot, TextPlot,
                                     LayoutPlot as HvLayoutPlot,
                                     OverlayPlot as HvOverlayPlot)
 
 from ..element import (Contours, Image, Points, Feature,
-                       WMTS, Tiles, Text, util)
+                       WMTS, Tiles, Text)
 
 
 def _get_projection(el):

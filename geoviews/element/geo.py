@@ -3,12 +3,10 @@ import param
 from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
-from holoviews.core import Element2D, Dimension
+from holoviews.core import Element2D, Dimension, Dataset
 from holoviews.core import util
 from holoviews.element import Text as HVText
 from iris.cube import Cube
-
-from .cube import HoloCube
 
 
 class _Element(Element2D):
@@ -26,7 +24,7 @@ class _Element(Element2D):
 
     def __init__(self, data, **kwargs):
         crs = None
-        crs_data = data.data if isinstance(data, HoloCube) else data
+        crs_data = data.data if isinstance(data, Dataset) else data
         if isinstance(crs_data, Cube):
             coord_sys = crs_data.coord_system()
             if hasattr(coord_sys, 'as_cartopy_projection'):
@@ -103,7 +101,7 @@ class Tiles(_Element):
         super(Tiles, self).__init__(data, **params)
 
 
-class Points(_Element, HoloCube):
+class Points(_Element, Dataset):
     """
     Points represent a collection of points with
     an associated cartopy coordinate-reference system.
@@ -114,7 +112,7 @@ class Points(_Element, HoloCube):
     group = param.String(default='Points')
 
 
-class Contours(_Element, HoloCube):
+class Contours(_Element, Dataset):
     """
     Contours represents a 2D array of some quantity with
     some associated coordinates, which may be discretized
@@ -128,7 +126,7 @@ class Contours(_Element, HoloCube):
     group = param.String(default='Contours')
 
 
-class Image(_Element, HoloCube):
+class Image(_Element, Dataset):
     """
     Image represents a 2D array of some quantity with
     some associated coordinates.

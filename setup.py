@@ -16,18 +16,18 @@ extras_require['notebook-dependencies'] = ['jupyter', 'pyzmq', 'jinja2', 'tornad
                                            'jsonschema',  'ipython', 'pygments']
 
 setup_args.update(dict(
-    name='holocube',
+    name='geoviews',
     version="0.0.1",
     install_requires = install_requires,
     extras_require = extras_require,
-    description='HoloCube.',
+    description='GeoViews.',
     long_description=open('README.md').read() if os.path.isfile('README.md') else 'Consult README.md',
     platforms=['Windows', 'Mac OS X', 'Linux'],
     license='BSD',
-    url='https://github.com/CubeBrowser/cube-explorer',
-    packages = ["holocube",
-                "holocube.element",
-                "holocube.plotting"],
+    url='https://github.com/ioam/geoviews',
+    packages = ["geoviews",
+                "geoviews.element",
+                "geoviews.plotting"],
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 1 - Planning Development Status",

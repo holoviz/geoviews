@@ -1,4 +1,4 @@
-# Contributing to Cube Explorer
+# Contributing to geoviews
 
 In proposing contributions to this project, you are agreeing to the following contribution terms.
 

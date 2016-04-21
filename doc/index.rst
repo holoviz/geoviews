@@ -1,4 +1,4 @@
-.. HoloCube documentation master file
+.. GeoViews documentation master file
 
 .. raw:: html
   :file: latest_news.html
@@ -6,7 +6,7 @@
 Introduction
 ____________
 
-.. notebook:: holocube Homepage.ipynb
+.. notebook:: geoviews Homepage.ipynb
 
 ------------
 
@@ -16,7 +16,7 @@ is to come in our `first tutorial <Introductory_Tutorial.html>`_.
 Installation
 ____________
 
-See the `github repo <https://github.com/CubeBrowser/cube-explorer>`_
+See the `github repo <https://github.com/ioam/geoviews>`_
 for installation instructions and to get started with the examples.
 
 ------------
@@ -24,13 +24,13 @@ for installation instructions and to get started with the examples.
 Support
 _______
 
-HoloCube was developed through a collaboration between
+GeoViews was developed through a collaboration between
 `Continuum Analytics <https://continuum.io>`_ and the `UK Metropolitan Office
-<http://www.metoffice.gov.uk>`_.  HoloCube is completely `open source
-<https://github.com/ioam/holoviews>`_, available under a BSD license
+<http://www.metoffice.gov.uk>`_.  GeoViews is completely `open source
+<https://github.com/ioam/geoviews>`_, available under a BSD license
 freely for both commercial and non-commercial use.  Please file
 bug reports and feature requests on our
-`github site <https://github.com/ioam/holoviews/issues>`_.
+`github site <https://github.com/ioam/geoviews/issues>`_.
 
 .. toctree::
    :titlesonly:

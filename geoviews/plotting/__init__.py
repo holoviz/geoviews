@@ -11,8 +11,8 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     LayoutPlot as HvLayoutPlot,
                                     OverlayPlot as HvOverlayPlot)
 
-from ..element import (Contours, Image, Points, Feature,
-                       WMTS, Tiles, Text)
+from ..element import (Image, Points, Feature, WMTS, Tiles, Text,
+                       LineContours, FilledContours)
 
 
 def _get_projection(el):
@@ -96,18 +96,17 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             pass
 
 
-class GeoContourPlot(GeoPlot, ColorbarPlot):
+class LineContourPlot(GeoPlot, ColorbarPlot):
     """
-    Draws a contour or contourf plot from the data in
-    a Contours.
+    Draws a contour plot.
     """
 
-    filled = param.Boolean(default=True, doc="""
-        Whether to draw filled or unfilled contours""")
+    colorbar = param.Boolean(default=True)
 
-    levels = param.ClassSelector(default=5, class_=(int, list))
+    levels = param.ClassSelector(default=5, class_=(int, list), doc="""
+        The levels of the contour as a number or list.""")
 
-    style_opts = ['antialiased', 'alpha', 'cmap']
+    style_opts = ['antialiased', 'alpha', 'cmap', 'linewidths', 'colors']
 
     def get_data(self, element, ranges, style):
         args = (element.data.copy(),)
@@ -118,9 +117,7 @@ class GeoContourPlot(GeoPlot, ColorbarPlot):
         return args, style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
-        plotfn = iplt.contourf if self.filled else iplt.contour
-        artists = {'artist': plotfn(*plot_args, axes=ax, **plot_kwargs)}
-        return artists
+        return {'artist': iplt.contour(*plot_args, axes=ax, **plot_kwargs)}
 
     def teardown_handles(self):
         """
@@ -133,6 +130,18 @@ class GeoContourPlot(GeoPlot, ColorbarPlot):
                     coll.remove()
                 except ValueError:
                     pass
+
+
+class FilledContourPlot(LineContourPlot):
+    """
+    Draws a filled contour plot.
+    """
+
+    style_opts = ['antialiased', 'alpha', 'cmap', 'linewidths']
+
+    def init_artists(self, ax, plot_args, plot_kwargs):
+        artists = {'artist': iplt.contourf(*plot_args, axes=ax, **plot_kwargs)}
+        return artists
 
 
 class GeoImagePlot(GeoPlot, ColorbarPlot):
@@ -271,7 +280,8 @@ class GeoTextPlot(GeoAnnotationPlot, TextPlot):
 
 
 # Register plots with HoloViews
-Store.register({Contours: GeoContourPlot,
+Store.register({LineContours: LineContourPlot,
+                FilledContours: FilledContourPlot,
                 Image: GeoImagePlot,
                 Feature: FeaturePlot,
                 WMTS: WMTSPlot,

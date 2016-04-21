@@ -3,7 +3,7 @@ from holoviews.core.data import Dataset
 from holoviews.element import ElementConversion, Points as HvPoints
 
 from .geo import (_Element, Feature, Tiles,     # noqa (API import)
-                  WMTS, Points, Image, Text, Contours)
+                  WMTS, Points, Image, Text, LineContours, FilledContours)
 
 
 def is_geographic(dataset, kdims):
@@ -35,8 +35,11 @@ class GeoConversion(ElementConversion):
     def __init__(self, cube):
         self._element = cube
 
-    def contours(self, kdims=None, vdims=None, mdims=None, **kwargs):
-        return self(Contours, kdims, vdims, mdims, **kwargs)
+    def linecontours(self, kdims=None, vdims=None, mdims=None, **kwargs):
+        return self(LineContours, kdims, vdims, mdims, **kwargs)
+
+    def filledcontours(self, kdims=None, vdims=None, mdims=None, **kwargs):
+        return self(FilledContours, kdims, vdims, mdims, **kwargs)
 
     def image(self, kdims=None, vdims=None, mdims=None, **kwargs):
         return self(Image, kdims, vdims, mdims, **kwargs)

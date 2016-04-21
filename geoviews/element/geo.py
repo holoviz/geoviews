@@ -112,18 +112,28 @@ class Points(_Element, Dataset):
     group = param.String(default='Points')
 
 
-class Contours(_Element, Dataset):
+class LineContours(_Element, Dataset):
     """
     Contours represents a 2D array of some quantity with
     some associated coordinates, which may be discretized
-    into one or more contours.
+    into one or more line contours.
     """
 
     kdims = param.List(default=[Dimension('x'), Dimension('y')])
 
     vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
 
-    group = param.String(default='Contours')
+    group = param.String(default='LineContours')
+
+
+class FilledContours(LineContours):
+    """
+    Contours represents a 2D array of some quantity with
+    some associated coordinates, which may be discretized
+    into one or more filled contours.
+    """
+
+    group = param.String(default='FilledContours')
 
 
 class Image(_Element, Dataset):

@@ -10,7 +10,7 @@ ____________
 
 ------------
 
-This website is still under construction but you can get a taste of what
+This website is still under construction, but you can get a taste of what
 is to come in our `first tutorial <Introductory_Tutorial.html>`_.
 
 Installation
@@ -39,4 +39,4 @@ bug reports and feature requests on our
 
    Home <self>
    Introductory Tutorial <Introductory_Tutorial> 
-   Github source <https://github.com/CubeBrowser/cube-explorer>
+   Github source <https://github.com/ioam/geoviews>

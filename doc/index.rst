@@ -38,5 +38,6 @@ bug reports and feature requests on our
    :maxdepth: 2
 
    Home <self>
-   Introductory Tutorial <Introductory_Tutorial> 
+   Introductory Tutorial <Introductory_Tutorial>
+   Working with Iris Cube <Working_with_Iris_Cubes>
    Github source <https://github.com/ioam/geoviews>

@@ -1,5 +1,5 @@
 import param
-
+import iris
 from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
@@ -7,6 +7,27 @@ from holoviews.core import Element2D, Dimension, Dataset
 from holoviews.core import util
 from holoviews.element import Text as HVText
 from iris.cube import Cube
+
+geographic_types = (cGoogleTiles, cFeature)
+
+def is_geographic(dataset, kdims=None):
+    """
+    Small utility that determines whether the supplied dataset
+    and kdims represent a geographic coordinate system.
+    """
+    if kdims:
+        kdims = [dataset.get_dimension(d) for d in kdims]
+    else:
+        kdims = dataset.kdims
+
+    if isinstance(dataset.data, geographic_types) or isinstance(dataset, WMTS):
+        return True
+    if (len(kdims) == 2 and
+        ((isinstance(dataset, _Element) and kdims == dataset.kdims) or
+        (isinstance(dataset.data, iris.cube.Cube) and all(dataset.data.coord(
+            kd.name).coord_system for kd in kdims)))):
+        return True
+    return False
 
 
 class _Element(Element2D):
@@ -39,6 +60,9 @@ class _Element(Element2D):
         elif crs:
             kwargs['crs'] = crs
         super(_Element, self).__init__(data, **kwargs)
+        if not is_geographic(self, self.kdims):
+            self.crs = None
+
 
     def clone(self, data=None, shared_data=True, new_type=None,
               *args, **overrides):

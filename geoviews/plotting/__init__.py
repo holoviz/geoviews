@@ -1,5 +1,6 @@
 import copy
 
+import numpy as np
 import param
 import iris.plot as iplt
 from cartopy import crs as ccrs
@@ -12,7 +13,7 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     OverlayPlot as HvOverlayPlot)
 
 from ..element import (Image, Points, Feature, WMTS, Tiles, Text,
-                       LineContours, FilledContours)
+                       LineContours, FilledContours, is_geographic)
 
 
 def _get_projection(el):
@@ -70,11 +71,22 @@ class OverlayPlot(ProjectionPlot, HvOverlayPlot):
     the correct projection for each axis.
     """
 
+    def __init__(self, element, **params):
+        super(OverlayPlot, self).__init__(element, **params)
+        plot_opts = self.lookup_options(self.hmap.last, 'plot').options
+        self.geographic = any(self.hmap.traverse(is_geographic, [Element]))
+        if 'aspect' not in plot_opts and self.geographic:
+            self.aspect = 'equal'
+
+
 
 class GeoPlot(ProjectionPlot, ElementPlot):
     """
     Plotting baseclass for geographic plots with a cartopy projection.
     """
+
+    apply_ranges = param.Boolean(default=False, doc="""
+        Do not use ranges to compute plot extents by default.""")
 
     projection = param.Parameter(default=ccrs.PlateCarree())
 
@@ -83,8 +95,36 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             el = element.last if isinstance(element, HoloMap) else element
             params['projection'] = el.crs
         super(GeoPlot, self).__init__(element, **params)
-        self.aspect = 'equal'
-        self.apply_ranges = False
+        plot_opts = self.lookup_options(self.hmap.last, 'plot').options
+        self.geographic = is_geographic(self.hmap.last)
+        if 'aspect' not in plot_opts and self.geographic:
+            self.aspect = 'equal'
+
+
+    def get_extents(self, element, ranges):
+        """
+        Subclasses the get_extents method using the GeoAxes
+        set_extent method to project the extents to the
+        Elements coordinate reference system.
+        """
+        ax = self.handles['axis']
+        extents = super(GeoPlot, self).get_extents(element, ranges)
+        x0, y0, x1, y1 = element.extents
+        if not self.geographic:
+            return extents
+
+        # If extent can't be determined autoscale, otherwise use
+        # set_extent to convert coordinates to native coordinate
+        # system
+        if (None in extents or any(not np.isfinite(e) for e in extents) or
+            x0 == x1 or y0 == y1):
+            ax.autoscale_view()
+        else:
+            x0, x1, y0, y1 = extents
+            ax.set_extent((x0, y0, x1, y1), element.crs)
+        (l, r), (b, t) = ax.get_xlim(), ax.get_ylim()
+        return l, b, r, t
+
 
     def teardown_handles(self):
         """
@@ -170,6 +210,8 @@ class GeoPointPlot(GeoPlot, PointPlot):
     """
     Draws a scatter plot from the data in a Points Element.
     """
+
+    apply_ranges = param.Boolean(default=True)
 
     def get_data(self, element, ranges, style):
         data = super(GeoPointPlot, self).get_data(element, ranges, style)
@@ -294,4 +336,3 @@ Store.register({LineContours: LineContourPlot,
 
 # Define plot and style options
 opts = Store.options(backend='matplotlib')
-OverlayPlot.aspect = 'equal'

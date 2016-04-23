@@ -1,24 +1,8 @@
-import iris
 from holoviews.core.data import Dataset
 from holoviews.element import ElementConversion, Points as HvPoints
 
-from .geo import (_Element, Feature, Tiles,     # noqa (API import)
+from .geo import (_Element, Feature, Tiles, is_geographic,     # noqa (API import)
                   WMTS, Points, Image, Text, LineContours, FilledContours)
-
-
-def is_geographic(dataset, kdims):
-    """
-    Small utility that determines whether the supplied dataset
-    and kdims represent a geographic coordinate system.
-    """
-
-    kdims = [dataset.get_dimension(d) for d in kdims]
-    if (len(kdims) == 2 and
-        ((isinstance(dataset, _Element) and kdims == dataset.kdims) or
-        (isinstance(dataset.data, iris.cube.Cube) and all(dataset.data.coord(
-            kd.name).coord_system for kd in kdims)))):
-        return True
-    return False
 
 
 class GeoConversion(ElementConversion):

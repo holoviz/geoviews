@@ -46,6 +46,8 @@ class _Element(Element2D):
         coordinate system of the data. Inferred automatically
         when _Element wraps cartopy Feature object.""")
 
+    kdims = param.List(default=[Dimension('Longitude'), Dimension('Latitude')])
+
     def __init__(self, data, **kwargs):
         crs = None
         crs_data = data.data if isinstance(data, Dataset) else data
@@ -75,15 +77,27 @@ class _Element(Element2D):
                                            *args, **overrides)
 
 
-class Feature(_Element):
+class _GeoFeature(_Element):
+    """
+    Baseclass for geographic types without their own data.
+    """
+
+    _auxiliary_component = True
+
+    def dimension_values(self, dim):
+        """
+        _GeoFeature types do not contain actual data.
+        """
+        return []
+
+
+class Feature(_GeoFeature):
     """
     A Feature represents a geographical feature
     specified as a cartopy Feature type.
     """
 
     group = param.String(default='Feature')
-
-    _auxiliary_component = True
 
     def __init__(self, data, **params):
         if not isinstance(data, cFeature):
@@ -92,7 +106,7 @@ class Feature(_Element):
         super(Feature, self).__init__(data, **params)
 
 
-class WMTS(_Element):
+class WMTS(_GeoFeature):
     """
     The WMTS Element represents a Web Map Tile Service
     specified as a tuple of the API URL and
@@ -102,8 +116,6 @@ class WMTS(_Element):
 
     layer = param.String(doc="The layer on the tile service")
 
-    _auxiliary_component = True
-
     def __init__(self, data, **params):
         if not isinstance(data, util.basestring):
             raise TypeError('%s data has to be a tile service URL'
@@ -111,15 +123,13 @@ class WMTS(_Element):
         super(WMTS, self).__init__(data, **params)
 
 
-class Tiles(_Element):
+class Tiles(_GeoFeature):
     """
     Tiles represents an image tile source to dynamically
     load data from depending on the zoom level.
     """
 
     group = param.String(default='Tiles')
-
-    _auxiliary_component = True
 
     def __init__(self, data, **params):
         if not isinstance(data, cGoogleTiles):
@@ -134,8 +144,6 @@ class Points(_Element, Dataset):
     an associated cartopy coordinate-reference system.
     """
 
-    kdims = param.List(default=['longitude', 'latitude'])
-
     group = param.String(default='Points')
 
 
@@ -145,8 +153,6 @@ class LineContours(_Element, Dataset):
     some associated coordinates, which may be discretized
     into one or more line contours.
     """
-
-    kdims = param.List(default=[Dimension('x'), Dimension('y')])
 
     vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
 
@@ -168,8 +174,6 @@ class Image(_Element, Dataset):
     Image represents a 2D array of some quantity with
     some associated coordinates.
     """
-
-    kdims = param.List(default=[Dimension('x'), Dimension('y')])
 
     vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
 

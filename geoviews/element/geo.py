@@ -10,24 +10,27 @@ from iris.cube import Cube
 
 geographic_types = (cGoogleTiles, cFeature)
 
-def is_geographic(dataset, kdims=None):
+def is_geographic(element, kdims=None):
     """
-    Small utility that determines whether the supplied dataset
-    and kdims represent a geographic coordinate system.
+    Utility to determine whether the supplied element optionally
+    a subset of its key dimensions represent a geographic coordinate
+    system.
     """
     if kdims:
-        kdims = [dataset.get_dimension(d) for d in kdims]
+        kdims = [element.get_dimension(d) for d in kdims]
     else:
-        kdims = dataset.kdims
+        kdims = element.kdims
 
-    if isinstance(dataset.data, geographic_types) or isinstance(dataset, WMTS):
+    if len(kdims) != 2:
+        return False
+    if isinstance(element.data, iris.cube.Cube):
+        return all(element.data.coord(kd.name).coord_system for kd in kdims)
+    elif isinstance(element.data, geographic_types) or isinstance(element, WMTS):
         return True
-    if (len(kdims) == 2 and
-        ((isinstance(dataset, _Element) and kdims == dataset.kdims) or
-        (isinstance(dataset.data, iris.cube.Cube) and all(dataset.data.coord(
-            kd.name).coord_system for kd in kdims)))):
-        return True
-    return False
+    elif isinstance(element, _Element):
+        return kdims == element.kdims and element.crs
+    else:
+        return False
 
 
 class _Element(Element2D):

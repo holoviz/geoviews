@@ -13,7 +13,7 @@ project = u'GeoViews'
 copyright = u'2016, GeoViews developers'
 authors = u'GeoViews developers'
 module = 'geoviews'
-description = 'Browser based exploration of Iris cubes'
+description = 'Geographic visualizations for HoloViews'
 
 
 # # The short X.Y version.
@@ -25,8 +25,8 @@ release = u'v0.1'
 import sphinx_rtd_theme
 html_theme = "sphinx_rtd_theme"
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-html_logo = ''
-html_favicon = ''
+html_logo = '_static/logo.png'
+html_favicon = '_static/favicon.ico'
 
 # -------------------------------------------------------------------------
 # -- The remaining items are less likely to need changing for a new project

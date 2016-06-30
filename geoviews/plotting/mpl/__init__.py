@@ -18,7 +18,7 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         LineContours, FilledContours, is_geographic,
                         Path, Polygons, Shape)
-from ..util import path_to_geom, polygon_to_geom
+from ...util import path_to_geom, polygon_to_geom
 
 
 def _get_projection(el):

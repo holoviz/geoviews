@@ -1,3 +1,7 @@
+import copy
+import itertools
+
+import param
 import numpy as np
 from cartopy.crs import GOOGLE_MERCATOR
 
@@ -6,10 +10,13 @@ from holoviews.plotting.util import map_colors
 from holoviews.plotting.bokeh.element import ElementPlot
 from holoviews.plotting.bokeh.chart import PointPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot
+from holoviews.plotting.bokeh.raster import RasterPlot
 from holoviews.plotting.bokeh.util import get_cmap
 
-from ...element import (WMTS, Points, Polygons, Path, Shape, is_geographic)
-from ..util import project_extents, geom_to_array
+from ...element import (WMTS, Points, Polygons, Path, Shape, Image,
+                        Image, Feature, is_geographic)
+from ...operation import ProjectImage
+from ...util import project_extents, geom_to_array
 
 DEFAULT_PROJ = GOOGLE_MERCATOR
 
@@ -29,7 +36,6 @@ class GeoPlot(ElementPlot):
         Elements coordinate reference system.
         """
         extents = super(GeoPlot, self).get_extents(element, ranges)
-
         if not getattr(element, 'crs', None):
             return extents
         elif any(e is None or not np.isfinite(e) for e in extents):
@@ -65,6 +71,22 @@ class GeoPointPlot(GeoPlot, PointPlot):
         return data, mapping
 
 
+class GeoRasterPlot(GeoPlot, RasterPlot):
+
+    def get_data(self, element, ranges=None, empty=False):
+        l, b, r, t = self.get_extents(element, ranges)
+        element = ProjectImage(element, projection=DEFAULT_PROJ)
+        img = element.dimension_values(2, flat=False).T
+        mapping = dict(image='image', x='x', y='y', dw='dw', dh='dh')
+        if empty:
+            data = dict(image=[], x=[], y=[], dw=[], dh=[])
+        else:
+            dh = t-b
+            data = dict(image=[img], x=[l],
+                        y=[b], dw=[r-l], dh=[dh])
+        return (data, mapping)
+
+
 class GeometryPlot(GeoPlot):
     """
     Geometry projects a geometry to the destination coordinate
@@ -95,7 +117,10 @@ class GeoShapePlot(GeoPolygonPlot):
     def get_data(self, element, ranges=None, empty=False):
         geoms = element.geom()
         if getattr(element, 'crs', None):
-            geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)
+            try:
+                geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)
+            except:
+                empty = True
         xs, ys = ([], []) if empty else geom_to_array(geoms)
         data = dict(xs=xs, ys=ys)
 
@@ -112,9 +137,32 @@ class GeoShapePlot(GeoPolygonPlot):
         return data, mapping
 
 
+class FeaturePlot(GeoPathPlot):
+
+    scale = param.ObjectSelector(default='110m',
+                                 objects=['10m', '50m', '110m'],
+                                 doc="The scale of the Feature in meters.")
+
+    def get_data(self, element, ranges, empty=[]):
+        feature = copy.copy(element.data)
+        feature.scale = self.scale
+        if not self.geographic:
+            return data, mapping
+        geoms = list(feature.geometries())
+        geoms = [DEFAULT_PROJ.project_geometry(geom, element.crs)
+                 for geom in geoms]
+        arrays = [geom_to_array(geom) for geom in geoms]
+        xs = [arr[0] for arr in arrays]
+        ys = [arr[1] for arr in arrays]
+        data = dict(xs=list(itertools.chain(*xs)),
+                    ys=list(itertools.chain(*ys)))
+        return data, dict(self._mapping)
+
 
 Store.register({WMTS: TilePlot,
                 Points: GeoPointPlot,
                 Polygons: GeoPolygonPlot,
                 Path: GeoPathPlot,
-                Shape: GeoShapePlot}, 'bokeh')
+                Shape: GeoShapePlot,
+                Image: GeoRasterPlot,
+                Feature: FeaturePlot}, 'bokeh')

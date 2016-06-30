@@ -5,6 +5,13 @@ from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
 from holoviews.core import Element2D, Dimension, Dataset
 from holoviews.core import util
+from holoviews.element import (Text as HVText, Path as HVPath,
+                               Polygons as HVPolygons)
+
+from shapely.geometry.base import BaseGeometry
+from shapely.geometry import (MultiLineString, LineString,
+                              MultiPolygon, Polygon)
+
 try:
     from iris.cube import Cube
 except ImportError:
@@ -188,3 +195,93 @@ class Text(HVText, _Element):
     An annotation containing some text at an x, y coordinate
     along with a coordinate reference system.
     """
+
+
+class Path(_Element, HVPath):
+    """
+    The Path Element contains a list of Paths stored as Nx2 numpy
+    arrays along with a coordinate reference system.
+    """
+
+    def geom(self):
+        """
+        Returns Path as a shapely geometry.
+        """
+        lines = []
+        for path in self.data:
+            lines.append(LineString(path))
+        return MultiLineString(lines)
+
+
+class Polygons(_Element, HVPolygons):
+    """
+    Polygons is a Path Element type that may contain any number of
+    closed paths with an associated value and a coordinate reference
+    system.
+    """
+
+    def geom(self):
+        """
+        Returns Polygons as a shapely geometry.
+        """
+        polys = []
+        for poly in self.data:
+            polys.append(Polygon(poly))
+        return MultiPolygon(polys)
+
+
+class Shape(_Element):
+    """
+    Shape wraps any shapely geometry type.
+    """
+
+    group = param.String(default='Shape')
+
+    level = param.Number(default=None, doc="""
+        Optional level associated with the set of Contours.""")
+
+    vdims = param.List(default=[Dimension('Level')], doc="""
+        Contours optionally accept a value dimension, corresponding
+        to the supplied values.""", bounds=(1,1))
+
+    def __init__(self, data, **params):
+        if not isinstance(data, BaseGeometry):
+            raise TypeError('%s data has to be a shapely geometry type.'
+                            % type(data).__name__)
+        super(Shape, self).__init__(data, **params)
+
+
+    def dimension_values(self, dimension):
+        """
+        Shapes do not support convert to array values.
+        """
+        dim = self.get_dimension(dimension)
+        if dim in self.vdims:
+            return [self.level]
+        else:
+            return []
+
+
+    def range(self, dimension):
+        dim = self.get_dimension(dimension)
+        if dim.range != (None, None):
+            return dim.range
+
+        idx = self.get_dimension_index(dimension)
+        if idx == 2:
+            return self.level, self.level
+        if idx in [0, 1]:
+            l, b, r, t = self.data.bounds
+            if idx == 0:
+                return l, r
+            elif idx == 1:
+                return b, t
+        else:
+            return (np.NaN, np.NaN)
+
+
+    def geom(self):
+        """
+        Returns Shape as a shapely geometry
+        """
+        return self.data

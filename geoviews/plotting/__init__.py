@@ -1,7 +1,6 @@
-from . import mpl
+from . import mpl # noqa
 
 try:
-    import bokeh
-    from . import bokeh
-except:
+    from . import bokeh # noqa
+except ImportError:
     pass

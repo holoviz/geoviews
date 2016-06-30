@@ -232,7 +232,7 @@ class GeometryPlot(GeoPlot):
             artist = ax.add_geometries(*plot_args, **plot_kwargs)
             return {'artist': artist}
         else:
-            return super(GeomPlot, self).init_artist(ax, plot_args, plot_kwargs)
+            return super(GeometryPlot, self).init_artist(ax, plot_args, plot_kwargs)
 
 
 class GeoPathPlot(GeometryPlot, PathPlot):

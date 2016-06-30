@@ -9,7 +9,7 @@ from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot
 from holoviews.plotting.bokeh.util import get_cmap
 
 from ...element import (WMTS, Points, Polygons, Path, Shape, is_geographic)
-from ..util import project_extents, path_to_geom, polygon_to_geom, geom_to_array
+from ..util import project_extents, geom_to_array
 
 DEFAULT_PROJ = GOOGLE_MERCATOR
 

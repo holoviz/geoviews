@@ -1,12 +1,15 @@
 import param
-import iris
+
 from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
 from holoviews.core import Element2D, Dimension, Dataset
 from holoviews.core import util
-from holoviews.element import Text as HVText
-from iris.cube import Cube
+try:
+    from iris.cube import Cube
+except ImportError:
+    Cube = None
+
 
 geographic_types = (cGoogleTiles, cFeature)
 
@@ -23,7 +26,7 @@ def is_geographic(element, kdims=None):
 
     if len(kdims) != 2:
         return False
-    if isinstance(element.data, iris.cube.Cube):
+    if Cube and isinstance(element.data, Cube):
         return all(element.data.coord(kd.name).coord_system for kd in kdims)
     elif isinstance(element.data, geographic_types) or isinstance(element, WMTS):
         return True

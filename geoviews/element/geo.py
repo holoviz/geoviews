@@ -17,6 +17,12 @@ try:
 except ImportError:
     Cube = None
 
+WMTS_types = (util.basestring,)
+try:
+    from bokeh.models import WMTSTileSource
+    WMTS_types += (WMTSTileSource,)
+except:
+    pass
 
 geographic_types = (cGoogleTiles, cFeature)
 
@@ -127,7 +133,7 @@ class WMTS(_GeoFeature):
     layer = param.String(doc="The layer on the tile service")
 
     def __init__(self, data, **params):
-        if not isinstance(data, util.basestring):
+        if not isinstance(data, WMTS_types):
             raise TypeError('%s data has to be a tile service URL'
                             % type(data).__name__)
         super(WMTS, self).__init__(data, **params)

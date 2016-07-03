@@ -3,7 +3,8 @@ import numpy as np
 from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
-from holoviews.core import Element2D, Dimension, Dataset
+from cartopy.io.shapereader import Reader
+from holoviews.core import Element2D, Dimension, Dataset, NdOverlay
 from holoviews.core import util
 from holoviews.element import (Text as HVText, Path as HVPath,
                                Polygons as HVPolygons)
@@ -256,6 +257,87 @@ class Shape(_Element):
             raise TypeError('%s data has to be a shapely geometry type.'
                             % type(data).__name__)
         super(Shape, self).__init__(data, **params)
+
+
+    @classmethod
+    def from_shapefile(cls, shapefile, *args, **kwargs):
+        """
+        Loads a shapefile from disk and optionally merges
+        it with a dataset. See ``from_records`` for full
+        signature.
+        """
+        reader = Reader(shapefile)
+        return cls.from_records(reader.records(), *args, **kwargs)
+
+
+    @classmethod
+    def from_records(cls, records, dataset=None, on=None,
+                     value=None, index=[], **kwargs):
+        """
+        Load data from a collection of
+        ``cartopy.io.shapereader.Record`` objects and optionally merge
+        it with a dataset to assign values to each polygon and form a
+        chloropleth. Supplying just records will return an NdOverlay
+        of Shape Elements with a numeric index. If a dataset is
+        supplied, a mapping between the attribute names in the records
+        and the dimension names in the dataset must be supplied. The
+        values assigned to each shape file can then be drawn from the
+        dataset by supplying a ``value`` and keys the Shapes are
+        indexed by specifying one or index dimensions.
+
+        * records - An iterator of cartopy.io.shapereader.Record
+                    objects.
+        * dataset - Any HoloViews Dataset type.
+        * on      - A mapping between the attribute names in
+                    the records and the dimensions in the dataset.
+        * value   - The value dimension in the dataset the
+                    values will be drawn from.
+        * index   - One or more dimensions in the dataset
+                    the Shapes will be indexed by.
+
+        Returns an NdOverlay of Shapes.
+        """
+        if dataset and not on:
+            raise ValueError('To merge dataset with shapes mapping '
+                             'must define attribute(s) to merge on.')
+
+        if not isinstance(on, (dict, list)):
+            on = [on]
+        if on and not isinstance(on, dict):
+            on = {o: o for o in on}
+        if not isinstance(index, list):
+            index = [index]
+
+        if dataset:
+            index = [dataset.get_dimension(ind) for ind in index]
+            vdim = dataset.get_dimension(value)
+            kwargs['vdims'] = [vdim]
+            not_found = [dim.name for dim in index+[vdim]
+                         if dim is None]
+            if not_found:
+                dim_str = ', '.join(not_found)
+                raise ValueError('Following dimensions not found '
+                                 'in dataset.'.format(dim.name))
+
+        chloropleth = NdOverlay(kdims=index if index else ['Index'])
+        for i, rec in enumerate(records):
+            if dataset:
+                selection = {dim: rec.attributes.get(attr, None)
+                             for attr, dim in on.items()}
+                row = dataset.select(**selection)
+                if not len(row):
+                    continue
+                if value:
+                    value = row[vdim.name][0]
+                    kwargs['level'] = value
+                if index:
+                    key = tuple(row[d.name][0] for d in index)
+                else:
+                    key = i
+            else:
+                key = i
+            chloropleth[key] = Shape(rec.geometry, **kwargs)
+        return chloropleth
 
 
     def dimension_values(self, dimension):

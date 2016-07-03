@@ -258,10 +258,20 @@ class GeoPolygonPlot(GeometryPlot, PolygonPlot):
 
     def get_data(self, element, ranges, style):
         if self.geographic:
+            vdim = element.vdims[0] if element.vdims else None
+            value = element.level
+            if vdim is not None and np.isfinite(value):
+                self._norm_kwargs(element, ranges, style, vdim)
+                style['clim'] = style.pop('vmin'), style.pop('vmax')
+                style['array'] = np.array([value]*len(element.data))
+            for k, v in self.overlay_dims.items():
+                dim = util.dimension_sanitizer(k.name)
+                data[dim] = [v for _ in range(len(xs))]
+
             return ([polygon_to_geom(element)], element.crs), style, {}
         else:
             return super(GeoPolygonPlot, self).get_data(element, ranges, style)
-            
+
 
 class GeoShapePlot(GeometryPlot, PolygonPlot):
     """
@@ -272,6 +282,12 @@ class GeoShapePlot(GeometryPlot, PolygonPlot):
 
     def get_data(self, element, ranges, style):
         if self.geographic:
+            vdim = element.vdims[0] if element.vdims else None
+            value = element.level
+            if vdim is not None and (value is not None and np.isfinite(value)):
+                self._norm_kwargs(element, ranges, style, vdim)
+                style['clim'] = style.pop('vmin'), style.pop('vmax')
+                style['array'] = np.array([value]*len(element.data))
             return ([element.data], element.crs), style, {}
         else:
             SkipRendering('Shape can only be plotted on geographic plot, '

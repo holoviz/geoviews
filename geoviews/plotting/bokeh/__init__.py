@@ -3,9 +3,12 @@ import itertools
 
 import param
 import numpy as np
+import shapely.geometry
 from cartopy.crs import GOOGLE_MERCATOR
 
 from holoviews import Store
+from holoviews.core import util
+from holoviews.core.options import Options
 from holoviews.plotting.util import map_colors
 from holoviews.plotting.bokeh.element import ElementPlot
 from holoviews.plotting.bokeh.chart import PointPlot
@@ -20,10 +23,16 @@ from ...util import project_extents, geom_to_array
 
 DEFAULT_PROJ = GOOGLE_MERCATOR
 
+line_types = (shapely.geometry.MultiLineString, shapely.geometry.LineString)
+poly_types = (shapely.geometry.MultiPolygon, shapely.geometry.Polygon)
+
+
 class GeoPlot(ElementPlot):
     """
     Plotting baseclass for geographic plots with a cartopy projection.
     """
+
+    show_grid = param.Boolean(default=False)
 
     def __init__(self, element, **params):
         super(GeoPlot, self).__init__(element, **params)
@@ -75,7 +84,8 @@ class GeoRasterPlot(GeoPlot, RasterPlot):
 
     def get_data(self, element, ranges=None, empty=False):
         l, b, r, t = self.get_extents(element, ranges)
-        element = ProjectImage(element, projection=DEFAULT_PROJ)
+        if self.geographic:
+            element = ProjectImage(element, projection=DEFAULT_PROJ)
         img = element.dimension_values(2, flat=False).T
         mapping = dict(image='image', x='x', y='y', dw='dw', dh='dh')
         if empty:
@@ -127,17 +137,24 @@ class GeoShapePlot(GeoPolygonPlot):
         style = self.style[self.cyclic_index]
         cmap = style.get('palette', style.get('cmap', None))
         mapping = dict(self._mapping)
-        if cmap and element.level is not None:
+        dim = element.vdims[0].name if element.vdims else None
+        if cmap and dim and element.level is not None:
             cmap = get_cmap(cmap)
             colors = map_colors(np.array([element.level]),
-                                ranges[element.vdims[0].name], cmap)
+                                ranges[dim], cmap)
             mapping['color'] = 'color'
             data['color'] = [] if empty else list(colors)*len(element.data)
-
+        if 'hover' in self.tools+self.default_tools:
+            if dim:
+                dim_name = util.dimension_sanitizer(dim)
+                data[dim_name] = [element.level for _ in range(len(xs))]
+            for k, v in self.overlay_dims.items():
+                dim = util.dimension_sanitizer(k.name)
+                data[dim] = [v for _ in range(len(xs))]
         return data, mapping
 
 
-class FeaturePlot(GeoPathPlot):
+class FeaturePlot(GeoPolygonPlot):
 
     scale = param.ObjectSelector(default='110m',
                                  objects=['10m', '50m', '110m'],
@@ -148,7 +165,12 @@ class FeaturePlot(GeoPathPlot):
         feature.scale = self.scale
         if not self.geographic:
             return data, mapping
+
         geoms = list(feature.geometries())
+        if isinstance(geoms[0], line_types):
+            self._plot_methods = dict(single='multi_line')
+        else:
+            self._plot_methods = dict(single='patches', batched='patches')
         geoms = [DEFAULT_PROJ.project_geometry(geom, element.crs)
                  for geom in geoms]
         arrays = [geom_to_array(geom) for geom in geoms]
@@ -166,3 +188,7 @@ Store.register({WMTS: TilePlot,
                 Shape: GeoShapePlot,
                 Image: GeoRasterPlot,
                 Feature: FeaturePlot}, 'bokeh')
+
+options = Store.options(backend='bokeh')
+
+options.Feature = Options('style', line_color='black')

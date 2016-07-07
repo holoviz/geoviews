@@ -10,6 +10,7 @@ from holoviews import Store
 from holoviews.core import util
 from holoviews.core.options import Options
 from holoviews.plotting.util import map_colors
+from holoviews.plotting.bokeh.annotation import TextPlot
 from holoviews.plotting.bokeh.element import ElementPlot
 from holoviews.plotting.bokeh.chart import PointPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot
@@ -17,7 +18,7 @@ from holoviews.plotting.bokeh.raster import RasterPlot
 from holoviews.plotting.bokeh.util import get_cmap
 
 from ...element import (WMTS, Points, Polygons, Path, Shape, Image,
-                        Image, Feature, is_geographic)
+                        Image, Feature, is_geographic, Text)
 from ...operation import ProjectImage
 from ...util import project_extents, geom_to_array
 
@@ -178,13 +179,29 @@ class FeaturePlot(GeoPolygonPlot):
         return data, dict(self._mapping)
 
 
+class GeoTextPlot(GeoPlot, TextPlot):
+
+    def get_data(self, element, ranges=None, empty=False):
+        mapping = dict(x='x', y='y', text='text')
+        if empty or not self.geographic:
+            return super(GeoTextPlot, self).get_data(element, ranges, empty)
+        x, y = DEFAULT_PROJ.transform_point(element.x, element.y,
+                                            element.crs)
+        return (dict(x=[x], y=[y], text=[element.text]), mapping)
+
+    def get_extents(self, element, ranges=None):
+        return None, None, None, None
+
+
+
 Store.register({WMTS: TilePlot,
                 Points: GeoPointPlot,
                 Polygons: GeoPolygonPlot,
                 Path: GeoPathPlot,
                 Shape: GeoShapePlot,
                 Image: GeoRasterPlot,
-                Feature: FeaturePlot}, 'bokeh')
+                Feature: FeaturePlot,
+                Text: GeoTextPlot}, 'bokeh')
 
 options = Store.options(backend='bokeh')
 

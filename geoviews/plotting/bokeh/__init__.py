@@ -18,7 +18,7 @@ from holoviews.plotting.bokeh.raster import RasterPlot
 from holoviews.plotting.bokeh.util import get_cmap
 
 from ...element import (WMTS, Points, Polygons, Path, Shape, Image,
-                        Image, Feature, is_geographic, Text)
+                        Feature, is_geographic, Text)
 from ...operation import ProjectImage
 from ...util import project_extents, geom_to_array
 

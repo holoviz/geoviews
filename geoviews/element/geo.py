@@ -5,7 +5,6 @@ from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
 from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset, NdOverlay
-from holoviews.core import util
 from holoviews.element import (Text as HVText, Path as HVPath,
                                Polygons as HVPolygons)
 
@@ -320,7 +319,7 @@ class Shape(_Element):
             if not_found:
                 dim_str = ', '.join(not_found)
                 raise ValueError('Following dimensions not found '
-                                 'in dataset.'.format(dim.name))
+                                 'in dataset: {}'.format(dim_str))
 
         chloropleth = NdOverlay(kdims=index if index else ['Index'])
         for i, rec in enumerate(records):

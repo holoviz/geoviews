@@ -55,10 +55,10 @@ class GeoPlot(ElementPlot):
 class TilePlot(GeoPlot):
 
     styl_opts = ['alpha', 'render_parents']
-    
+
     def get_data(self, element, ranges=None, empty=False):
         return {}, {'tile_source': element.data}
-    
+
     def _init_glyph(self, plot, mapping, properties):
         """
         Returns a Bokeh glyph object.
@@ -126,7 +126,7 @@ class GeoShapePlot(GeoPolygonPlot):
 
     def get_data(self, element, ranges=None, empty=False):
         geoms = element.geom()
-        if getattr(element, 'crs', None):
+        if self.geographic:
             try:
                 geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)
             except:
@@ -163,9 +163,6 @@ class FeaturePlot(GeoPolygonPlot):
     def get_data(self, element, ranges, empty=[]):
         feature = copy.copy(element.data)
         feature.scale = self.scale
-        if not self.geographic:
-            return data, mapping
-
         geoms = list(feature.geometries())
         if isinstance(geoms[0], line_types):
             self._plot_methods = dict(single='multi_line')

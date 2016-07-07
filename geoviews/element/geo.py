@@ -5,6 +5,7 @@ from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
 from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset, NdOverlay
+from holoviews.core.util import basestring
 from holoviews.element import (Text as HVText, Path as HVPath,
                                Polygons as HVPolygons)
 

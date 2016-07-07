@@ -31,6 +31,9 @@ def is_geographic(element, kdims=None):
     a subset of its key dimensions represent a geographic coordinate
     system.
     """
+    if isinstance(element, NdOverlay):
+        element = element.last
+
     if kdims:
         kdims = [element.get_dimension(d) for d in kdims]
     else:

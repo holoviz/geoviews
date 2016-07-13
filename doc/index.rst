@@ -8,11 +8,6 @@ ____________
 
 .. notebook:: geoviews Homepage.ipynb
 
-------------
-
-This website is still under construction, but you can get a taste of what
-is to come in our `first tutorial <Introductory_Tutorial.html>`_.
-
 Installation
 ____________
 
@@ -38,5 +33,8 @@ bug reports and feature requests on our
    :maxdepth: 2
 
    Home <self>
-   Introductory Tutorial <Introductory_Tutorial> 
+   Geometries <Geometries>
+   Plotting with Bokeh <Plotting_with_Bokeh>
+   Working with Iris I <Iris_Datasets_I>
+   Working with Iris II <Iris_Datasets_II>
    Github source <https://github.com/ioam/geoviews>

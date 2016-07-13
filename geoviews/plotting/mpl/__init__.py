@@ -7,7 +7,11 @@ from cartopy import crs as ccrs
 from holoviews.core import (Store, HoloMap, Layout, Overlay,
                             CompositeOverlay, Element)
 from holoviews.core import util
-from holoviews.core.options import SkipRendering
+try:
+    from xarray import Dataset, DataArray
+except:
+    Dataset = None
+from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     AnnotationPlot, TextPlot,
                                     LayoutPlot as HvLayoutPlot,
@@ -154,6 +158,12 @@ class LineContourPlot(GeoPlot, ColorbarPlot):
     style_opts = ['antialiased', 'alpha', 'cmap', 'linewidths', 'colors']
 
     def get_data(self, element, ranges, style):
+        if Dataset and isinstance(element.data, Dataset):
+            x, y, z = element.dimensions(label=True)
+            arr = element.data[z]
+            style['x'] = x
+            style['y'] = y
+            return (arr, element.crs), style, {}
         args = (element.data.copy(),)
         if isinstance(self.levels, int):
             args += (self.levels,)
@@ -162,7 +172,14 @@ class LineContourPlot(GeoPlot, ColorbarPlot):
         return args, style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
-        return {'artist': iplt.contour(*plot_args, axes=ax, **plot_kwargs)}
+        if DataArray and isinstance(plot_args[0], DataArray):
+            artist = plot_args[0].plot.contour(ax=ax, add_colorbar=False,
+                                               transform=plot_args[1],
+                                               robust=True, **plot_kwargs)
+        else:
+            artist = iplt.contour(*plot_args, axes=ax, **plot_kwargs)
+        return {'artist': artist}
+
 
     def teardown_handles(self):
         """
@@ -185,8 +202,14 @@ class FilledContourPlot(LineContourPlot):
     style_opts = ['antialiased', 'alpha', 'cmap', 'linewidths']
 
     def init_artists(self, ax, plot_args, plot_kwargs):
-        artists = {'artist': iplt.contourf(*plot_args, axes=ax, **plot_kwargs)}
-        return artists
+        if DataArray and isinstance(plot_args[0], DataArray):
+            artist = plot_args[0].plot.contourf(ax=ax, add_colorbar=False,
+                                                transform=plot_args[1],
+                                                robust=True, **plot_kwargs)
+        else:
+            artist = iplt.contourf(*plot_args, axes=ax, **plot_kwargs)
+        return {'artist': artist}
+
 
 
 class GeoImagePlot(GeoPlot, ColorbarPlot):
@@ -200,6 +223,12 @@ class GeoImagePlot(GeoPlot, ColorbarPlot):
     def get_data(self, element, ranges, style):
         self._norm_kwargs(element, ranges, style, element.vdims[0])
         style.pop('interpolation')
+        if Dataset and isinstance(element.data, Dataset):
+            x, y, z = element.dimensions(label=True)
+            arr = element.data[z]
+            style['x'] = x
+            style['y'] = y
+            return (arr, element.crs), style, {}
         cube = element.data.copy()
         # Make sure both coordinates have bounds to avoid iris warning.
         for coord in cube.dim_coords:
@@ -208,7 +237,13 @@ class GeoImagePlot(GeoPlot, ColorbarPlot):
         return (cube,), style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
-        return {'artist': iplt.pcolormesh(*plot_args, axes=ax, **plot_kwargs)}
+        if DataArray and isinstance(plot_args[0], DataArray):
+            artist = plot_args[0].plot.pcolormesh(ax=ax, transform=plot_args[1],
+                                                  add_colorbar=False,
+                                                  robust=True, **plot_kwargs)
+        else:
+            artist = iplt.pcolormesh(*plot_args, axes=ax, **plot_kwargs)
+        return {'artist': artist}
 
 
 class GeoPointPlot(GeoPlot, PointPlot):
@@ -325,7 +360,12 @@ class WMTSPlot(GeoPlot):
                   'filterrad', 'clims', 'norm']
 
     def get_data(self, element, ranges, style):
-        return (element.data, element.layer), style, {}
+        tile_sources = [ts for ts in element.data
+                        if isinstance(ts, util.basestring)]
+        if not tile_sources:
+            raise SkipRendering("No valid tile source URL found in WMTS "
+                                "Element, rendering skipped.")
+        return (tile_sources[0], element.layer), style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
         return {'artist': ax.add_wmts(*plot_args, **plot_kwargs)}

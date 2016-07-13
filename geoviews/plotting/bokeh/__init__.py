@@ -5,10 +5,11 @@ import param
 import numpy as np
 import shapely.geometry
 from cartopy.crs import GOOGLE_MERCATOR
+from bokeh.models import WMTSTileSource
 
 from holoviews import Store
 from holoviews.core import util
-from holoviews.core.options import Options
+from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.util import map_colors
 from holoviews.plotting.bokeh.annotation import TextPlot
 from holoviews.plotting.bokeh.element import ElementPlot
@@ -58,7 +59,12 @@ class TilePlot(GeoPlot):
     styl_opts = ['alpha', 'render_parents']
 
     def get_data(self, element, ranges=None, empty=False):
-        return {}, {'tile_source': element.data}
+        tile_sources = [ts for ts in element.data
+                        if isinstance(ts, WMTSTileSource)]
+        if not tile_sources:
+            raise SkipRendering("No valid WMTSTileSource found in WMTS "
+                                "Element, rendering skipped.")
+        return {}, {'tile_source': tile_sources[0]}
 
     def _init_glyph(self, plot, mapping, properties):
         """
@@ -206,3 +212,5 @@ Store.register({WMTS: TilePlot,
 options = Store.options(backend='bokeh')
 
 options.Feature = Options('style', line_color='black')
+options.Shape = Options('style', edgecolor='black', facecolor='#30A2DA')
+

@@ -135,12 +135,18 @@ class WMTS(_GeoFeature):
     layer = param.String(doc="The layer on the tile service")
 
     def __init__(self, data, **params):
-        if WMTSTileSource and isinstance(data, WMTSTileSource):
-            if 'crs' not in params:
-                params['crs'] = ccrs.GOOGLE_MERCATOR
-        elif not isinstance(data, basestring):
-            raise TypeError('%s data has to be a tile service URL'
-                            % type(data).__name__)
+        if isinstance(data, tuple):
+            data = data
+        else:
+            data = (data,)
+
+        for d in data:
+            if WMTSTileSource and isinstance(d, WMTSTileSource):
+                if 'crs' not in params:
+                    params['crs'] = ccrs.GOOGLE_MERCATOR
+            elif not isinstance(data, basestring):
+                raise TypeError('%s data has to be a tile service URL'
+                                % type(data).__name__)
         super(WMTS, self).__init__(data, **params)
 
 

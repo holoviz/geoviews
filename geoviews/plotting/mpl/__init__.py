@@ -448,4 +448,6 @@ Store.register({LineContours: LineContourPlot,
 
 
 # Define plot and style options
-opts = Store.options(backend='matplotlib')
+options = Store.options(backend='matplotlib')
+
+options.Shape = Options('style', edgecolor='black', facecolor='#30A2DA')

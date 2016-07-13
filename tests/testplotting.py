@@ -2,7 +2,7 @@ from iris.tests.stock import lat_lon_cube
 
 from geoviews.element import Image
 from geoviews.element.comparison import ComparisonTestCase
-from geoviews.plotting import GeoImagePlot
+from geoviews.plotting.mpl import GeoImagePlot
 
 
 class TestGeoImagePlot(ComparisonTestCase):

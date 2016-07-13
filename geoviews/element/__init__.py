@@ -2,7 +2,8 @@ from holoviews.core.data import Dataset
 from holoviews.element import ElementConversion, Points as HvPoints
 
 from .geo import (_Element, Feature, Tiles, is_geographic,     # noqa (API import)
-                  WMTS, Points, Image, Text, LineContours, FilledContours)
+                  WMTS, Points, Image, Text, LineContours,
+                  FilledContours, Path, Polygons, Shape)
 
 
 class GeoConversion(ElementConversion):

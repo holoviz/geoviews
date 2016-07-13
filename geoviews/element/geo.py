@@ -1,12 +1,27 @@
 import param
-import iris
+import numpy as np
 from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
-from holoviews.core import Element2D, Dimension, Dataset
-from holoviews.core import util
-from holoviews.element import Text as HVText
-from iris.cube import Cube
+from cartopy.io.shapereader import Reader
+from holoviews.core import Element2D, Dimension, Dataset, NdOverlay
+from holoviews.core.util import basestring
+from holoviews.element import (Text as HVText, Path as HVPath,
+                               Polygons as HVPolygons)
+
+from shapely.geometry.base import BaseGeometry
+from shapely.geometry import (MultiLineString, LineString,
+                              MultiPolygon, Polygon)
+
+try:
+    from iris.cube import Cube
+except ImportError:
+    Cube = None
+
+try:
+    from bokeh.models import WMTSTileSource
+except:
+    WMTSTileSource = None
 
 geographic_types = (cGoogleTiles, cFeature)
 
@@ -16,6 +31,9 @@ def is_geographic(element, kdims=None):
     a subset of its key dimensions represent a geographic coordinate
     system.
     """
+    if isinstance(element, NdOverlay):
+        element = element.last
+
     if kdims:
         kdims = [element.get_dimension(d) for d in kdims]
     else:
@@ -23,7 +41,7 @@ def is_geographic(element, kdims=None):
 
     if len(kdims) != 2:
         return False
-    if isinstance(element.data, iris.cube.Cube):
+    if Cube and isinstance(element.data, Cube):
         return all(element.data.coord(kd.name).coord_system for kd in kdims)
     elif isinstance(element.data, geographic_types) or isinstance(element, WMTS):
         return True
@@ -117,9 +135,18 @@ class WMTS(_GeoFeature):
     layer = param.String(doc="The layer on the tile service")
 
     def __init__(self, data, **params):
-        if not isinstance(data, util.basestring):
-            raise TypeError('%s data has to be a tile service URL'
-                            % type(data).__name__)
+        if isinstance(data, tuple):
+            data = data
+        else:
+            data = (data,)
+
+        for d in data:
+            if WMTSTileSource and isinstance(d, WMTSTileSource):
+                if 'crs' not in params:
+                    params['crs'] = ccrs.GOOGLE_MERCATOR
+            elif not isinstance(data, basestring):
+                raise TypeError('%s data has to be a tile service URL'
+                                % type(data).__name__)
         super(WMTS, self).__init__(data, **params)
 
 
@@ -185,3 +212,174 @@ class Text(HVText, _Element):
     An annotation containing some text at an x, y coordinate
     along with a coordinate reference system.
     """
+
+
+class Path(_Element, HVPath):
+    """
+    The Path Element contains a list of Paths stored as Nx2 numpy
+    arrays along with a coordinate reference system.
+    """
+
+    def geom(self):
+        """
+        Returns Path as a shapely geometry.
+        """
+        lines = []
+        for path in self.data:
+            lines.append(LineString(path))
+        return MultiLineString(lines)
+
+
+class Polygons(_Element, HVPolygons):
+    """
+    Polygons is a Path Element type that may contain any number of
+    closed paths with an associated value and a coordinate reference
+    system.
+    """
+
+    def geom(self):
+        """
+        Returns Polygons as a shapely geometry.
+        """
+        polys = []
+        for poly in self.data:
+            polys.append(Polygon(poly))
+        return MultiPolygon(polys)
+
+
+class Shape(_Element):
+    """
+    Shape wraps any shapely geometry type.
+    """
+
+    group = param.String(default='Shape')
+
+    level = param.Number(default=None, doc="""
+        Optional level associated with the set of Contours.""")
+
+    vdims = param.List(default=[Dimension('Level')], doc="""
+        Contours optionally accept a value dimension, corresponding
+        to the supplied values.""", bounds=(1,1))
+
+    def __init__(self, data, **params):
+        if not isinstance(data, BaseGeometry):
+            raise TypeError('%s data has to be a shapely geometry type.'
+                            % type(data).__name__)
+        super(Shape, self).__init__(data, **params)
+
+
+    @classmethod
+    def from_shapefile(cls, shapefile, *args, **kwargs):
+        """
+        Loads a shapefile from disk and optionally merges
+        it with a dataset. See ``from_records`` for full
+        signature.
+        """
+        reader = Reader(shapefile)
+        return cls.from_records(reader.records(), *args, **kwargs)
+
+
+    @classmethod
+    def from_records(cls, records, dataset=None, on=None,
+                     value=None, index=[], **kwargs):
+        """
+        Load data from a collection of
+        ``cartopy.io.shapereader.Record`` objects and optionally merge
+        it with a dataset to assign values to each polygon and form a
+        chloropleth. Supplying just records will return an NdOverlay
+        of Shape Elements with a numeric index. If a dataset is
+        supplied, a mapping between the attribute names in the records
+        and the dimension names in the dataset must be supplied. The
+        values assigned to each shape file can then be drawn from the
+        dataset by supplying a ``value`` and keys the Shapes are
+        indexed by specifying one or index dimensions.
+
+        * records - An iterator of cartopy.io.shapereader.Record
+                    objects.
+        * dataset - Any HoloViews Dataset type.
+        * on      - A mapping between the attribute names in
+                    the records and the dimensions in the dataset.
+        * value   - The value dimension in the dataset the
+                    values will be drawn from.
+        * index   - One or more dimensions in the dataset
+                    the Shapes will be indexed by.
+
+        Returns an NdOverlay of Shapes.
+        """
+        if dataset and not on:
+            raise ValueError('To merge dataset with shapes mapping '
+                             'must define attribute(s) to merge on.')
+
+        if not isinstance(on, (dict, list)):
+            on = [on]
+        if on and not isinstance(on, dict):
+            on = {o: o for o in on}
+        if not isinstance(index, list):
+            index = [index]
+
+        if dataset:
+            index = [dataset.get_dimension(ind) for ind in index]
+            vdim = dataset.get_dimension(value)
+            kwargs['vdims'] = [vdim]
+            not_found = [dim.name for dim in index+[vdim]
+                         if dim is None]
+            if not_found:
+                dim_str = ', '.join(not_found)
+                raise ValueError('Following dimensions not found '
+                                 'in dataset: {}'.format(dim_str))
+
+        chloropleth = NdOverlay(kdims=index if index else ['Index'])
+        for i, rec in enumerate(records):
+            if dataset:
+                selection = {dim: rec.attributes.get(attr, None)
+                             for attr, dim in on.items()}
+                row = dataset.select(**selection)
+                if not len(row):
+                    continue
+                if value:
+                    value = row[vdim.name][0]
+                    kwargs['level'] = value
+                if index:
+                    key = tuple(row[d.name][0] for d in index)
+                else:
+                    key = i
+            else:
+                key = i
+            chloropleth[key] = Shape(rec.geometry, **kwargs)
+        return chloropleth
+
+
+    def dimension_values(self, dimension):
+        """
+        Shapes do not support convert to array values.
+        """
+        dim = self.get_dimension(dimension)
+        if dim in self.vdims:
+            return [self.level]
+        else:
+            return []
+
+
+    def range(self, dimension):
+        dim = self.get_dimension(dimension)
+        if dim.range != (None, None):
+            return dim.range
+
+        idx = self.get_dimension_index(dimension)
+        if idx == 2:
+            return self.level, self.level
+        if idx in [0, 1]:
+            l, b, r, t = self.data.bounds
+            if idx == 0:
+                return l, r
+            elif idx == 1:
+                return b, t
+        else:
+            return (np.NaN, np.NaN)
+
+
+    def geom(self):
+        """
+        Returns Shape as a shapely geometry
+        """
+        return self.data

@@ -34,7 +34,7 @@ bug reports and feature requests on our
 
    Home <self>
    Geometries <Geometries>
-   Plotting with Bokeh <Plotting_with_Bokeh>
+   Working with Bokeh <Working_with_Bokeh>
    Working with Iris I <Iris_Datasets_I>
    Working with Iris II <Iris_Datasets_II>
    Github source <https://github.com/ioam/geoviews>

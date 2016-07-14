@@ -26,7 +26,7 @@ class ProjectImage(ElementOperation):
         proj = self.p.projection
         if proj == img.crs:
             return img
-        arr = img.dimension_values(2, flat=False)
+        arr = img.dimension_values(2, flat=False).T
         xs = img.dimension_values(0).T
         ys = img.dimension_values(1).T
         x0, x1 = img.range(0)

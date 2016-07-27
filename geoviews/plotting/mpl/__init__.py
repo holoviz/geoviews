@@ -28,7 +28,7 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         LineContours, FilledContours, is_geographic,
                         Path, Polygons, Shape)
-from ...util import path_to_geom, polygon_to_geom
+from ...util import path_to_geom, polygon_to_geom, project_extents
 
 
 def _get_projection(el):
@@ -133,15 +133,16 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         # system
         if (None in extents or any(not np.isfinite(e) for e in extents) or
             x0 == x1 or y0 == y1):
-            ax.autoscale_view()
+            extents = None
         else:
-            x0, x1, y0, y1 = extents
-            if isinstance(element.crs, ccrs._CylindricalProjection):
-                cy0, cy1 = element.crs.y_limits
-                if y0 < cy0: y0 = cy0
-                if y1 > cy1:  y1 = cy1
-            ax.set_extent((x0, y0, x1, y1), element.crs)
-        (l, r), (b, t) = ax.get_xlim(), ax.get_ylim()
+            extents = project_extents((x0, y0, x1, y1), element.crs,
+                                      self.projection)
+        if extents:
+            l, b, r, t = extents
+        else:
+            ax.autoscale_view()
+            (l, r), (b, t) = ax.get_xlim(), ax.get_ylim()
+
         return l, b, r, t
 
 

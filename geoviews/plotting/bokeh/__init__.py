@@ -50,8 +50,10 @@ class GeoPlot(ElementPlot):
         if not getattr(element, 'crs', None):
             return extents
         elif any(e is None or not np.isfinite(e) for e in extents):
-            return (np.NaN,)*4
-        return project_extents(extents, element.crs, DEFAULT_PROJ)
+            extents = None
+        else:
+            extents = project_extents(extents, element.crs, DEFAULT_PROJ)
+        return (np.NaN,)*4 if not extents else extents
 
 
 class TilePlot(GeoPlot):

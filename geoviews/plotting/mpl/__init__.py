@@ -233,7 +233,7 @@ class GeoImagePlot(GeoPlot, ImagePlot):
         if not self.geographic:
             return super(GeoImagePlot, self).get_data(element, ranges, style)
         self._norm_kwargs(element, ranges, style, element.vdims[0])
-        style.pop('interpolation')
+        style.pop('interpolation', None)
         if Dataset and isinstance(element.data, Dataset):
             x, y, z = element.dimensions(label=True)
             arr = element.data[z]

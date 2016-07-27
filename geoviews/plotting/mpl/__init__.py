@@ -136,6 +136,10 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             ax.autoscale_view()
         else:
             x0, x1, y0, y1 = extents
+            if isinstance(element.crs, ccrs._CylindricalProjection):
+                cy0, cy1 = element.crs.y_limits
+                if y0 < cy0: y0 = cy0
+                if y1 > cy1:  y1 = cy1
             ax.set_extent((x0, y0, x1, y1), element.crs)
         (l, r), (b, t) = ax.get_xlim(), ax.get_ylim()
         return l, b, r, t

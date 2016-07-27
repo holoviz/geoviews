@@ -112,8 +112,8 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         super(GeoPlot, self).__init__(element, **params)
         plot_opts = self.lookup_options(self.hmap.last, 'plot').options
         self.geographic = is_geographic(self.hmap.last)
-        if 'aspect' not in plot_opts and self.geographic:
-            self.aspect = 'equal'
+        if 'aspect' not in plot_opts:
+            self.aspect = 'equal' if self.geographic else 'square'
 
 
     def get_extents(self, element, ranges):

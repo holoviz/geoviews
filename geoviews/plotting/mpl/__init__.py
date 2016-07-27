@@ -11,12 +11,18 @@ try:
     from xarray import Dataset, DataArray
 except:
     Dataset = None
+
+try:
+    from iris.cube import Cube
+except:
+    Cube = None
+
 from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     AnnotationPlot, TextPlot,
                                     LayoutPlot as HvLayoutPlot,
                                     OverlayPlot as HvOverlayPlot,
-                                    PathPlot, PolygonPlot)
+                                    PathPlot, PolygonPlot, ImagePlot)
 
 
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
@@ -212,8 +218,7 @@ class FilledContourPlot(LineContourPlot):
 
 
 
-class GeoImagePlot(GeoPlot, ColorbarPlot):
-
+class GeoImagePlot(GeoPlot, ImagePlot):
     """
     Draws a pcolormesh plot from the data in a Image Element.
     """
@@ -221,6 +226,8 @@ class GeoImagePlot(GeoPlot, ColorbarPlot):
     style_opts = ['alpha', 'cmap', 'visible', 'filterrad', 'clims', 'norm']
 
     def get_data(self, element, ranges, style):
+        if not self.geographic:
+            return super(GeoImagePlot, self).get_data(element, ranges, style)
         self._norm_kwargs(element, ranges, style, element.vdims[0])
         style.pop('interpolation')
         if Dataset and isinstance(element.data, Dataset):
@@ -229,21 +236,44 @@ class GeoImagePlot(GeoPlot, ColorbarPlot):
             style['x'] = x
             style['y'] = y
             return (arr, element.crs), style, {}
-        cube = element.data.copy()
-        # Make sure both coordinates have bounds to avoid iris warning.
-        for coord in cube.dim_coords:
-            if not coord.has_bounds():
-                coord.guess_bounds()
-        return (cube,), style, {}
+        elif Cube and isinstance(element.data, Cube):
+            cube = element.data.copy()
+            # Make sure both coordinates have bounds to avoid iris warning.
+            for coord in cube.dim_coords:
+                if not coord.has_bounds():
+                    try:
+                        coord.guess_bounds()
+                    except:
+                        pass
+            return (cube,), style, {}
+        else:
+            xs, ys, zs = (element.dimension_values(i, False, False)
+                          for i in range(3))
+            style['transform'] = element.crs
+            return (xs, ys, zs), style, {}
+
 
     def init_artists(self, ax, plot_args, plot_kwargs):
-        if DataArray and isinstance(plot_args[0], DataArray):
+        if not self.geographic:
+            return super(GeoImagePlot, self).init_artists(ax, plot_args, plot_kwargs)
+        elif DataArray and isinstance(plot_args[0], DataArray):
             artist = plot_args[0].plot.pcolormesh(ax=ax, transform=plot_args[1],
-                                                  add_colorbar=False,
-                                                  robust=True, **plot_kwargs)
-        else:
+                                                  add_colorbar=False, **plot_kwargs)
+        elif Cube and isinstance(plot_args[0], Cube):
             artist = iplt.pcolormesh(*plot_args, axes=ax, **plot_kwargs)
+        else:
+            artist = ax.pcolormesh(*plot_args, **plot_kwargs)
         return {'artist': artist}
+
+
+    def update_handles(self, *args):
+        """
+        Update the elements of the plot.
+        """
+        if self.geographic:
+            return GeoPlot.update_handles(self, *args)
+        else:
+            return super(GeoImagePlot, self).update_handles(*args)
 
 
 class GeoPointPlot(GeoPlot, PointPlot):

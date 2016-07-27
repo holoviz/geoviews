@@ -7,7 +7,7 @@ from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset, NdOverlay
 from holoviews.core.util import basestring
 from holoviews.element import (Text as HVText, Path as HVPath,
-                               Polygons as HVPolygons)
+                               Polygons as HVPolygons, GridImage)
 
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry import (MultiLineString, LineString,
@@ -196,7 +196,7 @@ class FilledContours(LineContours):
     group = param.String(default='FilledContours')
 
 
-class Image(_Element, Dataset):
+class Image(_Element, GridImage):
     """
     Image represents a 2D array of some quantity with
     some associated coordinates.

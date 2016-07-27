@@ -93,7 +93,7 @@ class GeoRasterPlot(GeoPlot, RasterPlot):
         l, b, r, t = self.get_extents(element, ranges)
         if self.geographic:
             element = ProjectImage(element, projection=DEFAULT_PROJ)
-        img = element.dimension_values(2, flat=False).T
+        img = element.dimension_values(2, flat=False)
         mapping = dict(image='image', x='x', y='y', dw='dw', dh='dh')
         if empty:
             data = dict(image=[], x=[], y=[], dw=[], dh=[])

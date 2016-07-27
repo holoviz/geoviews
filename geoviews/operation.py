@@ -27,8 +27,8 @@ class ProjectImage(ElementOperation):
         if proj == img.crs:
             return img
         arr = img.dimension_values(2, flat=False).T
-        xs = img.dimension_values(0).T
-        ys = img.dimension_values(1).T
+        xs = img.dimension_values(0)
+        ys = img.dimension_values(1)
         x0, x1 = img.range(0)
         y0, y1 = img.range(1)
         xn, yn = arr.shape
@@ -40,5 +40,5 @@ class ProjectImage(ElementOperation):
         pxs = pxs.reshape((yn, xn))
         pys = pys.reshape((yn, xn))
         parray = regrid(arr, xs, ys, img.crs, proj, pxs, pys)
-        return Image((py, px, parray.T), kdims=img.kdims,
+        return Image((px, py, parray), kdims=img.kdims,
                      vdims=img.vdims, crs=proj)

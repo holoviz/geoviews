@@ -145,6 +145,10 @@ class WMTS(_GeoFeature):
                 if 'crs' not in params:
                     params['crs'] = ccrs.GOOGLE_MERCATOR
             elif not isinstance(data, basestring):
+                if 'crs' not in params and not self.crs:
+                    raise Exception('Must supply coordinate reference '
+                                    'system with cartopy WMTS URL.')
+            else:
                 raise TypeError('%s data has to be a tile service URL'
                                 % type(data).__name__)
         super(WMTS, self).__init__(data, **params)

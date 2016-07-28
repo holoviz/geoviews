@@ -195,7 +195,7 @@ class GeoTextPlot(GeoPlot, TextPlot):
         mapping = dict(x='x', y='y', text='text')
         if empty or not self.geographic:
             return super(GeoTextPlot, self).get_data(element, ranges, empty)
-        if crs:
+        if element.crs:
             x, y = DEFAULT_PROJ.transform_point(element.x, element.y,
                                                 element.crs)
         return (dict(x=[x], y=[y], text=[element.text]), mapping)

@@ -116,7 +116,9 @@ class GeometryPlot(GeoPlot):
         data, mapping = super(GeometryPlot, self).get_data(element, ranges, empty)
         if not self.geographic:
             return data, mapping
-        geoms = DEFAULT_PROJ.project_geometry(element.geom(), element.crs)
+        geoms = element.geom()
+        if element.crs:
+            geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)
         xs, ys = geom_to_array(geoms)
         data['xs'] = xs
         data['ys'] = ys
@@ -193,8 +195,9 @@ class GeoTextPlot(GeoPlot, TextPlot):
         mapping = dict(x='x', y='y', text='text')
         if empty or not self.geographic:
             return super(GeoTextPlot, self).get_data(element, ranges, empty)
-        x, y = DEFAULT_PROJ.transform_point(element.x, element.y,
-                                            element.crs)
+        if element.crs:
+            x, y = DEFAULT_PROJ.transform_point(element.x, element.y,
+                                                element.crs)
         return (dict(x=[x], y=[y], text=[element.text]), mapping)
 
     def get_extents(self, element, ranges=None):

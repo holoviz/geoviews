@@ -473,7 +473,8 @@ class GeoTextPlot(GeoAnnotationPlot, TextPlot):
         (x, y, text, fontsize,
          horizontalalignment, verticalalignment, rotation) = data
         opts['fontsize'] = fontsize
-        x, y = axis.projection.transform_point(x, y, src_crs=crs)
+        if crs:
+            x, y = axis.projection.transform_point(x, y, src_crs=crs)
         return [axis.text(x, y, text,
                           horizontalalignment=horizontalalignment,
                           verticalalignment=verticalalignment,

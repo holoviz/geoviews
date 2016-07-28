@@ -2,7 +2,6 @@ import copy
 
 import numpy as np
 import param
-import iris.plot as iplt
 from cartopy import crs as ccrs
 from holoviews.core import (Store, HoloMap, Layout, Overlay,
                             CompositeOverlay, Element)
@@ -14,6 +13,7 @@ except:
 
 try:
     from iris.cube import Cube
+    import iris.plot as iplt
 except:
     Cube = None
 

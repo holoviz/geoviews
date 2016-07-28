@@ -174,12 +174,22 @@ class LineContourPlot(GeoPlot, ColorbarPlot):
             arr = element.data[z]
             style['x'] = x
             style['y'] = y
-            return (arr, element.crs), style, {}
-        args = (element.data.copy(),)
-        if isinstance(self.levels, int):
-            args += (self.levels,)
-        else:
             style['levels'] = self.levels
+            return (arr, element.crs), style, {}
+        elif Cube and isinstance(element.data, Cube):
+            args = (element.data.copy(),)
+            if isinstance(self.levels, int):
+                args += (self.levels,)
+            else:
+                style['levels'] = self.levels
+        else:
+            args = tuple(element.dimension_values(i, False, False)
+                         for i in range(3))
+            if isinstance(self.levels, int):
+                args += (self.levels,)
+            else:
+                style['levels'] = self.levels
+            style['transform'] = element.crs
         return args, style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
@@ -187,8 +197,10 @@ class LineContourPlot(GeoPlot, ColorbarPlot):
             artist = plot_args[0].plot.contour(ax=ax, add_colorbar=False,
                                                transform=plot_args[1],
                                                robust=True, **plot_kwargs)
-        else:
+        elif Cube and isinstance(plot_args[0], Cube):
             artist = iplt.contour(*plot_args, axes=ax, **plot_kwargs)
+        else:
+            artist = ax.contour(*plot_args, **plot_kwargs)
         return {'artist': artist}
 
 
@@ -217,8 +229,10 @@ class FilledContourPlot(LineContourPlot):
             artist = plot_args[0].plot.contourf(ax=ax, add_colorbar=False,
                                                 transform=plot_args[1],
                                                 robust=True, **plot_kwargs)
-        else:
+        elif Cube and isinstance(plot_args[0], Cube):
             artist = iplt.contourf(*plot_args, axes=ax, **plot_kwargs)
+        else:
+            artist = ax.contourf(*plot_args, **plot_kwargs)
         return {'artist': artist}
 
 

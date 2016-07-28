@@ -9,7 +9,7 @@ from holoviews.core import util
 try:
     from xarray import Dataset, DataArray
 except:
-    Dataset = None
+    Dataset, DataArray = None, None
 
 try:
     from iris.cube import Cube

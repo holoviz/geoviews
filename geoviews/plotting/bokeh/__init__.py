@@ -214,5 +214,5 @@ Store.register({WMTS: TilePlot,
 options = Store.options(backend='bokeh')
 
 options.Feature = Options('style', line_color='black')
-options.Shape = Options('style', edgecolor='black', facecolor='#30A2DA')
+options.Shape = Options('style', line_color='black', fill_color='#30A2DA')
 

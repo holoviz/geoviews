@@ -33,6 +33,7 @@ bug reports and feature requests on our
    :maxdepth: 2
 
    Home <self>
+   Geometries <Projections>
    Geometries <Geometries>
    Working with Iris I <Iris_Datasets_I>
    Working with Iris II <Iris_Datasets_II>

@@ -4,29 +4,35 @@
 
 # GeoViews
 
+GeoViews is a Python library that makes it easy to explore and
+visualize geographical, meteorological, and oceanographic datasets,
+such as those used in weather, climate, and remote sensing research.
 
-Exploration and visualization of https://github.com/SciTools/iris cubes in a web browser, including a Jupyter notebook.
+GeoViews is built on the [HoloViews](http://holoviews.org) library for
+building flexible visualizations of multidimensional data.  GeoViews
+adds a family of geographic plot types based on the
+[Cartopy](http://scitools.org.uk/cartopy) library, plotted using
+either the [Matplotlib](http://matplotlib.org) or
+[Bokeh](http://bokeh.pydata.org) packages.  Each of the new
+`GeoElement` plot types is a new HoloViews `Element` that has an
+associated geographic projection based on `cartopy.crs`. The
+`GeoElements` currently include `Feature`, `WMTS`, `Tiles`, `Points`,
+`Contours`, `Image`, and `Text` objects, each of which can easily be
+overlaid in the same plots.  E.g. an object with temperature data can
+be overlaid with coastline data using an expression like
+``gv.Image(temperature)*gv.Feature(cartopy.feature.COASTLINE)``.  Each
+`GeoElement` can also be freely combined in layouts with any other
+HoloViews `Element`, making it simple to make even complex
+multi-figure layouts of overlaid objects.
 
-To install, first install HoloViews and Iris.  At the moment, cube-explorer relies on the latest git version of both those packages, and the easiest way to get all their dependencies is to install them via conda:
+## Installation
+
+You can install GeoViews and its dependencies using conda:
 
 ```
-conda install -c ioam holoviews
-conda install -c scitools iris
-```
-
-and then install the latest git version of the two packages, e.g. via:
-
-```
-pip install https://github.com/ioam/holoviews/zipball/master
-pip install https://github.com/CubeBrowser/cube-explorer/zipball/master
-```
-
-Then run setup on a copy of this git repository:
-
-```
-git clone https://github.com/CubeBrowser/cube-explorer.git
-cd cube-explorer
-python setup.py develop
+conda install -c scitools/label/dev iris cartopy
+conda install -c conda-forge proj.4 scitools mo_pack
+conda install -c ioam holoviews geoviews
 ```
 
 You will probably also want a copy of the Iris sample data.  Sample
@@ -40,10 +46,11 @@ cd `dirname $DIR`
 ln -s ~/iris-sample-data/sample_data .
 ```
 
-You should now be able to run the examples in the `notebooks` directory:
+You should now be able to download and run the examples in the `notebooks` directory:
 
 ```
-cd ~/cube-explorer
-cd notebooks
+git clone https://github.com/ioam/geoviews.git
+cd geoviews
+cd doc
 jupyter notebook
 ```

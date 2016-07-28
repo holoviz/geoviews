@@ -30,8 +30,7 @@ multi-figure layouts of overlaid objects.
 You can install GeoViews and its dependencies using conda:
 
 ```
-conda install -c scitools/label/dev iris cartopy
-conda install -c conda-forge proj.4 scitools mo_pack
+conda install -c scitools/label/dev -c conda-forge iris cartopy
 conda install -c ioam holoviews geoviews
 ```
 

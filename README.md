@@ -34,15 +34,11 @@ conda install -c scitools/label/dev -c conda-forge iris cartopy
 conda install -c ioam holoviews geoviews
 ```
 
-You will probably also want a copy of the Iris sample data.  Sample
-bash commands for downloading and linking to it:
+You will probably also want a copy of the Iris sample data. Using
+conda install it with:
 
 ```
-cd ~
-git clone https://github.com/SciTools/iris-sample-data.git
-DIR=`python -c 'import iris ; print(iris.sample_data_path())'`
-cd `dirname $DIR`
-ln -s ~/iris-sample-data/sample_data .
+conda install -c scitools iris_sample_data
 ```
 
 You should now be able to download and run the examples in the `notebooks` directory:

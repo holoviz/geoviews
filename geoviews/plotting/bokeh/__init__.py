@@ -153,7 +153,7 @@ class GeoShapePlot(GeoPolygonPlot):
             cmap = get_cmap(cmap)
             colors = map_colors(np.array([element.level]),
                                 ranges[dim], cmap)
-            mapping['color'] = 'color'
+            mapping['fill_color'] = 'color'
             data['color'] = [] if empty else list(colors)*len(element.data)
         if 'hover' in self.tools+self.default_tools:
             if dim:

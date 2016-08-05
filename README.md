@@ -41,11 +41,11 @@ conda install it with:
 conda install -c scitools iris_sample_data
 ```
 
-You should now be able to download and run the examples in the `notebooks` directory:
+You can now switch to your preferred working directory, grab a copy of the notebooks to run locally, and run them using Jupyter notebook::
 
 ```
-git clone https://github.com/ioam/geoviews.git
-cd geoviews
-cd doc
+mkdir ~/geoviews-examples
+cd ~/geoviews-examples
+python -c 'from geoviews import examples ; examples()'
 jupyter notebook
 ```

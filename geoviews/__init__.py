@@ -7,7 +7,7 @@ from .element import (_Element, Feature, Tiles,     # noqa (API import)
 from . import plotting                              # noqa (API import)
 
 
-def example_notebooks(path='.', verbose=False):
+def examples(path='.', verbose=False):
     """
     Copies the example Jupyter notebooks to the supplied path.
     """

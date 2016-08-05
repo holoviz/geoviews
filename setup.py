@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import sys
 try:
     from setuptools import setup
 except ImportError:
@@ -17,7 +18,7 @@ extras_require['notebook-dependencies'] = ['jupyter', 'pyzmq', 'jinja2', 'tornad
 
 setup_args.update(dict(
     name='geoviews',
-    version="0.0.1",
+    version="1.0.0",
     install_requires = install_requires,
     extras_require = extras_require,
     description='GeoViews.',
@@ -43,4 +44,11 @@ setup_args.update(dict(
 ))
 
 if __name__=="__main__":
+
+    if 'GEOVIEWS_RELEASE' in os.environ:
+
+        if ('upload' in sys.argv) or ('sdist' in sys.argv):
+            import geoviews
+            geoviews.__version__.verify(setup_args['version'])
+
     setup(**setup_args)

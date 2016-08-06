@@ -69,7 +69,7 @@ class _Element(Element2D):
     def __init__(self, data, **kwargs):
         crs = None
         crs_data = data.data if isinstance(data, Dataset) else data
-        if isinstance(crs_data, Cube):
+        if Cube and isinstance(crs_data, Cube):
             coord_sys = crs_data.coord_system()
             if hasattr(coord_sys, 'as_cartopy_projection'):
                 crs = coord_sys.as_cartopy_projection()

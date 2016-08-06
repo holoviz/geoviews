@@ -9,7 +9,8 @@ except ImportError:
 
 
 setup_args = {}
-install_requires = ['param>=1.3.2', 'numpy>=1.0', 'holoviews>=1.4.3']
+install_requires = ['param>=1.3.2', 'numpy>=1.0', 'holoviews>=1.6.0',
+                    'cartopy>=0.14.2']
 extras_require={}
 
 # Notebook dependencies of IPython
@@ -28,7 +29,9 @@ setup_args.update(dict(
     url='https://github.com/ioam/geoviews',
     packages = ["geoviews",
                 "geoviews.element",
-                "geoviews.plotting"],
+                "geoviews.plotting",
+                "geoviews.plotting.bokeh",
+                "geoviews.plotting.mpl"],
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 1 - Planning Development Status",

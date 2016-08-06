@@ -1,0 +1,25 @@
+package:
+  name: geoviews
+  version: 1.0.0
+
+source:
+  path: .
+
+requirements:
+  build:
+    - python
+    - holoviews
+    - setuptools
+    - cartopy
+  run:
+    - python
+    - holoviews
+    - jupyter
+    - notebook
+    - cartopy
+    - bokeh
+
+about:
+  home: geo.holoviews.org
+  summary: GeoViews is a Python library that makes it easy to explore and visualize geographical, meteorological, and oceanographic datasets, such as those used in weather, climate, and remote sensing research.
+  license: BSD 3-Clause

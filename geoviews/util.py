@@ -77,3 +77,19 @@ def geom_to_array(geoms):
             xs.append(arr[:, 0])
             ys.append(arr[:, 1])
     return xs, ys
+
+
+def geo_mesh(element):
+    """
+    Get mesh data from a 2D Element ensuring that if the data is
+    on a cylindrical coordinate system and wraps globally that data
+    actually wraps around.
+    """
+    xs, ys, zs = (element.dimension_values(i, False, False)
+                  for i in range(3))
+    lon0, lon1 = element.range(0)
+    if isinstance(element.crs, ccrs._CylindricalProjection) and (lon1 - lon0) == 360:
+        xs = np.append(xs, xs[0:1] + 360, axis=0)
+        zs = np.ma.concatenate([zs, zs[:, 0:1]], axis=1)
+    return xs, ys, zs
+

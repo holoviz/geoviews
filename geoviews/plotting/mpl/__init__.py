@@ -6,16 +6,6 @@ from cartopy import crs as ccrs
 from holoviews.core import (Store, HoloMap, Layout, Overlay,
                             CompositeOverlay, Element)
 from holoviews.core import util
-try:
-    from xarray import Dataset, DataArray
-except:
-    Dataset, DataArray = None, None
-
-try:
-    from iris.cube import Cube
-    import iris.plot as iplt
-except:
-    Cube = None
 
 from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,

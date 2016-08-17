@@ -1,8 +1,8 @@
 from iris.tests.stock import lat_lon_cube
-from holoviews.core import Dataset, HoloMap
+from holoviews.core import HoloMap
 from holoviews.element import Curve
 
-from geoviews.element import is_geographic, Image
+from geoviews.element import is_geographic, Image, Dataset
 from geoviews.element.comparison import ComparisonTestCase
 
 class TestConversions(ComparisonTestCase):

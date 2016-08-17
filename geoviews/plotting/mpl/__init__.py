@@ -6,16 +6,6 @@ from cartopy import crs as ccrs
 from holoviews.core import (Store, HoloMap, Layout, Overlay,
                             CompositeOverlay, Element)
 from holoviews.core import util
-try:
-    from xarray import Dataset, DataArray
-except:
-    Dataset, DataArray = None, None
-
-try:
-    from iris.cube import Cube
-    import iris.plot as iplt
-except:
-    Cube = None
 
 from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
@@ -28,7 +18,7 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         LineContours, FilledContours, is_geographic,
                         Path, Polygons, Shape)
-from ...util import path_to_geom, polygon_to_geom, project_extents
+from ...util import path_to_geom, polygon_to_geom, project_extents, geo_mesh
 
 
 def _get_projection(el):
@@ -168,40 +158,16 @@ class LineContourPlot(GeoPlot, ColorbarPlot):
 
     style_opts = ['antialiased', 'alpha', 'cmap', 'linewidths', 'colors']
 
-    def get_data(self, element, ranges, style):
-        if Dataset and isinstance(element.data, Dataset):
-            x, y, z = element.dimensions(label=True)
-            arr = element.data[z]
-            style['x'] = x
-            style['y'] = y
-            style['levels'] = self.levels
-            return (arr, element.crs), style, {}
-        elif Cube and isinstance(element.data, Cube):
-            args = (element.data.copy(),)
-            if isinstance(self.levels, int):
-                args += (self.levels,)
-            else:
-                style['levels'] = self.levels
-        else:
-            args = tuple(element.dimension_values(i, False, False)
-                         for i in range(3))
-            if isinstance(self.levels, int):
-                args += (self.levels,)
-            else:
-                style['levels'] = self.levels
-            style['transform'] = element.crs
-        return args, style, {}
+    _plot_methods = dict(single='contour')
 
-    def init_artists(self, ax, plot_args, plot_kwargs):
-        if DataArray and isinstance(plot_args[0], DataArray):
-            artist = plot_args[0].plot.contour(ax=ax, add_colorbar=False,
-                                               transform=plot_args[1],
-                                               robust=True, **plot_kwargs)
-        elif Cube and isinstance(plot_args[0], Cube):
-            artist = iplt.contour(*plot_args, axes=ax, **plot_kwargs)
+    def get_data(self, element, ranges, style):
+        args = geo_mesh(element)
+        if isinstance(self.levels, int):
+            args += (self.levels,)
         else:
-            artist = ax.contour(*plot_args, **plot_kwargs)
-        return {'artist': artist}
+            style['levels'] = self.levels
+        style['transform'] = element.crs
+        return args, style, {}
 
 
     def teardown_handles(self):
@@ -224,16 +190,7 @@ class FilledContourPlot(LineContourPlot):
 
     style_opts = ['antialiased', 'alpha', 'cmap', 'linewidths']
 
-    def init_artists(self, ax, plot_args, plot_kwargs):
-        if DataArray and isinstance(plot_args[0], DataArray):
-            artist = plot_args[0].plot.contourf(ax=ax, add_colorbar=False,
-                                                transform=plot_args[1],
-                                                robust=True, **plot_kwargs)
-        elif Cube and isinstance(plot_args[0], Cube):
-            artist = iplt.contourf(*plot_args, axes=ax, **plot_kwargs)
-        else:
-            artist = ax.contourf(*plot_args, **plot_kwargs)
-        return {'artist': artist}
+    _plot_methods = dict(single='contourf')
 
 
 
@@ -249,39 +206,15 @@ class GeoImagePlot(GeoPlot, ImagePlot):
             return super(GeoImagePlot, self).get_data(element, ranges, style)
         self._norm_kwargs(element, ranges, style, element.vdims[0])
         style.pop('interpolation', None)
-        if Dataset and isinstance(element.data, Dataset):
-            x, y, z = element.dimensions(label=True)
-            arr = element.data[z]
-            style['x'] = x
-            style['y'] = y
-            return (arr, element.crs), style, {}
-        elif Cube and isinstance(element.data, Cube):
-            cube = element.data.copy()
-            # Make sure both coordinates have bounds to avoid iris warning.
-            for coord in cube.dim_coords:
-                if not coord.has_bounds():
-                    try:
-                        coord.guess_bounds()
-                    except:
-                        pass
-            return (cube,), style, {}
-        else:
-            xs, ys, zs = (element.dimension_values(i, False, False)
-                          for i in range(3))
-            style['transform'] = element.crs
-            return (xs, ys, zs), style, {}
+        xs, ys, zs = geo_mesh(element)
+        style['transform'] = element.crs
+        return (xs, ys, zs), style, {}
 
 
     def init_artists(self, ax, plot_args, plot_kwargs):
         if not self.geographic:
             return super(GeoImagePlot, self).init_artists(ax, plot_args, plot_kwargs)
-        elif DataArray and isinstance(plot_args[0], DataArray):
-            artist = plot_args[0].plot.pcolormesh(ax=ax, transform=plot_args[1],
-                                                  add_colorbar=False, **plot_kwargs)
-        elif Cube and isinstance(plot_args[0], Cube):
-            artist = iplt.pcolormesh(*plot_args, axes=ax, **plot_kwargs)
-        else:
-            artist = ax.pcolormesh(*plot_args, **plot_kwargs)
+        artist = ax.pcolormesh(*plot_args, **plot_kwargs)
         return {'artist': artist}
 
 

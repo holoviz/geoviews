@@ -4,7 +4,7 @@ from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
 from cartopy.io.shapereader import Reader
-from holoviews.core import Element2D, Dimension, Dataset, NdOverlay
+from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
 from holoviews.core.util import basestring
 from holoviews.element import (Text as HVText, Path as HVPath,
                                Polygons as HVPolygons, GridImage)
@@ -68,7 +68,7 @@ class _Element(Element2D):
 
     def __init__(self, data, **kwargs):
         crs = None
-        crs_data = data.data if isinstance(data, Dataset) else data
+        crs_data = data.data if isinstance(data, HvDataset) else data
         if Cube and isinstance(crs_data, Cube):
             coord_sys = crs_data.coord_system()
             if hasattr(coord_sys, 'as_cartopy_projection'):
@@ -83,8 +83,6 @@ class _Element(Element2D):
         elif crs:
             kwargs['crs'] = crs
         super(_Element, self).__init__(data, **kwargs)
-        if not is_geographic(self, self.kdims):
-            self.crs = None
 
 
     def clone(self, data=None, shared_data=True, new_type=None,
@@ -169,7 +167,14 @@ class Tiles(_GeoFeature):
         super(Tiles, self).__init__(data, **params)
 
 
-class Points(_Element, Dataset):
+
+class Dataset(_Element, HvDataset):
+    """
+    Coordinate system aware version of a HoloViews dataset.
+    """
+
+
+class Points(Dataset):
     """
     Points represent a collection of points with
     an associated cartopy coordinate-reference system.
@@ -178,7 +183,7 @@ class Points(_Element, Dataset):
     group = param.String(default='Points')
 
 
-class LineContours(_Element, Dataset):
+class LineContours(_Element, GridImage):
     """
     Contours represents a 2D array of some quantity with
     some associated coordinates, which may be discretized

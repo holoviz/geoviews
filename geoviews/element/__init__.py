@@ -1,9 +1,8 @@
-from holoviews.core.data import Dataset
 from holoviews.element import ElementConversion, Points as HvPoints
 
 from .geo import (_Element, Feature, Tiles, is_geographic,     # noqa (API import)
                   WMTS, Points, Image, Text, LineContours,
-                  FilledContours, Path, Polygons, Shape)
+                  FilledContours, Path, Polygons, Shape, Dataset)
 
 
 class GeoConversion(ElementConversion):
@@ -19,6 +18,11 @@ class GeoConversion(ElementConversion):
 
     def __init__(self, cube):
         self._element = cube
+
+    def __call__(self, *args, **kwargs):
+        if 'crs' not in kwargs and isinstance(self._element, _Element):
+            kwargs['crs'] = self._element.crs
+        return super(GeoConversion, self).__call__(*args, **kwargs)
 
     def linecontours(self, kdims=None, vdims=None, mdims=None, **kwargs):
         return self(LineContours, kdims, vdims, mdims, **kwargs)

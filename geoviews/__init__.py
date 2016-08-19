@@ -1,7 +1,7 @@
 import os, glob
 import requests
 from io import BytesIO
-from shutil import copyfile
+from shutil import copyfile, copytree
 from zipfile import ZipFile
 
 import param
@@ -27,6 +27,7 @@ def examples(path='geoviews-examples', include_data=False, verbose=False):
                   os.path.join(__path__[0], '../../../../share/geoviews-examples')]
 
     path = os.path.abspath(path)
+    asset_path = os.path.join(path, 'assets')
     if not os.path.exists(path):
         os.makedirs(path)
         if verbose:
@@ -34,6 +35,10 @@ def examples(path='geoviews-examples', include_data=False, verbose=False):
 
     for source in candidates:
         if os.path.exists(source):
+            if not os.path.exists(asset_path):
+                copytree(os.path.join(source, 'assets'), asset_path)
+                if verbose:
+                    print('Copied assets to %s' % asset_path)
             for nb in glob.glob(os.path.join(source, '*.ipynb')):
                 nb_name = os.path.basename(nb)
                 nb_path = os.path.join(path, nb_name)

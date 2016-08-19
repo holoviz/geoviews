@@ -82,7 +82,7 @@ class GeoPointPlot(GeoPlot, PointPlot):
         data, mapping = super(GeoPointPlot, self).get_data(*args, **kwargs)
         element = args[0]
         xdim, ydim = element.dimensions('key', label=True)
-        if len(data[xdim]) and element.crs is not DEFAULT_PROJ:
+        if len(data[xdim]) and element.crs not in [DEFAULT_PROJ, None]:
             points = DEFAULT_PROJ.transform_points(element.crs, data[xdim],
                                                    data[ydim])
             data[xdim] = points[:, 0]

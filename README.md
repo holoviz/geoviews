@@ -27,15 +27,15 @@ multi-figure layouts of overlaid objects.
 
 ## Installation
 
-You will first probably want to install iris and/or xarray for working with
-multidimensional datasets:
+GeoViews requires cartopy, and most people will want iris and/or
+xarray as well:
 
 ```
 conda install -c scitools/label/dev -c conda-forge iris cartopy
 conda install xarray
 ```
 
-You can then install GeoViews and its dependencies using conda:
+You can then install GeoViews and its other dependencies using conda:
 
 ```
 conda install -c ioam holoviews geoviews

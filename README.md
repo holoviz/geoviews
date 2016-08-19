@@ -27,25 +27,26 @@ multi-figure layouts of overlaid objects.
 
 ## Installation
 
-You can install GeoViews and its dependencies using conda:
+GeoViews requires cartopy, and most people will want iris and/or
+xarray as well:
 
 ```
 conda install -c scitools/label/dev -c conda-forge iris cartopy
+conda install xarray
+```
+
+You can then install GeoViews and its other dependencies using conda:
+
+```
 conda install -c ioam holoviews geoviews
 ```
 
-You will probably also want a copy of the Iris sample data. Using
-conda install it with:
+You can now switch to your preferred working directory, grab a copy of
+the notebooks to run locally, and run them using the Jupyter notebook:: 
 
 ```
-conda install -c scitools iris_sample_data
-```
-
-You can now switch to your preferred working directory, grab a copy of the notebooks to run locally, and run them using Jupyter notebook::
-
-```
-mkdir ~/geoviews-examples
-cd ~/geoviews-examples
-python -c 'from geoviews import examples ; examples()'
+cd ~
+python -c 'import geoviews; geoviews.examples("geoviews-examples",include_data=True)'
+cd geoviews-examples
 jupyter notebook
 ```

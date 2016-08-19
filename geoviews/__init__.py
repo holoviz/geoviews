@@ -23,10 +23,6 @@ def examples(path='geoviews-examples', include_data=False, verbose=False):
     Copies the example notebooks to the supplied path. If
     include_data is enabled the sample data is also downloaded.
     """
-
-    import os, glob
-    from shutil import copytree, ignore_patterns
-
     candidates = [os.path.join(__path__[0], '../doc/'),
                   os.path.join(__path__[0], '../../../../share/geoviews-examples')]
 

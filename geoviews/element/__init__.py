@@ -20,7 +20,8 @@ class GeoConversion(ElementConversion):
         self._element = cube
 
     def __call__(self, *args, **kwargs):
-        if 'crs' not in kwargs and isinstance(self._element, _Element):
+        group_type = args[0]
+        if 'crs' not in kwargs and issubclass(group_type, _Element):
             kwargs['crs'] = self._element.crs
         return super(GeoConversion, self).__call__(*args, **kwargs)
 

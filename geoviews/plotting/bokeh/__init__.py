@@ -218,5 +218,12 @@ Store.register({WMTS: TilePlot,
 options = Store.options(backend='bokeh')
 
 options.Feature = Options('style', line_color='black')
+options.Feature.Coastline = Options('style', line_width=0.5)
+options.Feature.Borders = Options('style', line_width=0.5)
+options.Feature.Rivers = Options('style', line_color='blue')
+options.Feature.Land   = Options('style', fill_color='#efefdb', line_color='#efefdb')
+options.Feature.Ocean  = Options('style', fill_color='#97b6e1', line_color='#97b6e1')
+options.Feature.Lakes  = Options('style', fill_color='#97b6e1', line_color='#97b6e1')
+options.Feature.Rivers = Options('style', line_color='#97b6e1')
 options.Shape = Options('style', line_color='black', fill_color='#30A2DA')
 

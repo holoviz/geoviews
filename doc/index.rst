@@ -33,7 +33,7 @@ bug reports and feature requests on our
    :maxdepth: 2
 
    Home <self>
-   Geometries <Projections>
+   Projections <Projections>
    Geometries <Geometries>
    Working with Gridded Data I <Gridded_Datasets_I>
    Working with Gridded Data II <Gridded_Datasets_II>

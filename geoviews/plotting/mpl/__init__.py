@@ -69,6 +69,13 @@ class LayoutPlot(ProjectionPlot, HvLayoutPlot):
     the correct projection for each axis.
     """
 
+    vspace = param.Number(default=0.3, doc="""
+      Specifies the space between vertically adjacent elements in the grid.
+      Default value is set conservatively to avoid overlap of subplots.""")
+
+    v17_layout_format = True
+
+
 
 class OverlayPlot(ProjectionPlot, HvOverlayPlot):
     """

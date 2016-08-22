@@ -10,6 +10,7 @@ from .element import (_Element, Feature, Tiles,     # noqa (API import)
                       WMTS, LineContours, FilledContours, Text, Image,
                       Points, Path, Polygons, Shape, Dataset)
 from . import plotting                              # noqa (API import)
+from . import feature                               # noqa (API import)
 
 
 __version__ = param.Version(release=(1,0,0), fpath=__file__,

@@ -4,7 +4,7 @@ import numpy as np
 import param
 from cartopy import crs as ccrs
 from holoviews.core import (Store, HoloMap, Layout, Overlay,
-                            CompositeOverlay, Element)
+                            CompositeOverlay, Element, NdLayout)
 from holoviews.core import util
 
 from holoviews.core.options import SkipRendering, Options
@@ -431,6 +431,7 @@ Store.register({LineContours: LineContourPlot,
                 Points: GeoPointPlot,
                 Text: GeoTextPlot,
                 Layout: LayoutPlot,
+                NdLayout: LayoutPlot,
                 Overlay: OverlayPlot,
                 Polygons: GeoPolygonPlot,
                 Path: GeoPathPlot,

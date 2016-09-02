@@ -10,7 +10,7 @@ particularly powerful support for multidimensional meteorological
 and oceanographic datasets, such as those used in weather, climate,
 and remote sensing research, but is useful for almost anything
 that you would want to plot on a map!  You can see lots of example 
-notebooks at [http://geo.holoviews.org](geo.holoviews.org), and a good 
+notebooks at [geo.holoviews.org](http://geo.holoviews.org), and a good 
 overview is in our [blog post announcement](https://www.continuum.io/blog/developer-blog/introducing-geoviews).
 
 GeoViews is built on the [HoloViews](http://holoviews.org) library for

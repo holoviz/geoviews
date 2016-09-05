@@ -43,7 +43,7 @@ conda install xarray
 You can then install GeoViews and its other dependencies using conda:
 
 ```
-conda install -c ioam holoviews geoviews
+conda install -c conda-forge -c ioam holoviews geoviews
 ```
 
 You can now switch to your preferred working directory, grab a copy of

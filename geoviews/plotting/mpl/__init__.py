@@ -132,8 +132,12 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             x0 == x1 or y0 == y1):
             extents = None
         else:
-            extents = project_extents((x0, y0, x1, y1), element.crs,
-                                      self.projection)
+            try:
+                extents = project_extents((x0, y0, x1, y1), element.crs,
+                                          self.projection)
+            except:
+                extents = (np.NaN,)*4
+
         if extents:
             l, b, r, t = extents
         else:

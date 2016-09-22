@@ -52,7 +52,10 @@ class GeoPlot(ElementPlot):
         elif any(e is None or not np.isfinite(e) for e in extents):
             extents = None
         else:
-            extents = project_extents(extents, element.crs, DEFAULT_PROJ)
+            try:
+                extents = project_extents(extents, element.crs, DEFAULT_PROJ)
+            except:
+                extents = None
         return (np.NaN,)*4 if not extents else extents
 
 

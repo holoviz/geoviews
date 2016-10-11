@@ -41,9 +41,7 @@ def is_geographic(element, kdims=None):
 
     if len(kdims) != 2:
         return False
-    if Cube and isinstance(element.data, Cube):
-        return all(element.data.coord(kd.name).coord_system for kd in kdims)
-    elif isinstance(element.data, geographic_types) or isinstance(element, WMTS):
+    if isinstance(element.data, geographic_types) or isinstance(element, WMTS):
         return True
     elif isinstance(element, _Element):
         return kdims == element.kdims and element.crs

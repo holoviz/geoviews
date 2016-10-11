@@ -213,18 +213,15 @@ class GeoImagePlot(GeoPlot, ImagePlot):
     style_opts = ['alpha', 'cmap', 'visible', 'filterrad', 'clims', 'norm']
 
     def get_data(self, element, ranges, style):
-        if not self.geographic:
-            return super(GeoImagePlot, self).get_data(element, ranges, style)
         self._norm_kwargs(element, ranges, style, element.vdims[0])
         style.pop('interpolation', None)
         xs, ys, zs = geo_mesh(element)
-        style['transform'] = element.crs
+        if self.geographic:
+            style['transform'] = element.crs
         return (xs, ys, zs), style, {}
 
 
     def init_artists(self, ax, plot_args, plot_kwargs):
-        if not self.geographic:
-            return super(GeoImagePlot, self).init_artists(ax, plot_args, plot_kwargs)
         artist = ax.pcolormesh(*plot_args, **plot_kwargs)
         return {'artist': artist}
 

@@ -390,3 +390,7 @@ class Shape(_Element):
         Returns Shape as a shapely geometry
         """
         return self.data
+
+
+    def __len__(self):
+        return len(self.data)

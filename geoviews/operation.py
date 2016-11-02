@@ -5,12 +5,30 @@ from cartopy.img_transform import regrid
 
 from holoviews.operation import ElementOperation
 
-from .element import Image
-
+from .element import Image, Shape, Shape, Polygons, Path
 from .util import project_extents
 
+class project_shape(ElementOperation):
+    """
+    Projects Shape, Polygons and Path Elements from their source
+    coordinate reference system to the supplied projection.
+    """
 
-class ProjectImage(ElementOperation):
+    projection = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR,
+                                     class_=ccrs.Projection,
+                                     instantiate=False, doc="""
+        Projection the shape type is projected to.""")
+
+    def _process_element(self, element):
+        geom = self.p.projection.project_geometry(element.geom(),
+                                                  element.crs)
+        return element.clone(geom, crs=self.p.projection)
+
+    def _process(self, element, key=None):
+        return element.map(self._process_element, [Shape, Polygons, Path])
+
+
+class project_image(ElementOperation):
     """
     Projects an geoviews Image to the specified projection,
     returning a regular HoloViews Image type. Works by
@@ -19,7 +37,8 @@ class ProjectImage(ElementOperation):
     """
 
     projection = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR,
-                                     class_=ccrs.Projection, doc="""
+                                     class_=ccrs.Projection,
+                                     instantiate=False, doc="""
         Projection the image type is projected to.""")
 
     def _process(self, img, key=None):

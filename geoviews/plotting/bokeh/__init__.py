@@ -141,7 +141,7 @@ class GeoShapePlot(GeoPolygonPlot):
 
     def get_data(self, element, ranges=None, empty=False):
         geoms = element.geom()
-        if self.geographic:
+        if self.geographic and element.crs != DEFAULT_PROJ:
             try:
                 geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)
             except:

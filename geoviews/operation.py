@@ -5,7 +5,7 @@ from cartopy.img_transform import regrid
 
 from holoviews.operation import ElementOperation
 
-from .element import Image, Shape, Shape, Polygons, Path
+from .element import Image, Shape, Polygons, Path
 from .util import project_extents
 
 class project_shape(ElementOperation):

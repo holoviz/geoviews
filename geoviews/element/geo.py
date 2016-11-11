@@ -5,7 +5,7 @@ from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
 from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
-from holoviews.core.util import basestring
+from holoviews.core.util import basestring, pd
 from holoviews.element import (Text as HVText, Path as HVPath,
                                Polygons as HVPolygons, GridImage)
 
@@ -313,9 +313,12 @@ class Shape(_Element):
 
         Returns an NdOverlay of Shapes.
         """
-        if dataset and not on:
+        if dataset is not None and not on:
             raise ValueError('To merge dataset with shapes mapping '
                              'must define attribute(s) to merge on.')
+
+        if pd and isinstance(dataset, pd.DataFrame):
+            dataset = Dataset(dataset)
 
         if not isinstance(on, (dict, list)):
             on = [on]

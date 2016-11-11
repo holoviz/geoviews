@@ -327,18 +327,23 @@ class Shape(_Element):
         if not isinstance(index, list):
             index = [index]
 
+        kdims = []
+        for ind in (index if index else ['Index']):
+            if dataset and dataset.get_dimension(ind):
+                dim = dataset.get_dimension(ind)
+            else:
+                dim = Dimension(ind)
+            kdims.append(dim)
+
         if dataset:
-            index = [dataset.get_dimension(ind) for ind in index]
             vdim = dataset.get_dimension(value)
             kwargs['vdims'] = [vdim]
-            not_found = [dim.name for dim in index+[vdim]
-                         if dim is None]
-            if not_found:
-                dim_str = ', '.join(not_found)
-                raise ValueError('Following dimensions not found '
-                                 'in dataset: {}'.format(dim_str))
+            if not vdim:
+                raise ValueError('Value dimension not found '
+                                 'in dataset: {}'.format(vdim))
 
-        chloropleth = NdOverlay(kdims=index if index else ['Index'])
+        chloropleth = NdOverlay(kdims=kdims)
+        ddims = dataset.dimensions()
         for i, rec in enumerate(records):
             if dataset:
                 selection = {dim: rec.attributes.get(attr, None)
@@ -350,7 +355,16 @@ class Shape(_Element):
                     value = row[vdim.name][0]
                     kwargs['level'] = value
                 if index:
-                    key = tuple(row[d.name][0] for d in index)
+                    key = []
+                    for kdim in kdims:
+                        if kdim in ddims:
+                            k = row[kdim.name][0]
+                        elif kdim.name in rec.attributes:
+                            k = rec.attributes[kdim.name]
+                        else:
+                            raise ValueError('%s could not be found' % kdim)
+                        key.append(k)
+                    key = tuple(key)
                 else:
                     key = i
             else:

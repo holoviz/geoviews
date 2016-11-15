@@ -154,11 +154,12 @@ class GeoShapePlot(GeoPolygonPlot):
         mapping = dict(self._mapping)
         dim = element.vdims[0].name if element.vdims else None
         if cmap and dim and element.level is not None:
-            cmap = get_cmap(cmap)
-            colors = map_colors(np.array([element.level]),
-                                ranges[dim], cmap)
-            mapping['fill_color'] = 'color'
-            data['color'] = [] if empty else list(colors)*len(element.data)
+            cdim = element.vdims[0]
+            cmapper = self._get_colormapper(cdim, element, ranges, style)
+            data[cdim.name] = [] if empty else element.dimension_values(2)
+            mapping['fill_color'] = {'field': cdim.name,
+                                     'transform': cmapper}
+
         if 'hover' in self.tools+self.default_tools:
             if dim:
                 dim_name = util.dimension_sanitizer(dim)

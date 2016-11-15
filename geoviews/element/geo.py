@@ -335,15 +335,16 @@ class Shape(_Element):
                 dim = Dimension(ind)
             kdims.append(dim)
 
+        ddims = []
         if dataset:
             vdim = dataset.get_dimension(value)
             kwargs['vdims'] = [vdim]
             if not vdim:
                 raise ValueError('Value dimension not found '
                                  'in dataset: {}'.format(vdim))
+            ddims = dataset.dimensions()
 
         chloropleth = NdOverlay(kdims=kdims)
-        ddims = dataset.dimensions()
         for i, rec in enumerate(records):
             if dataset:
                 selection = {dim: rec.attributes.get(attr, None)
@@ -354,19 +355,17 @@ class Shape(_Element):
                 if value:
                     value = row[vdim.name][0]
                     kwargs['level'] = value
-                if index:
-                    key = []
-                    for kdim in kdims:
-                        if kdim in ddims:
-                            k = row[kdim.name][0]
-                        elif kdim.name in rec.attributes:
-                            k = rec.attributes[kdim.name]
-                        else:
-                            raise ValueError('%s could not be found' % kdim)
-                        key.append(k)
+            if index:
+                key = []
+                for kdim in kdims:
+                    if kdim in ddims:
+                        k = row[kdim.name][0]
+                    elif kdim.name in rec.attributes:
+                        k = rec.attributes[kdim.name]
+                    else:
+                        raise ValueError('%s could not be found' % kdim)
+                    key.append(k)
                     key = tuple(key)
-                else:
-                    key = i
             else:
                 key = i
             chloropleth[key] = Shape(rec.geometry, **kwargs)

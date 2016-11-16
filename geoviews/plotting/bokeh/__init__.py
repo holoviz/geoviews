@@ -10,13 +10,11 @@ from bokeh.models import WMTSTileSource
 from holoviews import Store
 from holoviews.core import util
 from holoviews.core.options import SkipRendering, Options
-from holoviews.plotting.util import map_colors
 from holoviews.plotting.bokeh.annotation import TextPlot
 from holoviews.plotting.bokeh.element import ElementPlot
 from holoviews.plotting.bokeh.chart import PointPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot
 from holoviews.plotting.bokeh.raster import RasterPlot
-from holoviews.plotting.bokeh.util import get_cmap
 
 from ...element import (WMTS, Points, Polygons, Path, Shape, Image,
                         Feature, is_geographic, Text)

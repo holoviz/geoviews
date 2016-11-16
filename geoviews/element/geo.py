@@ -365,7 +365,7 @@ class Shape(_Element):
                     else:
                         raise ValueError('%s could not be found' % kdim)
                     key.append(k)
-                    key = tuple(key)
+                key = tuple(key)
             else:
                 key = i
             chloropleth[key] = Shape(rec.geometry, **kwargs)

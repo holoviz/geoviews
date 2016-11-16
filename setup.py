@@ -9,7 +9,7 @@ except ImportError:
 
 
 setup_args = {}
-install_requires = ['param>=1.3.2', 'numpy>=1.0', 'holoviews>=1.6.0',
+install_requires = ['param>=1.3.2', 'numpy>=1.0', 'holoviews>=1.6.2',
                     'cartopy>=0.14.2']
 extras_require={}
 

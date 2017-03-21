@@ -10,17 +10,15 @@ from bokeh.models import WMTSTileSource
 from holoviews import Store
 from holoviews.core import util
 from holoviews.core.options import SkipRendering, Options
-from holoviews.plotting.util import map_colors
 from holoviews.plotting.bokeh.annotation import TextPlot
 from holoviews.plotting.bokeh.element import ElementPlot
 from holoviews.plotting.bokeh.chart import PointPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot
 from holoviews.plotting.bokeh.raster import RasterPlot
-from holoviews.plotting.bokeh.util import get_cmap
 
 from ...element import (WMTS, Points, Polygons, Path, Shape, Image,
                         Feature, is_geographic, Text)
-from ...operation import ProjectImage
+from ...operation import project_image
 from ...util import project_extents, geom_to_array
 
 DEFAULT_PROJ = GOOGLE_MERCATOR
@@ -52,7 +50,10 @@ class GeoPlot(ElementPlot):
         elif any(e is None or not np.isfinite(e) for e in extents):
             extents = None
         else:
-            extents = project_extents(extents, element.crs, DEFAULT_PROJ)
+            try:
+                extents = project_extents(extents, element.crs, DEFAULT_PROJ)
+            except:
+                extents = None
         return (np.NaN,)*4 if not extents else extents
 
 
@@ -95,7 +96,7 @@ class GeoRasterPlot(GeoPlot, RasterPlot):
     def get_data(self, element, ranges=None, empty=False):
         l, b, r, t = self.get_extents(element, ranges)
         if self.geographic:
-            element = ProjectImage(element, projection=DEFAULT_PROJ)
+            element = project_image(element, projection=DEFAULT_PROJ)
         img = element.dimension_values(2, flat=False)
         mapping = dict(image='image', x='x', y='y', dw='dw', dh='dh')
         if empty:
@@ -138,7 +139,7 @@ class GeoShapePlot(GeoPolygonPlot):
 
     def get_data(self, element, ranges=None, empty=False):
         geoms = element.geom()
-        if self.geographic:
+        if self.geographic and element.crs != DEFAULT_PROJ:
             try:
                 geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)
             except:
@@ -151,11 +152,12 @@ class GeoShapePlot(GeoPolygonPlot):
         mapping = dict(self._mapping)
         dim = element.vdims[0].name if element.vdims else None
         if cmap and dim and element.level is not None:
-            cmap = get_cmap(cmap)
-            colors = map_colors(np.array([element.level]),
-                                ranges[dim], cmap)
-            mapping['fill_color'] = 'color'
-            data['color'] = [] if empty else list(colors)*len(element.data)
+            cdim = element.vdims[0]
+            cmapper = self._get_colormapper(cdim, element, ranges, style)
+            data[cdim.name] = [] if empty else element.dimension_values(2)
+            mapping['fill_color'] = {'field': cdim.name,
+                                     'transform': cmapper}
+
         if 'hover' in self.tools+self.default_tools:
             if dim:
                 dim_name = util.dimension_sanitizer(dim)

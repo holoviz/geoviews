@@ -5,7 +5,7 @@ from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
 from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
-from holoviews.core.util import basestring
+from holoviews.core.util import basestring, pd
 from holoviews.element import (Text as HVText, Path as HVPath,
                                Polygons as HVPolygons, GridImage)
 
@@ -41,9 +41,7 @@ def is_geographic(element, kdims=None):
 
     if len(kdims) != 2:
         return False
-    if Cube and isinstance(element.data, Cube):
-        return all(element.data.coord(kd.name).coord_system for kd in kdims)
-    elif isinstance(element.data, geographic_types) or isinstance(element, WMTS):
+    if isinstance(element.data, geographic_types) or isinstance(element, WMTS):
         return True
     elif isinstance(element, _Element):
         return kdims == element.kdims and element.crs
@@ -315,9 +313,12 @@ class Shape(_Element):
 
         Returns an NdOverlay of Shapes.
         """
-        if dataset and not on:
+        if dataset is not None and not on:
             raise ValueError('To merge dataset with shapes mapping '
                              'must define attribute(s) to merge on.')
+
+        if pd and isinstance(dataset, pd.DataFrame):
+            dataset = Dataset(dataset)
 
         if not isinstance(on, (dict, list)):
             on = [on]
@@ -326,18 +327,24 @@ class Shape(_Element):
         if not isinstance(index, list):
             index = [index]
 
+        kdims = []
+        for ind in (index if index else ['Index']):
+            if dataset and dataset.get_dimension(ind):
+                dim = dataset.get_dimension(ind)
+            else:
+                dim = Dimension(ind)
+            kdims.append(dim)
+
+        ddims = []
         if dataset:
-            index = [dataset.get_dimension(ind) for ind in index]
             vdim = dataset.get_dimension(value)
             kwargs['vdims'] = [vdim]
-            not_found = [dim.name for dim in index+[vdim]
-                         if dim is None]
-            if not_found:
-                dim_str = ', '.join(not_found)
-                raise ValueError('Following dimensions not found '
-                                 'in dataset: {}'.format(dim_str))
+            if not vdim:
+                raise ValueError('Value dimension not found '
+                                 'in dataset: {}'.format(vdim))
+            ddims = dataset.dimensions()
 
-        chloropleth = NdOverlay(kdims=index if index else ['Index'])
+        chloropleth = NdOverlay(kdims=kdims)
         for i, rec in enumerate(records):
             if dataset:
                 selection = {dim: rec.attributes.get(attr, None)
@@ -348,10 +355,17 @@ class Shape(_Element):
                 if value:
                     value = row[vdim.name][0]
                     kwargs['level'] = value
-                if index:
-                    key = tuple(row[d.name][0] for d in index)
-                else:
-                    key = i
+            if index:
+                key = []
+                for kdim in kdims:
+                    if kdim in ddims:
+                        k = row[kdim.name][0]
+                    elif kdim.name in rec.attributes:
+                        k = rec.attributes[kdim.name]
+                    else:
+                        raise ValueError('%s could not be found' % kdim)
+                    key.append(k)
+                key = tuple(key)
             else:
                 key = i
             chloropleth[key] = Shape(rec.geometry, **kwargs)
@@ -392,3 +406,7 @@ class Shape(_Element):
         Returns Shape as a shapely geometry
         """
         return self.data
+
+
+    def __len__(self):
+        return len(self.data)

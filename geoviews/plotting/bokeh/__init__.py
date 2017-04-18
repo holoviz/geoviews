@@ -6,12 +6,13 @@ import numpy as np
 import shapely.geometry
 from cartopy.crs import GOOGLE_MERCATOR
 from bokeh.models import WMTSTileSource
+from bokeh.models.tools import BoxZoomTool
 
 from holoviews import Store
 from holoviews.core import util
 from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.bokeh.annotation import TextPlot
-from holoviews.plotting.bokeh.element import ElementPlot
+from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot
 from holoviews.plotting.bokeh.chart import PointPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot
 from holoviews.plotting.bokeh.raster import RasterPlot
@@ -31,6 +32,10 @@ class GeoPlot(ElementPlot):
     """
     Plotting baseclass for geographic plots with a cartopy projection.
     """
+
+    default_tools = param.List(default=['save', 'pan', 'wheel_zoom',
+                                        BoxZoomTool(match_aspect=True), 'reset'],
+        doc="A list of plugin tools to use on the plot.")
 
     show_grid = param.Boolean(default=False)
 

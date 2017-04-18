@@ -6,6 +6,7 @@ import numpy as np
 import shapely.geometry
 from cartopy.crs import GOOGLE_MERCATOR
 from bokeh.models import WMTSTileSource
+from bokeh.models.tools import BoxZoomTool
 
 from holoviews import Store
 from holoviews.core import util
@@ -32,6 +33,10 @@ class GeoPlot(ElementPlot):
     Plotting baseclass for geographic plots with a cartopy projection.
     """
 
+    default_tools = param.List(default=['save', 'pan', 'wheel_zoom',
+                                        BoxZoomTool(match_aspect=True), 'reset'],
+        doc="A list of plugin tools to use on the plot.")
+
     show_grid = param.Boolean(default=False)
 
     def __init__(self, element, **params):
@@ -57,9 +62,10 @@ class GeoPlot(ElementPlot):
         return (np.NaN,)*4 if not extents else extents
 
 
+
 class TilePlot(GeoPlot):
 
-    styl_opts = ['alpha', 'render_parents']
+    style_opts = ['alpha', 'render_parents']
 
     def get_data(self, element, ranges=None, empty=False):
         tile_sources = [ts for ts in element.data
@@ -69,11 +75,18 @@ class TilePlot(GeoPlot):
                                 "Element, rendering skipped.")
         return {}, {'tile_source': tile_sources[0]}
 
+    def _update_glyphs(self, renderer, properties, mapping, glyph):
+        allowed_properties = glyph.properties()
+        merged = dict(properties, **mapping)
+        glyph.update(**{k: v for k, v in merged.items()
+                        if k in allowed_properties})
+
     def _init_glyph(self, plot, mapping, properties):
         """
         Returns a Bokeh glyph object.
         """
         renderer = plot.add_tile(mapping['tile_source'])
+        renderer.alpha = properties.get('alpha', 1)
         return renderer, renderer
 
 

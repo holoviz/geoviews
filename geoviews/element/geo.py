@@ -6,8 +6,8 @@ from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
 from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
 from holoviews.core.util import basestring, pd
-from holoviews.element import (Text as HVText, Path as HVPath,
-                               Polygons as HVPolygons, GridImage)
+from holoviews.element import (Text as HvText, Path as HvPath,
+                               Polygons as HvPolygons, Image as HvImage)
 
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry import (MultiLineString, LineString,
@@ -85,7 +85,7 @@ class _Element(Element2D):
 
     def clone(self, data=None, shared_data=True, new_type=None,
               *args, **overrides):
-        if 'crs' not in overrides:
+        if 'crs' not in overrides and isinstance(new_type, _Element):
             overrides['crs'] = self.crs
         return super(_Element, self).clone(data, shared_data, new_type,
                                            *args, **overrides)
@@ -181,7 +181,7 @@ class Points(Dataset):
     group = param.String(default='Points')
 
 
-class LineContours(_Element, GridImage):
+class LineContours(_Element, HvImage):
     """
     Contours represents a 2D array of some quantity with
     some associated coordinates, which may be discretized
@@ -203,7 +203,7 @@ class FilledContours(LineContours):
     group = param.String(default='FilledContours')
 
 
-class Image(_Element, GridImage):
+class Image(_Element, HvImage):
     """
     Image represents a 2D array of some quantity with
     some associated coordinates.
@@ -214,14 +214,14 @@ class Image(_Element, GridImage):
     group = param.String(default='Image')
 
 
-class Text(HVText, _Element):
+class Text(HvText, _Element):
     """
     An annotation containing some text at an x, y coordinate
     along with a coordinate reference system.
     """
 
 
-class Path(_Element, HVPath):
+class Path(_Element, HvPath):
     """
     The Path Element contains a list of Paths stored as Nx2 numpy
     arrays along with a coordinate reference system.
@@ -237,7 +237,7 @@ class Path(_Element, HVPath):
         return MultiLineString(lines)
 
 
-class Polygons(_Element, HVPolygons):
+class Polygons(_Element, HvPolygons):
     """
     Polygons is a Path Element type that may contain any number of
     closed paths with an associated value and a coordinate reference

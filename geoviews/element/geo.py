@@ -288,7 +288,7 @@ class Shape(_Element):
 
     @classmethod
     def from_records(cls, records, dataset=None, on=None,
-                     value=None, index=[], **kwargs):
+                     value=None, index=[], drop_missing=False, **kwargs):
         """
         Load data from a collection of
         ``cartopy.io.shapereader.Record`` objects and optionally merge
@@ -310,6 +310,8 @@ class Shape(_Element):
                     values will be drawn from.
         * index   - One or more dimensions in the dataset
                     the Shapes will be indexed by.
+        * drop_missing - Whether to drop shapes which are missing from
+                         the provided dataset.
 
         Returns an NdOverlay of Shapes.
         """
@@ -344,32 +346,39 @@ class Shape(_Element):
                                  'in dataset: {}'.format(vdim))
             ddims = dataset.dimensions()
 
-        chloropleth = NdOverlay(kdims=kdims)
+        data = []
+        notfound = False
         for i, rec in enumerate(records):
             if dataset:
                 selection = {dim: rec.attributes.get(attr, None)
                              for attr, dim in on.items()}
                 row = dataset.select(**selection)
-                if not len(row):
-                    continue
-                if value:
+                if len(row):
                     value = row[vdim.name][0]
-                    kwargs['level'] = value
+                elif drop_missing:
+                    continue
+                else:
+                    value = np.NaN
+                kwargs['level'] = value
             if index:
                 key = []
                 for kdim in kdims:
-                    if kdim in ddims:
+                    if kdim in ddims and len(row):
                         k = row[kdim.name][0]
                     elif kdim.name in rec.attributes:
                         k = rec.attributes[kdim.name]
                     else:
-                        raise ValueError('%s could not be found' % kdim)
+                        k = None
+                        notfound = True
                     key.append(k)
                 key = tuple(key)
             else:
-                key = i
-            chloropleth[key] = Shape(rec.geometry, **kwargs)
-        return chloropleth
+                key = (i,)
+            data.append((key, Shape(rec.geometry, **kwargs)))
+        if notfound:
+            kdims = ['Index']+kdims
+            data = [((i,)+subk, v) for i, (subk, v) in enumerate(data)]
+        return NdOverlay(data, kdims=kdims)
 
 
     def dimension_values(self, dimension):

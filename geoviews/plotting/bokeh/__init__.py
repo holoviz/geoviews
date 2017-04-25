@@ -8,17 +8,17 @@ from cartopy.crs import GOOGLE_MERCATOR
 from bokeh.models import WMTSTileSource
 from bokeh.models.tools import BoxZoomTool
 
-from holoviews import Store
+from holoviews import Store, Overlay, NdOverlay
 from holoviews.core import util
 from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.bokeh.annotation import TextPlot
-from holoviews.plotting.bokeh.element import ElementPlot
+from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 from holoviews.plotting.bokeh.chart import PointPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot
 from holoviews.plotting.bokeh.raster import RasterPlot
 
 from ...element import (WMTS, Points, Polygons, Path, Shape, Image,
-                        Feature, is_geographic, Text)
+                        Feature, is_geographic, Text, _Element)
 from ...operation import project_image
 from ...util import project_extents, geom_to_array
 
@@ -37,7 +37,8 @@ class GeoPlot(ElementPlot):
                                         BoxZoomTool(match_aspect=True), 'reset'],
         doc="A list of plugin tools to use on the plot.")
 
-    show_grid = param.Boolean(default=False)
+    show_grid = param.Boolean(default=True, doc="""
+        Whether to show a gridlines on the plot.""")
 
     def __init__(self, element, **params):
         super(GeoPlot, self).__init__(element, **params)
@@ -61,6 +62,18 @@ class GeoPlot(ElementPlot):
                 extents = None
         return (np.NaN,)*4 if not extents else extents
 
+
+class OverlayPlot(HvOverlayPlot):
+    """
+    Subclasses the HoloViews OverlayPlot to add custom behavior
+    for geographic plots.
+    """
+
+    def __init__(self, element, **params):
+        self.geographic = any(element.traverse(is_geographic, [_Element]))
+        if self.geographic:
+            self.show_grid = False
+        super(OverlayPlot, self).__init__(element, **params)
 
 
 class TilePlot(GeoPlot):
@@ -229,7 +242,9 @@ Store.register({WMTS: TilePlot,
                 Shape: GeoShapePlot,
                 Image: GeoRasterPlot,
                 Feature: FeaturePlot,
-                Text: GeoTextPlot}, 'bokeh')
+                Text: GeoTextPlot,
+                Overlay: OverlayPlot,
+                NdOverlay: OverlayPlot}, 'bokeh')
 
 options = Store.options(backend='bokeh')
 
@@ -242,4 +257,3 @@ options.Feature.Ocean  = Options('style', fill_color='#97b6e1', line_color='#97b
 options.Feature.Lakes  = Options('style', fill_color='#97b6e1', line_color='#97b6e1')
 options.Feature.Rivers = Options('style', line_color='#97b6e1')
 options.Shape = Options('style', line_color='black', fill_color='#30A2DA')
-

@@ -37,7 +37,7 @@ many users will want iris and/or xarray as well:
 
 
 ```
-conda install -c conda-forge -c ioam holoviews>=1.6.2 geoviews
+conda install -c conda-forge -c ioam holoviews geoviews
 # (Optional)
 conda install xarray
 conda install -c conda-forge iris

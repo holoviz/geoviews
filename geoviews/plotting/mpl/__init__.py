@@ -230,10 +230,7 @@ class GeoImagePlot(GeoPlot, ImagePlot):
         """
         Update the elements of the plot.
         """
-        if self.geographic:
-            return GeoPlot.update_handles(self, *args)
-        else:
-            return super(GeoImagePlot, self).update_handles(*args)
+        return GeoPlot.update_handles(self, *args)
 
 
 class GeoPointPlot(GeoPlot, PointPlot):

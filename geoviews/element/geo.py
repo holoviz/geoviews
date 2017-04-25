@@ -85,7 +85,7 @@ class _Element(Element2D):
 
     def clone(self, data=None, shared_data=True, new_type=None,
               *args, **overrides):
-        if 'crs' not in overrides and isinstance(new_type, _Element):
+        if 'crs' not in overrides and (not new_type or isinstance(new_type, _Element)):
             overrides['crs'] = self.crs
         return super(_Element, self).clone(data, shared_data, new_type,
                                            *args, **overrides)

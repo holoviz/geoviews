@@ -13,7 +13,7 @@ from . import plotting                              # noqa (API import)
 from . import feature                               # noqa (API import)
 
 
-__version__ = param.Version(release=(1,1,0), fpath=__file__,
+__version__ = param.Version(release=(1,2,0), fpath=__file__,
                             commit="$Format:%h$", reponame='geoviews')
 
 SAMPLE_DATA_URL = 'http://assets.holoviews.org/geoviews-sample-data.zip'

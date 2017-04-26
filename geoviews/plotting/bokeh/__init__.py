@@ -37,8 +37,8 @@ class GeoPlot(ElementPlot):
                                         BoxZoomTool(match_aspect=True), 'reset'],
         doc="A list of plugin tools to use on the plot.")
 
-    show_grid = param.Boolean(default=True, doc="""
-        Whether to show a gridlines on the plot.""")
+    show_grid = param.Boolean(default=False, doc="""
+        Whether to show gridlines on the plot.""")
 
     def __init__(self, element, **params):
         super(GeoPlot, self).__init__(element, **params)

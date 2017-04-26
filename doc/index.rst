@@ -9,10 +9,23 @@ ____________
 .. notebook:: geoviews Homepage.ipynb
 
 Installation
-____________
+------------
 
-See the `github repo <https://github.com/ioam/geoviews>`_
-for installation instructions and to get started with the examples.
+You can then install GeoViews and its other dependencies using conda,
+many users will want iris and/or xarray as well::
+
+   conda install -c conda-forge -c ioam holoviews geoviews
+   # (Optional)
+   conda install xarray
+   conda install -c conda-forge iris
+
+You can now switch to your preferred working directory, grab a copy of
+the notebooks to run locally, and run them using the Jupyter notebook::
+
+   cd ~
+   python -c 'import geoviews; geoviews.examples("geoviews-examples",include_data=True)'
+   cd geoviews-examples
+   jupyter notebook
 
 ------------
 

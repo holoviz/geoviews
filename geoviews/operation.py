@@ -5,7 +5,7 @@ from cartopy.img_transform import regrid
 
 from holoviews.operation import ElementOperation
 
-from .element import Image, Shape, Polygons, Path
+from .element import Image, Shape, Polygons, Path, Points
 from .util import project_extents
 
 class project_shape(ElementOperation):
@@ -19,13 +19,37 @@ class project_shape(ElementOperation):
                                      instantiate=False, doc="""
         Projection the shape type is projected to.""")
 
+    supported_types = [Shape, Polygons, Path]
+
     def _process_element(self, element):
         geom = self.p.projection.project_geometry(element.geom(),
                                                   element.crs)
         return element.clone(geom, crs=self.p.projection)
 
     def _process(self, element, key=None):
-        return element.map(self._process_element, [Shape, Polygons, Path])
+        return element.map(self._process_element, self.supported_types)
+
+
+class project_points(ElementOperation):
+
+    projection = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR,
+                                     class_=ccrs.Projection,
+                                     instantiate=False, doc="""
+        Projection the shape type is projected to.""")
+
+    supported_types = [Points]
+
+    def _process_element(self, element):
+        xdim, ydim = element.dimensions()[:2]
+        xs, ys = (element.dimension_values(i) for i in range(2))
+        coordinates = self.p.projection.transform_points(element.crs, xs, ys)
+        new_data = element.columns()
+        new_data[xdim.name] = coordinates[:, 0]
+        new_data[ydim.name] = coordinates[:, 1]
+        return element.clone(new_data, crs=self.p.projection)
+
+    def _process(self, element, key=None):
+        return element.map(self._process_element, self.supported_types)
 
 
 class project_image(ElementOperation):
@@ -40,6 +64,8 @@ class project_image(ElementOperation):
                                      class_=ccrs.Projection,
                                      instantiate=False, doc="""
         Projection the image type is projected to.""")
+
+    supported_types = [Image]
 
     def _process(self, img, key=None):
         proj = self.p.projection
@@ -61,3 +87,19 @@ class project_image(ElementOperation):
         parray = regrid(arr, xs, ys, img.crs, proj, pxs, pys)
         return Image((px, py, parray), kdims=img.kdims,
                      vdims=img.vdims, crs=proj)
+
+
+class project(ElementOperation):
+    """
+    Projects GeoViews Element types to the specified projection.
+    """
+
+    projection = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR,
+                                     class_=ccrs.Projection,
+                                     instantiate=False, doc="""
+        Projection the image type is projected to.""")
+
+    def _process(self, element, key=None):
+        element = element.map(project_image, project_image.supported_types)
+        element = element.map(project_shape, project_shape.supported_types)
+        return element.map(project_points, project_points.supported_types)

@@ -1,7 +1,7 @@
 import param
 import numpy as np
 from cartopy import crs as ccrs
-from cartopy.img_transform import regrid
+from cartopy.img_transform import warp_array
 
 from holoviews.operation import ElementOperation
 
@@ -71,21 +71,18 @@ class project_image(ElementOperation):
         proj = self.p.projection
         if proj == img.crs:
             return img
-        arr = img.dimension_values(2, flat=False).T
-        xs = img.dimension_values(0)
-        ys = img.dimension_values(1)
+        arr = img.dimension_values(2, flat=False)
         x0, x1 = img.range(0)
         y0, y1 = img.range(1)
         xn, yn = arr.shape
         px0, py0, px1, py1 = project_extents((x0, y0, x1, y1),
                                              img.crs, proj)
-        px = np.linspace(px0, px1, xn)
-        py = np.linspace(py0, py1, yn)
-        pxs, pys = np.meshgrid(px, py)
-        pxs = pxs.reshape((yn, xn))
-        pys = pys.reshape((yn, xn))
-        parray = regrid(arr, xs, ys, img.crs, proj, pxs, pys)
-        return Image((px, py, parray), kdims=img.kdims,
+        src_ext, trgt_ext = (x0, x1, y0, y1), (px0, px1, py0, py1)
+        projected, extents = warp_array(arr, proj, img.crs, (xn, yn),
+                                        src_ext, trgt_ext)
+        bounds = (extents[0], extents[2], extents[1], extents[3])
+        data = np.flipud(projected)
+        return Image(data, bounds=bounds, kdims=img.kdims,
                      vdims=img.vdims, crs=proj)
 
 

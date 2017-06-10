@@ -38,11 +38,11 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     domain_in_src_proj = Polygon([[x1, y1], [x2, y1],
                                   [x2, y2], [x1, y2],
                                   [x1, y1]])
-    boundary_poly = Polygon(dest_proj.boundary)
+    boundary_poly = Polygon(src_proj.boundary)
     if src_proj != dest_proj:
         # Erode boundary by threshold to avoid transform issues.
         # This is a workaround for numerical issues at the boundary.
-        eroded_boundary = boundary_poly.buffer(-dest_proj.threshold)
+        eroded_boundary = boundary_poly.buffer(-src_proj.threshold)
         geom_in_src_proj = eroded_boundary.intersection(
             domain_in_src_proj)
         geom_in_crs = dest_proj.project_geometry(geom_in_src_proj, src_proj)

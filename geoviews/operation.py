@@ -46,7 +46,8 @@ class project_points(ElementOperation):
         new_data = element.columns()
         new_data[xdim.name] = coordinates[:, 0]
         new_data[ydim.name] = coordinates[:, 1]
-        return element.clone(new_data, crs=self.p.projection)
+        return element.clone(new_data, crs=self.p.projection,
+                             datatype=[element.interface.datatype]+element.datatype)
 
     def _process(self, element, key=None):
         return element.map(self._process_element, self.supported_types)

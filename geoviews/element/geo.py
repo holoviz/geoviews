@@ -58,7 +58,7 @@ class _Element(Element2D):
 
     _abstract = True
 
-    crs = param.ClassSelector(class_=ccrs.CRS, doc="""
+    crs = param.ClassSelector(default=ccrs.PlateCarree(), class_=ccrs.CRS, doc="""
         Cartopy coordinate-reference-system specifying the
         coordinate system of the data. Inferred automatically
         when _Element wraps cartopy Feature object.""")

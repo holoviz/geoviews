@@ -7,7 +7,8 @@ from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
 from holoviews.core.util import basestring, pd
 from holoviews.element import (Text as HvText, Path as HvPath,
-                               Polygons as HvPolygons, Image as HvImage)
+                               Polygons as HvPolygons, Image as HvImage,
+                               Curve as HvCurve, RGB as HvRGB)
 
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry import (MultiLineString, LineString,
@@ -212,6 +213,28 @@ class Image(_Element, HvImage):
     vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
 
     group = param.String(default='Image')
+
+
+class RGB(_Element, HvRGB):
+    """
+    An RGB element is a Image containing channel data for the the
+    red, green, blue and (optionally) the alpha channels. The values
+    of each channel must be in the range 0.0 to 1.0.
+
+    In input array may have a shape of NxMx4 or NxMx3. In the latter
+    case, the defined alpha dimension parameter is appended to the
+    list of value dimensions.
+    """
+
+    group = param.String(default='RGB', constant=True)
+
+    vdims = param.List(
+        default=[Dimension('R', range=(0,1)), Dimension('G',range=(0,1)),
+                 Dimension('B', range=(0,1))], bounds=(3, 4), doc="""
+        The dimension description of the data held in the matrix.
+
+        If an alpha channel is supplied, the defined alpha_dimension
+        is automatically appended to this list.""")
 
 
 class Text(HvText, _Element):

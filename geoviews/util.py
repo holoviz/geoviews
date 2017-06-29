@@ -3,6 +3,8 @@ from cartopy import crs as ccrs
 from shapely.geometry import (MultiLineString, LineString,
                               MultiPolygon, Polygon)
 
+from .element import RGB
+
 
 def wrap_lons(lons, base, period):
     """
@@ -85,8 +87,13 @@ def geo_mesh(element):
     on a cylindrical coordinate system and wraps globally that data
     actually wraps around.
     """
-    xs, ys, zs = (element.dimension_values(i, False, False)
-                  for i in range(3))
+    if isinstance(element, RGB):
+        xs, ys = (element.dimension_values(i, False, False)
+                  for i in range(2))
+        zs = np.dstack([element.dimension_values(i, False, False) for i in range(2, 2+len(element.vdims))])
+    else:
+        xs, ys, zs = (element.dimension_values(i, False, False)
+                      for i in range(3))
     lon0, lon1 = element.range(0)
     if isinstance(element.crs, ccrs._CylindricalProjection) and (lon1 - lon0) == 360:
         xs = np.append(xs, xs[0:1] + 360, axis=0)

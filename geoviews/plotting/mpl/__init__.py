@@ -13,11 +13,12 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     LayoutPlot as HvLayoutPlot,
                                     OverlayPlot as HvOverlayPlot,
                                     PathPlot, PolygonPlot, ImagePlot)
+from holoviews.plotting.mpl.util import get_raster_array
 
 
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         LineContours, FilledContours, is_geographic,
-                        Path, Polygons, Shape)
+                        Path, Polygons, Shape, RGB)
 from ...util import path_to_geom, polygon_to_geom, project_extents, geo_mesh
 
 
@@ -233,6 +234,36 @@ class GeoImagePlot(GeoPlot, ImagePlot):
         return GeoPlot.update_handles(self, *args)
 
 
+class GeoRGBPlot(GeoImagePlot):
+    """
+    Draws a imshow plot from the data in a RGB Element.
+    """
+
+    style_opts = ['alpha', 'visible', 'filterrad']
+
+    def get_data(self, element, ranges, style):
+        self._norm_kwargs(element, ranges, style, element.vdims[0])
+        style.pop('interpolation', None)
+        zs = get_raster_array(element)[::-1]
+        l, b, r, t = element.bounds.lbrt()
+        style['extent'] = [l, r, b, t]
+        if self.geographic:
+            style['transform'] = element.crs
+        return (zs,), style, {}
+
+
+    def init_artists(self, ax, plot_args, plot_kwargs):
+        artist = ax.imshow(*plot_args, **plot_kwargs)
+        return {'artist': artist}
+
+
+    def update_handles(self, *args):
+        """
+        Update the elements of the plot.
+        """
+        return GeoPlot.update_handles(self, *args)
+
+
 class GeoPointPlot(GeoPlot, PointPlot):
     """
     Draws a scatter plot from the data in a Points Element.
@@ -433,6 +464,7 @@ Store.register({LineContours: LineContourPlot,
                 Overlay: OverlayPlot,
                 Polygons: GeoPolygonPlot,
                 Path: GeoPathPlot,
+                RGB: GeoRGBPlot,
                 Shape: GeoShapePlot}, 'matplotlib')
 
 

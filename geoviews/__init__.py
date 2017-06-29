@@ -8,7 +8,7 @@ import param
 
 from .element import (_Element, Feature, Tiles,     # noqa (API import)
                       WMTS, LineContours, FilledContours, Text, Image,
-                      Points, Path, Polygons, Shape, Dataset)
+                      Points, Path, Polygons, Shape, Dataset, RGB)
 from . import operation                             # noqa (API import)
 from . import plotting                              # noqa (API import)
 from . import feature                               # noqa (API import)

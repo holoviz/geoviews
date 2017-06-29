@@ -88,7 +88,7 @@ class TilePlot(GeoPlot):
                                 "Element, rendering skipped.")
         return {}, {'tile_source': tile_sources[0]}
 
-    def _update_glyphs(self, renderer, properties, mapping, glyph):
+    def _update_glyph(self, renderer, properties, mapping, glyph):
         allowed_properties = glyph.properties()
         merged = dict(properties, **mapping)
         glyph.update(**{k: v for k, v in merged.items()

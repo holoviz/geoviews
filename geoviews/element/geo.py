@@ -8,7 +8,7 @@ from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
 from holoviews.core.util import basestring, pd
 from holoviews.element import (Text as HvText, Path as HvPath,
                                Polygons as HvPolygons, Image as HvImage,
-                               Curve as HvCurve, RGB as HvRGB)
+                               RGB as HvRGB)
 
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry import (MultiLineString, LineString,

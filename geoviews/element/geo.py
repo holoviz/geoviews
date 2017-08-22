@@ -24,6 +24,11 @@ try:
 except:
     WMTSTileSource = None
 
+try:
+    from owslib.wmts import WebMapTileService
+except:
+    WebMapTileService = None
+
 geographic_types = (cGoogleTiles, cFeature)
 
 def is_geographic(element, kdims=None):
@@ -141,13 +146,13 @@ class WMTS(_GeoFeature):
             if WMTSTileSource and isinstance(d, WMTSTileSource):
                 if 'crs' not in params:
                     params['crs'] = ccrs.GOOGLE_MERCATOR
-            elif not isinstance(data, basestring):
+            elif WebMapTileService and isinstance(d, WebMapTileService):
                 if 'crs' not in params and not self.crs:
                     raise Exception('Must supply coordinate reference '
                                     'system with cartopy WMTS URL.')
-            else:
+            elif not isinstance(d, basestring):
                 raise TypeError('%s data has to be a tile service URL'
-                                % type(data).__name__)
+                                % type(d).__name__)
         super(WMTS, self).__init__(data, **params)
 
 

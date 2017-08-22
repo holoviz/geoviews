@@ -3,6 +3,12 @@ import copy
 import numpy as np
 import param
 from cartopy import crs as ccrs
+
+try:
+    from owslib.wmts import WebMapTileService
+except:
+    WebMapTileService = None
+
 from holoviews.core import (Store, HoloMap, Layout, Overlay,
                             CompositeOverlay, Element, NdLayout)
 from holoviews.core import util
@@ -378,12 +384,25 @@ class WMTSPlot(GeoPlot):
                   'filterrad', 'clims', 'norm']
 
     def get_data(self, element, ranges, style):
-        tile_sources = [ts for ts in element.data
-                        if isinstance(ts, util.basestring)]
-        if not tile_sources:
+        if WebMapTileService is None:
+            raise SkipRendering('WMTS element requires owslib and PIL '
+                                'to be installed.')
+        tile_source = None
+        for url in element.data:
+            if isinstance(url, util.basestring):
+                try:
+                    tile_source = WebMapTileService(url)
+                    break
+                except:
+                    pass
+            elif isinstance(url, WebMapTileService):
+                tile_source = url
+                break
+
+        if tile_source is None:
             raise SkipRendering("No valid tile source URL found in WMTS "
                                 "Element, rendering skipped.")
-        return (tile_sources[0], element.layer), style, {}
+        return (tile_source, element.layer), style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
         return {'artist': ax.add_wmts(*plot_args, **plot_kwargs)}

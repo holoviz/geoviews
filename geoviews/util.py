@@ -67,18 +67,26 @@ def polygon_to_geom(polygon):
     return MultiPolygon(polys)
 
 
-def geom_to_array(geoms):
-    xs, ys = [], []
-    for geom in geoms:
-        if hasattr(geom, 'exterior'):
-            xs.append(np.array(geom.exterior.coords.xy[0]))
-            ys.append(np.array(geom.exterior.coords.xy[1]))
-        else:
-            geom_data = geom.array_interface()
-            arr = np.array(geom_data['data']).reshape(geom_data['shape'])
+def geom_to_arr(geom):
+    arr = geom.array_interface_base['data']
+    return np.array(arr).reshape(int(len(arr)/2), 2)
+
+
+def geom_to_array(geom):
+    if hasattr(geom, 'exterior'):
+        xs = np.array(geom.exterior.coords.xy[0])
+        ys = np.array(geom.exterior.coords.xy[1])
+    else:
+        xs, ys = [], []
+        for g in geom:
+            arr = geom_to_arr(g)
             xs.append(arr[:, 0])
             ys.append(arr[:, 1])
-    return xs, ys
+            xs.append([np.NaN])
+            ys.append([np.NaN])
+        xs = np.concatenate(xs)
+        ys = np.concatenate(ys)
+    return np.column_stack([xs, ys])
 
 
 def geo_mesh(element):

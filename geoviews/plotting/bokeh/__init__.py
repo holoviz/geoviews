@@ -18,7 +18,8 @@ from holoviews.plotting.bokeh.raster import RasterPlot
 
 from ...element import (WMTS, Points, Polygons, Path, Contours, Shape, Image,
                         Feature, is_geographic, Text, _Element)
-from ...operation import project_image, project_shape, project_points, project_path
+from ...operation import project_image, project_shape, project_points, project_path, project_image_fast
+from ...operation import 
 from ...util import project_extents, geom_to_array
 
 DEFAULT_PROJ = GOOGLE_MERCATOR
@@ -150,6 +151,20 @@ class GeoPointPlot(GeoPlot, PointPlot):
 class GeoRasterPlot(GeoPlot, RasterPlot):
 
     _project_operation = project_image
+
+    def get_data(self, element, ranges=None, empty=False):
+        l, b, r, t = self.get_extents(element, ranges)
+        if self.geographic:
+            element = project_image_fast(element, projection=DEFAULT_PROJ)
+        img = element.dimension_values(2, flat=False)
+        mapping = dict(image='image', x='x', y='y', dw='dw', dh='dh')
+        if empty:
+            data = dict(image=[], x=[], y=[], dw=[], dh=[])
+        else:
+            dh = t-b
+            data = dict(image=[img], x=[l],
+                        y=[b], dw=[r-l], dh=[dh])
+        return (data, mapping)
 
 
 class GeoPolygonPlot(GeoPlot, PolygonPlot):

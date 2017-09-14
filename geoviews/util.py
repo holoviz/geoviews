@@ -20,6 +20,12 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     if y1 < cy1: y1 = cy1
     if y2 > cy2:  y2 = cy2
 
+    # Offset with tolerances
+    x1 += tol
+    x2 -= tol
+    y1 += tol
+    y2 -= tol
+
     # Wrap longitudes
     cx1, cx2 = src_proj.x_limits
     if isinstance(src_proj, ccrs._CylindricalProjection):
@@ -28,12 +34,6 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     else:
         if x1 < cx1: x1 = cx1
         if x2 > cx2: x2 = cx2
-
-    # Offset with tolerances
-    x1 += tol
-    x2 -= tol
-    y1 += tol
-    y2 -= tol
 
     domain_in_src_proj = Polygon([[x1, y1], [x2, y1],
                                   [x2, y2], [x1, y2],

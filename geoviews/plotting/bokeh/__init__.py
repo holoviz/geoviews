@@ -100,6 +100,7 @@ class TilePlot(GeoPlot):
 
     def _update_glyph(self, renderer, properties, mapping, glyph):
         allowed_properties = glyph.properties()
+        mapping['url'] = mapping.pop('tile_source').url
         merged = dict(properties, **mapping)
         glyph.update(**{k: v for k, v in merged.items()
                         if k in allowed_properties})

@@ -6,7 +6,7 @@ import numpy as np
 import shapely.geometry
 from cartopy.crs import GOOGLE_MERCATOR
 from bokeh.models import WMTSTileSource, MercatorTickFormatter, MercatorTicker
-from bokeh.models.tools import BoxZoomTool
+from bokeh.models.tools import BoxZoomTool, HoverTool
 
 from holoviews import Store, Overlay, NdOverlay
 from holoviews.core import util
@@ -138,6 +138,7 @@ class GeoPointPlot(GeoPlot, PointPlot):
 
     def get_data(self, *args, **kwargs):
         data, mapping = super(GeoPointPlot, self).get_data(*args, **kwargs)
+        if self.static_source: return data, mapping
         element = args[0]
         xdim, ydim = element.dimensions('key', label=True)
         if len(data[xdim]) and element.crs not in [DEFAULT_PROJ, None]:
@@ -151,6 +152,7 @@ class GeoPointPlot(GeoPlot, PointPlot):
 class GeoRasterPlot(GeoPlot, RasterPlot):
 
     def get_data(self, element, ranges=None, empty=False):
+        if self.static_source: return {}, {}
         l, b, r, t = self.get_extents(element, ranges)
         if self.geographic:
             element = project_image(element, projection=DEFAULT_PROJ)
@@ -172,15 +174,36 @@ class GeometryPlot(GeoPlot):
     """
 
     def get_data(self, element, ranges=None, empty=False):
-        data, mapping = super(GeometryPlot, self).get_data(element, ranges, empty)
         if not self.geographic:
-            return data, mapping
-        geoms = element.geom()
-        if element.crs:
-            geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)
-        xs, ys = geom_to_array(geoms)
-        data['xs'] = xs
-        data['ys'] = ys
+            return super(GeometryPlot, self).get_data(element, ranges, empty)
+        
+        if self.static_source:
+            data = {}
+        else:
+            geoms = element.geom()
+            if element.crs:
+                geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)
+            xs, ys = geom_to_array(geoms)
+            data = dict(xs=ys, ys=xs) if self.invert_axes else dict(xs=xs, ys=ys)
+
+        style = self.style[self.cyclic_index]
+        mapping = dict(self._mapping)
+        if element.vdims and getattr(element, 'level', None) is not None:
+            cdim = element.vdims[0]
+            dim_name = util.dimension_sanitizer(cdim.name)
+            data[dim_name] = [element.level for _ in range(len(xs))]
+            cmapper = self._get_colormapper(cdim, element, ranges, style)
+            color_prop = 'fill_color' if isinstance(element, Polygons) else 'line_color'
+            mapping[color_prop] = {'field': dim_name, 'transform': cmapper}
+
+        if any(isinstance(t, HoverTool) for t in self.state.tools):
+            dim_name = util.dimension_sanitizer(element.vdims[0].name)
+            for k, v in self.overlay_dims.items():
+                dim = util.dimension_sanitizer(k.name)
+                data[dim] = [v for _ in range(len(xs))]
+            data[dim_name] = [element.level for _ in range(len(xs))]
+
+        self._get_hover_data(data, element, empty)
         return data, mapping
 
 
@@ -195,26 +218,30 @@ class GeoPathPlot(GeometryPlot, PathPlot):
 class GeoShapePlot(GeoPolygonPlot):
 
     def get_data(self, element, ranges=None, empty=False):
-        geoms = element.geom()
-        if self.geographic and element.crs != DEFAULT_PROJ:
-            try:
-                geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)
-            except:
-                empty = True
-        xs, ys = ([], []) if empty else geom_to_array(geoms)
-        data = dict(xs=xs, ys=ys)
+        if self.static_source:
+            data = {}
+        else:
+            geoms = element.geom()
+            if self.geographic and element.crs != DEFAULT_PROJ:
+                try:
+                    geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)
+                except:
+                    empty = True
+            xs, ys = ([], []) if empty else geom_to_array(geoms)
+            data = dict(xs=xs, ys=ys)
 
-        style = self.style[self.cyclic_index]
-        cmap = style.get('palette', style.get('cmap', None))
         mapping = dict(self._mapping)
-        dim = element.vdims[0].name if element.vdims else None
-        if cmap and dim and element.level is not None:
-            cdim = element.vdims[0]
-            dim_name = util.dimension_sanitizer(cdim.name)
-            cmapper = self._get_colormapper(cdim, element, ranges, style)
-            data[dim_name] = [] if empty else [element.level for _ in range(len(xs))]
-            mapping['fill_color'] = {'field': dim_name,
-                                     'transform': cmapper}
+        if element.level is not None:
+            style = self.style[self.cyclic_index]
+            cmap = style.get('palette', style.get('cmap', None))
+            dim = element.vdims[0].name if element.vdims else None
+            if cmap and dim:
+                cdim = element.vdims[0]
+                dim_name = util.dimension_sanitizer(cdim.name)
+                cmapper = self._get_colormapper(cdim, element, ranges, style)
+                data[dim_name] = [] if empty else [element.level for _ in range(len(xs))]
+                mapping['fill_color'] = {'field': dim_name,
+                                         'transform': cmapper}
 
         if 'hover' in self.tools+self.default_tools:
             if dim:
@@ -233,6 +260,9 @@ class FeaturePlot(GeoPolygonPlot):
                                  doc="The scale of the Feature in meters.")
 
     def get_data(self, element, ranges, empty=[]):
+        mapping = dict(self._mapping)
+        if self.static_source: return {}, mapping
+
         feature = copy.copy(element.data)
         feature.scale = self.scale
         geoms = list(feature.geometries())
@@ -247,7 +277,7 @@ class FeaturePlot(GeoPolygonPlot):
         ys = [arr[1] for arr in arrays]
         data = dict(xs=list(itertools.chain(*xs)),
                     ys=list(itertools.chain(*ys)))
-        return data, dict(self._mapping)
+        return data, mapping
 
 
 class GeoTextPlot(GeoPlot, TextPlot):

@@ -16,7 +16,6 @@ from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverl
 from holoviews.plotting.bokeh.chart import PointPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot
 from holoviews.plotting.bokeh.raster import RasterPlot
-from holoviews.plotting.bokeh.util import IGNORED_MODELS
 
 from ...element import (WMTS, Points, Polygons, Path, Shape, Image,
                         Feature, is_geographic, Text, _Element)
@@ -24,7 +23,13 @@ from ...operation import project_image
 from ...util import project_extents, geom_to_array
 
 DEFAULT_PROJ = GOOGLE_MERCATOR
-IGNORED_MODELS += ['MercatorTicker', 'MercatorTickFormatter']
+
+try:
+    # Handle updating of ticker and formatter in holoviews<1.9.0
+    from holoviews.plotting.bokeh.util import IGNORED_MODELS
+    IGNORED_MODELS += ['MercatorTicker', 'MercatorTickFormatter']
+except:
+    pass
 
 line_types = (shapely.geometry.MultiLineString, shapely.geometry.LineString)
 poly_types = (shapely.geometry.MultiPolygon, shapely.geometry.Polygon)

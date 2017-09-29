@@ -5,7 +5,7 @@ import param
 import numpy as np
 import shapely.geometry
 from cartopy.crs import GOOGLE_MERCATOR
-from bokeh.models import WMTSTileSource
+from bokeh.models import WMTSTileSource, MercatorTickFormatter, MercatorTicker
 from bokeh.models.tools import BoxZoomTool
 
 from holoviews import Store, Overlay, NdOverlay
@@ -16,6 +16,7 @@ from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverl
 from holoviews.plotting.bokeh.chart import PointPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot
 from holoviews.plotting.bokeh.raster import RasterPlot
+from holoviews.plotting.bokeh.util import IGNORED_MODELS
 
 from ...element import (WMTS, Points, Polygons, Path, Shape, Image,
                         Feature, is_geographic, Text, _Element)
@@ -23,6 +24,7 @@ from ...operation import project_image
 from ...util import project_extents, geom_to_array
 
 DEFAULT_PROJ = GOOGLE_MERCATOR
+IGNORED_MODELS += ['MercatorTicker', 'MercatorTickFormatter']
 
 line_types = (shapely.geometry.MultiLineString, shapely.geometry.LineString)
 poly_types = (shapely.geometry.MultiPolygon, shapely.geometry.Polygon)
@@ -44,6 +46,18 @@ class GeoPlot(ElementPlot):
         super(GeoPlot, self).__init__(element, **params)
         self.geographic = is_geographic(self.hmap.last)
 
+
+    def _axis_properties(self, axis, key, plot, dimension=None,
+                         ax_mapping={'x': 0, 'y': 1}):
+        axis_props = super(GeoPlot, self)._axis_properties(axis, key, plot,
+                                                           dimension, ax_mapping)
+        if self.geographic:
+            dimension = 'lon' if axis == 'x' else 'lat'
+            axis_props['ticker'] = MercatorTicker(dimension=dimension)
+            axis_props['formatter'] = MercatorTickFormatter(dimension=dimension)
+        return axis_props
+
+
     def get_extents(self, element, ranges):
         """
         Subclasses the get_extents method using the GeoAxes
@@ -51,7 +65,7 @@ class GeoPlot(ElementPlot):
         Elements coordinate reference system.
         """
         extents = super(GeoPlot, self).get_extents(element, ranges)
-        if not getattr(element, 'crs', None):
+        if not getattr(element, 'crs', None) or not self.geographic:
             return extents
         elif any(e is None or not np.isfinite(e) for e in extents):
             extents = None
@@ -63,17 +77,18 @@ class GeoPlot(ElementPlot):
         return (np.NaN,)*4 if not extents else extents
 
 
-class OverlayPlot(HvOverlayPlot):
+
+class OverlayPlot(GeoPlot, HvOverlayPlot):
     """
     Subclasses the HoloViews OverlayPlot to add custom behavior
     for geographic plots.
     """
 
     def __init__(self, element, **params):
+        super(OverlayPlot, self).__init__(element, **params)
         self.geographic = any(element.traverse(is_geographic, [_Element]))
         if self.geographic:
             self.show_grid = False
-        super(OverlayPlot, self).__init__(element, **params)
 
 
 class TilePlot(GeoPlot):

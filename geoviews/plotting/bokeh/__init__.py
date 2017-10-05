@@ -98,7 +98,7 @@ class OverlayPlot(GeoPlot, HvOverlayPlot):
 
 class TilePlot(GeoPlot):
 
-    style_opts = ['alpha', 'render_parents']
+    style_opts = ['alpha', 'render_parents', 'level']
 
     def get_data(self, element, ranges=None, empty=False):
         tile_source = None
@@ -129,7 +129,8 @@ class TilePlot(GeoPlot):
         """
         Returns a Bokeh glyph object.
         """
-        renderer = plot.add_tile(mapping['tile_source'])
+        level = properties.pop('level', 'underlay')
+        renderer = plot.add_tile(mapping['tile_source'], level=level)
         renderer.alpha = properties.get('alpha', 1)
         return renderer, renderer
 

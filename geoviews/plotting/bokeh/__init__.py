@@ -100,7 +100,7 @@ class TilePlot(GeoPlot):
 
     style_opts = ['alpha', 'render_parents', 'level']
 
-    def get_data(self, element, ranges=None, empty=False):
+    def get_data(self, element, ranges, style):
         tile_source = None
         for url in element.data:
             if isinstance(url, util.basestring) and not url.endswith('cgi'):
@@ -116,7 +116,7 @@ class TilePlot(GeoPlot):
         if tile_source is None:
             raise SkipRendering("No valid tile source URL found in WMTS "
                                 "Element, rendering skipped.")
-        return {}, {'tile_source': tile_source}
+        return {}, {'tile_source': tile_source}, style
 
     def _update_glyph(self, renderer, properties, mapping, glyph):
         allowed_properties = glyph.properties()
@@ -137,35 +137,25 @@ class TilePlot(GeoPlot):
 
 class GeoPointPlot(GeoPlot, PointPlot):
 
-    def get_data(self, *args, **kwargs):
-        data, mapping = super(GeoPointPlot, self).get_data(*args, **kwargs)
-        if self.static_source: return data, mapping
-        element = args[0]
+    def get_data(self, element, ranges, style):
+        data, mapping, style = super(GeoPointPlot, self).get_data(element, ranges, style)
+        if self.static_source: return data, mapping, style
         xdim, ydim = element.dimensions('key', label=True)
         if len(data[xdim]) and element.crs not in [DEFAULT_PROJ, None]:
             points = DEFAULT_PROJ.transform_points(element.crs, data[xdim],
                                                    data[ydim])
             data[xdim] = points[:, 0]
             data[ydim] = points[:, 1]
-        return data, mapping
+        return data, mapping, style
 
 
 class GeoRasterPlot(GeoPlot, RasterPlot):
 
-    def get_data(self, element, ranges=None, empty=False):
-        if self.static_source: return {}, {}
-        l, b, r, t = self.get_extents(element, ranges)
+    def get_data(self, element, ranges, style):
         if self.geographic:
             element = project_image(element, projection=DEFAULT_PROJ)
-        img = element.dimension_values(2, flat=False)
-        mapping = dict(image='image', x='x', y='y', dw='dw', dh='dh')
-        if empty:
-            data = dict(image=[], x=[], y=[], dw=[], dh=[])
-        else:
-            dh = t-b
-            data = dict(image=[img], x=[l],
-                        y=[b], dw=[r-l], dh=[dh])
-        return (data, mapping)
+        return RasterPlot.get_data(self, element, ranges, style)
+
 
 
 class GeometryPlot(GeoPlot):
@@ -174,9 +164,9 @@ class GeometryPlot(GeoPlot):
     reference system before creating the glyph.
     """
 
-    def get_data(self, element, ranges=None, empty=False):
+    def get_data(self, element, ranges, style):
         if not self.geographic:
-            return super(GeometryPlot, self).get_data(element, ranges, empty)
+            return super(GeometryPlot, self).get_data(element, ranges, style)
         
         if self.static_source:
             data = {}
@@ -187,7 +177,6 @@ class GeometryPlot(GeoPlot):
             xs, ys = geom_to_array(geoms)
             data = dict(xs=ys, ys=xs) if self.invert_axes else dict(xs=xs, ys=ys)
 
-        style = self.style[self.cyclic_index]
         mapping = dict(self._mapping)
         if element.vdims and getattr(element, 'level', None) is not None:
             cdim = element.vdims[0]
@@ -204,8 +193,8 @@ class GeometryPlot(GeoPlot):
                 data[dim] = [v for _ in range(len(xs))]
             data[dim_name] = [element.level for _ in range(len(xs))]
 
-        self._get_hover_data(data, element, empty)
-        return data, mapping
+        self._get_hover_data(data, element)
+        return data, mapping, style
 
 
 class GeoPolygonPlot(GeometryPlot, PolygonPlot):
@@ -218,7 +207,7 @@ class GeoPathPlot(GeometryPlot, PathPlot):
 
 class GeoShapePlot(GeoPolygonPlot):
 
-    def get_data(self, element, ranges=None, empty=False):
+    def get_data(self, element, ranges, style):
         if self.static_source:
             data = {}
         else:
@@ -233,7 +222,6 @@ class GeoShapePlot(GeoPolygonPlot):
 
         mapping = dict(self._mapping)
         if element.level is not None:
-            style = self.style[self.cyclic_index]
             cmap = style.get('palette', style.get('cmap', None))
             dim = element.vdims[0].name if element.vdims else None
             if cmap and dim:
@@ -251,7 +239,7 @@ class GeoShapePlot(GeoPolygonPlot):
             for k, v in self.overlay_dims.items():
                 dim = util.dimension_sanitizer(k.name)
                 data[dim] = [v for _ in range(len(xs))]
-        return data, mapping
+        return data, mapping, style
 
 
 class FeaturePlot(GeoPolygonPlot):
@@ -260,9 +248,9 @@ class FeaturePlot(GeoPolygonPlot):
                                  objects=['10m', '50m', '110m'],
                                  doc="The scale of the Feature in meters.")
 
-    def get_data(self, element, ranges, empty=[]):
+    def get_data(self, element, ranges, style):
         mapping = dict(self._mapping)
-        if self.static_source: return {}, mapping
+        if self.static_source: return {}, mapping, style
 
         feature = copy.copy(element.data)
         feature.scale = self.scale
@@ -278,19 +266,19 @@ class FeaturePlot(GeoPolygonPlot):
         ys = [arr[1] for arr in arrays]
         data = dict(xs=list(itertools.chain(*xs)),
                     ys=list(itertools.chain(*ys)))
-        return data, mapping
+        return data, mapping, style
 
 
 class GeoTextPlot(GeoPlot, TextPlot):
 
-    def get_data(self, element, ranges=None, empty=False):
+    def get_data(self, element, ranges, style):
         mapping = dict(x='x', y='y', text='text')
-        if empty or not self.geographic:
-            return super(GeoTextPlot, self).get_data(element, ranges, empty)
+        if self.geographic:
+            return super(GeoTextPlot, self).get_data(element, ranges, style)
         if element.crs:
             x, y = DEFAULT_PROJ.transform_point(element.x, element.y,
                                                 element.crs)
-        return (dict(x=[x], y=[y], text=[element.text]), mapping)
+        return (dict(x=[x], y=[y], text=[element.text]), mapping, style)
 
     def get_extents(self, element, ranges=None):
         return None, None, None, None

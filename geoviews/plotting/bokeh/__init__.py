@@ -14,10 +14,10 @@ from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.bokeh.annotation import TextPlot
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 from holoviews.plotting.bokeh.chart import PointPlot
-from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot
+from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
 from holoviews.plotting.bokeh.raster import RasterPlot
 
-from ...element import (WMTS, Points, Polygons, Path, Shape, Image,
+from ...element import (WMTS, Points, Polygons, Path, Contours, Shape, Image,
                         Feature, is_geographic, Text, _Element)
 from ...operation import project_image, project_shape, project_points, project_path
 from ...util import project_extents, geom_to_array
@@ -158,6 +158,11 @@ class GeoPolygonPlot(GeoPlot, PolygonPlot):
     _project_operation = project_path
 
 
+class GeoContourPlot(GeoPlot, ContourPlot):
+
+    _project_operation = project_path
+
+
 class GeoPathPlot(GeoPlot, PathPlot):
 
     _project_operation = project_path
@@ -174,9 +179,9 @@ class GeoShapePlot(GeoPolygonPlot):
             data = dict(xs=[xs], ys=[ys])
 
         mapping = dict(self._mapping)
+        dim = element.vdims[0].name if element.vdims else None
         if element.level is not None:
             cmap = style.get('palette', style.get('cmap', None))
-            dim = element.vdims[0].name if element.vdims else None
             if cmap and dim:
                 cdim = element.vdims[0]
                 dim_name = util.dimension_sanitizer(cdim.name)
@@ -238,6 +243,7 @@ class GeoTextPlot(GeoPlot, TextPlot):
 Store.register({WMTS: TilePlot,
                 Points: GeoPointPlot,
                 Polygons: GeoPolygonPlot,
+                Contours: GeoContourPlot,
                 Path: GeoPathPlot,
                 Shape: GeoShapePlot,
                 Image: GeoRasterPlot,

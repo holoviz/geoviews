@@ -18,13 +18,14 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     AnnotationPlot, TextPlot,
                                     LayoutPlot as HvLayoutPlot,
                                     OverlayPlot as HvOverlayPlot,
-                                    PathPlot, PolygonPlot, ImagePlot)
+                                    PathPlot, PolygonPlot, ImagePlot,
+                                    ContourPlot)
 from holoviews.plotting.mpl.util import get_raster_array
 
 
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         LineContours, FilledContours, is_geographic,
-                        Path, Polygons, Shape, RGB)
+                        Path, Polygons, Shape, RGB, Contours)
 from ...util import path_to_geom, polygon_to_geom, project_extents, geo_mesh
 
 from ...operation import project_points, project_path
@@ -303,7 +304,17 @@ class GeometryPlot(GeoPlot):
 
 class GeoPathPlot(GeoPlot, PathPlot):
     """
-    Draws a scatter plot from the data in a Points Element.
+    Draws a Path plot from a Path Element.
+    """
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_path
+
+
+class GeoContourPlot(GeoPlot, ContourPlot):
+    """
+    Draws a contour plot from a Contours Element.
     """
 
     apply_ranges = param.Boolean(default=True)
@@ -476,6 +487,7 @@ Store.register({LineContours: LineContourPlot,
                 Overlay: OverlayPlot,
                 Polygons: GeoPolygonPlot,
                 Path: GeoPathPlot,
+                Contours: GeoContourPlot,
                 RGB: GeoRGBPlot,
                 Shape: GeoShapePlot}, 'matplotlib')
 

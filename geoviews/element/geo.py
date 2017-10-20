@@ -8,7 +8,7 @@ from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
 from holoviews.core.util import basestring, pd, max_extents, dimension_range
 from holoviews.element import (Text as HvText, Path as HvPath,
                                Polygons as HvPolygons, Image as HvImage,
-                               RGB as HvRGB)
+                               RGB as HvRGB, Contours as HvContours)
 
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry import (MultiLineString, LineString,
@@ -265,6 +265,20 @@ class Path(_Element, HvPath):
     """
     The Path Element contains a list of Paths stored as Nx2 numpy
     arrays along with a coordinate reference system.
+    """
+
+    def geom(self):
+        """
+        Returns Path as a shapely geometry.
+        """
+        return path_to_geom(self)
+
+
+class Contours(_Element, HvContours):
+    """
+    Contours is a Path Element type that may contain any number of
+    closed paths with an associated value and a coordinate reference
+    system.
     """
 
     def geom(self):

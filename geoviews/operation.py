@@ -6,7 +6,7 @@ from shapely.geometry import Polygon, LineString
 
 from holoviews.operation import ElementOperation
 
-from .element import Image, Shape, Polygons, Path, Points
+from .element import Image, Shape, Polygons, Path, Points, Contours
 from .util import project_extents, geom_to_array
 
 
@@ -21,7 +21,7 @@ class project_path(ElementOperation):
                                      instantiate=False, doc="""
         Projection the shape type is projected to.""")
 
-    supported_types = [Polygons, Path]
+    supported_types = [Polygons, Path, Contours]
 
     def _process_element(self, element):
         if element.interface.datatype == 'geodataframe':

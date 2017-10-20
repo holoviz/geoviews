@@ -14,9 +14,16 @@ class GeoPandasInterface(MultiInterface):
 
     datatype = 'geodataframe'
 
+    multi = True
+
     @classmethod
     def init(cls, eltype, data, kdims, vdims):
-        return data, {'kdims': eltype.kdims, 'vdims': []}, {}
+        dims = {'kdims': eltype.kdims, 'vdims': eltype.vdims}
+        if kdims is not None:
+            dims['kdims'] = kdims
+        if vdims is not None:
+            dims['vdims'] = vdims
+        return data, dims, {}
 
     @classmethod
     def validate(cls, dataset):
@@ -103,11 +110,32 @@ class GeoPandasInterface(MultiInterface):
         return np.concatenate(values[:-1]) if values else []
 
     @classmethod
-    def split(cls, dataset, start, end):
+    def split(cls, dataset, start, end, datatype, **kwargs):
         objs = []
-        for d in dataset.data.geometry:
-            arr = geom_to_array(d)
-            objs.append(dataset.clone(arr, datatype=cls.subtypes, vdims=[]))
+        xdim, ydim = dataset.kdims[:2]
+        row = dataset.data.iloc[0]
+        arr = geom_to_array(row['geometry'])
+        d = {(xdim.name, ydim.name): arr}
+        ds = dataset.clone(d, datatype=['dictionary'])
+        for i, row in dataset.data.iterrows():
+            if datatype == 'geom':
+                objs.append(row['geometry'])
+                continue
+            arr = geom_to_array(row['geometry'])
+            d = {xdim.name: arr[:, 0], ydim.name: arr[:, 1]}
+            d.update({vd.name: row[vd.name] for vd in dataset.vdims})
+            ds.data = d
+            if datatype == 'array':
+                obj = ds.array(**kwargs)
+            elif datatype == 'dataframe':
+                obj = ds.dframe(**kwargs)
+            elif datatype == 'columns':
+                obj = ds.columns(**kwargs)
+            elif datatype is None:
+                obj = ds.clone()
+            else:
+                raise ValueError("%s datatype not support" % datatype)
+            objs.append(obj)
         return objs
 
 

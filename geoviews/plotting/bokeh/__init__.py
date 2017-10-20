@@ -212,6 +212,7 @@ class GeoShapePlot(GeoPolygonPlot):
             data = {}
         else:
             geoms = element.geom()
+            empty = False
             if self.geographic and element.crs != DEFAULT_PROJ:
                 try:
                     geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)

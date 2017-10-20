@@ -1,7 +1,7 @@
 import numpy as np
 import geopandas as gpd
 
-from holoviews.core.data import Interface, MultiInterface
+from holoviews.core.data import Interface, MultiInterface, PandasInterface
 from holoviews.core.util import max_range
 from holoviews.element import Path
 
@@ -27,13 +27,26 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def validate(cls, dataset):
-        pass
+        not_found = [d for d in dataset.dimensions(label='name')[2:]
+                     if d not in dataset.data.columns]
+        if not_found:
+            raise ValueError("Supplied data does not contain specified "
+                             "dimensions, the following dimensions were "
+                             "not found: %s" % repr(not_found))
 
     @classmethod
     def dimension_type(cls, dataset, dim):
         arr = geom_to_array(dataset.data.geometry.iloc[0])
         ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
         return ds.interface.dimension_type(ds, dim)
+
+    @classmethod
+    def isscalar(cls, dataset, dim):
+        """
+        Tests if dimension is scalar in each subpath.
+        """
+        idx = dataset.get_dimension_index(dim)
+        return idx not in [0, 1]
 
     @classmethod
     def range(cls, dataset, dim):
@@ -50,7 +63,7 @@ class GeoPandasInterface(MultiInterface):
             dim = dataset.get_dimension(dim)
             vals = dataset.data[dim.name]
             return vals.min(), vals.max()
-        
+
     @classmethod
     def aggregate(cls, columns, dimensions, function, **kwargs):
         raise NotImplementedError
@@ -100,14 +113,25 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def values(cls, dataset, dimension, expanded, flat):
+        dimension = dataset.get_dimension(dimension)
+        idx = dataset.get_dimension_index(dimension)
+        data = dataset.data
+        if idx not in [0, 1] and not expanded:
+            return data[dimension.name].values
         values = []
-        arr = geom_to_array(dataset.data.geometry.iloc[0])
+        columns = list(data.columns)
+        arr = geom_to_array(data.geometry.iloc[0])
         ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
-        for d in dataset.data.geometry:
-            ds.data = geom_to_array(d)
-            values.append(ds.interface.values(ds, dimension))
+        for i, d in enumerate(data.geometry):
+            arr = geom_to_array(d)
+            if idx in [0, 1]:
+                ds.data = arr
+                values.append(ds.interface.values(ds, dimension))
+            else:
+                arr = np.full(len(arr), data.iloc[i, columns.index(dimension.name)])
+                values.append(arr)
             values.append([np.NaN])
-        return np.concatenate(values[:-1]) if values else []
+        return np.concatenate(values[:-1]) if values else np.array([])
 
     @classmethod
     def split(cls, dataset, start, end, datatype, **kwargs):
@@ -116,6 +140,7 @@ class GeoPandasInterface(MultiInterface):
         row = dataset.data.iloc[0]
         arr = geom_to_array(row['geometry'])
         d = {(xdim.name, ydim.name): arr}
+        d.update({vd.name: row[vd.name] for vd in dataset.vdims})
         ds = dataset.clone(d, datatype=['dictionary'])
         for i, row in dataset.data.iterrows():
             if datatype == 'geom':

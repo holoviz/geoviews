@@ -1,9 +1,10 @@
 import numpy as np
 from cartopy import crs as ccrs
 from shapely.geometry import (MultiLineString, LineString,
-                              MultiPolygon, Polygon)
+                              MultiPolygon, Polygon, asLineString,
+                              asPolygon)
 
-from .element import RGB
+#from .element import RGB
 
 
 def wrap_lons(lons, base, period):
@@ -53,18 +54,48 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     return geom_in_crs.bounds
 
 
-def path_to_geom(path):
+def path_to_geom(path, multi=True):
     lines = []
-    for path in path.data:
-        lines.append(LineString(path))
-    return MultiLineString(lines)
+    datatype = 'geom' if path.interface.datatype == 'geodataframe' else 'array'
+    for path in path.split(datatype=datatype):
+        if datatype == 'array':
+            path = LineString(path)
+        elif path.geom_type == 'MultiPolygon':
+            for geom in path:
+                lines.append(geom.exterior)
+            continue
+        elif path.geom_type == 'Polygon':
+            path = path.exterior
+        else:
+            path = path
+        if path.geom_type == 'MultiLineString':
+            for geom in path:
+                lines.append(geom)
+        else:
+            lines.append(path)
+    return MultiLineString(lines) if multi else lines
 
 
-def polygon_to_geom(polygon):
-    polys = []
-    for poly in polygon.data:
-        polys.append(Polygon(poly))
-    return MultiPolygon(polys)
+def polygon_to_geom(poly, multi=True):
+    lines = []
+    datatype = 'geom' if poly.interface.datatype == 'geodataframe' else 'array'
+    for path in poly.split(datatype=datatype):
+        if datatype == 'array':
+            path = Polygon(path)
+        elif path.geom_type == 'MultiLineString':
+            for geom in path:
+                lines.append(geom.convex_hull)
+            continue
+        elif path.geom_type == 'MultiPolygon':
+            for geom in path:
+                lines.append(geom)
+            continue
+        elif path.geom_type == 'LineString':
+            path = path.convex_hull
+        else:
+            path = path
+        lines.append(path)
+    return MultiPolygon(lines) if multi else lines
 
 
 def geom_to_arr(geom):
@@ -84,8 +115,8 @@ def geom_to_array(geom):
             ys.append(arr[:, 1])
             xs.append([np.NaN])
             ys.append([np.NaN])
-        xs = np.concatenate(xs)
-        ys = np.concatenate(ys)
+        xs = np.concatenate(xs[:-1]) if xs else np.array([])
+        ys = np.concatenate(ys[:-1]) if ys else np.array([])
     return np.column_stack([xs, ys])
 
 

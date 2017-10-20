@@ -5,7 +5,7 @@ from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
 from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
-from holoviews.core.util import basestring, pd
+from holoviews.core.util import basestring, pd, max_extents, dimension_range
 from holoviews.element import (Text as HvText, Path as HvPath,
                                Polygons as HvPolygons, Image as HvImage,
                                RGB as HvRGB)
@@ -29,7 +29,10 @@ try:
 except:
     WebMapTileService = None
 
-geographic_types = (cGoogleTiles, cFeature)
+from ..data.geopandas import GeoPandasInterface
+from ..util import path_to_geom, polygon_to_geom
+
+geographic_types = (cGoogleTiles, cFeature, BaseGeometry)
 
 def is_geographic(element, kdims=None):
     """
@@ -47,7 +50,7 @@ def is_geographic(element, kdims=None):
 
     if len(kdims) != 2:
         return False
-    if isinstance(element.data, geographic_types) or isinstance(element, WMTS):
+    if isinstance(element.data, geographic_types) or isinstance(element, (WMTS, Feature)):
         return True
     elif isinstance(element, _Element):
         return kdims == element.kdims and element.crs
@@ -124,6 +127,15 @@ class Feature(_GeoFeature):
             raise TypeError('%s data has to be an cartopy Feature type'
                             % type(data).__name__)
         super(Feature, self).__init__(data, **params)
+
+    def range(self, dim, data_range=True):
+        didx = self.get_dimension_index(dim)
+        if didx in [0, 1] and data_range:
+            dim = self.get_dimension(dim)
+            l, b, r, t = max_extents([geom.bounds for geom in self.data.geometries()])
+            lower, upper = (b, t) if didx else (l, r)
+            return dimension_range(lower, upper, dim)
+        return super(Feature, self).range(dim, data_range)
 
 
 class WMTS(_GeoFeature):
@@ -259,10 +271,7 @@ class Path(_Element, HvPath):
         """
         Returns Path as a shapely geometry.
         """
-        lines = []
-        for path in self.data:
-            lines.append(LineString(path))
-        return MultiLineString(lines)
+        return path_to_geom(self)
 
 
 class Polygons(_Element, HvPolygons):
@@ -274,12 +283,9 @@ class Polygons(_Element, HvPolygons):
 
     def geom(self):
         """
-        Returns Polygons as a shapely geometry.
+        Returns Path as a shapely geometry.
         """
-        polys = []
-        for poly in self.data:
-            polys.append(Polygon(poly))
-        return MultiPolygon(polys)
+        return polygon_to_geom(self)
 
 
 class Shape(_Element):
@@ -420,22 +426,20 @@ class Shape(_Element):
             return []
 
 
-    def range(self, dimension):
-        dim = self.get_dimension(dimension)
+    def range(self, dim, data_range=True):
+        dim = self.get_dimension(dim)
         if dim.range != (None, None):
             return dim.range
 
-        idx = self.get_dimension_index(dimension)
-        if idx == 2:
+        idx = self.get_dimension_index(dim)
+        if idx == 2 and data_range:
             return self.level, self.level
-        if idx in [0, 1]:
+        if idx in [0, 1] and data_range:
             l, b, r, t = self.data.bounds
-            if idx == 0:
-                return l, r
-            elif idx == 1:
-                return b, t
+            lower, upper = (b, t) if idx else (l, r)
+            return dimension_range(lower, upper, dim)
         else:
-            return (np.NaN, np.NaN)
+            return super(Shape, self).range(dim, data_range)
 
 
     def geom(self):

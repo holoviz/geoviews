@@ -2,6 +2,7 @@ import numpy as np
 import geopandas as gpd
 
 from holoviews.core.data import Interface, MultiInterface, PandasInterface
+from holoviews.core.data.interface  import DataError
 from holoviews.core.util import max_range
 from holoviews.element import Path
 
@@ -18,19 +19,29 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def init(cls, eltype, data, kdims, vdims):
-        dims = {'kdims': eltype.kdims, 'vdims': eltype.vdims}
+        if not isinstance(data, gpd.GeoDataFrame):
+            raise ValueError("GeoPandasInterface only support geopandas DataFrames.")
+        elif 'geometry' not in data:
+            raise DataError("GeoPandas dataframe must contain geometry column, "
+                            "to plot non-geographic data use pandas DataFrame.", cls)
         if kdims is not None:
-            dims['kdims'] = kdims
-        if vdims is not None:
-            dims['vdims'] = vdims
-        return data, dims, {}
+            if len(kdims) != 2:
+                raise DataError("Expected two kdims to use GeoDataFrame, found %d."
+                                % len(kdims))
+        else:
+            kdims = eltype.kdims
+
+        if vdims is None:
+            vdims = eltype.vdims
+        return data, {'kdims': kdims, 'vdims': vdims}, {}
 
     @classmethod
-    def validate(cls, dataset):
+    def validate(cls, dataset, vdims=True):
+        dim_types = 'key' if vdims else 'all'
         not_found = [d for d in dataset.dimensions(label='name')[2:]
                      if d not in dataset.data.columns]
         if not_found:
-            raise ValueError("Supplied data does not contain specified "
+            raise DataError("Supplied data does not contain specified "
                              "dimensions, the following dimensions were "
                              "not found: %s" % repr(not_found))
 

@@ -68,12 +68,12 @@ class GeoPointPlot(GeoPlot, PointPlot):
 
 class GeoRasterPlot(GeoPlot, RasterPlot):
 
-    _project_operation = project_image.instance(fast=True)
+    _project_operation = project_image.instance(fast=False)
 
 
 class GeoRGBPlot(GeoPlot, RGBPlot):
 
-    _project_operation = project_image.instance(fast=True)
+    _project_operation = project_image.instance(fast=False)
 
 
 class GeoPolygonPlot(GeoPlot, PolygonPlot):

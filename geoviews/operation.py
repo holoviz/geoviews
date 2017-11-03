@@ -160,8 +160,8 @@ class project_image(Operation):
         ys = element.dimension_values(1)
         if isinstance(element, RGB):
             rgb = element.rgb
-            array = np.dstack([np.flipud(element.dimension_values(d, flat=False))
-                               for d in element.vdims])
+            array = np.dstack([np.flipud(rgb.dimension_values(d, flat=False))
+                               for d in rgb.vdims])
         else:
             array = element.dimension_values(2, flat=False)
 

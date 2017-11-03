@@ -14,10 +14,10 @@ from holoviews.plotting.bokeh.annotation import TextPlot
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 from holoviews.plotting.bokeh.chart import PointPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
-from holoviews.plotting.bokeh.raster import RasterPlot
+from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot
 
 from ...element import (WMTS, Points, Polygons, Path, Contours, Shape, Image,
-                        Feature, is_geographic, Text, _Element)
+                        Feature, is_geographic, Text, RGB, _Element)
 from ...operation import project_image, project_shape, project_points, project_path
 from ...util import project_extents, geom_to_array
 
@@ -149,7 +149,12 @@ class GeoPointPlot(GeoPlot, PointPlot):
 
 class GeoRasterPlot(GeoPlot, RasterPlot):
 
-    _project_operation = project_image
+    _project_operation = project_image.instance(fast=True)
+
+
+class GeoRGBPlot(GeoPlot, RGBPlot):
+
+    _project_operation = project_image.instance(fast=True)
 
 
 class GeoPolygonPlot(GeoPlot, PolygonPlot):
@@ -246,6 +251,7 @@ Store.register({WMTS: TilePlot,
                 Path: GeoPathPlot,
                 Shape: GeoShapePlot,
                 Image: GeoRasterPlot,
+                RGB: GeoRGBPlot,
                 Feature: FeaturePlot,
                 Text: GeoTextPlot,
                 Overlay: OverlayPlot,

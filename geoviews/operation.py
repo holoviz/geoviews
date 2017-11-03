@@ -165,7 +165,7 @@ class project_image(Operation):
         else:
             array = element.dimension_values(2, flat=False)
 
-        (x0, x1), (y0, y1) = element.range(0), element.range(1)
+        (x0, y0, x1, y1) = element.bounds.lbrt()
         width = int(w) if self.p.width is None else self.p.width
         height = int(h) if self.p.height is None else self.p.height
 
@@ -175,8 +175,11 @@ class project_image(Operation):
         xvalues = []
         for xb in bounds['x']:
             px0, py0, px1, py1 = project_extents((xb[0], yb[0], xb[1], yb[1]), element.crs, proj)
-            xfraction = (xb[1]-xb[0])/(x1-x0)
-            fraction_width = int(width*xfraction)
+            if len(bounds['x']) > 1:
+                xfraction = (xb[1]-xb[0])/(x1-x0)
+                fraction_width = int(width*xfraction)
+            else:
+                fraction_width = width
             xs = np.linspace(px0, px1, fraction_width)
             ys = np.linspace(py0, py1, height)
             cxs, cys = cartesian_product([xs, ys])
@@ -186,6 +189,10 @@ class project_image(Operation):
             icys = (((pys-y0) / (y1-y0)) * h).astype(int)
             xvalues.append(xs)
 
+            icxs[icxs<0] = 0
+            icys[icys<0] = 0
+            icxs[icxs>=w] = w-1
+            icys[icys>=h] = h-1
             resampled_arr = array[icys, icxs]
             if isinstance(element, RGB):
                 nvdims = len(element.vdims)

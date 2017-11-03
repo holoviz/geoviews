@@ -9,7 +9,7 @@ except ImportError:
 
 
 setup_args = {}
-install_requires = ['param>=1.5.1', 'numpy>=1.0', 'holoviews>=1.8.0',
+install_requires = ['param>=1.5.1', 'numpy>=1.0', 'holoviews>=1.9.0',
                     'cartopy>=0.14.2']
 extras_require={}
 
@@ -19,7 +19,7 @@ extras_require['notebook-dependencies'] = ['jupyter', 'pyzmq', 'jinja2', 'tornad
 
 setup_args.update(dict(
     name='geoviews',
-    version="1.3.2",
+    version="1.4.0",
     install_requires = install_requires,
     extras_require = extras_require,
     description='GeoViews.',

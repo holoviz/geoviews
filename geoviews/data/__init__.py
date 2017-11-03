@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import param
 
 try:
-    from . import geopandas
+    from . import geopandas # noqa (API import)
 except ImportError:
     pass
 except Exception as e:

@@ -11,8 +11,6 @@ from holoviews.element import (Text as HvText, Path as HvPath,
                                RGB as HvRGB, Contours as HvContours)
 
 from shapely.geometry.base import BaseGeometry
-from shapely.geometry import (MultiLineString, LineString,
-                              MultiPolygon, Polygon)
 
 try:
     from iris.cube import Cube
@@ -29,7 +27,6 @@ try:
 except:
     WebMapTileService = None
 
-from ..data.geopandas import GeoPandasInterface
 from ..util import path_to_geom, polygon_to_geom
 
 geographic_types = (cGoogleTiles, cFeature, BaseGeometry)

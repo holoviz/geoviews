@@ -1,12 +1,11 @@
 import copy
-import itertools
 
 import param
 import numpy as np
 import shapely.geometry
 from cartopy.crs import GOOGLE_MERCATOR
 from bokeh.models import WMTSTileSource, MercatorTickFormatter, MercatorTicker
-from bokeh.models.tools import BoxZoomTool, HoverTool
+from bokeh.models.tools import BoxZoomTool
 
 from holoviews import Store, Overlay, NdOverlay
 from holoviews.core import util

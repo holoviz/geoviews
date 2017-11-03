@@ -26,7 +26,7 @@ from holoviews.plotting.mpl.util import get_raster_array
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         LineContours, FilledContours, is_geographic,
                         Path, Polygons, Shape, RGB, Contours)
-from ...util import path_to_geom, polygon_to_geom, project_extents, geo_mesh
+from ...util import project_extents, geo_mesh
 
 from ...operation import project_points, project_path
 
@@ -192,6 +192,7 @@ class LineContourPlot(GeoPlot, ColorbarPlot):
 
     def get_data(self, element, ranges, style):
         args = geo_mesh(element)
+        style.pop('label', None)
         if isinstance(self.levels, int):
             args += (self.levels,)
         else:

@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import numpy as np
 from geopandas import GeoDataFrame
 
-from holoviews.core.data import Interface, MultiInterface, PandasInterface
+from holoviews.core.data import Interface, MultiInterface
 from holoviews.core.data.interface  import DataError
 from holoviews.core.util import max_range
 from holoviews.element import Path
@@ -40,7 +40,7 @@ class GeoPandasInterface(MultiInterface):
     @classmethod
     def validate(cls, dataset, vdims=True):
         dim_types = 'key' if vdims else 'all'
-        not_found = [d for d in dataset.dimensions(label='name')[2:]
+        not_found = [d for d in dataset.dimensions(dim_types, label='name')[2:]
                      if d not in dataset.data.columns]
         if not_found:
             raise DataError("Supplied data does not contain specified "

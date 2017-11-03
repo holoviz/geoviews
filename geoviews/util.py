@@ -1,10 +1,7 @@
 import numpy as np
 from cartopy import crs as ccrs
-from shapely.geometry import (MultiLineString, LineString,
-                              MultiPolygon, Polygon, asLineString,
-                              asPolygon)
+from shapely.geometry import (MultiLineString, LineString, MultiPolygon, Polygon)
 
-#from .element import RGB
 
 
 def wrap_lons(lons, base, period):
@@ -126,10 +123,11 @@ def geo_mesh(element):
     on a cylindrical coordinate system and wraps globally that data
     actually wraps around.
     """
-    if isinstance(element, RGB):
+    if len(element.vdims) > 1:
         xs, ys = (element.dimension_values(i, False, False)
                   for i in range(2))
-        zs = np.dstack([element.dimension_values(i, False, False) for i in range(2, 2+len(element.vdims))])
+        zs = np.dstack([element.dimension_values(i, False, False)
+                        for i in range(2, 2+len(element.vdims))])
     else:
         xs, ys, zs = (element.dimension_values(i, False, False)
                       for i in range(3))

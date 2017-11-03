@@ -17,7 +17,7 @@ from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
 from ...operation import project_image, project_shape, project_points, project_path
 from ...util import geom_to_array
 from .plot import GeoPlot, OverlayPlot, DEFAULT_PROJ
-from . import callbacks
+from . import callbacks # noqa
 
 line_types = (shapely.geometry.MultiLineString, shapely.geometry.LineString)
 poly_types = (shapely.geometry.MultiPolygon, shapely.geometry.Polygon)

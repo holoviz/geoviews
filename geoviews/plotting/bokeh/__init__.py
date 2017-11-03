@@ -14,12 +14,11 @@ from holoviews.plotting.bokeh.annotation import TextPlot
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 from holoviews.plotting.bokeh.chart import PointPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
-from holoviews.plotting.bokeh.raster import RasterPlot
+from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot
 
 from ...element import (WMTS, Points, Polygons, Path, Contours, Shape, Image,
-                        Feature, is_geographic, Text, _Element)
-from ...operation import project_image, project_shape, project_points, project_path, project_image_fast
-from ...operation import 
+                        Feature, is_geographic, Text, RGB, _Element)
+from ...operation import project_image, project_shape, project_points, project_path
 from ...util import project_extents, geom_to_array
 
 DEFAULT_PROJ = GOOGLE_MERCATOR
@@ -150,21 +149,12 @@ class GeoPointPlot(GeoPlot, PointPlot):
 
 class GeoRasterPlot(GeoPlot, RasterPlot):
 
-    _project_operation = project_image
+    _project_operation = project_image.instance(fast=True)
 
-    def get_data(self, element, ranges=None, empty=False):
-        l, b, r, t = self.get_extents(element, ranges)
-        if self.geographic:
-            element = project_image_fast(element, projection=DEFAULT_PROJ)
-        img = element.dimension_values(2, flat=False)
-        mapping = dict(image='image', x='x', y='y', dw='dw', dh='dh')
-        if empty:
-            data = dict(image=[], x=[], y=[], dw=[], dh=[])
-        else:
-            dh = t-b
-            data = dict(image=[img], x=[l],
-                        y=[b], dw=[r-l], dh=[dh])
-        return (data, mapping)
+
+class GeoRGBPlot(GeoPlot, RGBPlot):
+
+    _project_operation = project_image.instance(fast=True)
 
 
 class GeoPolygonPlot(GeoPlot, PolygonPlot):
@@ -261,6 +251,7 @@ Store.register({WMTS: TilePlot,
                 Path: GeoPathPlot,
                 Shape: GeoShapePlot,
                 Image: GeoRasterPlot,
+                RGB: GeoRGBPlot,
                 Feature: FeaturePlot,
                 Text: GeoTextPlot,
                 Overlay: OverlayPlot,

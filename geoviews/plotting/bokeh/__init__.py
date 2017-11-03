@@ -1,107 +1,26 @@
 import copy
 
 import param
-import numpy as np
 import shapely.geometry
-from cartopy.crs import GOOGLE_MERCATOR
-from bokeh.models import WMTSTileSource, MercatorTickFormatter, MercatorTicker
-from bokeh.models.tools import BoxZoomTool
+from bokeh.models import WMTSTileSource
 
 from holoviews import Store, Overlay, NdOverlay
 from holoviews.core import util
 from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.bokeh.annotation import TextPlot
-from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 from holoviews.plotting.bokeh.chart import PointPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
 from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot
 
-from ...element import (WMTS, Points, Polygons, Path, Contours, Shape, Image,
-                        Feature, is_geographic, Text, RGB, _Element)
+from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
+                        Image, Feature, Text, RGB)
 from ...operation import project_image, project_shape, project_points, project_path
-from ...util import project_extents, geom_to_array
-
-DEFAULT_PROJ = GOOGLE_MERCATOR
-
-try:
-    # Handle updating of ticker and formatter in holoviews<1.9.0
-    from holoviews.plotting.bokeh.util import IGNORED_MODELS
-    IGNORED_MODELS += ['MercatorTicker', 'MercatorTickFormatter']
-except:
-    pass
+from ...util import geom_to_array
+from .plot import GeoPlot, OverlayPlot, DEFAULT_PROJ
+from . import callbacks # noqa
 
 line_types = (shapely.geometry.MultiLineString, shapely.geometry.LineString)
 poly_types = (shapely.geometry.MultiPolygon, shapely.geometry.Polygon)
-
-
-class GeoPlot(ElementPlot):
-    """
-    Plotting baseclass for geographic plots with a cartopy projection.
-    """
-
-    default_tools = param.List(default=['save', 'pan', 'wheel_zoom',
-                                        BoxZoomTool(match_aspect=True), 'reset'],
-        doc="A list of plugin tools to use on the plot.")
-
-    show_grid = param.Boolean(default=False, doc="""
-        Whether to show gridlines on the plot.""")
-
-    # Project operation to apply to the element
-    _project_operation = None
-
-    def __init__(self, element, **params):
-        super(GeoPlot, self).__init__(element, **params)
-        self.geographic = is_geographic(self.hmap.last)
-
-
-    def _axis_properties(self, axis, key, plot, dimension=None,
-                         ax_mapping={'x': 0, 'y': 1}):
-        axis_props = super(GeoPlot, self)._axis_properties(axis, key, plot,
-                                                           dimension, ax_mapping)
-        if self.geographic:
-            dimension = 'lon' if axis == 'x' else 'lat'
-            axis_props['ticker'] = MercatorTicker(dimension=dimension)
-            axis_props['formatter'] = MercatorTickFormatter(dimension=dimension)
-        return axis_props
-
-
-    def get_extents(self, element, ranges):
-        """
-        Subclasses the get_extents method using the GeoAxes
-        set_extent method to project the extents to the
-        Elements coordinate reference system.
-        """
-        extents = super(GeoPlot, self).get_extents(element, ranges)
-        if not getattr(element, 'crs', None) or not self.geographic:
-            return extents
-        elif any(e is None or not np.isfinite(e) for e in extents):
-            extents = None
-        else:
-            try:
-                extents = project_extents(extents, element.crs, DEFAULT_PROJ)
-            except:
-                extents = None
-        return (np.NaN,)*4 if not extents else extents
-
-
-    def get_data(self, element, ranges, style):
-        if self._project_operation and self.geographic and element.crs != DEFAULT_PROJ:
-            element = self._project_operation(element)
-        return super(GeoPlot, self).get_data(element, ranges, style)
-
-
-class OverlayPlot(GeoPlot, HvOverlayPlot):
-    """
-    Subclasses the HoloViews OverlayPlot to add custom behavior
-    for geographic plots.
-    """
-
-    def __init__(self, element, **params):
-        super(OverlayPlot, self).__init__(element, **params)
-        self.geographic = any(element.traverse(is_geographic, [_Element]))
-        if self.geographic:
-            self.show_grid = False
-
 
 class TilePlot(GeoPlot):
 
@@ -178,7 +97,9 @@ class GeoShapePlot(GeoPolygonPlot):
         if self.static_source:
             data = {}
         else:
-            xs, ys = geom_to_array(project_shape(element).geom()).T
+            if self.geographic and element.crs != DEFAULT_PROJ:
+                element = project_shape(element)
+            xs, ys = geom_to_array(element.geom()).T
             if self.invert_axes: xs, ys = ys, xs
             data = dict(xs=[xs], ys=[ys])
 

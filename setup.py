@@ -28,6 +28,7 @@ setup_args.update(dict(
     license='BSD',
     url='https://github.com/ioam/geoviews',
     packages = ["geoviews",
+                "geoviews.data",
                 "geoviews.element",
                 "geoviews.plotting",
                 "geoviews.plotting.bokeh",

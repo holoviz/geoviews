@@ -18,14 +18,17 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     AnnotationPlot, TextPlot,
                                     LayoutPlot as HvLayoutPlot,
                                     OverlayPlot as HvOverlayPlot,
-                                    PathPlot, PolygonPlot, ImagePlot)
+                                    PathPlot, PolygonPlot, ImagePlot,
+                                    ContourPlot)
 from holoviews.plotting.mpl.util import get_raster_array
 
 
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         LineContours, FilledContours, is_geographic,
-                        Path, Polygons, Shape, RGB)
-from ...util import path_to_geom, polygon_to_geom, project_extents, geo_mesh
+                        Path, Polygons, Shape, RGB, Contours)
+from ...util import project_extents, geo_mesh
+
+from ...operation import project_points, project_path
 
 
 def _get_projection(el):
@@ -109,6 +112,9 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
     projection = param.Parameter(default=ccrs.PlateCarree())
 
+    # Project operation to apply to the element
+    _project_operation = None
+
     def __init__(self, element, **params):
         if 'projection' not in params:
             el = element.last if isinstance(element, HoloMap) else element
@@ -154,6 +160,12 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         return l, b, r, t
 
 
+    def get_data(self, element, ranges, style):
+        if self._project_operation and self.geographic and element.crs != self.projection:
+            element = self._project_operation(element, projection=self.projection)
+        return super(GeoPlot, self).get_data(element, ranges, style)
+
+
     def teardown_handles(self):
         """
         Delete artist handle so it can be redrawn.
@@ -180,6 +192,7 @@ class LineContourPlot(GeoPlot, ColorbarPlot):
 
     def get_data(self, element, ranges, style):
         args = geo_mesh(element)
+        style.pop('label', None)
         if isinstance(self.levels, int):
             args += (self.levels,)
         else:
@@ -277,11 +290,7 @@ class GeoPointPlot(GeoPlot, PointPlot):
 
     apply_ranges = param.Boolean(default=True)
 
-    def get_data(self, element, ranges, style):
-        data = super(GeoPointPlot, self).get_data(element, ranges, style)
-        args, style, axis_kwargs = data
-        style['transform'] = element.crs
-        return args, style, axis_kwargs
+    _project_operation = project_points
 
 
 class GeometryPlot(GeoPlot):
@@ -294,38 +303,34 @@ class GeometryPlot(GeoPlot):
             return super(GeometryPlot, self).init_artist(ax, plot_args, plot_kwargs)
 
 
-class GeoPathPlot(GeometryPlot, PathPlot):
+class GeoPathPlot(GeoPlot, PathPlot):
+    """
+    Draws a Path plot from a Path Element.
+    """
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_path
+
+
+class GeoContourPlot(GeoPlot, ContourPlot):
+    """
+    Draws a contour plot from a Contours Element.
+    """
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_path
+
+
+class GeoPolygonPlot(GeoPlot, PolygonPlot):
     """
     Draws a scatter plot from the data in a Points Element.
     """
 
     apply_ranges = param.Boolean(default=True)
 
-    def get_data(self, element, ranges, style):
-        if self.geographic:
-            return ([path_to_geom(element)], element.crs), style, {}
-        else:
-            return super(GeoPathPlot, self).get_data(element, ranges, style)
-
-
-class GeoPolygonPlot(GeometryPlot, PolygonPlot):
-    """
-    Draws a scatter plot from the data in a Points Element.
-    """
-
-    apply_ranges = param.Boolean(default=True)
-
-    def get_data(self, element, ranges, style):
-        if self.geographic:
-            vdim = element.vdims[0] if element.vdims else None
-            value = element.level
-            if vdim is not None and np.isfinite(value):
-                self._norm_kwargs(element, ranges, style, vdim)
-                style['clim'] = style.pop('vmin'), style.pop('vmax')
-                style['array'] = np.array([value]*len(element.data))
-            return ([polygon_to_geom(element)], element.crs), style, {}
-        else:
-            return super(GeoPolygonPlot, self).get_data(element, ranges, style)
+    _project_operation = project_path
 
 
 class GeoShapePlot(GeometryPlot, PolygonPlot):
@@ -342,7 +347,7 @@ class GeoShapePlot(GeometryPlot, PolygonPlot):
             if vdim is not None and (value is not None and np.isfinite(value)):
                 self._norm_kwargs(element, ranges, style, vdim)
                 style['clim'] = style.pop('vmin'), style.pop('vmax')
-                style['array'] = np.array([value]*len(element.data))
+                style['array'] = np.array([value])
             return ([element.data], element.crs), style, {}
         else:
             SkipRendering('Shape can only be plotted on geographic plot, '
@@ -483,6 +488,7 @@ Store.register({LineContours: LineContourPlot,
                 Overlay: OverlayPlot,
                 Polygons: GeoPolygonPlot,
                 Path: GeoPathPlot,
+                Contours: GeoContourPlot,
                 RGB: GeoRGBPlot,
                 Shape: GeoShapePlot}, 'matplotlib')
 

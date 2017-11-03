@@ -1,9 +1,7 @@
 import numpy as np
 from cartopy import crs as ccrs
-from shapely.geometry import (MultiLineString, LineString,
-                              MultiPolygon, Polygon)
+from shapely.geometry import (MultiLineString, LineString, MultiPolygon, Polygon)
 
-from .element import RGB
 
 
 def wrap_lons(lons, base, period):
@@ -53,32 +51,70 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     return geom_in_crs.bounds
 
 
-def path_to_geom(path):
+def path_to_geom(path, multi=True):
     lines = []
-    for path in path.data:
-        lines.append(LineString(path))
-    return MultiLineString(lines)
-
-
-def polygon_to_geom(polygon):
-    polys = []
-    for poly in polygon.data:
-        polys.append(Polygon(poly))
-    return MultiPolygon(polys)
-
-
-def geom_to_array(geoms):
-    xs, ys = [], []
-    for geom in geoms:
-        if hasattr(geom, 'exterior'):
-            xs.append(np.array(geom.exterior.coords.xy[0]))
-            ys.append(np.array(geom.exterior.coords.xy[1]))
+    datatype = 'geom' if path.interface.datatype == 'geodataframe' else 'array'
+    for path in path.split(datatype=datatype):
+        if datatype == 'array':
+            path = LineString(path)
+        elif path.geom_type == 'MultiPolygon':
+            for geom in path:
+                lines.append(geom.exterior)
+            continue
+        elif path.geom_type == 'Polygon':
+            path = path.exterior
         else:
-            geom_data = geom.array_interface()
-            arr = np.array(geom_data['data']).reshape(geom_data['shape'])
+            path = path
+        if path.geom_type == 'MultiLineString':
+            for geom in path:
+                lines.append(geom)
+        else:
+            lines.append(path)
+    return MultiLineString(lines) if multi else lines
+
+
+def polygon_to_geom(poly, multi=True):
+    lines = []
+    datatype = 'geom' if poly.interface.datatype == 'geodataframe' else 'array'
+    for path in poly.split(datatype=datatype):
+        if datatype == 'array':
+            path = Polygon(path)
+        elif path.geom_type == 'MultiLineString':
+            for geom in path:
+                lines.append(geom.convex_hull)
+            continue
+        elif path.geom_type == 'MultiPolygon':
+            for geom in path:
+                lines.append(geom)
+            continue
+        elif path.geom_type == 'LineString':
+            path = path.convex_hull
+        else:
+            path = path
+        lines.append(path)
+    return MultiPolygon(lines) if multi else lines
+
+
+def geom_to_arr(geom):
+    arr = geom.array_interface_base['data']
+    return np.array(arr).reshape(int(len(arr)/2), 2)
+
+
+def geom_to_array(geom):
+    if hasattr(geom, 'exterior'):
+        xs = np.array(geom.exterior.coords.xy[0])
+        ys = np.array(geom.exterior.coords.xy[1])
+    else:
+        xs, ys = [], []
+        for g in geom:
+            arr = geom_to_arr(g)
             xs.append(arr[:, 0])
             ys.append(arr[:, 1])
-    return xs, ys
+            xs.append([np.NaN])
+            ys.append([np.NaN])
+        xs = np.concatenate(xs[:-1]) if xs else np.array([])
+        ys = np.concatenate(ys[:-1]) if ys else np.array([])
+    return np.column_stack([xs, ys])
 
 
 def geo_mesh(element):
@@ -87,10 +123,11 @@ def geo_mesh(element):
     on a cylindrical coordinate system and wraps globally that data
     actually wraps around.
     """
-    if isinstance(element, RGB):
+    if len(element.vdims) > 1:
         xs, ys = (element.dimension_values(i, False, False)
                   for i in range(2))
-        zs = np.dstack([element.dimension_values(i, False, False) for i in range(2, 2+len(element.vdims))])
+        zs = np.dstack([element.dimension_values(i, False, False)
+                        for i in range(2, 2+len(element.vdims))])
     else:
         xs, ys, zs = (element.dimension_values(i, False, False)
                       for i in range(3))

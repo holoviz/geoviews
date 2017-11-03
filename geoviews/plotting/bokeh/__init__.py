@@ -1,12 +1,11 @@
 import copy
-import itertools
 
 import param
 import numpy as np
 import shapely.geometry
 from cartopy.crs import GOOGLE_MERCATOR
 from bokeh.models import WMTSTileSource, MercatorTickFormatter, MercatorTicker
-from bokeh.models.tools import BoxZoomTool, HoverTool
+from bokeh.models.tools import BoxZoomTool
 
 from holoviews import Store, Overlay, NdOverlay
 from holoviews.core import util
@@ -14,12 +13,12 @@ from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.bokeh.annotation import TextPlot
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 from holoviews.plotting.bokeh.chart import PointPlot
-from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot
+from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
 from holoviews.plotting.bokeh.raster import RasterPlot
 
-from ...element import (WMTS, Points, Polygons, Path, Shape, Image,
+from ...element import (WMTS, Points, Polygons, Path, Contours, Shape, Image,
                         Feature, is_geographic, Text, _Element)
-from ...operation import project_image
+from ...operation import project_image, project_shape, project_points, project_path
 from ...util import project_extents, geom_to_array
 
 DEFAULT_PROJ = GOOGLE_MERCATOR
@@ -46,6 +45,9 @@ class GeoPlot(ElementPlot):
 
     show_grid = param.Boolean(default=False, doc="""
         Whether to show gridlines on the plot.""")
+
+    # Project operation to apply to the element
+    _project_operation = None
 
     def __init__(self, element, **params):
         super(GeoPlot, self).__init__(element, **params)
@@ -81,6 +83,11 @@ class GeoPlot(ElementPlot):
                 extents = None
         return (np.NaN,)*4 if not extents else extents
 
+
+    def get_data(self, element, ranges, style):
+        if self._project_operation and self.geographic and element.crs != DEFAULT_PROJ:
+            element = self._project_operation(element)
+        return super(GeoPlot, self).get_data(element, ranges, style)
 
 
 class OverlayPlot(GeoPlot, HvOverlayPlot):
@@ -137,72 +144,27 @@ class TilePlot(GeoPlot):
 
 class GeoPointPlot(GeoPlot, PointPlot):
 
-    def get_data(self, element, ranges, style):
-        data, mapping, style = super(GeoPointPlot, self).get_data(element, ranges, style)
-        if self.static_source: return data, mapping, style
-        xdim, ydim = element.dimensions('key', label=True)
-        if len(data[xdim]) and element.crs not in [DEFAULT_PROJ, None]:
-            points = DEFAULT_PROJ.transform_points(element.crs, data[xdim],
-                                                   data[ydim])
-            data[xdim] = points[:, 0]
-            data[ydim] = points[:, 1]
-        return data, mapping, style
+    _project_operation = project_points
 
 
 class GeoRasterPlot(GeoPlot, RasterPlot):
 
-    def get_data(self, element, ranges, style):
-        if self.geographic:
-            element = project_image(element, projection=DEFAULT_PROJ)
-        return RasterPlot.get_data(self, element, ranges, style)
+    _project_operation = project_image
 
 
+class GeoPolygonPlot(GeoPlot, PolygonPlot):
 
-class GeometryPlot(GeoPlot):
-    """
-    Geometry projects a geometry to the destination coordinate
-    reference system before creating the glyph.
-    """
-
-    def get_data(self, element, ranges, style):
-        if not self.geographic:
-            return super(GeometryPlot, self).get_data(element, ranges, style)
-        
-        if self.static_source:
-            data = {}
-        else:
-            geoms = element.geom()
-            if element.crs:
-                geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)
-            xs, ys = geom_to_array(geoms)
-            data = dict(xs=ys, ys=xs) if self.invert_axes else dict(xs=xs, ys=ys)
-
-        mapping = dict(self._mapping)
-        if element.vdims and getattr(element, 'level', None) is not None:
-            cdim = element.vdims[0]
-            dim_name = util.dimension_sanitizer(cdim.name)
-            data[dim_name] = [element.level for _ in range(len(xs))]
-            cmapper = self._get_colormapper(cdim, element, ranges, style)
-            color_prop = 'fill_color' if isinstance(element, Polygons) else 'line_color'
-            mapping[color_prop] = {'field': dim_name, 'transform': cmapper}
-
-        if any(isinstance(t, HoverTool) for t in self.state.tools):
-            dim_name = util.dimension_sanitizer(element.vdims[0].name)
-            for k, v in self.overlay_dims.items():
-                dim = util.dimension_sanitizer(k.name)
-                data[dim] = [v for _ in range(len(xs))]
-            data[dim_name] = [element.level for _ in range(len(xs))]
-
-        self._get_hover_data(data, element)
-        return data, mapping, style
+    _project_operation = project_path
 
 
-class GeoPolygonPlot(GeometryPlot, PolygonPlot):
-    pass
+class GeoContourPlot(GeoPlot, ContourPlot):
+
+    _project_operation = project_path
 
 
-class GeoPathPlot(GeometryPlot, PathPlot):
-    pass
+class GeoPathPlot(GeoPlot, PathPlot):
+
+    _project_operation = project_path
 
 
 class GeoShapePlot(GeoPolygonPlot):
@@ -211,32 +173,26 @@ class GeoShapePlot(GeoPolygonPlot):
         if self.static_source:
             data = {}
         else:
-            geoms = element.geom()
-            empty = False
-            if self.geographic and element.crs != DEFAULT_PROJ:
-                try:
-                    geoms = DEFAULT_PROJ.project_geometry(geoms, element.crs)
-                except:
-                    empty = True
-            xs, ys = ([], []) if empty else geom_to_array(geoms)
-            data = dict(xs=xs, ys=ys)
+            xs, ys = geom_to_array(project_shape(element).geom()).T
+            if self.invert_axes: xs, ys = ys, xs
+            data = dict(xs=[xs], ys=[ys])
 
         mapping = dict(self._mapping)
+        dim = element.vdims[0].name if element.vdims else None
         if element.level is not None:
             cmap = style.get('palette', style.get('cmap', None))
-            dim = element.vdims[0].name if element.vdims else None
             if cmap and dim:
                 cdim = element.vdims[0]
                 dim_name = util.dimension_sanitizer(cdim.name)
                 cmapper = self._get_colormapper(cdim, element, ranges, style)
-                data[dim_name] = [] if empty else [element.level for _ in range(len(xs))]
+                data[dim_name] = [element.level]
                 mapping['fill_color'] = {'field': dim_name,
                                          'transform': cmapper}
 
         if 'hover' in self.tools+self.default_tools:
             if dim:
                 dim_name = util.dimension_sanitizer(dim)
-                data[dim_name] = [element.level for _ in range(len(xs))]
+                data[dim_name] = [element.level]
             for k, v in self.overlay_dims.items():
                 dim = util.dimension_sanitizer(k.name)
                 data[dim] = [v for _ in range(len(xs))]
@@ -262,11 +218,8 @@ class FeaturePlot(GeoPolygonPlot):
             self._plot_methods = dict(single='patches', batched='patches')
         geoms = [DEFAULT_PROJ.project_geometry(geom, element.crs)
                  for geom in geoms]
-        arrays = [geom_to_array(geom) for geom in geoms]
-        xs = [arr[0] for arr in arrays]
-        ys = [arr[1] for arr in arrays]
-        data = dict(xs=list(itertools.chain(*xs)),
-                    ys=list(itertools.chain(*ys)))
+        xs, ys = zip(*(geom_to_array(geom).T for geom in geoms))
+        data = dict(xs=list(xs), ys=list(ys))
         return data, mapping, style
 
 
@@ -274,7 +227,7 @@ class GeoTextPlot(GeoPlot, TextPlot):
 
     def get_data(self, element, ranges, style):
         mapping = dict(x='x', y='y', text='text')
-        if self.geographic:
+        if not self.geographic:
             return super(GeoTextPlot, self).get_data(element, ranges, style)
         if element.crs:
             x, y = DEFAULT_PROJ.transform_point(element.x, element.y,
@@ -289,6 +242,7 @@ class GeoTextPlot(GeoPlot, TextPlot):
 Store.register({WMTS: TilePlot,
                 Points: GeoPointPlot,
                 Polygons: GeoPolygonPlot,
+                Contours: GeoContourPlot,
                 Path: GeoPathPlot,
                 Shape: GeoShapePlot,
                 Image: GeoRasterPlot,

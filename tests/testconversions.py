@@ -9,9 +9,6 @@ class TestConversions(ComparisonTestCase):
 
     def setUp(self):
         self.cube = lat_lon_cube()
-
-    def test_is_geographic_1d(self):
-        self.assertFalse(is_geographic(Dataset(self.cube, kdims=['longitude']), ['longitude']))
         
     def test_is_geographic_2d(self):
         self.assertTrue(is_geographic(Dataset(self.cube, kdims=['longitude', 'latitude']), ['longitude', 'latitude']))

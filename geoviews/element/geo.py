@@ -68,9 +68,10 @@ class _Element(Element2D):
         coordinate system of the data. Inferred automatically
         when _Element wraps cartopy Feature object.""")
 
-    kdims = param.List(default=[Dimension('Longitude'), Dimension('Latitude')])
+    kdims = param.List(default=[Dimension('Longitude'), Dimension('Latitude')],
+                       bounds=(2, 2), constant=True)
 
-    def __init__(self, data, **kwargs):
+    def __init__(self, data, kdims=None, vdims=None, **kwargs):
         crs = None
         crs_data = data.data if isinstance(data, HvDataset) else data
         if Cube and isinstance(crs_data, Cube):
@@ -86,7 +87,7 @@ class _Element(Element2D):
                              'system must match crs of the data.')
         elif crs:
             kwargs['crs'] = crs
-        super(_Element, self).__init__(data, **kwargs)
+        super(_Element, self).__init__(data, kdims=kdims, vdims=vdims, **kwargs)
 
 
     def clone(self, data=None, shared_data=True, new_type=None,
@@ -119,11 +120,11 @@ class Feature(_GeoFeature):
 
     group = param.String(default='Feature')
 
-    def __init__(self, data, **params):
+    def __init__(self, data, kdims=None, vdims=None, **params):
         if not isinstance(data, cFeature):
             raise TypeError('%s data has to be an cartopy Feature type'
                             % type(data).__name__)
-        super(Feature, self).__init__(data, **params)
+        super(Feature, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
     def range(self, dim, data_range=True):
         didx = self.get_dimension_index(dim)
@@ -141,11 +142,16 @@ class WMTS(_GeoFeature):
     specified as a tuple of the API URL and
     """
 
+    crs = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR, class_=ccrs.CRS, doc="""
+        Cartopy coordinate-reference-system specifying the
+        coordinate system of the data. Inferred automatically
+        when _Element wraps cartopy Feature object.""")
+
     group = param.String(default='WMTS')
 
     layer = param.String(doc="The layer on the tile service")
 
-    def __init__(self, data, **params):
+    def __init__(self, data, kdims=None, vdims=None, **params):
         if isinstance(data, tuple):
             data = data
         else:
@@ -153,8 +159,7 @@ class WMTS(_GeoFeature):
 
         for d in data:
             if WMTSTileSource and isinstance(d, WMTSTileSource):
-                if 'crs' not in params:
-                    params['crs'] = ccrs.GOOGLE_MERCATOR
+                pass
             elif WebMapTileService and isinstance(d, WebMapTileService):
                 if 'crs' not in params and not self.crs:
                     raise Exception('Must supply coordinate reference '
@@ -162,7 +167,7 @@ class WMTS(_GeoFeature):
             elif not isinstance(d, basestring):
                 raise TypeError('%s data has to be a tile service URL'
                                 % type(d).__name__)
-        super(WMTS, self).__init__(data, **params)
+        super(WMTS, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
 
 class Tiles(_GeoFeature):
@@ -173,11 +178,11 @@ class Tiles(_GeoFeature):
 
     group = param.String(default='Tiles')
 
-    def __init__(self, data, **params):
+    def __init__(self, data, kdims=None, vdims=None, **params):
         if not isinstance(data, cGoogleTiles):
             raise TypeError('%s data has to be a cartopy GoogleTiles type'
                             % type(data).__name__)
-        super(Tiles, self).__init__(data, **params)
+        super(Tiles, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
 
 
@@ -313,11 +318,11 @@ class Shape(_Element):
         Contours optionally accept a value dimension, corresponding
         to the supplied values.""", bounds=(1,1))
 
-    def __init__(self, data, **params):
+    def __init__(self, data, kdims=None, vdims=None, **params):
         if not isinstance(data, BaseGeometry):
             raise TypeError('%s data has to be a shapely geometry type.'
                             % type(data).__name__)
-        super(Shape, self).__init__(data, **params)
+        super(Shape, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
 
     @classmethod

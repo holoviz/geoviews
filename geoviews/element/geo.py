@@ -191,6 +191,11 @@ class Dataset(_Element, HvDataset):
     Coordinate system aware version of a HoloViews dataset.
     """
 
+    kdims = param.List(default=[Dimension('Longitude'), Dimension('Latitude')],
+                       constant=True)
+
+    group = param.String(default='Dataset')
+
 
 class Points(Dataset):
     """

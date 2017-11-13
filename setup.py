@@ -19,7 +19,7 @@ extras_require['notebook-dependencies'] = ['jupyter', 'pyzmq', 'jinja2', 'tornad
 
 setup_args.update(dict(
     name='geoviews',
-    version="1.4.0",
+    version="1.4.1",
     install_requires = install_requires,
     extras_require = extras_require,
     description='GeoViews.',

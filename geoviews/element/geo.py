@@ -142,11 +142,6 @@ class WMTS(_GeoFeature):
     specified as a tuple of the API URL and
     """
 
-    crs = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR, class_=ccrs.CRS, doc="""
-        Cartopy coordinate-reference-system specifying the
-        coordinate system of the data. Inferred automatically
-        when _Element wraps cartopy Feature object.""")
-
     group = param.String(default='WMTS')
 
     layer = param.String(doc="The layer on the tile service")
@@ -159,7 +154,7 @@ class WMTS(_GeoFeature):
 
         for d in data:
             if WMTSTileSource and isinstance(d, WMTSTileSource):
-                pass
+                params['crs'] = ccrs.GOOGLE_MERCATOR
             elif WebMapTileService and isinstance(d, WebMapTileService):
                 if 'crs' not in params and not self.crs:
                     raise Exception('Must supply coordinate reference '
@@ -167,6 +162,8 @@ class WMTS(_GeoFeature):
             elif not isinstance(d, basestring):
                 raise TypeError('%s data has to be a tile service URL'
                                 % type(d).__name__)
+            else:
+                params['crs'] = ccrs.GOOGLE_MERCATOR
         super(WMTS, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
 

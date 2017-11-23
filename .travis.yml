@@ -29,6 +29,7 @@ script:
   - nosetests --with-doctest --with-coverage --cover-package=geoviews
   - flake8 --ignore=E,W . --exclude=./doc
 # TODO: temp, need to use stages or something
+  - python -c "import geoviews as gv; gv.sample_data('notebooks/user_guide/sample-data')"
   - conda install -c conda-forge sphinx beautifulsoup4 graphviz
   - pip install nbsite
   - pip install sphinx_ioam_theme
@@ -39,6 +40,7 @@ script:
   - sphinx-build -b html . ./_build/html
   - nbsite_fix_links.py _build/html
   - cp -r ../notebooks/user_guide/assets _build/html/user_guide/
+  - cp -r ../notebooks/user_guide/sample-data _build/html/user_guide/
   - touch ./_build/html/.nojekyll
   - cd ..
 

@@ -4,6 +4,9 @@ User Guide
 
 Contents:
 
+* `Homepage <Homepage.html>`_
+   TODO
+
 * `Projections <Projections.html>`_
    TODO
 
@@ -24,6 +27,7 @@ Contents:
     :hidden:
     :maxdepth: 2
 
+    Homepage
     Projections
     Geometries
     Working with Gridded Data I <Gridded_Datasets_I>

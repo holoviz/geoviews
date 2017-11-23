@@ -32,6 +32,8 @@ script:
   - conda install -c conda-forge sphinx beautifulsoup4 graphviz
   - pip install nbsite
   - pip install sphinx_ioam_theme
+  # TODO
+  - rm notebooks/*.ipynb
   - cd doc
   - nbsite_nbpagebuild.py geoviews ../notebooks .
   - sphinx-build -b html . ./_build/html

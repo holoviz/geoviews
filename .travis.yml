@@ -28,5 +28,25 @@ install:
 script:
   - nosetests --with-doctest --with-coverage --cover-package=geoviews
   - flake8 --ignore=E,W . --exclude=./doc
+# TODO: temp, need to use stages or something
+  - conda install -c conda-forge sphinx beautifulsoup4 graphviz
+  - pip install nbsite
+  - pip install sphinx_ioam_theme
+  - cd doc
+  - nbsite_nbpagebuild.py geoviews ../notebooks .
+  - sphinx-build -b html . ./_build/html
+  - nbsite_fix_links.py _build/html
+  - cp -r ../notebooks/user_guide/assets _build/html/user_guide/
+  - touch ./_build/html/.nojekyll
+  - cd ..
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: ./doc/_build/html
+  on:
+    branch: docs
+
 
 after_success: coveralls

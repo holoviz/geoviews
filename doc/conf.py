@@ -22,8 +22,8 @@ html_static_path = ['_static']
 
 html_theme = 'sphinx_ioam_theme'
 html_theme_options = {
-    'logo':'_static/logo.png',
-    'favicon':'_static/favicon.ico'
+    'logo':'logo.png',
+    'favicon':'favicon.ico'
 # ...
 # ? css
 # ? js

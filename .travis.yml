@@ -43,9 +43,6 @@ script:
   - nbsite_cleandisthtml.py ./_build/html take_a_chance
   - cp -r ../notebooks/user_guide/assets _build/html/user_guide/
   - cp -r ../notebooks/user_guide/sample-data _build/html/user_guide/
-  - mkdir -p ./_build/html/json  
-  - find . -type f -name '*.json' -path "./_build" -prune -exec mv {} ./_build/html/json/ ";"
-  - find ../notebooks -type f -name '*.json' -exec mv {} ./_build/html/json/ ";"
   - touch ./_build/html/.nojekyll
   - cd ..
 

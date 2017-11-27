@@ -15,9 +15,7 @@ html_theme = 'sphinx_ioam_theme'
 html_theme_options = {
     'logo':'logo.png',
     'favicon':'favicon.ico'
-# ...
-# ? css
-# ? js
+#    'css':'geoviews.css'
 }
 
 _NAV =  (
@@ -25,7 +23,7 @@ _NAV =  (
         ('About', 'about')
 )
 
-html_context = {
+html_context.update({
     'PROJECT': project,
     'DESCRIPTION': description,
     'AUTHOR': authors,
@@ -37,6 +35,5 @@ html_context = {
         ('Gitter', '//gitter.im/ioam/holoviews'),
         ('Twitter', '//twitter.com/holoviews'),
         ('Github', '//github.com/ioam/geoviews'),
-    ),
-    'js_includes': ['custom.js', 'require.js'],
-}
+    )
+})

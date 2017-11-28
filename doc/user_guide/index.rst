@@ -10,10 +10,10 @@ Contents:
 * `Geometries <Geometries.html>`_
    TODO
    
-* `Gridded data I <Gridded_Datasets_I.html>`_
+* `Gridded Datasets I <Gridded_Datasets_I.html>`_
    TODO
 
-* `Gridded data II <Gridded_Datasets_II.html>`_
+* `Gridded Datasets II <Gridded_Datasets_II.html>`_
    TODO
 
 * `Working with Bokeh <Working_with_Bokeh>`_
@@ -26,6 +26,6 @@ Contents:
 
     Projections
     Geometries
-    Working with Gridded Data I <Gridded_Datasets_I>
-    Working with Gridded Data II <Gridded_Datasets_II>
+    Gridded Datasets I <Gridded_Datasets_I>
+    Gridded Datasets II <Gridded_Datasets_II>
     Working with Bokeh <Working_with_Bokeh>

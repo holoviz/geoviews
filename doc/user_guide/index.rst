@@ -5,19 +5,19 @@ User Guide
 Contents:
 
 * `Projections <Projections.html>`_
-   TODO
+   Plotting data on various geographic projections.
 
 * `Geometries <Geometries.html>`_
-   TODO
+   Working with geometries and shapes.
    
 * `Gridded Datasets I <Gridded_Datasets_I.html>`_
-   TODO
+   Make full use of multidimensional gridded datasets stored in netCDF and other common formats.
 
 * `Gridded Datasets II <Gridded_Datasets_II.html>`_
-   TODO
+   Explore complex datasets quickly with lower dimensional views.
 
 * `Working with Bokeh <Working_with_Bokeh>`_
-   TODO
+   Using the Bokeh extension for more interactivity.
 
 .. toctree::
     :titlesonly:

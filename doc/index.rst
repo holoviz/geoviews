@@ -22,7 +22,7 @@ GeoViews
 .. notebook:: geoviews Homepage.ipynb
 
 
-The `User Guide <user_guide>`_...
+Please see the `User Guide <user_guide>`_ for further documentation.
 
 
 Installation

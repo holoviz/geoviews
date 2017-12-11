@@ -28,13 +28,14 @@ install:
 script:
   - nosetests --with-doctest --with-coverage --cover-package=geoviews
   - flake8 --ignore=E,W . --exclude=./doc
-# TODO: temp, need to use stages or something
+### doc building
+  # TODO: need to use stages or similar
   - python -c "import geoviews as gv; gv.sample_data('notebooks/user_guide/sample-data')"
   - python -c "import geoviews as gv; gv.sample_data('doc/sample-data')"
   - conda install -c conda-forge sphinx beautifulsoup4 graphviz
   - pip install nbsite
   - pip install sphinx_ioam_theme
-  # TODO
+  # TODO: should make this content available too?
   - rm notebooks/*.ipynb
   - cd doc
   - nbsite_nbpagebuild.py ioam geoviews ../notebooks .

@@ -154,7 +154,8 @@ class WMTS(_GeoFeature):
 
         for d in data:
             if WMTSTileSource and isinstance(d, WMTSTileSource):
-                params['crs'] = ccrs.GOOGLE_MERCATOR
+                if not 'crs' in params:
+                    params['crs'] = ccrs.GOOGLE_MERCATOR
             elif WebMapTileService and isinstance(d, WebMapTileService):
                 if 'crs' not in params and not self.crs:
                     raise Exception('Must supply coordinate reference '
@@ -162,7 +163,7 @@ class WMTS(_GeoFeature):
             elif not isinstance(d, basestring):
                 raise TypeError('%s data has to be a tile service URL'
                                 % type(d).__name__)
-            else:
+            elif not 'crs' in params:
                 params['crs'] = ccrs.GOOGLE_MERCATOR
         super(WMTS, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 

@@ -26,6 +26,13 @@ class TilePlot(GeoPlot):
 
     style_opts = ['alpha', 'render_parents', 'level']
 
+    def get_extents(self, element, ranges):
+        extents = super(TilePlot, self).get_extents(element, ranges)
+        if not self.overlaid:
+            global_extent = (-20026376.39, -20048966.10, 20026376.39, 20048966.10)
+            return util.max_extents([extents, global_extent])
+        return extents
+
     def get_data(self, element, ranges, style):
         tile_source = None
         for url in element.data:

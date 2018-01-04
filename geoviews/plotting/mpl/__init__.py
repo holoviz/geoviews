@@ -19,16 +19,17 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     LayoutPlot as HvLayoutPlot,
                                     OverlayPlot as HvOverlayPlot,
                                     PathPlot, PolygonPlot, ImagePlot,
-                                    ContourPlot)
+                                    ContourPlot, GraphPlot, TriMeshPlot)
 from holoviews.plotting.mpl.util import get_raster_array
 
 
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         LineContours, FilledContours, is_geographic,
-                        Path, Polygons, Shape, RGB, Contours)
+                        Path, Polygons, Shape, RGB, Contours, Nodes,
+                        EdgePaths, Graph, TriMesh)
 from ...util import project_extents, geo_mesh
 
-from ...operation import project_points, project_path
+from ...operation import project_points, project_path, project_graph
 
 
 def _get_projection(el):
@@ -353,7 +354,21 @@ class GeoShapePlot(GeometryPlot, PolygonPlot):
             SkipRendering('Shape can only be plotted on geographic plot, '
                           'supply a coordinate reference system.')
 
-        
+
+class GeoGraphPlot(GeoPlot, GraphPlot):
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_graph
+
+
+class GeoTriMeshPlot(GeoPlot, TriMeshPlot):
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_graph
+
+
 ########################################
 #  Geographic features and annotations #
 ########################################
@@ -490,7 +505,11 @@ Store.register({LineContours: LineContourPlot,
                 Path: GeoPathPlot,
                 Contours: GeoContourPlot,
                 RGB: GeoRGBPlot,
-                Shape: GeoShapePlot}, 'matplotlib')
+                Shape: GeoShapePlot,
+                Graph: GeoGraphPlot,
+                TriMesh: GeoTriMeshPlot,
+                Nodes: GeoPointPlot,
+                EdgePaths: GeoPathPlot}, 'matplotlib')
 
 
 # Define plot and style options

@@ -7,14 +7,14 @@ from holoviews.core.util import cartesian_product
 from holoviews.operation import Operation
 from shapely.geometry import Polygon, LineString
 
-from .element import Image, Shape, Polygons, Path, Points, Contours, RGB
+from .element import Image, Shape, Polygons, Path, Points, Contours, RGB, Graph, Nodes, EdgePaths
 from .util import project_extents, geom_to_array
 
 
-class project_path(Operation):
+class _project_operation(Operation):
     """
-    Projects Polygons and Path Elements from their source coordinate
-    reference system to the supplied projection.
+    Baseclass for projection operations, projecting elements from their
+    source coordinate reference system to the supplied projection.
     """
 
     projection = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR,
@@ -22,7 +22,21 @@ class project_path(Operation):
                                      instantiate=False, doc="""
         Projection the shape type is projected to.""")
 
-    supported_types = [Polygons, Path, Contours]
+    # Defines the types of elements supported by the operation
+    supported_types = []
+
+    def _process(self, element, key=None):
+        return element.map(self._process_element, self.supported_types)
+
+
+
+class project_path(_project_operation):
+    """
+    Projects Polygons and Path Elements from their source coordinate
+    reference system to the supplied projection.
+    """
+
+    supported_types = [Polygons, Path, Contours, EdgePaths]
 
     def _process_element(self, element):
         if element.interface.datatype == 'geodataframe':
@@ -46,20 +60,12 @@ class project_path(Operation):
             projected.append(geom)
         return element.clone(projected, crs=self.p.projection)
 
-    def _process(self, element, key=None):
-        return element.map(self._process_element, self.supported_types)
 
-
-class project_shape(Operation):
+class project_shape(_project_operation):
     """
     Projects Shape Element from the source coordinate reference system
     to the supplied projection.
     """
-
-    projection = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR,
-                                     class_=ccrs.Projection,
-                                     instantiate=False, doc="""
-        Projection the shape type is projected to.""")
 
     supported_types = [Shape]
 
@@ -67,18 +73,10 @@ class project_shape(Operation):
         geom = self.p.projection.project_geometry(element.geom(), element.crs)
         return element.clone(geom, crs=self.p.projection)
 
-    def _process(self, element, key=None):
-        return element.map(self._process_element, self.supported_types)
 
+class project_points(_project_operation):
 
-class project_points(Operation):
-
-    projection = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR,
-                                     class_=ccrs.Projection,
-                                     instantiate=False, doc="""
-        Projection the shape type is projected to.""")
-
-    supported_types = [Points]
+    supported_types = [Points, Nodes]
 
     def _process_element(self, element):
         xdim, ydim = element.dimensions()[:2]
@@ -90,22 +88,26 @@ class project_points(Operation):
         return element.clone(new_data, crs=self.p.projection,
                              datatype=[element.interface.datatype]+element.datatype)
 
-    def _process(self, element, key=None):
-        return element.map(self._process_element, self.supported_types)
+
+class project_graph(_project_operation):
+
+    supported_types = [Graph]
+
+    def _process_element(self, element):
+        nodes = project_points(element.nodes, projection=self.projection)
+        data = (element.data, nodes)
+        if element._edgepaths:
+            data = data + (project_path(element.edgepaths),)
+        return element.clone(data)
 
 
-class project_image(Operation):
+class project_image(_project_operation):
     """
     Projects an geoviews Image to the specified projection,
     returning a regular HoloViews Image type. Works by
     regridding the data along projected bounds. Only supports
     rectangular projections.
     """
-
-    projection = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR,
-                                     class_=ccrs.Projection,
-                                     instantiate=False, doc="""
-        Projection the image type is projected to.""")
 
     fast = param.Boolean(default=False, doc="""
         Whether to enable fast reprojection with (much) better
@@ -226,4 +228,5 @@ class project(Operation):
         element = element.map(project_path, project_path.supported_types)
         element = element.map(project_image, project_image.supported_types)
         element = element.map(project_shape, project_shape.supported_types)
+        element = element.map(project_graph, project_graph.supported_types)
         return element.map(project_points, project_points.supported_types)

@@ -9,12 +9,15 @@ from holoviews.core import util
 from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.bokeh.annotation import TextPlot
 from holoviews.plotting.bokeh.chart import PointPlot
+from holoviews.plotting.bokeh.graphs import TriMeshPlot, GraphPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
 from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot
 
 from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
-                        Image, Feature, Text, RGB)
-from ...operation import project_image, project_shape, project_points, project_path
+                        Image, Feature, Text, RGB, Nodes, EdgePaths,
+                        Graph, TriMesh)
+from ...operation import (project_image, project_shape, project_points,
+                          project_path, project_graph)
 from ...util import geom_to_array
 from .plot import GeoPlot, OverlayPlot, DEFAULT_PROJ
 from . import callbacks # noqa
@@ -96,6 +99,16 @@ class GeoContourPlot(GeoPlot, ContourPlot):
 class GeoPathPlot(GeoPlot, PathPlot):
 
     _project_operation = project_path
+
+
+class GeoGraphPlot(GeoPlot, GraphPlot):
+
+    _project_operation = project_graph
+
+
+class GeoTriMeshPlot(GeoPlot, TriMeshPlot):
+
+    _project_operation = project_graph
 
 
 class GeoShapePlot(GeoPolygonPlot):
@@ -183,7 +196,11 @@ Store.register({WMTS: TilePlot,
                 Feature: FeaturePlot,
                 Text: GeoTextPlot,
                 Overlay: OverlayPlot,
-                NdOverlay: OverlayPlot}, 'bokeh')
+                NdOverlay: OverlayPlot,
+                Graph: GeoGraphPlot,
+                TriMesh: GeoTriMeshPlot,
+                Nodes: GeoPointPlot,
+                EdgePaths: GeoPathPlot}, 'bokeh')
 
 options = Store.options(backend='bokeh')
 

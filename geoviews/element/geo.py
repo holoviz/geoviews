@@ -6,9 +6,10 @@ from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
 from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
 from holoviews.core.util import basestring, pd, max_extents, dimension_range
-from holoviews.element import (Text as HvText, Path as HvPath,
-                               Polygons as HvPolygons, Image as HvImage,
-                               RGB as HvRGB, Contours as HvContours)
+from holoviews.element import (
+    Contours as HvContours, Graph as HvGraph, Image as HvImage,
+    Nodes as HvNodes, Path as HvPath, Polygons as HvPolygons,
+    RGB as HvRGB, Text as HvText, TriMesh as HvTriMesh)
 
 from shapely.geometry.base import BaseGeometry
 
@@ -45,7 +46,7 @@ def is_geographic(element, kdims=None):
     else:
         kdims = element.kdims
 
-    if len(kdims) != 2:
+    if len(kdims) != 2 and not isinstance(element, (Graph, Nodes)):
         return False
     if isinstance(element.data, geographic_types) or isinstance(element, (WMTS, Feature)):
         return True
@@ -259,6 +260,21 @@ class RGB(_Element, HvRGB):
         is automatically appended to this list.""")
 
 
+
+class Nodes(_Element, HvNodes):
+    """
+    Nodes is a simple Element representing Graph nodes as a set of
+    Points.  Unlike regular Points, Nodes must define a third key
+    dimension corresponding to the node index.
+    """
+
+    group = param.String(default='Nodes', constant=True)
+
+    kdims = param.List(default=[Dimension('Longitude'), Dimension('Latitude'),
+                                Dimension('index')], bounds=(3, 3))
+
+
+
 class Text(HvText, _Element):
     """
     An annotation containing some text at an x, y coordinate
@@ -272,11 +288,72 @@ class Path(_Element, HvPath):
     arrays along with a coordinate reference system.
     """
 
+    group = param.String(default='Path', constant=True)
+
     def geom(self):
         """
         Returns Path as a shapely geometry.
         """
         return path_to_geom(self)
+
+
+class EdgePaths(Path):
+    """
+    EdgePaths is a simple Element representing the paths of edges
+    connecting nodes in a graph.
+    """
+
+    group = param.String(default='EdgePaths', constant=True)
+
+
+
+class Graph(_Element, HvGraph):
+
+    group = param.String(default='Graph', constant=True)
+
+    node_type = Nodes
+
+    edge_type = EdgePaths
+
+    def __init__(self, data, kdims=None, vdims=None, **params):
+        nodes, edges = None, None
+        if isinstance(data, tuple):
+            if len(data) > 1 and isinstance(data[1], self.node_type):
+                nodes = data[1]
+            elif len(data) > 2 and isinstance(data[2], self.edge_type):
+                edges = data[2]
+
+        if 'crs' in params:
+            crs = params['crs']
+            mismatch = None
+            if nodes is not None and type(crs) != type(nodes.crs):
+                mismatch = 'nodes'
+            elif edges is not None and type(crs) != type(edges.crs):
+                mismatch = 'edges'
+            if mismatch:
+                raise ValueError("Coordinate reference system supplied "
+                                 "to %s element must match the crs of "
+                                 "the %s. Expected %s found %s." %
+                                 (mismatch, type(self).__name__, nodes.crs, crs))
+        elif nodes is not None:
+            crs = nodes.crs
+            params['crs'] = crs
+        else:
+            crs = self.crs
+
+        super(Graph, self).__init__(data, kdims, vdims, **params)
+        self.nodes.crs = crs
+        if self._edgepaths:
+            self._edgepaths.crs = crs
+
+
+class TriMesh(HvTriMesh, Graph):
+
+    group = param.String(default='TriMesh', constant=True)
+
+    node_type = Nodes
+
+    edge_type = EdgePaths
 
 
 class Contours(_Element, HvContours):
@@ -285,6 +362,8 @@ class Contours(_Element, HvContours):
     closed paths with an associated value and a coordinate reference
     system.
     """
+
+    group = param.String(default='Contours', constant=True)
 
     def geom(self):
         """
@@ -299,6 +378,8 @@ class Polygons(_Element, HvPolygons):
     closed paths with an associated value and a coordinate reference
     system.
     """
+
+    group = param.String(default='Polygons', constant=True)
 
     def geom(self):
         """

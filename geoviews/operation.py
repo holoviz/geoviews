@@ -120,6 +120,8 @@ class project_quadmesh(_project_operation):
             zs = zs.T
         coords = self.p.projection.transform_points(element.crs, X, Y)
         params = get_param_values(element)
+        if zs.ndim > 2:
+            zs = np.squeeze(zs)
         return QuadMesh((coords[..., 0], coords[..., 1], zs),
                         crs=self.projection, **params)
 

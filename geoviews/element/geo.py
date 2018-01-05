@@ -239,7 +239,6 @@ class Image(_Element, HvImage):
     group = param.String(default='Image')
 
 
-
 class QuadMesh(_Element, HvQuadMesh):
     """
     QuadMesh is a Raster type to hold x- and y- bin values
@@ -262,6 +261,8 @@ class QuadMesh(_Element, HvQuadMesh):
 
     _binned = True
 
+    def trimesh(self):
+        return super(QuadMesh, self).trimesh().clone(crs=self.crs)
 
 
 class RGB(_Element, HvRGB):

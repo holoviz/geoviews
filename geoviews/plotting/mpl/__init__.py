@@ -12,7 +12,7 @@ except:
 from holoviews.core import (Store, HoloMap, Layout, Overlay,
                             CompositeOverlay, Element, NdLayout)
 from holoviews.core import util
-
+from holoviews.core.data import GridInterface
 from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     AnnotationPlot, TextPlot,
@@ -238,6 +238,8 @@ class GeoImagePlot(GeoPlot, ImagePlot):
         self._norm_kwargs(element, ranges, style, element.vdims[0])
         style.pop('interpolation', None)
         xs, ys, zs = geo_mesh(element)
+        xs = GridInterface._infer_interval_breaks(xs)
+        ys = GridInterface._infer_interval_breaks(ys)
         if self.geographic:
             style['transform'] = element.crs
         return (xs, ys, zs), style, {}

@@ -97,7 +97,7 @@ class project_graph(_project_operation):
         nodes = project_points(element.nodes, projection=self.projection)
         data = (element.data, nodes)
         if element._edgepaths:
-            data = data + (project_path(element.edgepaths),)
+            data = data + (project_path(element.edgepaths, projection=self.projection),)
         return element.clone(data)
 
 

@@ -7,10 +7,9 @@ from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
 from holoviews.core.util import basestring, pd, max_extents, dimension_range
 from holoviews.element import (
-    Contours as HvContours, EdgePaths as HvEdgePaths,
-    Graph as HvGraph, Image as HvImage, Nodes as HvNodes,
-    Path as HvPath, Polygons as HvPolygons, RGB as HvRGB,
-    Text as HvText, TriMesh as HvTriMesh)
+    Contours as HvContours, Graph as HvGraph, Image as HvImage,
+    Nodes as HvNodes, Path as HvPath, Polygons as HvPolygons,
+    RGB as HvRGB, Text as HvText, TriMesh as HvTriMesh)
 
 from shapely.geometry.base import BaseGeometry
 
@@ -312,23 +311,30 @@ class Graph(_Element, HvGraph):
 
     group = param.String(default='Graph', constant=True)
 
-    _node_type = Nodes
+    node_type = Nodes
 
-    _edge_type = EdgePaths
+    edge_type = EdgePaths
 
     def __init__(self, data, kdims=None, vdims=None, **params):
-        if isinstance(data, tuple) and len(data) > 1 and isinstance(data, self._node_type):
-            nodes = data[1]
-        else:
-            nodes = None
+        nodes, edges = None, None
+        if isinstance(data, tuple):
+            if len(data) > 1 and isinstance(data[1], self.node_type):
+                nodes = data[1]
+            elif len(data) > 2 and isinstance(data[2], self.edge_type):
+                edges = data[2]
 
         if 'crs' in params:
             crs = params['crs']
+            mismatch = None
             if nodes is not None and type(crs) != type(nodes.crs):
+                mismatch = 'nodes'
+            elif edges is not None and type(crs) != type(edges.crs):
+                mismatch = 'edges'
+            if mismatch:
                 raise ValueError("Coordinate reference system supplied "
                                  "to %s element must match the crs of "
-                                 "the nodes. Expected %s found %s." %
-                                 (type(self).__name__, nodes.crs, crs))
+                                 "the %s. Expected %s found %s." %
+                                 (mismatch, type(self).__name__, nodes.crs, crs))
         elif nodes is not None:
             crs = nodes.crs
             params['crs'] = crs
@@ -338,12 +344,16 @@ class Graph(_Element, HvGraph):
         super(Graph, self).__init__(data, kdims, vdims, **params)
         self.nodes.crs = crs
         if self._edgepaths:
-            self.edgepaths.crs = crs
+            self._edgepaths.crs = crs
 
 
 class TriMesh(HvTriMesh, Graph):
 
     group = param.String(default='TriMesh', constant=True)
+
+    node_type = Nodes
+
+    edge_type = EdgePaths
 
 
 class Contours(_Element, HvContours):

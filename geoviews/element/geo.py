@@ -5,7 +5,8 @@ from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
 from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
-from holoviews.core.util import basestring, pd, max_extents, dimension_range
+from holoviews.core.util import (basestring, pd, max_extents,
+                                 dimension_range, get_param_values)
 from holoviews.element import (
     Contours as HvContours, Graph as HvGraph, Image as HvImage,
     Nodes as HvNodes, Path as HvPath, Polygons as HvPolygons,
@@ -262,7 +263,11 @@ class QuadMesh(_Element, HvQuadMesh):
     _binned = True
 
     def trimesh(self):
-        return super(QuadMesh, self).trimesh().clone(crs=self.crs)
+        trimesh = super(QuadMesh, self).trimesh()
+        node_params = get_param_values(trimesh.nodes)
+        nodes = TriMesh.node_type(trimesh.nodes.data, **node_params)
+        return TriMesh((trimesh.data, nodes), crs=self.crs,
+                       **get_param_values(trimesh))
 
 
 class RGB(_Element, HvRGB):

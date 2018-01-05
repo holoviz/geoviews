@@ -3,11 +3,12 @@ import numpy as np
 
 from cartopy import crs as ccrs
 from cartopy.img_transform import warp_array, _determine_bounds
-from holoviews.core.util import cartesian_product
+from holoviews.core.util import cartesian_product, get_param_values
 from holoviews.operation import Operation
 from shapely.geometry import Polygon, LineString
 
-from .element import Image, Shape, Polygons, Path, Points, Contours, RGB, Graph, Nodes, EdgePaths
+from .element import (Image, Shape, Polygons, Path, Points, Contours,
+                      RGB, Graph, Nodes, EdgePaths, QuadMesh)
 from .util import project_extents, geom_to_array
 
 
@@ -99,6 +100,28 @@ class project_graph(_project_operation):
         if element._edgepaths:
             data = data + (project_path(element.edgepaths, projection=self.projection),)
         return element.clone(data, crs=self.projection)
+
+
+class project_quadmesh(_project_operation):
+
+    supported_types = [QuadMesh]
+
+    def _process_element(self, element):
+        irregular = any(element.interface.irregular(element, kd)
+                        for kd in element.kdims)
+        zs = element.dimension_values(2, flat=False)
+        if irregular:
+            X, Y = [element.interface.coords(element, d, expanded=True, edges=True)
+                    for d in element.kdims]
+        else:
+            xs = element.interface.coords(element, 0, edges=True)
+            ys = element.interface.coords(element, 1, edges=True)
+            X, Y = cartesian_product([xs, ys], flat=False)
+            zs = zs.T
+        coords = self.p.projection.transform_points(element.crs, X, Y)
+        params = get_param_values(element)
+        return QuadMesh((coords[..., 0], coords[..., 1], zs),
+                        crs=self.projection, **params)
 
 
 class project_image(_project_operation):
@@ -229,4 +252,5 @@ class project(Operation):
         element = element.map(project_image, project_image.supported_types)
         element = element.map(project_shape, project_shape.supported_types)
         element = element.map(project_graph, project_graph.supported_types)
+        element = element.map(project_quadmesh, project_quadmesh.supported_types)
         return element.map(project_points, project_points.supported_types)

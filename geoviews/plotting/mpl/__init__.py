@@ -19,14 +19,15 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     LayoutPlot as HvLayoutPlot,
                                     OverlayPlot as HvOverlayPlot,
                                     PathPlot, PolygonPlot, ImagePlot,
-                                    ContourPlot, GraphPlot, TriMeshPlot)
+                                    ContourPlot, GraphPlot, TriMeshPlot,
+                                    QuadMeshPlot)
 from holoviews.plotting.mpl.util import get_raster_array
 
 
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         LineContours, FilledContours, is_geographic,
                         Path, Polygons, Shape, RGB, Contours, Nodes,
-                        EdgePaths, Graph, TriMesh)
+                        EdgePaths, Graph, TriMesh, QuadMesh)
 from ...util import project_extents, geo_mesh
 
 from ...operation import project_points, project_path, project_graph
@@ -252,6 +253,16 @@ class GeoImagePlot(GeoPlot, ImagePlot):
         Update the elements of the plot.
         """
         return GeoPlot.update_handles(self, *args)
+
+
+
+class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):
+
+    def get_data(self, element, ranges, style):
+        if self.geographic:
+            style['transform'] = element.crs
+        return super(GeoQuadMeshPlot, self).get_data(element, ranges, style)
+
 
 
 class GeoRGBPlot(GeoImagePlot):
@@ -509,7 +520,8 @@ Store.register({LineContours: LineContourPlot,
                 Graph: GeoGraphPlot,
                 TriMesh: GeoTriMeshPlot,
                 Nodes: GeoPointPlot,
-                EdgePaths: GeoPathPlot}, 'matplotlib')
+                EdgePaths: GeoPathPlot,
+                QuadMesh: GeoQuadMeshPlot}, 'matplotlib')
 
 
 # Define plot and style options

@@ -11,13 +11,13 @@ from holoviews.plotting.bokeh.annotation import TextPlot
 from holoviews.plotting.bokeh.chart import PointPlot
 from holoviews.plotting.bokeh.graphs import TriMeshPlot, GraphPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
-from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot
+from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot, QuadMeshPlot
 
 from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
                         Image, Feature, Text, RGB, Nodes, EdgePaths,
-                        Graph, TriMesh)
+                        Graph, TriMesh, QuadMesh)
 from ...operation import (project_image, project_shape, project_points,
-                          project_path, project_graph)
+                          project_path, project_graph, project_quadmesh)
 from ...util import geom_to_array
 from .plot import GeoPlot, OverlayPlot, DEFAULT_PROJ
 from . import callbacks # noqa
@@ -74,6 +74,11 @@ class TilePlot(GeoPlot):
 class GeoPointPlot(GeoPlot, PointPlot):
 
     _project_operation = project_points
+
+
+class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):
+
+    _project_operation = project_quadmesh
 
 
 class GeoRasterPlot(GeoPlot, RasterPlot):
@@ -200,7 +205,8 @@ Store.register({WMTS: TilePlot,
                 Graph: GeoGraphPlot,
                 TriMesh: GeoTriMeshPlot,
                 Nodes: GeoPointPlot,
-                EdgePaths: GeoPathPlot}, 'bokeh')
+                EdgePaths: GeoPathPlot,
+                QuadMesh: GeoQuadMeshPlot}, 'bokeh')
 
 options = Store.options(backend='bokeh')
 

@@ -3,7 +3,7 @@ from holoviews.element import ElementConversion, Points as HvPoints
 from .geo import (_Element, Feature, Tiles, is_geographic,     # noqa (API import)
                   WMTS, Points, Image, Text, LineContours, RGB,
                   FilledContours, Path, Polygons, Shape, Dataset,
-                  Contours, TriMesh, Graph, Nodes, EdgePaths)
+                  Contours, TriMesh, Graph, Nodes, EdgePaths, QuadMesh)
 
 
 class GeoConversion(ElementConversion):

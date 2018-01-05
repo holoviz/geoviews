@@ -9,7 +9,8 @@ from holoviews.core.util import basestring, pd, max_extents, dimension_range
 from holoviews.element import (
     Contours as HvContours, Graph as HvGraph, Image as HvImage,
     Nodes as HvNodes, Path as HvPath, Polygons as HvPolygons,
-    RGB as HvRGB, Text as HvText, TriMesh as HvTriMesh)
+    RGB as HvRGB, Text as HvText, TriMesh as HvTriMesh,
+    QuadMesh as HvQuadMesh)
 
 from shapely.geometry.base import BaseGeometry
 
@@ -236,6 +237,31 @@ class Image(_Element, HvImage):
     vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
 
     group = param.String(default='Image')
+
+
+
+class QuadMesh(_Element, HvQuadMesh):
+    """
+    QuadMesh is a Raster type to hold x- and y- bin values
+    with associated values. The x- and y-values of the QuadMesh
+    may be supplied either as the edges of each bin allowing
+    uneven sampling or as the bin centers, which will be converted
+    to evenly sampled edges.
+
+    As a secondary but less supported mode QuadMesh can contain
+    a mesh of quadrilateral coordinates that is not laid out in
+    a grid. The data should then be supplied as three separate
+    2D arrays for the x-/y-coordinates and grid values.
+    """
+
+    datatype = param.List(default=['grid', 'xarray'])
+
+    vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
+
+    group = param.String(default='QuadMesh')
+
+    _binned = True
+
 
 
 class RGB(_Element, HvRGB):

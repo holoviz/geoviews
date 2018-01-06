@@ -111,10 +111,20 @@ class project_quadmesh(_project_operation):
                         for kd in element.kdims)
         zs = element.dimension_values(2, flat=False)
         if irregular:
-            X, Y = [element.interface.coords(element, d, expanded=True, edges=True)
-                    for d in element.kdims]
+            coords = []
+            for is_y, kd in enumerate(element.kdims):
+                vals = element.interface.coords(element, kd, expanded=True)
+                if not is_y and isinstance(element.crs, ccrs._CylindricalProjection):
+                    vals = np.where(vals>180, -180+vals%180, vals)
+                vals = element.interface._infer_interval_breaks(vals, 1)
+                vals = element.interface._infer_interval_breaks(vals, 0)
+                coords.append(vals)
+            X, Y = coords
         else:
-            xs = element.interface.coords(element, 0, edges=True)
+            xs = element.dimension_values(0, expanded=False)
+            if isinstance(element.crs, ccrs._CylindricalProjection):
+                xs = np.where(xs>180, -180+xs%180, xs)
+            xs = element.interface._infer_interval_breaks(xs)
             ys = element.interface.coords(element, 1, edges=True)
             X, Y = cartesian_product([xs, ys], flat=False)
             zs = zs.T

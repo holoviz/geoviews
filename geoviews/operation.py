@@ -107,33 +107,54 @@ class project_quadmesh(_project_operation):
     supported_types = [QuadMesh]
 
     def _process_element(self, element):
+        proj = self.p.projection
+        if proj == element.crs:
+            return element
+
         irregular = any(element.interface.irregular(element, kd)
                         for kd in element.kdims)
         zs = element.dimension_values(2, flat=False)
         if irregular:
-            coords = []
-            for is_y, kd in enumerate(element.kdims):
-                vals = element.interface.coords(element, kd, expanded=True)
-                if not is_y and isinstance(element.crs, ccrs._CylindricalProjection):
-                    vals = np.where(vals>180, -180+vals%180, vals)
-                vals = element.interface._infer_interval_breaks(vals, 1)
-                vals = element.interface._infer_interval_breaks(vals, 0)
-                coords.append(vals)
-            X, Y = coords
+            X, Y = [np.asarray(element.interface.coords(element, kd, expanded=True))
+                    for kd in element.kdims]
         else:
-            xs = element.dimension_values(0, expanded=False)
-            if isinstance(element.crs, ccrs._CylindricalProjection):
-                xs = np.where(xs>180, -180+xs%180, xs)
-            xs = element.interface._infer_interval_breaks(xs)
-            ys = element.interface.coords(element, 1, edges=True)
-            X, Y = cartesian_product([xs, ys], flat=False)
+            X = element.dimension_values(0, expanded=True)
+            Y = element.dimension_values(1, expanded=True)
             zs = zs.T
-        coords = self.p.projection.transform_points(element.crs, X, Y)
+
+        coords = proj.transform_points(element.crs, X, Y)
+        PX, PY = coords[..., 0], coords[..., 1]
+
+        # Mask quads which are wrapping around the x-axis
+        wrap_proj_types = (ccrs._RectangularProjection,
+                           ccrs._WarpedRectangularProjection,
+                           ccrs.InterruptedGoodeHomolosine,
+                           ccrs.Mercator)
+        if isinstance(proj, wrap_proj_types):
+            with np.errstate(invalid='ignore'):
+                edge_lengths = np.hypot(
+                    np.diff(PX , axis=1),
+                    np.diff(PY, axis=1)
+                )
+                to_mask = (
+                    (edge_lengths >= abs(proj.x_limits[1] -
+                                         proj.x_limits[0]) / 2) |
+                    np.isnan(edge_lengths)
+                )
+            if np.any(to_mask):
+                mask = np.zeros(zs.shape, dtype=np.bool)
+                mask[:, 1:][to_mask] = True
+                mask[:, 2:][to_mask[:, :-1]] = True
+                mask[:, :-1][to_mask] = True
+                mask[:, :-2][to_mask[:, 1:]] = True
+                mask[1:, 1:][to_mask[:-1]] = True
+                mask[1:, :-1][to_mask[:-1]] = True
+                mask[:-1, 1:][to_mask[1:]] = True
+                mask[:-1, :-1][to_mask[1:]] = True
+                zs[mask] = np.NaN
+
         params = get_param_values(element)
-        if zs.ndim > 2:
-            zs = np.squeeze(zs)
-        return QuadMesh((coords[..., 0], coords[..., 1], zs),
-                        crs=self.projection, **params)
+        return QuadMesh((PX, PY, zs), crs=self.projection, **params)
 
 
 class project_image(_project_operation):

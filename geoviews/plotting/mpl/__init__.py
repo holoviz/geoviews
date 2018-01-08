@@ -12,24 +12,25 @@ except:
 from holoviews.core import (Store, HoloMap, Layout, Overlay,
                             CompositeOverlay, Element, NdLayout)
 from holoviews.core import util
-
+from holoviews.core.data import GridInterface
 from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     AnnotationPlot, TextPlot,
                                     LayoutPlot as HvLayoutPlot,
                                     OverlayPlot as HvOverlayPlot,
                                     PathPlot, PolygonPlot, ImagePlot,
-                                    ContourPlot, GraphPlot, TriMeshPlot)
+                                    ContourPlot, GraphPlot, TriMeshPlot,
+                                    QuadMeshPlot)
 from holoviews.plotting.mpl.util import get_raster_array
 
 
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         LineContours, FilledContours, is_geographic,
                         Path, Polygons, Shape, RGB, Contours, Nodes,
-                        EdgePaths, Graph, TriMesh)
+                        EdgePaths, Graph, TriMesh, QuadMesh)
 from ...util import project_extents, geo_mesh
 
-from ...operation import project_points, project_path, project_graph
+from ...operation import project_points, project_path, project_graph, project_quadmesh
 
 
 def _get_projection(el):
@@ -237,6 +238,8 @@ class GeoImagePlot(GeoPlot, ImagePlot):
         self._norm_kwargs(element, ranges, style, element.vdims[0])
         style.pop('interpolation', None)
         xs, ys, zs = geo_mesh(element)
+        xs = GridInterface._infer_interval_breaks(xs)
+        ys = GridInterface._infer_interval_breaks(ys)
         if self.geographic:
             style['transform'] = element.crs
         return (xs, ys, zs), style, {}
@@ -252,6 +255,18 @@ class GeoImagePlot(GeoPlot, ImagePlot):
         Update the elements of the plot.
         """
         return GeoPlot.update_handles(self, *args)
+
+
+
+class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):
+
+    _project_operation = project_quadmesh
+
+    def get_data(self, element, ranges, style):
+        if self._project_operation and self.geographic:
+            element = self._project_operation(element, projection=self.projection)
+        return super(GeoPlot, self).get_data(element, ranges, style)
+
 
 
 class GeoRGBPlot(GeoImagePlot):
@@ -509,7 +524,8 @@ Store.register({LineContours: LineContourPlot,
                 Graph: GeoGraphPlot,
                 TriMesh: GeoTriMeshPlot,
                 Nodes: GeoPointPlot,
-                EdgePaths: GeoPathPlot}, 'matplotlib')
+                EdgePaths: GeoPathPlot,
+                QuadMesh: GeoQuadMeshPlot}, 'matplotlib')
 
 
 # Define plot and style options

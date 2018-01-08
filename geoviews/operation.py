@@ -3,11 +3,12 @@ import numpy as np
 
 from cartopy import crs as ccrs
 from cartopy.img_transform import warp_array, _determine_bounds
-from holoviews.core.util import cartesian_product
+from holoviews.core.util import cartesian_product, get_param_values
 from holoviews.operation import Operation
 from shapely.geometry import Polygon, LineString
 
-from .element import Image, Shape, Polygons, Path, Points, Contours, RGB, Graph, Nodes, EdgePaths
+from .element import (Image, Shape, Polygons, Path, Points, Contours,
+                      RGB, Graph, Nodes, EdgePaths, QuadMesh)
 from .util import project_extents, geom_to_array
 
 
@@ -99,6 +100,58 @@ class project_graph(_project_operation):
         if element._edgepaths:
             data = data + (project_path(element.edgepaths, projection=self.projection),)
         return element.clone(data, crs=self.projection)
+
+
+class project_quadmesh(_project_operation):
+
+    supported_types = [QuadMesh]
+
+    def _process_element(self, element):
+        proj = self.p.projection
+        irregular = any(element.interface.irregular(element, kd)
+                        for kd in element.kdims)
+        zs = element.dimension_values(2, flat=False)
+        if irregular:
+            X, Y = [np.asarray(element.interface.coords(element, kd, expanded=True))
+                    for kd in element.kdims]
+        else:
+            X = element.dimension_values(0, expanded=True)
+            Y = element.dimension_values(1, expanded=True)
+            zs = zs.T
+
+        coords = proj.transform_points(element.crs, X, Y)
+        PX, PY = coords[..., 0], coords[..., 1]
+
+        # Mask quads which are wrapping around the x-axis
+        wrap_proj_types = (ccrs._RectangularProjection,
+                           ccrs._WarpedRectangularProjection,
+                           ccrs.InterruptedGoodeHomolosine,
+                           ccrs.Mercator)
+        if isinstance(proj, wrap_proj_types):
+            with np.errstate(invalid='ignore'):
+                edge_lengths = np.hypot(
+                    np.diff(PX , axis=1),
+                    np.diff(PY, axis=1)
+                )
+                to_mask = (
+                    (edge_lengths >= abs(proj.x_limits[1] -
+                                         proj.x_limits[0]) / 2) |
+                    np.isnan(edge_lengths)
+                )
+            if np.any(to_mask):
+                mask = np.zeros(zs.shape, dtype=np.bool)
+                mask[:, 1:][to_mask] = True
+                mask[:, 2:][to_mask[:, :-1]] = True
+                mask[:, :-1][to_mask] = True
+                mask[:, :-2][to_mask[:, 1:]] = True
+                mask[1:, 1:][to_mask[:-1]] = True
+                mask[1:, :-1][to_mask[:-1]] = True
+                mask[:-1, 1:][to_mask[1:]] = True
+                mask[:-1, :-1][to_mask[1:]] = True
+                zs[mask] = np.NaN
+
+        params = get_param_values(element)
+        return QuadMesh((PX, PY, zs), crs=self.projection, **params)
 
 
 class project_image(_project_operation):
@@ -229,4 +282,5 @@ class project(Operation):
         element = element.map(project_image, project_image.supported_types)
         element = element.map(project_shape, project_shape.supported_types)
         element = element.map(project_graph, project_graph.supported_types)
+        element = element.map(project_quadmesh, project_quadmesh.supported_types)
         return element.map(project_points, project_points.supported_types)

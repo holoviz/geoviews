@@ -108,9 +108,6 @@ class project_quadmesh(_project_operation):
 
     def _process_element(self, element):
         proj = self.p.projection
-        if proj == element.crs:
-            return element
-
         irregular = any(element.interface.irregular(element, kd)
                         for kd in element.kdims)
         zs = element.dimension_values(2, flat=False)

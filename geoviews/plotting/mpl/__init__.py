@@ -30,7 +30,7 @@ from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         EdgePaths, Graph, TriMesh, QuadMesh)
 from ...util import project_extents, geo_mesh
 
-from ...operation import project_points, project_path, project_graph
+from ...operation import project_points, project_path, project_graph, project_quadmesh
 
 
 def _get_projection(el):
@@ -260,10 +260,12 @@ class GeoImagePlot(GeoPlot, ImagePlot):
 
 class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):
 
+    _project_operation = project_quadmesh
+
     def get_data(self, element, ranges, style):
-        if self.geographic:
-            style['transform'] = element.crs
-        return super(GeoQuadMeshPlot, self).get_data(element, ranges, style)
+        if self._project_operation and self.geographic:
+            element = self._project_operation(element, projection=self.projection)
+        return super(GeoPlot, self).get_data(element, ranges, style)
 
 
 

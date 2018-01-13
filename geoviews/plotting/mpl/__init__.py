@@ -3,6 +3,7 @@ import copy
 import numpy as np
 import param
 from cartopy import crs as ccrs
+from cartopy.io.img_tiles import GoogleTiles
 
 try:
     from owslib.wmts import WebMapTileService
@@ -415,39 +416,6 @@ class WMTSPlot(GeoPlot):
     Adds a Web Map Tile Service from a WMTS Element.
     """
 
-    style_opts = ['alpha', 'cmap', 'interpolation', 'visible',
-                  'filterrad', 'clims', 'norm']
-
-    def get_data(self, element, ranges, style):
-        if WebMapTileService is None:
-            raise SkipRendering('WMTS element requires owslib and PIL '
-                                'to be installed.')
-        tile_source = None
-        for url in element.data:
-            if isinstance(url, util.basestring):
-                try:
-                    tile_source = WebMapTileService(url)
-                    break
-                except:
-                    pass
-            elif isinstance(url, WebMapTileService):
-                tile_source = url
-                break
-
-        if tile_source is None:
-            raise SkipRendering("No valid tile source URL found in WMTS "
-                                "Element, rendering skipped.")
-        return (tile_source, element.layer), style, {}
-
-    def init_artists(self, ax, plot_args, plot_kwargs):
-        return {'artist': ax.add_wmts(*plot_args, **plot_kwargs)}
-
-
-class TilePlot(GeoPlot):
-    """
-    Draws image tiles specified by a Tiles Element.
-    """
-
     zoom = param.Integer(default=8, doc="""
         Controls the zoom level of the tile source.""")
 
@@ -455,10 +423,18 @@ class TilePlot(GeoPlot):
                   'filterrad', 'clims', 'norm']
 
     def get_data(self, element, ranges, style):
-        return (element.data, self.zoom), style, {}
+        if isinstance(element.data, util.basestring):
+            tile_source = GoogleTiles(url=element.data)
+            return (tile_source, self.zoom), style, {}
+        else:
+            tile_source = element.data
+            return (tile_source, element.layer), style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):
-        return {'artist': ax.add_image(*plot_args, **plot_kwargs)}
+        if isinstance(plot_args[0], GoogleTiles):
+            return {'artist': ax.add_image(*plot_args, **plot_kwargs)}
+        return {'artist': ax.add_wmts(*plot_args, **plot_kwargs)}
+
 
 
 class GeoAnnotationPlot(AnnotationPlot):
@@ -510,7 +486,7 @@ Store.register({LineContours: LineContourPlot,
                 Image: GeoImagePlot,
                 Feature: FeaturePlot,
                 WMTS: WMTSPlot,
-                Tiles: TilePlot,
+                Tiles: WMTSPlot,
                 Points: GeoPointPlot,
                 Text: GeoTextPlot,
                 Layout: LayoutPlot,

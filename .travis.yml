@@ -6,9 +6,6 @@ sudo: false
 stages:
   - test
   - doc
-  # TODO: Before merging, decide when docs should be built and add a
-  # condition here. We don't yet have a ready mechanism for holding
-  # docs for all PRs etc.
 
 jobs:
   include:
@@ -69,4 +66,4 @@ jobs:
         github_token: $GITHUB_TOKEN
         local_dir: ./doc/_build/html
         on:
-          branch: docs
+          tags: true

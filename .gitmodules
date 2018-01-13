@@ -1,8 +1,0 @@
-[submodule "doc/nbpublisher"]
-	path = doc/nbpublisher
-	url = https://github.com/ioam/ioam-builder.git
-	branch = nbpublisher
-[submodule "doc/builder"]
-	path = doc/builder
-	url = https://github.com/ioam/ioam-builder.git
-	branch = docbuilder

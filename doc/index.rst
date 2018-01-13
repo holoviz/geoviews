@@ -2,21 +2,8 @@
 GeoViews
 ********
 
-.. raw:: html
 
-   <div style="width: 65%; float:left">
-
-	 
 **Geographic visualizations for HoloViews**
-
-
-.. raw:: html
-  
-   </div>
-
-
-.. raw:: html
-  :file: latest_news.html
 
 
 .. notebook:: geoviews Homepage.ipynb

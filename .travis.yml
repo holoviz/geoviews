@@ -1,32 +1,69 @@
+# At some point, should probably change to generic (since using conda)
 language: python
 
 sudo: false
 
-python:
-  - "2.7"
-  - "3.6"
+stages:
+  - test
+  - doc
 
-install:
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
-    else
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  # Useful for debugging any issues with conda
-  - conda info -a
-  - conda create -q -n test-environment -c conda-forge python=$TRAVIS_PYTHON_VERSION nose numpy matplotlib bokeh pandas scipy jupyter ipython param flake8 mock filelock iris cartopy xarray geopandas numpy --quiet
-  - source activate test-environment
-  - pip install coveralls
-  - pip install git+https://github.com/ioam/holoviews.git
-  - python setup.py install
+jobs:
+  include:
+    - &default
+      stage: test
+      python: "2.7"
+      before_install:
+        #########################
+        ##### install conda #####
+        - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+        - bash miniconda.sh -b -p $HOME/miniconda
+        - export PATH="$HOME/miniconda/bin:$PATH"
+        - hash -r
+        - conda config --set always_yes yes --set changeps1 no
+        - conda update -q conda
+        # Useful for debugging any issues with conda
+        - conda info -a
+        #########################       
+        - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
+        - source activate test-environment
+      install:
+        - conda install -c conda-forge nose numpy matplotlib bokeh pandas scipy jupyter ipython param flake8 mock filelock iris cartopy xarray geopandas numpy --quiet
+        - pip install coveralls
+        - pip install git+https://github.com/ioam/holoviews.git
+        - python setup.py install
+      script:
+        - nosetests --with-doctest --with-coverage --cover-package=geoviews
+        - flake8 --ignore=E,W . --exclude=./doc
 
-script:
-  - nosetests --with-doctest --with-coverage --cover-package=geoviews
-  - flake8 --ignore=E,W . --exclude=./doc
+    - <<: *default
+      python: "3.6"
+      after_success: coveralls      
 
-after_success: coveralls
+    - <<: *default
+      stage: doc
+      python: "3.6"
+      script:
+        # TODO: can't remember why I did this twice
+        - python -c "import geoviews as gv; gv.sample_data('notebooks/user_guide/sample-data')"
+        - python -c "import geoviews as gv; gv.sample_data('doc/sample-data')"
+        - conda install -c conda-forge sphinx beautifulsoup4 graphviz
+        - pip install nbsite
+        - pip install sphinx_ioam_theme
+        # TODO: should make this content available too rather than deleting it!
+        - rm notebooks/*.ipynb
+        - cd doc
+        - nbsite_nbpagebuild.py ioam geoviews ../notebooks .
+        - sphinx-build -b html . ./_build/html
+        - nbsite_fix_links.py _build/html
+        - nbsite_cleandisthtml.py ./_build/html take_a_chance
+        - cp -r ../notebooks/user_guide/assets _build/html/user_guide/
+        - cp -r ../notebooks/user_guide/sample-data _build/html/user_guide/
+        - touch ./_build/html/.nojekyll
+        - cd ..
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        github_token: $GITHUB_TOKEN
+        local_dir: ./doc/_build/html
+        on:
+          tags: true

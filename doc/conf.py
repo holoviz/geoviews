@@ -14,8 +14,8 @@ html_static_path += ['_static']
 html_theme = 'sphinx_ioam_theme'
 html_theme_options = {
     'logo':'geoviews-logo.png',
-    'favicon':'favicon.ico'
-#    'css':'geoviews.css'
+    'favicon':'favicon.ico',
+    'custom_css':'geoviews.css'
 }
 
 _NAV =  (

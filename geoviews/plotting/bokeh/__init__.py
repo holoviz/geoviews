@@ -83,6 +83,14 @@ class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):
 
 class GeoRasterPlot(GeoPlot, RasterPlot):
 
+    clipping_colors = param.Dict(default={'NaN': (0, 0, 0, 0)}, doc="""
+        Dictionary to specify colors for clipped values, allows
+        setting color for NaN values and for values above and below
+        the min and max value. The min, max or NaN color may specify
+        an RGB(A) color as a color hex string of the form #FFFFFF or
+        #FFFFFFFF or a length 3 or length 4 tuple specifying values in
+        the range 0-1 or a named HTML color.""")
+
     _project_operation = project_image.instance(fast=False)
 
 

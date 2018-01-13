@@ -375,8 +375,18 @@ class Graph(_Element, HvGraph):
 
         super(Graph, self).__init__(data, kdims, vdims, **params)
         self.nodes.crs = crs
-        if self._edgepaths:
-            self._edgepaths.crs = crs
+
+
+    @property
+    def edgepaths(self):
+        """
+        Returns the fixed EdgePaths or computes direct connections
+        between supplied nodes.
+        """
+        edgepaths = super(Graph, self).edgepaths
+        edgepaths.crs = self.crs
+        return edgepaths
+
 
 
 class TriMesh(HvTriMesh, Graph):
@@ -386,6 +396,16 @@ class TriMesh(HvTriMesh, Graph):
     node_type = Nodes
 
     edge_type = EdgePaths
+
+    @property
+    def edgepaths(self):
+        """
+        Returns the fixed EdgePaths or computes direct connections
+        between supplied nodes.
+        """
+        edgepaths = super(TriMesh, self).edgepaths
+        edgepaths.crs = self.crs
+        return edgepaths
 
 
 class Contours(_Element, HvContours):

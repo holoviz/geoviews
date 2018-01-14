@@ -20,6 +20,7 @@ html_theme_options = {
 
 _NAV =  (
         ('User Guide', 'user_guide/index'),
+        ('Gallery', 'gallery/index'),
         ('About', 'about')
 )
 

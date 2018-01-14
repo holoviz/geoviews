@@ -160,6 +160,13 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
         return l, b, r, t
 
+    def _finalize_axis(self, *args, **kwargs):
+        ret = super(GeoPlot, self)._finalize_axis(*args, **kwargs)
+        if self.show_grid:
+            axis = self.handles['axis']
+            axis.gridlines()
+        return ret
+
 
     def get_data(self, element, ranges, style):
         if self._project_operation and self.geographic and element.crs != self.projection:
@@ -402,8 +409,20 @@ class WMTSPlot(GeoPlot):
 
     def init_artists(self, ax, plot_args, plot_kwargs):
         if isinstance(plot_args[0], GoogleTiles):
-            return {'artist': ax.add_image(*plot_args, **plot_kwargs)}
+            if 'artist' in self.handles:
+                return {'artist': self.handles['artist']}
+            img = ax.add_image(*plot_args, **plot_kwargs)
+            return {'artist': img or plot_args[0]}
         return {'artist': ax.add_wmts(*plot_args, **plot_kwargs)}
+
+    def teardown_handles(self):
+        """
+        If no custom update_handles method is supplied this method
+        is called to tear down any previous handles before replacing
+        them.
+        """
+        if not isinstance(self.handles.get('artist'), GoogleTiles):
+            self.handles['artist'].remove()
 
 
 

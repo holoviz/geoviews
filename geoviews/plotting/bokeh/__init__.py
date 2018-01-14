@@ -12,6 +12,7 @@ from holoviews.plotting.bokeh.chart import PointPlot, VectorFieldPlot
 from holoviews.plotting.bokeh.graphs import TriMeshPlot, GraphPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
 from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot, QuadMeshPlot
+from holoviews.plotting.bokeh.util import mpl_to_bokeh
 
 from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
                         Image, Feature, Text, RGB, Nodes, EdgePaths,
@@ -149,6 +150,21 @@ class GeoShapePlot(GeoPolygonPlot):
                 dim = util.dimension_sanitizer(k.name)
                 data[dim] = [v for _ in range(len(xs))]
         return data, mapping, style
+
+    def _init_glyph(self, plot, mapping, properties):
+        """
+        Returns a Bokeh glyph object.
+        """
+        properties = mpl_to_bokeh(properties)
+        if isinstance(self.current_frame.data, line_types):
+            properties = {k: v for k, v in properties.items()
+                          if 'fill_' not in k}
+            plot_method = plot.multi_line
+        else:
+            plot_method = plot.patches
+        renderer = plot_method(**dict(properties, **mapping))
+        return renderer, renderer.glyph
+
 
 
 class FeaturePlot(GeoPolygonPlot):

@@ -3,9 +3,11 @@ language: python
 
 sudo: false
 
+TODO: update condition before merge
 stages:
   - test
   - doc
+    if: branch = gallery AND type != pull_request
 
 jobs:
   include:
@@ -64,9 +66,15 @@ jobs:
         - touch ./_build/html/.nojekyll
         - cd ..
       deploy:
-        provider: pages
-        skip_cleanup: true
-        github_token: $GITHUB_TOKEN
-        local_dir: ./doc/_build/html
-        on:
-          tags: true
+        - provider: pages
+          skip_cleanup: true
+          github_token: $GITHUB_TOKEN
+          local_dir: ./doc/_build/html
+          on:
+            tags: true
+        - provider: pages
+          skip_cleanup: true
+          github_token: $GITHUB_TOKEN
+          local_dir: ./doc/_build/html
+          repo: ioam-docs/geoviews-master
+

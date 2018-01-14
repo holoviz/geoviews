@@ -21,14 +21,14 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     OverlayPlot as HvOverlayPlot,
                                     PathPlot, PolygonPlot, ImagePlot,
                                     ContourPlot, GraphPlot, TriMeshPlot,
-                                    QuadMeshPlot)
+                                    QuadMeshPlot, VectorFieldPlot)
 from holoviews.plotting.mpl.util import get_raster_array
 
 
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         LineContours, FilledContours, is_geographic,
                         Path, Polygons, Shape, RGB, Contours, Nodes,
-                        EdgePaths, Graph, TriMesh, QuadMesh)
+                        EdgePaths, Graph, TriMesh, QuadMesh, VectorField)
 from ...util import project_extents, geo_mesh
 
 from ...operation import project_points, project_path, project_graph, project_quadmesh
@@ -310,6 +310,16 @@ class GeoPointPlot(GeoPlot, PointPlot):
     _project_operation = project_points
 
 
+class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
+    """
+    Draws a vector field plot from the data in a VectorField Element.
+    """
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_points
+
+
 class GeometryPlot(GeoPlot):
 
     def init_artists(self, ax, plot_args, plot_kwargs):
@@ -488,6 +498,7 @@ Store.register({LineContours: LineContourPlot,
                 WMTS: WMTSPlot,
                 Tiles: WMTSPlot,
                 Points: GeoPointPlot,
+                VectorField: GeoVectorFieldPlot,
                 Text: GeoTextPlot,
                 Layout: LayoutPlot,
                 NdLayout: LayoutPlot,

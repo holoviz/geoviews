@@ -10,7 +10,8 @@ from shapely.geometry import Polygon, LineString
 
 from . import element as gv_element
 from .element import (Image, Shape, Polygons, Path, Points, Contours,
-                      RGB, Graph, Nodes, EdgePaths, QuadMesh, _Element)
+                      RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField,
+                      _Element)
 from .util import project_extents, geom_to_array
 
 geo_ops = []
@@ -129,7 +130,7 @@ class project_shape(_project_operation):
 
 class project_points(_project_operation):
 
-    supported_types = [Points, Nodes]
+    supported_types = [Points, Nodes, VectorField]
 
     def _process_element(self, element):
         xdim, ydim = element.dimensions()[:2]

@@ -55,7 +55,7 @@ jobs:
         - rm notebooks/*.ipynb
         - cd doc
         - nbsite_nbpagebuild.py ioam geoviews ../notebooks .
-	- nbsite_gallery.py .. notebooks
+        - nbsite_gallery.py .. notebooks
         - sphinx-build -b html . ./_build/html
         - nbsite_fix_links.py _build/html
         - nbsite_cleandisthtml.py ./_build/html take_a_chance

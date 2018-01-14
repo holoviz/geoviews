@@ -76,6 +76,6 @@ jobs:
           github_token: $GITHUB_TOKEN
           local_dir: ./doc/_build/html
           repo: ioam-docs/geoviews-master
-	  on:
+          on:
             branch: gallery
           # TODO: remove branch:gallery before merge

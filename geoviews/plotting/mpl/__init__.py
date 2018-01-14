@@ -162,6 +162,13 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
         return l, b, r, t
 
+    def _finalize_axis(self, *args, **kwargs):
+        ret = super(GeoPlot, self)._finalize_axis(*args, **kwargs)
+        if self.show_grid:
+            axis = self.handles['axis']
+            axis.gridlines()
+        return ret
+
 
     def get_data(self, element, ranges, style):
         if self._project_operation and self.geographic and element.crs != self.projection:

@@ -3,11 +3,10 @@ language: python
 
 sudo: false
 
-TODO: update condition before merge
+TODO: update when to upload to ioam-docs before merging
 stages:
   - test
   - doc
-    if: branch = gallery AND type != pull_request
 
 jobs:
   include:

@@ -2,7 +2,7 @@ import param
 import numpy as np
 from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
-from cartopy.io.img_tiles import GoogleTiles as cGoogleTiles
+from cartopy.io.img_tiles import GoogleTiles
 from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
 from holoviews.core.util import basestring, pd, max_extents, dimension_range
@@ -29,7 +29,7 @@ except:
 
 from ..util import path_to_geom, polygon_to_geom
 
-geographic_types = (cGoogleTiles, cFeature, BaseGeometry)
+geographic_types = (GoogleTiles, cFeature, BaseGeometry)
 
 def is_geographic(element, kdims=None):
     """
@@ -78,7 +78,7 @@ class _Element(Element2D):
             coord_sys = crs_data.coord_system()
             if hasattr(coord_sys, 'as_cartopy_projection'):
                 crs = coord_sys.as_cartopy_projection()
-        elif isinstance(crs_data, (cFeature, cGoogleTiles)):
+        elif isinstance(crs_data, (cFeature, GoogleTiles)):
             crs = crs_data.crs
 
         supplied_crs = kwargs.get('crs', None)
@@ -138,8 +138,10 @@ class Feature(_GeoFeature):
 
 class WMTS(_GeoFeature):
     """
-    The WMTS Element represents a Web Map Tile Service
-    specified as a tuple of the API URL and
+    The WMTS Element represents a Web Map Tile Service specified as a
+    URL containing {x}, {y}, and {z} templating variables, e.g.:
+
+    https://maps.wikimedia.org/osm-intl/{Z}/{X}/{Y}@2x.png
     """
 
     group = param.String(default='WMTS')
@@ -147,41 +149,24 @@ class WMTS(_GeoFeature):
     layer = param.String(doc="The layer on the tile service")
 
     def __init__(self, data, kdims=None, vdims=None, **params):
-        if isinstance(data, tuple):
-            data = data
-        else:
-            data = (data,)
-
-        for d in data:
-            if WMTSTileSource and isinstance(d, WMTSTileSource):
-                if not 'crs' in params:
-                    params['crs'] = ccrs.GOOGLE_MERCATOR
-            elif WebMapTileService and isinstance(d, WebMapTileService):
-                if 'crs' not in params and not self.crs:
-                    raise Exception('Must supply coordinate reference '
-                                    'system with cartopy WMTS URL.')
-            elif not isinstance(d, basestring):
-                raise TypeError('%s data has to be a tile service URL'
-                                % type(d).__name__)
-            elif not 'crs' in params:
-                params['crs'] = ccrs.GOOGLE_MERCATOR
+        if ((WMTSTileSource and isinstance(data, WMTSTileSource)) or
+            (GoogleTiles and isinstance(data, GoogleTiles))):
+            data = data.url
+        elif WebMapTileService and isinstance(data, WebMapTileService):
+            pass
+        elif not isinstance(data, basestring):
+            raise TypeError('%s data should be a tile service URL not a %s type.'
+                            % (type(self).__name__, type(data).__name__) )
         super(WMTS, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
 
-class Tiles(_GeoFeature):
+class Tiles(WMTS):
     """
     Tiles represents an image tile source to dynamically
     load data from depending on the zoom level.
     """
 
     group = param.String(default='Tiles')
-
-    def __init__(self, data, kdims=None, vdims=None, **params):
-        if not isinstance(data, cGoogleTiles):
-            raise TypeError('%s data has to be a cartopy GoogleTiles type'
-                            % type(data).__name__)
-        super(Tiles, self).__init__(data, kdims=kdims, vdims=vdims, **params)
-
 
 
 class Dataset(_Element, HvDataset):

@@ -34,22 +34,10 @@ class TilePlot(GeoPlot):
         return extents
 
     def get_data(self, element, ranges, style):
-        tile_source = None
-        for url in element.data:
-            if isinstance(url, util.basestring) and not url.endswith('cgi'):
-                try:
-                    tile_source = WMTSTileSource(url=url)
-                    break
-                except:
-                    pass
-            elif isinstance(url, WMTSTileSource):
-                tile_source = url
-                break
-
-        if tile_source is None:
-            raise SkipRendering("No valid tile source URL found in WMTS "
-                                "Element, rendering skipped.")
-        return {}, {'tile_source': tile_source}, style
+        if not isinstance(element.data, util.basestring):
+            SkipRendering("WMTS element data must be a URL string, "
+                          "bokeh cannot render %r" % element.data)
+        return {}, {'tile_source': WMTSTileSource(url=element.data)}, style
 
     def _update_glyph(self, renderer, properties, mapping, glyph):
         allowed_properties = glyph.properties()

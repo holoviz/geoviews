@@ -8,14 +8,14 @@ from holoviews import Store, Overlay, NdOverlay
 from holoviews.core import util
 from holoviews.core.options import SkipRendering, Options
 from holoviews.plotting.bokeh.annotation import TextPlot
-from holoviews.plotting.bokeh.chart import PointPlot
+from holoviews.plotting.bokeh.chart import PointPlot, VectorFieldPlot
 from holoviews.plotting.bokeh.graphs import TriMeshPlot, GraphPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
 from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot, QuadMeshPlot
 
 from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
                         Image, Feature, Text, RGB, Nodes, EdgePaths,
-                        Graph, TriMesh, QuadMesh)
+                        Graph, TriMesh, QuadMesh, VectorField)
 from ...operation import (project_image, project_shape, project_points,
                           project_path, project_graph, project_quadmesh)
 from ...util import geom_to_array
@@ -60,6 +60,11 @@ class TilePlot(GeoPlot):
 
 
 class GeoPointPlot(GeoPlot, PointPlot):
+
+    _project_operation = project_points
+
+
+class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
 
     _project_operation = project_points
 
@@ -188,6 +193,7 @@ class GeoTextPlot(GeoPlot, TextPlot):
 
 Store.register({WMTS: TilePlot,
                 Points: GeoPointPlot,
+                VectorField: GeoVectorFieldPlot,
                 Polygons: GeoPolygonPlot,
                 Contours: GeoContourPlot,
                 Path: GeoPathPlot,

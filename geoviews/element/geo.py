@@ -192,6 +192,20 @@ class Points(Dataset):
     group = param.String(default='Points')
 
 
+class VectorField(Dataset):
+    """
+    A VectorField contains is a collection of vectors where each
+    vector has an associated position. The vectors should be specified
+    by defining an angle in radians and a magnitude.
+    """
+
+    group = param.String(default='VectorField', constant=True)
+
+    vdims = param.List(default=[Dimension('Angle', cyclic=True, range=(0,2*np.pi)),
+                                Dimension('Magnitude')], bounds=(1, None))
+
+
+
 class LineContours(_Element, HvImage):
     """
     Contours represents a 2D array of some quantity with

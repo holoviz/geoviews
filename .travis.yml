@@ -61,12 +61,14 @@ jobs:
         - rm notebooks/*.ipynb
         - cd doc
         - nbsite_nbpagebuild.py ioam geoviews ../notebooks .
+        # gallery notebooks depend on user guide assets
+        - mkdir -p _build/html/user_guide
+        - cp -r ../notebooks/user_guide/assets _build/html/user_guide/
+        - cp -r ../notebooks/user_guide/sample-data _build/html/user_guide/
         - nbsite_gallery.py .. notebooks None '.' matplotlib bokeh None 
         - sphinx-build -b html . ./_build/html
         - nbsite_fix_links.py _build/html
         - nbsite_cleandisthtml.py ./_build/html take_a_chance
-        - cp -r ../notebooks/user_guide/assets _build/html/user_guide/
-        - cp -r ../notebooks/user_guide/sample-data _build/html/user_guide/
         - touch ./_build/html/.nojekyll
         - cd ..
       deploy:

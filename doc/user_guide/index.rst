@@ -16,7 +16,7 @@ Contents:
 * `Gridded Datasets II <Gridded_Datasets_II.html>`_
    Explore complex datasets quickly with lower dimensional views.
 
-* `Working with Bokeh <Working_with_Bokeh>`_
+* `Working with Bokeh <Working_with_Bokeh.html>`_
    Using the Bokeh extension for more interactivity.
 
 .. toctree::

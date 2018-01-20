@@ -3,10 +3,11 @@ import numpy as np
 import xarray as xr
 
 from holoviews.core.util import get_param_values
-from holoviews.element import Image as HvImage
+from holoviews.core.data import XArrayInterface
+from holoviews.element import Image as HvImage, QuadMesh as HvQuadMesh
 from holoviews.operation.datashader import regrid
 
-from ..element import Image, is_geographic
+from ..element import Image, QuadMesh, is_geographic
 
 
 class weighted_regrid(regrid):
@@ -40,20 +41,37 @@ class weighted_regrid(regrid):
         except:
             raise ImportError("xESMF library required for weighted regridding.")
         x, y = element.kdims
-        info = self._get_sampling(element, x, y)
-        (x_range, y_range), _, (width, height), (xtype, ytype) = info
-        if x_range[0] > x_range[1]:
-            x_range = x_range[::-1]
-        element = element.select(**{x.name: x_range, y.name: y_range})
+        if self.p.target:
+            tx, ty = self.p.target.kdims[:2]
+            if issubclass(self.p.target.interface, XArrayInterface):
+                ds_out = self.p.target.data
+                ds_out.rename({tx.name: 'lon', ty.name: 'lat'},
+                              inplace=True)
+                height, width = ds_out[tx.name].shape
+            else:
+                xs = self.p.target.dimension_values(0, expanded=False)
+                ys = self.p.target.dimension_values(1, expanded=False)
+                ds_out = xr.Dataset({'lat': ys, 'lon': xs})
+                height, width = len(ys), len(xs)
+            x_range = ds_out[tx.name].min(), ds_out[tx.name].max()
+            y_range = ds_out[ty.name].min(), ds_out[ty.name].max()
+            xtype, ytype = 'numeric', 'numeric'
+        else:
+            info = self._get_sampling(element, x, y)
+            (x_range, y_range), _, (width, height), (xtype, ytype) = info
+            if x_range[0] > x_range[1]:
+                x_range = x_range[::-1]
+            element = element.select(**{x.name: x_range, y.name: y_range})
+            ys = np.linspace(y_range[0], y_range[1], height)
+            xs = np.linspace(x_range[0], x_range[1], width)
+            ds_out = xr.Dataset({'lat': ys, 'lon': xs})
+
         irregular = any(element.interface.irregular(element, d)
                         for d in [x, y])
         coord_opts = {'flat': False} if irregular else {'expanded': False}
         coords = tuple(element.dimension_values(d, **coord_opts)
                        for d in [x, y])
         arrays = self._get_xarrays(element, coords, xtype, ytype)
-        ys = np.linspace(y_range[0], y_range[1], height)
-        xs = np.linspace(x_range[0], x_range[1], width)
-        ds_out = xr.Dataset({'lat': ys, 'lon': xs})
         ds = xr.Dataset(arrays)
         ds.rename({x.name: 'lon', y.name: 'lat'}, inplace=True)
 
@@ -73,5 +91,11 @@ class weighted_regrid(regrid):
         ds = xr.Dataset({vd: regridder(arr) for vd, arr in arrays.items()})
         params = dict(get_param_values(element), kdims=['lon', 'lat'])
         if is_geographic(element):
-            return Image(ds, crs=element.crs, **params)
-        return HvImage(ds, **params)
+            try:
+                return Image(ds, crs=element.crs, **params)
+            except:
+                return QuadMesh(ds, crs=element.crs, **params)
+        try:
+            return HvImage(ds, **params)
+        except:
+            return HvQuadMesh(ds, **params)

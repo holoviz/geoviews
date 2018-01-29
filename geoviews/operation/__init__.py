@@ -4,14 +4,14 @@ from holoviews.operation.stats import bivariate_kde
 
 from .. import element as gv_element
 from ..element import _Element
-from .projection import (
+from .projection import ( # noqa (API import)
     project_image, project_path, project_shape, project_points,
     project_graph, project_quadmesh, project
 )
 
 geo_ops = [contours, bivariate_kde]
 try:
-    from holoviews.operation.datashader import (
+    from holoviews.operation.datashader import (   
         ResamplingOperation, shade, stack, dynspread)
     geo_ops += [ResamplingOperation, shade, stack, dynspread]
 except:

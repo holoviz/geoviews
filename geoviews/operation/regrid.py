@@ -21,8 +21,10 @@ class weighted_regrid(regrid):
     Implements weighted regridding of rectilinear and curvilinear
     grids using the xESMF library, supporting all the ESMF regridding
     algorithms including bilinear, conservative and nearest neighbour
-    regridding. In addition to these different interpolation options
-    it supports
+    regridding. The operation will always store the sparse weight
+    matrix to disk and reuse the weights for later aggregations. To
+    delete the weight files call the clean_weight_files method on the
+    operation.
     """
 
     interpolation = param.ObjectSelector(default='bilinear',

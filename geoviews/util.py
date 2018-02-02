@@ -45,7 +45,15 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
         eroded_boundary = boundary_poly.buffer(-src_proj.threshold)
         geom_in_src_proj = eroded_boundary.intersection(
             domain_in_src_proj)
-        geom_in_crs = dest_proj.project_geometry(geom_in_src_proj, src_proj)
+        try:
+            geom_in_crs = dest_proj.project_geometry(geom_in_src_proj, src_proj)
+        except ValueError:
+            src_name =type(src_proj).__name__
+            dest_name =type(dest_proj).__name__
+            raise ValueError('Could not project data from %s projection '
+                             'to %s projection. Ensure the coordinate '
+                             'reference system (crs) matches your data.' %
+                             (src_name, dest_name))
     else:
         geom_in_crs = boundary_poly.intersection(domain_in_src_proj)
     return geom_in_crs.bounds

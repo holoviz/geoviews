@@ -30,6 +30,7 @@ setup_args.update(dict(
     packages = ["geoviews",
                 "geoviews.data",
                 "geoviews.element",
+                "geoviews.operation",
                 "geoviews.plotting",
                 "geoviews.plotting.bokeh",
                 "geoviews.plotting.mpl"],

@@ -53,8 +53,7 @@ class weighted_regrid(regrid):
             tx, ty = self.p.target.kdims[:2]
             if issubclass(self.p.target.interface, XArrayInterface):
                 ds_out = self.p.target.data
-                ds_out.rename({tx.name: 'lon', ty.name: 'lat'},
-                              inplace=True)
+                ds_out = ds_out.rename({tx.name: 'lon', ty.name: 'lat'})
                 height, width = ds_out[tx.name].shape
             else:
                 xs = self.p.target.dimension_values(0, expanded=False)
@@ -97,8 +96,10 @@ class weighted_regrid(regrid):
 
     def _process(self, element, key=None):
         regridder, arrays = self._get_regridder(element)
+        x, y = element.kdims
         ds = xr.Dataset({vd: regridder(arr) for vd, arr in arrays.items()})
-        params = dict(get_param_values(element), kdims=['lon', 'lat'])
+        ds.rename({'lon': x.name, 'lat': y.name}, inplace=True)
+        params = get_param_values(element)
         if is_geographic(element):
             try:
                 return Image(ds, crs=element.crs, **params)

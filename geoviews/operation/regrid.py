@@ -1,3 +1,9 @@
+import os
+try:
+    FileNotFoundError
+except NameError:
+    FileNotFoundError = IOError
+
 import param
 import numpy as np
 import xarray as xr
@@ -34,6 +40,8 @@ class weighted_regrid(regrid):
         reuse_weights parameter is disabled. Note the files are not
         cleared automatically so make sure you clean up the cached
         files when you are done.""")
+
+    _files = []
 
     def _get_regridder(self, element):
         try:
@@ -80,9 +88,10 @@ class weighted_regrid(regrid):
         filename = self.file_pattern.format(method=self.p.interpolation,
                                             width=width, height=height,
                                             x_range=x_range, y_range=y_range)
+        self._files.append(os.path.abspath(filename))
         regridder = xe.Regridder(ds, ds_out, self.p.interpolation,
                                  reuse_weights=self.p.reuse_weights,
-                                 filename=filename.replace(', ', '_'))
+                                 filename=filename)
         return regridder, arrays
 
 
@@ -99,3 +108,19 @@ class weighted_regrid(regrid):
             return HvImage(ds, **params)
         except:
             return HvQuadMesh(ds, **params)
+
+
+    @classmethod
+    def clean_weight_files(cls):
+        """
+        Cleans existing weight files.
+        """
+        deleted = []
+        for f in cls._files:
+            try:
+                os.remove(f)
+                deleted.append(f)
+            except FileNotFoundError:
+                pass
+        print('Deleted %d weight files' % len(deleted))
+        cls._files = []

@@ -78,7 +78,9 @@ class project_path(Operation):
     supported_types = [Polygons, Path, Contours]
 
     def _process_element(self, element):
-        if element.interface.datatype == 'geodataframe':
+        if not len(element):
+            return element.clone(crs=self.p.projection)
+        elif element.interface.datatype == 'geodataframe':
             geoms = element.split(datatype='geom')
             projected = [self.p.projection.project_geometry(geom, element.crs)
                          for geom in geoms]
@@ -117,6 +119,8 @@ class project_shape(Operation):
     supported_types = [Shape]
 
     def _process_element(self, element):
+        if not len(element):
+            return element.clone(crs=self.p.projection)
         geom = self.p.projection.project_geometry(element.geom(), element.crs)
         return element.clone(geom, crs=self.p.projection)
 
@@ -134,14 +138,17 @@ class project_points(Operation):
     supported_types = [Points]
 
     def _process_element(self, element):
+        if not len(element):
+            return element.clone(crs=self.p.projection)
         xdim, ydim = element.dimensions()[:2]
         xs, ys = (element.dimension_values(i) for i in range(2))
         coordinates = self.p.projection.transform_points(element.crs, xs, ys)
         new_data = element.columns()
         new_data[xdim.name] = coordinates[:, 0]
         new_data[ydim.name] = coordinates[:, 1]
+        datatype = [element.interface.datatype]+element.datatype
         return element.clone(new_data, crs=self.p.projection,
-                             datatype=[element.interface.datatype]+element.datatype)
+                             datatype=datatype)
 
     def _process(self, element, key=None):
         return element.map(self._process_element, self.supported_types)

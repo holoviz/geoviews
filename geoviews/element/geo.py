@@ -11,7 +11,7 @@ from holoviews.element import (
     Contours as HvContours, Graph as HvGraph, Image as HvImage,
     Nodes as HvNodes, Path as HvPath, Polygons as HvPolygons,
     RGB as HvRGB, Text as HvText, TriMesh as HvTriMesh,
-    QuadMesh as HvQuadMesh)
+    QuadMesh as HvQuadMesh, Points as HvPoints, VectorField as HvVectorField)
 
 from shapely.geometry.base import BaseGeometry
 
@@ -183,7 +183,7 @@ class Dataset(_Element, HvDataset):
     group = param.String(default='Dataset')
 
 
-class Points(Dataset):
+class Points(_Element, HvPoints):
     """
     Points represent a collection of points with
     an associated cartopy coordinate-reference system.
@@ -192,7 +192,7 @@ class Points(Dataset):
     group = param.String(default='Points')
 
 
-class VectorField(Dataset):
+class VectorField(_Element, HvVectorField):
     """
     A VectorField contains is a collection of vectors where each
     vector has an associated position. The vectors should be specified
@@ -396,6 +396,8 @@ class TriMesh(HvTriMesh, Graph):
     node_type = Nodes
 
     edge_type = EdgePaths
+
+    point_type = Points
 
     @property
     def edgepaths(self):

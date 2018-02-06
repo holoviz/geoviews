@@ -19,7 +19,7 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     AnnotationPlot, TextPlot,
                                     LayoutPlot as HvLayoutPlot,
                                     OverlayPlot as HvOverlayPlot,
-                                    PathPlot, PolygonPlot, ImagePlot,
+                                    PathPlot, PolygonPlot, RasterPlot,
                                     ContourPlot, GraphPlot, TriMeshPlot,
                                     QuadMeshPlot, VectorFieldPlot)
 from holoviews.plotting.mpl.util import get_raster_array
@@ -235,7 +235,7 @@ class FilledContourPlot(LineContourPlot):
 
 
 
-class GeoImagePlot(GeoPlot, ImagePlot):
+class GeoImagePlot(GeoPlot, RasterPlot):
     """
     Draws a pcolormesh plot from the data in a Image Element.
     """

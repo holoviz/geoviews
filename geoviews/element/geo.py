@@ -399,6 +399,36 @@ class TriMesh(HvTriMesh, Graph):
 
     point_type = Points
 
+    def __init__(self, data, kdims=None, vdims=None, **params):
+        nodes, edges = None, None
+        if isinstance(data, tuple):
+            if len(data) > 1 and isinstance(data[1], (self.node_type, self.point_type)):
+                nodes = data[1]
+            elif len(data) > 2 and isinstance(data[2], self.edge_type):
+                edges = data[2]
+
+        if 'crs' in params:
+            crs = params['crs']
+            mismatch = None
+            if nodes is not None and type(crs) != type(nodes.crs):
+                mismatch = 'nodes'
+            elif edges is not None and type(crs) != type(edges.crs):
+                mismatch = 'edges'
+            if mismatch:
+                raise ValueError("Coordinate reference system supplied "
+                                 "to %s element must match the crs of "
+                                 "the %s. Expected %s found %s." %
+                                 (mismatch, type(self).__name__, nodes.crs, crs))
+        elif nodes is not None:
+            crs = nodes.crs
+            params['crs'] = crs
+        else:
+            crs = self.crs
+
+        super(TriMesh, self).__init__(data, kdims, vdims, **params)
+        self.nodes.crs = crs
+
+
     @property
     def edgepaths(self):
         """

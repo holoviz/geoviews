@@ -28,26 +28,31 @@ def convert_to_geotype(element, crs=None):
     return geotype(element, crs=crs)
 
 
-def find_crs(element):
+def find_crs(op, element):
     """
     Traverses the supplied object looking for coordinate reference
     systems (crs). If multiple clashing reference systems are found
     it will throw an error.
     """
-    crss = element.traverse(lambda x: x.crs, [_Element])
-    crss = [crs for crs in crss if crs is not None]
-    if any(crss[0] != crs for crs in crss[1:] if crs is not None):
-        raise ValueError('Cannot datashade Elements in different '
-                         'coordinate reference systems.')
-    return {'crs': crss[0] if crss else None}
+    crss = [crs for crs in element.traverse(lambda x: x.crs, [_Element])
+            if crs is not None]
+    if not crss:
+        return {}
+    crs = crss[0]
+    if any(crs != ocrs for ocrs in crss[1:]):
+        raise ValueError('Cannot %s Elements in different '
+                         'coordinate reference systems.'
+                         % type(op).__name__)
+    return {'crs': crs}
 
 
-def add_crs(element, **kwargs):
+def add_crs(op, element, **kwargs):
     """
     Converts any elements in the input to their equivalent geotypes
     if given a coordinate reference system.
     """
     return element.map(lambda x: convert_to_geotype(x, kwargs.get('crs')), Element)
+
 
 for op in geo_ops:
     op._preprocess_hooks = op._preprocess_hooks + [find_crs]

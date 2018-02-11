@@ -4,7 +4,7 @@ import numpy as np
 from cartopy import crs as ccrs
 from cartopy.img_transform import warp_array, _determine_bounds
 from holoviews.core import Element
-from holoviews.core.util import cartesian_product, get_param_values
+from holoviews.core.util import cartesian_product
 from holoviews.operation import Operation
 from shapely.geometry import Polygon, LineString
 
@@ -26,6 +26,7 @@ from holoviews.operation.stats import bivariate_kde
 
 geo_ops += [contours, bivariate_kde]
 
+
 def convert_to_geotype(element, crs=None):
     """
     Converts a HoloViews element type to the equivalent GeoViews
@@ -37,21 +38,25 @@ def convert_to_geotype(element, crs=None):
     return geotype(element, crs=crs)
 
 
-def find_crs(element):
+def find_crs(op, element):
     """
     Traverses the supplied object looking for coordinate reference
     systems (crs). If multiple clashing reference systems are found
     it will throw an error.
     """
-    crss = element.traverse(lambda x: x.crs, [_Element])
-    crss = [crs for crs in crss if crs is not None]
-    if any(crss[0] != crs for crs in crss[1:] if crs is not None):
-        raise ValueError('Cannot datashade Elements in different '
-                         'coordinate reference systems.')
-    return {'crs': crss[0] if crss else None}
+    crss = [crs for crs in element.traverse(lambda x: x.crs, [_Element])
+            if crs is not None]
+    if not crss:
+        return {}
+    crs = crss[0]
+    if any(crs != ocrs for ocrs in crss[1:]):
+        raise ValueError('Cannot %s Elements in different '
+                         'coordinate reference systems.'
+                         % type(op).__name__)
+    return {'crs': crs}
 
 
-def add_crs(element, **kwargs):
+def add_crs(op, element, **kwargs):
     """
     Converts any elements in the input to their equivalent geotypes
     if given a coordinate reference system.

@@ -1,6 +1,6 @@
 package:
   name: geoviews
-  version: 1.4.2
+  version: 1.4.3
 
 source:
   path: .
@@ -15,7 +15,7 @@ requirements:
     - jupyter
     - notebook
     - cartopy
-    - bokeh >=0.12.10
+    - bokeh >=0.12.13
 
 about:
   home: geo.holoviews.org

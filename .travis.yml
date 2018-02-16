@@ -46,7 +46,7 @@ jobs:
         # TODO: can't remember why I did this twice
         - python -c "import geoviews as gv; gv.sample_data('notebooks/user_guide/sample-data')"
         - python -c "import geoviews as gv; gv.sample_data('doc/sample-data')"
-        - conda install -c conda-forge sphinx beautifulsoup4 graphviz
+        - conda install -c conda-forge sphinx<1.7 beautifulsoup4 graphviz
         - conda install -c nesii/label/dev-esmf -c conda-forge esmpy
         - pip install xesmf
         - pip install nbsite

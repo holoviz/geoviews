@@ -73,3 +73,4 @@ target/
 doc/_build
 
 geoviews/.version
+*~

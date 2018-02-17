@@ -7,7 +7,7 @@ sudo: false
 # before merge.
 stages:
   - test
-  - name: doc
+  - name: docs
     if: (branch = master AND type != pull_request) OR (tag =~ ^v)
   - name: conda_dev_package
     if: (branch = packaging)
@@ -50,7 +50,7 @@ jobs:
 #      after_success: coveralls
 
     - <<: *default
-      stage: doc
+      stage: docs
       python: "3.6"
       script:
         # TODO: can't remember why I did this twice

@@ -89,6 +89,7 @@ jobs:
         - conda install -y -c pyviz/label/dev -c conda-forge pyct
         - doit ci_configure_conda
       install:
+        - export VERSIONHACK=$(python -c "import subprocess;desc=subprocess.check_output(['git','describe','--long']).decode('utf8');v,commits=desc.split('-')[0:2];newv=[int(x) for x in v.split('.')];newv[-1]+=1;print('.'.join(str(x) for x in newv)+'.dev'+commits)")      
         - doit build_conda_package --channel conda-forge
       script: true
 #        - doit upload_conda_package --token=$CONDA_UPLOAD_TOKEN

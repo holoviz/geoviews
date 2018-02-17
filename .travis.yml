@@ -3,43 +3,51 @@ language: python
 
 sudo: false
 
-TODO: update when to upload to ioam-docs before merging
+# TODO: various temp things in this PR for testing; will be undone
+# before merge.
 stages:
   - test
   - doc
+    if: (branch = master AND type != pull_request) OR (tag =~ ^v)
+  - name: conda_dev_package
+    if branch = packaging
+#    if: (branch = master AND type != pull_request)
+#  - name: conda_package
+#    if: tag =~ ^v
+
 
 jobs:
   include:
     - &default
       stage: test
       python: "2.7"
-      before_install:
-        #########################
-        ##### install conda #####
-        - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-        - bash miniconda.sh -b -p $HOME/miniconda
-        - export PATH="$HOME/miniconda/bin:$PATH"
-        - hash -r
-        - conda config --set always_yes yes --set changeps1 no
-        - conda update -q conda
-        # Useful for debugging any issues with conda
-        - conda info -a
-        #########################
-        - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
-        - source activate test-environment
-      install:
-        - conda install nose numpy matplotlib bokeh pandas scipy jupyter ipython param flake8 mock filelock cartopy xarray geopandas numpy shapely gdal libgdal datashader --quiet
-        - conda install -c conda-forge iris
-        - pip install coveralls
-        - pip install git+https://github.com/ioam/holoviews.git
-        - python setup.py install
-      script:
-        - nosetests --with-doctest --with-coverage --cover-package=geoviews
-        - flake8 --ignore=E,W . --exclude=./doc
-
-    - <<: *default
-      python: "3.6"
-      after_success: coveralls
+#      before_install:
+#        #########################
+#        ##### install conda #####
+#        - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+#        - bash miniconda.sh -b -p $HOME/miniconda
+#        - export PATH="$HOME/miniconda/bin:$PATH"
+#        - hash -r
+#        - conda config --set always_yes yes --set changeps1 no
+#        - conda update -q conda
+#        # Useful for debugging any issues with conda
+#        - conda info -a
+#        #########################
+#        - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
+#        - source activate test-environment
+#      install:
+#        - conda install nose numpy matplotlib bokeh pandas scipy jupyter ipython param flake8 mock filelock cartopy xarray geopandas numpy shapely gdal libgdal datashader --quiet
+#        - conda install -c conda-forge iris
+#        - pip install coveralls
+#        - pip install git+https://github.com/ioam/holoviews.git
+#        - python setup.py install
+#      script:
+#        - nosetests --with-doctest --with-coverage --cover-package=geoviews
+#        - flake8 --ignore=E,W . --exclude=./doc
+#
+#    - <<: *default
+#      python: "3.6"
+#      after_success: coveralls
 
     - <<: *default
       stage: doc
@@ -74,3 +82,21 @@ jobs:
           local_dir: ./doc/_build/html
           on:
             branch: master
+
+    - &conda_default
+      stage: conda_dev_package
+      python: 3.6
+      before_install:
+        - pip install pyct && doit install_miniconda && rm -f .doit.db
+        - export PATH="$HOME/miniconda/bin:$PATH"
+        - conda install -y -c pyviz/label/dev -c conda-forge pyct
+        - doit ci_configure_conda
+      install:
+        - doit build_conda_package --channel conda-forge
+      script: true
+#        - doit upload_conda_package --token=$CONDA_UPLOAD_TOKEN
+#  
+#    - <<: *conda_default
+#      stage: conda_package
+#      script:
+#        - doit upload_conda_package --token=$CONDA_UPLOAD_TOKEN --label=main --label=dev

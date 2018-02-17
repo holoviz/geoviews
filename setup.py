@@ -6,16 +6,6 @@ try:
 except ImportError:
     from distutils.core import setup
 
-
-setup_args = {}
-install_requires = ['param>=1.5.1', 'numpy>=1.0', 'holoviews>=1.9.0',
-                    'cartopy>=0.14.2']
-extras_require={}
-
-# Notebook dependencies of IPython
-extras_require['notebook-dependencies'] = ['jupyter', 'pyzmq', 'jinja2', 'tornado',
-                                           'jsonschema',  'ipython', 'pygments']
-
 def embed_version(basepath, ref='v0.2.2'):
     """
     Autover is purely a build time dependency in all cases (conda and
@@ -58,16 +48,34 @@ def get_setup_version(reponame):
         print("WARNING: param>=1.6.0 unavailable. If you are installing a package, this warning can safely be ignored. If you are creating a package or otherwise operating in a git repository, you should install param>=1.6.0.")
         return json.load(open(version_file_path, 'r'))['version_string']
 
-setup_args.update(dict(
+setup_args = dict(
     name='geoviews',
     version=get_setup_version("geoviews"),
-    install_requires = install_requires,
-    extras_require = extras_require,
-    description='GeoViews.',
+    python_requires = '>=2.7',
+    install_requires = [
+        'param >=1.5.1',
+        'numpy >=1.0',
+        'holoviews >=1.9.0',
+        'cartopy >=0.14.2',
+        'bokeh >=0.12.10',
+    ],
+    extras_require={
+        # Notebook dependencies of IPython
+        # TODO: is all this necessary? maybe notebook, ipykernel or similar?
+        'notebook-dependencies' = [
+            'jupyter',
+            'pyzmq',
+            'jinja2',
+            'tornado',
+            'jsonschema',
+            'ipython',
+            'pygments',
+        ]},
+    description='GeoViews is a Python library that makes it easy to explore and visualize geographical, meteorological, and oceanographic datasets, such as those used in weather, climate, and remote sensing research.',    
     long_description=open('README.md').read() if os.path.isfile('README.md') else 'Consult README.md',
     platforms=['Windows', 'Mac OS X', 'Linux'],
-    license='BSD',
-    url='https://github.com/ioam/geoviews',
+    license='BSD 3-Clause',
+    url='http://geoviews.org',
     packages = ["geoviews",
                 "geoviews.data",
                 "geoviews.element",
@@ -88,7 +96,7 @@ setup_args.update(dict(
         "Natural Language :: English",
         "Topic :: Scientific/Engineering",
         "Topic :: Software Development :: Libraries"]
-))
+)
 
 if __name__=="__main__":
     setup(**setup_args)

@@ -7,19 +7,37 @@ package:
 source:
   path: ..
 
+build:
+  noarch: python
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
 requirements:
   build:
     - python
     - setuptools
   run:
-    - python
-    - holoviews >=1.9.0
-    - jupyter
-    - notebook
-    - cartopy
-    - bokeh >=0.12.10
+    - python {{ sdata['python_requires'] }}
+    {% for dep in sdata.get('install_requires',{}) %}
+    - {{ dep }}
+    {% endfor %}
+
+    {% for option in sdata.get('extras_require',{}) %}
+     {% for dep in sdata['extras_require'][option] %}
+    - {{ dep }}
+     {% endfor %}
+    {% endfor %}
+
+test:
+  imports:
+    - geoviews
+  requires:
+    {% for dep in sdata.get('tests_require',{}) %}
+    - {{ dep }}
+    {% endfor %}
+  commands:
+    - nosetests --with-doctest geoviews
 
 about:
-  home: geo.holoviews.org
-  summary: GeoViews is a Python library that makes it easy to explore and visualize geographical, meteorological, and oceanographic datasets, such as those used in weather, climate, and remote sensing research.
-  license: BSD 3-Clause
+  home: {{ sdata['url'] }}
+  summary: {{ sdata['description'] }}
+  license: {{ sdata['license'] }}

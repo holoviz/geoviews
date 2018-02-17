@@ -8,13 +8,9 @@ sudo: false
 stages:
   - test
   - name: docs
-    if: ((branch = master AND type != pull_request) OR (tag =~ ^v))
+    if: (branch != packaging)
   - name: conda_dev_package
     if: (branch = packaging)
-
-#    if: (branch = master AND type != pull_request)
-#  - name: conda_package
-#    if: tag =~ ^v
 
 
 jobs:

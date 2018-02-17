@@ -7,7 +7,7 @@ sudo: false
 # before merge.
 stages:
   - test
-  - doc
+  - name: doc
     if: (branch = master AND type != pull_request) OR (tag =~ ^v)
   - name: conda_dev_package
     if: (branch = packaging)

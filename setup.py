@@ -62,7 +62,7 @@ setup_args = dict(
     extras_require={
         # Notebook dependencies of IPython
         # TODO: is all this necessary? maybe notebook, ipykernel or similar?
-        'notebook-dependencies' = [
+        'notebook-dependencies':[
             'jupyter',
             'pyzmq',
             'jinja2',

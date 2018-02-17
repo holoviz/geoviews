@@ -55,7 +55,7 @@ setup_args = dict(
     install_requires = [
         'param >=1.5.1',
         'numpy >=1.0',
-        'holoviews >=1.9.0',
+        'holoviews >=1.9.4',
         'cartopy >=0.14.2',
         'bokeh >=0.12.10',
     ],

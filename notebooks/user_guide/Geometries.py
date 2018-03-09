@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 import holoviews as hv
 import geoviews as gv
 import geoviews.feature as gf

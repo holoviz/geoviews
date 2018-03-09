@@ -1,12 +1,10 @@
 import xarray as xr
-import numpy as np
 import pandas as pd
 import holoviews as hv
 import geoviews as gv
 import geoviews.feature as gf
 import geopandas as gpd
 
-import cartopy
 from cartopy import crs as ccrs
 
 from bokeh.tile_providers import STAMEN_TONER, STAMEN_TONER_LABELS
@@ -119,11 +117,6 @@ def choropleth_example():
     geometries = gpd.read_file('./assets/boundaries/boundaries.shp')
     referendum = pd.read_csv('./assets/referendum.csv')
     gdf = gpd.GeoDataFrame(pd.merge(geometries, referendum))
-
-    tiles = {'OpenMap': 'http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png',
-         'ESRI': 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}.jpg',
-         'Wikipedia': 'https://maps.wikimedia.org/osm-intl/{Z}/{X}/{Y}@2x.png',
-         'Stamen Toner': STAMEN_TONER}
 
     opts = ("Polygons [tools=['hover'] width=450 height=600 color_index=""'leaveVoteshare'"
             " colorbar=True toolbar='above' xaxis=None yaxis=None]")

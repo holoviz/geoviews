@@ -4,7 +4,6 @@ import holoviews as hv
 import geoviews as gv
 import geoviews.feature as gf
 from cartopy import crs as ccrs
-from bokeh.plotting import curdoc, save, output_file
 
 """
 The following examples were taken from

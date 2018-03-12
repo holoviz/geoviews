@@ -4,8 +4,6 @@ from io import BytesIO
 from shutil import copyfile, copytree
 from zipfile import ZipFile
 
-import param
-
 from .element import (_Element, Feature, Tiles,     # noqa (API import)
                       WMTS, LineContours, FilledContours, Text, Image,
                       Points, Path, Polygons, Shape, Dataset, RGB,
@@ -17,8 +15,14 @@ from . import plotting                              # noqa (API import)
 from . import feature                               # noqa (API import)
 
 
-__version__ = param.Version(release=(1,4,2), fpath=__file__,
-                            commit="$Format:%h$", reponame='geoviews')
+try:
+    from version import Version
+    __version__ = str(Version(fpath=__file__, archive_commit="$Format:%h$",
+                              reponame="geoviews"))
+except:
+    import json
+    __version__ = json.load(open(os.path.join(os.path.split(__file__)[0],
+                                              '.version'), 'r'))['version_string']
 
 SAMPLE_DATA_URL = 'http://assets.holoviews.org/geoviews-sample-data.zip'
 

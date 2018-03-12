@@ -2,15 +2,14 @@
 
 - Ensure all tests pass.
 
-- Update version number in `conda.recipe/meta.yaml`, `geoviews/__init__.py`,
-  and `setup.py`. Commit.
-
-- Tag commit and push to github
+- Tag commit a PEP440 style tag (starting with the prefix 'v') and push to github
 
 ```bash
-git tag -a x.x.x -m 'Version x.x.x'
+git tag -a vx.x.x -m 'Version x.x.x'
 git push upstream master --tags
 ```
+
+Example tags might include v1.4.2 v1.5.0a1 or v1.6.5b3
 
 - Build conda packages
 

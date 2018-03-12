@@ -1,9 +1,11 @@
+{% set sdata = load_setup_py_data() %}
+
 package:
   name: geoviews
-  version: 1.4.2
+  version: {{ sdata['version'] }}
 
 source:
-  path: .
+  path: ..
 
 requirements:
   build:

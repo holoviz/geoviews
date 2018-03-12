@@ -71,3 +71,5 @@ target/
 .DS_Store
 # Website
 doc/_build
+
+geoviews/.version

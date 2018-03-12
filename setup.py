@@ -54,7 +54,7 @@ def get_setup_version(reponame):
 
 setup_args.update(dict(
     name='geoviews',
-    version=get_setup_version("geoviews"),,
+    version=get_setup_version("geoviews"),
     install_requires = install_requires,
     extras_require = extras_require,
     description='GeoViews.',

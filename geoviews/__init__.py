@@ -4,8 +4,6 @@ from io import BytesIO
 from shutil import copyfile, copytree
 from zipfile import ZipFile
 
-import param
-
 from .element import (_Element, Feature, Tiles,     # noqa (API import)
                       WMTS, LineContours, FilledContours, Text, Image,
                       Points, Path, Polygons, Shape, Dataset, RGB,

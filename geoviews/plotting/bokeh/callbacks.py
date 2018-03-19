@@ -98,7 +98,7 @@ class GeoBoundsXYCallback(BoundsCallback):
         msg['bounds'] = project_extents(msg['bounds'], DEFAULT_PROJ,
                                         plot.current_frame.crs)
         return msg
-        
+
 
 class GeoBoundsXCallback(BoundsXCallback):
 
@@ -125,28 +125,28 @@ class GeoBoundsYCallback(BoundsYCallback):
 
 
 class GeoPointerXYCallback(PointerXYCallback):
-    
+
     def _process_msg(self, msg):
         msg = super(GeoPointerXYCallback, self)._process_msg(msg)
         return project_point(self, msg)
 
 
 class GeoPointerXCallback(PointerXCallback):
-    
+
     def _process_msg(self, msg):
         msg = super(GeoPointerXCallback, self)._process_msg(msg)
         return project_point(self, msg, ('x',))
 
 
 class GeoPointerYCallback(PointerYCallback):
-    
+
     def _process_msg(self, msg):
         msg = super(GeoPointerYCallback, self)._process_msg(msg)
         return project_point(self, msg, ('y',))
 
 
 class GeoTapCallback(TapCallback):
-    
+
     def _process_msg(self, msg):
         msg = super(GeoTapCallback, self)._process_msg(msg)
         return project_point(self, msg)
@@ -181,7 +181,7 @@ class GeoMouseLeaveCallback(MouseLeaveCallback):
 
 
 callbacks = Stream._callbacks['bokeh']
-    
+
 callbacks[RangeXY]     = GeoRangeXYCallback
 callbacks[RangeX]      = GeoRangeXCallback
 callbacks[RangeY]      = GeoRangeYCallback

@@ -6,17 +6,19 @@ from bokeh.models import WMTSTileSource
 
 from holoviews import Store, Overlay, NdOverlay
 from holoviews.core import util
-from holoviews.core.options import SkipRendering, Options
-from holoviews.plotting.bokeh.annotation import TextPlot
+from holoviews.core.options import SkipRendering, Options, Compositor
+from holoviews.plotting.bokeh.annotation import TextPlot, LabelsPlot
 from holoviews.plotting.bokeh.chart import PointPlot, VectorFieldPlot
 from holoviews.plotting.bokeh.graphs import TriMeshPlot, GraphPlot
+from holoviews.plotting.bokeh.hex_tiles import hex_binning, HexTilesPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
 from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot, QuadMeshPlot
 from holoviews.plotting.bokeh.util import mpl_to_bokeh
 
 from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
                         Image, Feature, Text, RGB, Nodes, EdgePaths,
-                        Graph, TriMesh, QuadMesh, VectorField)
+                        Graph, TriMesh, QuadMesh, VectorField, Labels,
+                        HexTiles)
 from ...operation import (project_image, project_shape, project_points,
                           project_path, project_graph, project_quadmesh)
 from ...util import geom_to_array
@@ -206,9 +208,34 @@ class GeoTextPlot(GeoPlot, TextPlot):
         return None, None, None, None
 
 
+class GeoLabelsPlot(GeoPlot, LabelsPlot):
+
+    _project_operation = project_points
+
+
+class geo_hex_binning(hex_binning, project_points):
+    """
+    Applies hex binning by computing aggregates on a hexagonal grid.
+
+    Should not be user facing as the returned element is not directly
+    useable.
+    """
+
+    def _process(self, element, key=None):
+        if isinstance(element, HexTiles):
+            element = project_points._process(self, element)
+        return hex_binning._process(self, element)
+
+compositor = Compositor(
+    "HexTiles", geo_hex_binning, None, 'data', output_type=HexTiles,
+    transfer_options=True, transfer_parameters=True, backends=['bokeh']
+)
+Compositor.register(compositor)
+
 
 Store.register({WMTS: TilePlot,
                 Points: GeoPointPlot,
+                Labels: GeoLabelsPlot,
                 VectorField: GeoVectorFieldPlot,
                 Polygons: GeoPolygonPlot,
                 Contours: GeoContourPlot,
@@ -217,6 +244,7 @@ Store.register({WMTS: TilePlot,
                 Image: GeoRasterPlot,
                 RGB: GeoRGBPlot,
                 Feature: FeaturePlot,
+                HexTiles: HexTilesPlot,
                 Text: GeoTextPlot,
                 Overlay: OverlayPlot,
                 NdOverlay: OverlayPlot,

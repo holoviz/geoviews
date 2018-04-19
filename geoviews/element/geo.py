@@ -11,7 +11,9 @@ from holoviews.element import (
     Contours as HvContours, Graph as HvGraph, Image as HvImage,
     Nodes as HvNodes, Path as HvPath, Polygons as HvPolygons,
     RGB as HvRGB, Text as HvText, TriMesh as HvTriMesh,
-    QuadMesh as HvQuadMesh, Points as HvPoints, VectorField as HvVectorField)
+    QuadMesh as HvQuadMesh, Points as HvPoints,
+    VectorField as HvVectorField, HexTiles as HvHexTiles,
+    Labels as HvLabels)
 
 from shapely.geometry.base import BaseGeometry
 
@@ -190,6 +192,25 @@ class Points(_Element, HvPoints):
     """
 
     group = param.String(default='Points')
+
+
+class HexTiles(_Element, HvHexTiles):
+    """
+    Points represent a collection of points with
+    an associated cartopy coordinate-reference system.
+    """
+
+    group = param.String(default='HexTiles')
+
+
+
+class Labels(_Element, HvLabels):
+    """
+    Points represent a collection of points with
+    an associated cartopy coordinate-reference system.
+    """
+
+    group = param.String(default='Labels')
 
 
 class VectorField(_Element, HvVectorField):

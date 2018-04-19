@@ -8,7 +8,8 @@ from holoviews.operation import Operation
 from shapely.geometry import Polygon, LineString
 
 from ..element import (Image, Shape, Polygons, Path, Points, Contours,
-                      RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField)
+                       RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField,
+                       HexTiles, Labels)
 from ..util import project_extents, geom_to_array
 
 
@@ -81,7 +82,7 @@ class project_shape(_project_operation):
 
 class project_points(_project_operation):
 
-    supported_types = [Points, Nodes, VectorField]
+    supported_types = [Points, Nodes, VectorField, HexTiles, Labels]
 
     def _process_element(self, element):
         if not len(element):

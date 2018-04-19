@@ -21,14 +21,16 @@ from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
                                     OverlayPlot as HvOverlayPlot,
                                     PathPlot, PolygonPlot, RasterPlot,
                                     ContourPlot, GraphPlot, TriMeshPlot,
-                                    QuadMeshPlot, VectorFieldPlot)
+                                    QuadMeshPlot, VectorFieldPlot,
+                                    HexTilesPlot, LabelsPlot)
 from holoviews.plotting.mpl.util import get_raster_array
 
 
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         LineContours, FilledContours, is_geographic,
                         Path, Polygons, Shape, RGB, Contours, Nodes,
-                        EdgePaths, Graph, TriMesh, QuadMesh, VectorField)
+                        EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
+                        HexTiles, Labels)
 from ...util import project_extents, geo_mesh
 
 from ...operation import project_points, project_path, project_graph, project_quadmesh
@@ -317,6 +319,26 @@ class GeoPointPlot(GeoPlot, PointPlot):
     _project_operation = project_points
 
 
+class GeoLabelsPlot(GeoPlot, LabelsPlot):
+    """
+    Draws a scatter plot from the data in a Labels Element.
+    """
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_points
+
+
+class GeoHexTilesPlot(GeoPlot, HexTilesPlot):
+    """
+    Draws a scatter plot from the data in a Points Element.
+    """
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_points
+
+
 class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
     """
     Draws a vector field plot from the data in a VectorField Element.
@@ -517,6 +539,7 @@ Store.register({LineContours: LineContourPlot,
                 WMTS: WMTSPlot,
                 Tiles: WMTSPlot,
                 Points: GeoPointPlot,
+                Labels: GeoLabelsPlot,
                 VectorField: GeoVectorFieldPlot,
                 Text: GeoTextPlot,
                 Layout: LayoutPlot,
@@ -531,6 +554,7 @@ Store.register({LineContours: LineContourPlot,
                 TriMesh: GeoTriMeshPlot,
                 Nodes: GeoPointPlot,
                 EdgePaths: GeoPathPlot,
+                HexTiles: GeoHexTilesPlot,
                 QuadMesh: GeoQuadMeshPlot}, 'matplotlib')
 
 

@@ -47,14 +47,9 @@ jobs:
         # TODO: can't remember why I did this twice
         - python -c "import geoviews as gv; gv.sample_data('notebooks/user_guide/sample-data')"
         - python -c "import geoviews as gv; gv.sample_data('doc/sample-data')"
-<<<<<<< HEAD
-        - conda install -c conda-forge "sphinx<1.7" beautifulsoup4 graphviz selenium phantomjs
-        - conda install -c nesii/label/dev-esmf -c conda-forge esmpy
-        - pip install xesmf
-=======
         - python -c "import bokeh; bokeh.sampledata.download()"
         - conda install -c conda-forge sphinx beautifulsoup4 graphviz selenium phantomjs
->>>>>>> Download bokeh sampledata
+        - pip install xesmf
         - pip install nbsite
         - pip install sphinx_ioam_theme
         # TODO: should make this content available too rather than deleting it!

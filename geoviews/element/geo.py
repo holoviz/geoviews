@@ -32,7 +32,7 @@ try:
 except:
     WebMapTileService = None
 
-from ..util import path_to_geom, polygon_to_geom
+from ..util import path_to_geom, polygon_to_geom, geom_to_array
 
 geographic_types = (GoogleTiles, cFeature, BaseGeometry)
 
@@ -620,13 +620,13 @@ class Shape(_Element):
         return NdOverlay(data, kdims=kdims)
 
 
-    def dimension_values(self, dimension):
+    def dimension_values(self, dimension, expanded=True, flat=True):
         """
         Shapes do not support convert to array values.
         """
         dim = self.get_dimension(dimension)
         if dim in self.vdims:
-            return [self.level]
+            return np.full(len(self), self.level) if expanded else np.array([self.level])
         else:
             return []
 
@@ -655,4 +655,4 @@ class Shape(_Element):
 
 
     def __len__(self):
-        return len(self.data)
+        return len(geom_to_array(self.data))

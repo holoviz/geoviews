@@ -23,9 +23,9 @@ except ImportError:
     Cube = None
 
 try:
-    from bokeh.models import WMTSTileSource
+    from bokeh.models import MercatorTileSource
 except:
-    WMTSTileSource = None
+    MercatorTileSource = None
 
 try:
     from owslib.wmts import WebMapTileService
@@ -154,7 +154,7 @@ class WMTS(_GeoFeature):
     layer = param.String(doc="The layer on the tile service")
 
     def __init__(self, data, kdims=None, vdims=None, **params):
-        if ((WMTSTileSource and isinstance(data, WMTSTileSource)) or
+        if ((MercatorTileSource and isinstance(data, MercatorTileSource)) or
             (GoogleTiles and isinstance(data, GoogleTiles))):
             data = data.url
         elif WebMapTileService and isinstance(data, WebMapTileService):

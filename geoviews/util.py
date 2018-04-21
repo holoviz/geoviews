@@ -64,7 +64,13 @@ def path_to_geom(path, multi=True):
     datatype = 'geom' if path.interface.datatype == 'geodataframe' else 'array'
     for path in path.split(datatype=datatype):
         if datatype == 'array':
-            path = LineString(path)
+            splits = np.where(np.isnan(path).sum(axis=1))[0]
+            paths = np.split(path, splits+1) if len(splits) else [path]
+            for i, path in enumerate(paths):
+                if i != (len(paths)-1):
+                    path = path[:-1]
+                lines.append(LineString(path[:, :2]))
+            continue
         elif path.geom_type == 'MultiPolygon':
             for geom in path:
                 lines.append(geom.exterior)
@@ -86,7 +92,13 @@ def polygon_to_geom(poly, multi=True):
     datatype = 'geom' if poly.interface.datatype == 'geodataframe' else 'array'
     for path in poly.split(datatype=datatype):
         if datatype == 'array':
-            path = Polygon(path)
+            splits = np.where(np.isnan(path[:, :2]).sum(axis=1))[0]
+            paths = np.split(path, splits+1) if len(splits) else [path]
+            for i, path in enumerate(paths):
+                if i != (len(paths)-1):
+                    path = path[:-1]
+                lines.append(Polygon(path[:, :2]))
+            continue
         elif path.geom_type == 'MultiLineString':
             for geom in path:
                 lines.append(geom.convex_hull)

@@ -51,18 +51,36 @@ class project_path(_project_operation):
             new_data['geometry'] = projected
             return element.clone(new_data, crs=self.p.projection)
 
+        boundary_poly = element.crs.project_geometry(Polygon(self.p.projection.boundary),
+                                                     self.p.projection)
+
         geom_type = Polygon if isinstance(element, Polygons) else LineString
         xdim, ydim = element.kdims[:2]
         projected = []
-        for geom in element.split(datatype='columns'):
-            xs, ys = geom[xdim.name], geom[ydim.name]
-            path = geom_type(np.column_stack([xs, ys]))
-            proj = self.p.projection.project_geometry(path, element.crs)
-            proj_arr = geom_to_array(proj)
-            geom[xdim.name] = proj_arr[:, 0]
-            geom[ydim.name] = proj_arr[:, 1]
-            projected.append(geom)
+        for path in element.split():
+            data = {vd.name: path.dimension_values(vd, expanded=False) for vd in path.vdims}
+            if any(len(vals) > 1 for vals in data.values()):
+                # Handle continuously varying path case
+                geom = path.columns()
+                xs, ys = geom[xdim.name], geom[ydim.name]
+                path = geom_type(np.column_stack([xs, ys]))
+                path = path.intersection(boundary_poly)
+                proj = self.p.projection.project_geometry(path, element.crs)
+                proj_arr = geom_to_array(proj)
+                geom[xdim.name] = proj_arr[:, 0]
+                geom[ydim.name] = proj_arr[:, 1]
+                projected.append(geom)
+            else:
+                # Handle iso-contour case
+                data = {k: vals[0] for k, vals in data.items()}
+                geom = path.geom()
+                geom = geom.intersection(boundary_poly)
+                proj = self.p.projection.project_geometry(geom, element.crs)
+                for geom in proj:
+                    xs, ys = np.array(geom.array_interface_base['data']).reshape(-1, 2).T
+                    projected.append(dict(data, **{xdim.name: xs, ydim.name: ys}))
         return element.clone(projected, crs=self.p.projection)
+
 
 
 class project_shape(_project_operation):

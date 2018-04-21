@@ -57,6 +57,7 @@ jobs:
         - nbsite_nbpagebuild.py ioam geoviews ../notebooks .
         # gallery notebooks depend on user guide assets
         - mkdir -p _build/html/user_guide
+        - cp -r ../notebooks/user_guide/assets user_guide/
         - cp -r ../notebooks/user_guide/assets _build/html/user_guide/
         - cp -r ../notebooks/user_guide/sample-data _build/html/user_guide/
         - nbsite_gallery.py .. notebooks None '.' matplotlib bokeh None 

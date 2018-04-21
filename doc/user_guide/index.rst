@@ -19,6 +19,10 @@ Contents:
 * `Working with Bokeh <Working_with_Bokeh.html>`_
    Using the Bokeh extension for more interactivity.
 
+* `Resampling large grids <Resampling_Grids.html>`_
+   Using the datashader and xESMF libraries to regrid large meshes.
+
+
 .. toctree::
     :titlesonly:
     :hidden:
@@ -29,3 +33,4 @@ Contents:
     Gridded Datasets I <Gridded_Datasets_I>
     Gridded Datasets II <Gridded_Datasets_II>
     Working with Bokeh <Working_with_Bokeh>
+	Resampling Grids <Resampling_Grids>

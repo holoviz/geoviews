@@ -2,7 +2,7 @@ import copy
 
 import param
 import shapely.geometry
-from bokeh.models import WMTSTileSource
+from bokeh.models import WMTSTileSource, BBoxTileSource, QUADKEYTileSource
 
 from holoviews import Store, Overlay, NdOverlay
 from holoviews.core import util
@@ -43,7 +43,15 @@ class TilePlot(GeoPlot):
         if not isinstance(element.data, util.basestring):
             SkipRendering("WMTS element data must be a URL string, "
                           "bokeh cannot render %r" % element.data)
-        return {}, {'tile_source': WMTSTileSource(url=element.data)}, style
+        if '{Q}' in element.data:
+            tile_source = QUADKEYTileSource
+        elif all(kw in element.data for kw in ('{XMIN}', '{XMAX}', '{YMIN}', '{YMAX}')):
+            tile_source = BBoxTileSource
+        elif all(kw in element.data for kw in ('{X}', '{Y}', '{Z}')):
+            tile_source = WMTSTileSource
+        else:
+            raise ValueError('Tile source URL format not recognized.')
+        return {}, {'tile_source': tile_source(url=element.data)}, style
 
     def _update_glyph(self, renderer, properties, mapping, glyph):
         allowed_properties = glyph.properties()

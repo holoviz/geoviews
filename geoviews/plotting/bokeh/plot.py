@@ -6,9 +6,10 @@ import param
 import numpy as np
 
 from cartopy.crs import GOOGLE_MERCATOR
-from bokeh.models.tools import BoxZoomTool
+from bokeh.models.tools import BoxZoomTool, WheelZoomTool
 from bokeh.models import MercatorTickFormatter, MercatorTicker
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
+from holoviews.plotting.bokeh.util import bokeh_version
 
 from ...element import is_geographic, _Element
 from ...util import project_extents
@@ -20,7 +21,9 @@ class GeoPlot(ElementPlot):
     Plotting baseclass for geographic plots with a cartopy projection.
     """
 
-    default_tools = param.List(default=['save', 'pan', 'wheel_zoom',
+    default_tools = param.List(default=['save', 'pan',
+                                        WheelZoomTool(**({} if bokeh_version < '0.12.16' else
+                                                         {'zoom_on_axis': False})),
                                         BoxZoomTool(match_aspect=True), 'reset'],
         doc="A list of plugin tools to use on the plot.")
 

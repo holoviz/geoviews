@@ -15,14 +15,8 @@ from . import plotting                              # noqa (API import)
 from . import feature                               # noqa (API import)
 
 
-try:
-    from version import Version
-    __version__ = str(Version(fpath=__file__, archive_commit="$Format:%h$",
+__version__ = str(param.version.Version(fpath=__file__, archive_commit="$Format:%h$",
                               reponame="geoviews"))
-except:
-    import json
-    __version__ = json.load(open(os.path.join(os.path.split(__file__)[0],
-                                              '.version'), 'r'))['version_string']
 
 SAMPLE_DATA_URL = 'http://assets.holoviews.org/geoviews-sample-data.zip'
 

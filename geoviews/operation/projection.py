@@ -74,7 +74,8 @@ class project_path(_project_operation):
                 # Handle iso-contour case
                 data = {k: vals[0] for k, vals in data.items()}
                 geom = path.geom()
-                geom = geom.intersection(boundary_poly)
+                if boundary_poly:
+                    geom = geom.intersection(boundary_poly)
                 proj = self.p.projection.project_geometry(geom, element.crs)
                 for geom in proj:
                     xs, ys = np.array(geom.array_interface_base['data']).reshape(-1, 2).T

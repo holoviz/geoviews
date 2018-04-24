@@ -3,6 +3,7 @@ language: python
 
 sudo: false
 
+TODO: update when to upload to ioam-docs before merging
 stages:
   - test
   - doc
@@ -23,11 +24,12 @@ jobs:
         - conda update -q conda
         # Useful for debugging any issues with conda
         - conda info -a
-        #########################       
+        #########################
         - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
         - source activate test-environment
       install:
-        - conda install -c conda-forge nose numpy matplotlib bokeh pandas scipy jupyter ipython param flake8 mock filelock iris cartopy xarray geopandas numpy shapely=1.6.3 gdal=2.2.3 libgdal=2.2.3 glib=2.55.0 gstreamer=1.8.0 datashader --quiet
+        - conda install nose numpy matplotlib bokeh pandas scipy jupyter ipython param flake8 mock filelock cartopy xarray geopandas numpy shapely gdal libgdal datashader --quiet
+        - conda install -c conda-forge iris
         - pip install coveralls
         - pip install git+https://github.com/ioam/holoviews.git
         - python setup.py install
@@ -37,7 +39,7 @@ jobs:
 
     - <<: *default
       python: "3.6"
-      after_success: coveralls      
+      after_success: coveralls
 
     - <<: *default
       stage: doc
@@ -46,26 +48,29 @@ jobs:
         # TODO: can't remember why I did this twice
         - python -c "import geoviews as gv; gv.sample_data('notebooks/user_guide/sample-data')"
         - python -c "import geoviews as gv; gv.sample_data('doc/sample-data')"
-        - conda install -c conda-forge "sphinx<1.7" beautifulsoup4 graphviz
+        - python -c "import bokeh; bokeh.sampledata.download()"
+        - conda install -c pyviz/label/dev -c conda-forge nbsite sphinx_ioam_theme
         - conda install -c nesii/label/dev-esmf -c conda-forge esmpy
         - pip install xesmf
-        - pip install nbsite
-        - pip install sphinx_ioam_theme
         # TODO: should make this content available too rather than deleting it!
         - rm notebooks/*.ipynb
         - cd doc
         - nbsite_nbpagebuild.py ioam geoviews ../notebooks .
+        # gallery notebooks depend on user guide assets
+        - mkdir -p _build/html/user_guide
+        - cp -r ../notebooks/user_guide/assets user_guide/
+        - cp -r ../notebooks/user_guide/assets _build/html/user_guide/
+        - cp -r ../notebooks/user_guide/sample-data _build/html/user_guide/
+        - nbsite_gallery.py .. notebooks None '.' matplotlib bokeh None 
         - sphinx-build -b html . ./_build/html
         - nbsite_fix_links.py _build/html
         - nbsite_cleandisthtml.py ./_build/html take_a_chance
-        - cp -r ../notebooks/user_guide/assets _build/html/user_guide/
-        - cp -r ../notebooks/user_guide/sample-data _build/html/user_guide/
         - touch ./_build/html/.nojekyll
         - cd ..
       deploy:
-        provider: pages
-        skip_cleanup: true
-        github_token: $GITHUB_TOKEN
-        local_dir: ./doc/_build/html
-        on:
-          tags: true
+        - provider: pages
+          skip_cleanup: true
+          github_token: $GITHUB_TOKEN
+          local_dir: ./doc/_build/html
+          on:
+            branch: master

@@ -124,6 +124,9 @@ def geom_to_array(geom):
     if hasattr(geom, 'exterior'):
         xs = np.array(geom.exterior.coords.xy[0])
         ys = np.array(geom.exterior.coords.xy[1])
+    elif geom.geom_type == 'LineString':
+        arr = geom_to_arr(geom)
+        xs, ys = arr[:, 0], arr[:, 1]
     else:
         xs, ys = [], []
         for g in geom:

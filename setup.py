@@ -49,40 +49,70 @@ def get_setup_version(reponame):
         return json.load(open(version_file_path, 'r'))['version_string']
 
 
+####################
+### dependencies ###
+
+# TODO: versions need to be updated
+install_requires = [
+    'bokeh >=0.12.13', # not strictly required but shouldn't be problematic
+    'cartopy >=0.14.2',
+    'holoviews >=1.9.4',
+    'numpy >=1.0',
+    'param >=1.5.1',
+],
+
+
+# TODO: need to verify this list (not sure all needed), plus some
+# versions may be needed
+extras_require={
+    'recommended': [
+        'filelock',
+        'datashader',
+        'geopandas',
+        'gdal', 'libgdal',
+        'matplotlib',
+        'mock',
+        'pandas',
+        'scipy',
+        'shapely',
+        'xarray',
+        #### intent of packages below is jupyter notebook with ipykernel?
+        # seems like it could be simplified (or if for another
+        # purpose, should be clarified)
+        'ipython',
+        'jinja2',
+        'jsonschema',        
+        'jupyter',
+        'pygments',        
+        'pyzmq',
+        'tornado',
+        ####
+    ],
+    'tests': [
+        'nose',
+        'flake8'
+    ]
+}
+
+
 ########################
 ### package metadata ###
 
-    
+
 setup_args = dict(
     name='geoviews',
     version=get_setup_version("geoviews"),
     python_requires = '>=2.7',
-    install_requires = [
-        # TODO: these need to be updated
-        'param >=1.5.1',
-        'numpy >=1.0',
-        'holoviews >=1.9.4',
-        'cartopy >=0.14.2',
-        'bokeh >=0.12.10',
-    ],
-    extras_require={
-        # Notebook dependencies of IPython
-        # TODO: is all this necessary? maybe notebook, ipykernel or similar?
-        'notebook-dependencies':[
-            'jupyter',
-            'pyzmq',
-            'jinja2',
-            'tornado',
-            'jsonschema',
-            'ipython',
-            'pygments',
-        ]},
+    install_requires = install_requires,
+    extras_require = extras_require,
+    tests_require = extras_require['tests'],
     description='GeoViews is a Python library that makes it easy to explore and visualize geographical, meteorological, and oceanographic datasets, such as those used in weather, climate, and remote sensing research.',
     # TODO: update to use md properly for pypi
     long_description=open('README.md').read() if os.path.isfile('README.md') else 'Consult README.md',
     platforms=['Windows', 'Mac OS X', 'Linux'],
     license='BSD 3-Clause',
     url='http://geoviews.org',
+    # TODO: use find_packages()
     packages = ["geoviews",
                 "geoviews.data",
                 "geoviews.element",

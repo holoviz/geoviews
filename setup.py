@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 ###############
 ### autover ###
@@ -114,14 +114,7 @@ setup_args = dict(
     platforms=['Windows', 'Mac OS X', 'Linux'],
     license='BSD 3-Clause',
     url='http://geoviews.org',
-    # TODO: use find_packages()
-    packages = ["geoviews",
-                "geoviews.data",
-                "geoviews.element",
-                "geoviews.operation",
-                "geoviews.plotting",
-                "geoviews.plotting.bokeh",
-                "geoviews.plotting.mpl"],
+    packages = find_packages(), # TODO: unless there's something unusual in gv?
     package_data={'geoviews': ['.version']},
     include_package_data=True,
     classifiers = [

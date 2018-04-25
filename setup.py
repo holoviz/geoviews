@@ -92,7 +92,8 @@ extras_require={
         'nose',
         'flake8',
         'nbsmoke >=0.2.0',
-        'iris' # TODO
+        'iris', # TODO
+        'filelock' # TODO for iris?        
     ]
 }
 

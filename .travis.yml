@@ -5,13 +5,14 @@ sudo: false
 os:
   - linux
 
-cache:
-  directories:
-    - $HOME/miniconda
+# TODO: don't cache for now because of pip hv in the env
+#cache:
+#  directories:
+#    - $HOME/miniconda
 
-before_cache:
-  - rm -rf $HOME/miniconda/pkgs
-  - rm -rf $HOME/miniconda/conda-bld/*
+#before_cache:
+#  - rm -rf $HOME/miniconda/pkgs
+#  - rm -rf $HOME/miniconda/conda-bld/*
 
 env:
   global:
@@ -48,7 +49,7 @@ jobs:
         - source activate test-environment
         - doit develop_install $CHANNELS
         # TODO
-        - conda remove --force holoviews && pip install git+https://github.com/ioam/holoviews.git
+        - conda remove --force holoviews && pip install --upgrade git+https://github.com/ioam/holoviews.git
         - doit env_capture
       script: #TODO: doit test_all_quick
         - doit test_flakes

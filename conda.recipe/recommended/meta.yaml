@@ -17,7 +17,7 @@ requirements:
     - setuptools
   run:
     - python {{ sdata['python_requires'] }}  
-    - geoviews-core =={{ sdata['version'] }}
+    - geoviews-core ={{ sdata['version'] }}
     {% for dep in sdata['extras_require']['recommended'] %}
     - {{ dep }}
     {% endfor %}

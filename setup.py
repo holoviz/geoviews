@@ -121,6 +121,7 @@ setup_args = dict(
                 "geoviews.plotting.bokeh",
                 "geoviews.plotting.mpl"],
     package_data={'geoviews': ['.version']},
+    include_package_data=True,
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 1 - Planning Development Status",

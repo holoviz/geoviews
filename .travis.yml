@@ -31,10 +31,6 @@ stages:
 
 jobs:
   include:
-    - &default
-      stage: test
-      python: "2.7"
-
     ########## DEVELOPER INSTALL ##########
 
     # quick tests in typical dev env (most tests are run on packages)

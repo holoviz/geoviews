@@ -5,7 +5,7 @@ package:
   version: {{ sdata['version'] }}
 
 source:
-  path: ..
+  path: ../..
 
 build:
   noarch: python
@@ -16,26 +16,15 @@ requirements:
     - python
     - setuptools
   run:
-    - python {{ sdata['python_requires'] }}
-    {% for dep in sdata.get('install_requires',{}) %}
+    - python {{ sdata['python_requires'] }}  
+    - geoviews-core =={{ sdata['version'] }}
+    {% for dep in sdata['extras_require']['recommended'] %}
     - {{ dep }}
-    {% endfor %}
-
-    {% for option in sdata.get('extras_require',{}) %}
-     {% for dep in sdata['extras_require'][option] %}
-    - {{ dep }}
-     {% endfor %}
     {% endfor %}
 
 test:
   imports:
     - geoviews
-  requires:
-    {% for dep in sdata.get('tests_require',{}) %}
-    - {{ dep }}
-    {% endfor %}
-  commands:
-    - nosetests --with-doctest geoviews
 
 about:
   home: {{ sdata['url'] }}

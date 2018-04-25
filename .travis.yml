@@ -1,10 +1,26 @@
 # At some point, should probably change to generic (since using conda)
-language: python
-
+language: generic
 sudo: false
 
-# TODO: various temp things in this PR for testing; will be undone
-# before merge.
+os:
+  - linux
+
+cache:
+  directories:
+    - $HOME/miniconda
+
+before_cache:
+  - rm -rf $HOME/miniconda/pkgs
+  - rm -rf $HOME/miniconda/conda-bld/*
+
+env:
+  global:
+    - PYENV_VERSION=3.6
+    # TODO: update once basically working
+    - PKG_TEST_PYTHON="--test-python=py36"
+    - CHANNELS="-c pyviz/label/dev -c ioam -c conda-forge -c defaults"
+
+# TODO: add conditionals for packages before merge
 stages:
   - test
   - name: docs
@@ -18,37 +34,49 @@ jobs:
     - &default
       stage: test
       python: "2.7"
-#      before_install:
-#        #########################
-#        ##### install conda #####
-#        - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-#        - bash miniconda.sh -b -p $HOME/miniconda
-#        - export PATH="$HOME/miniconda/bin:$PATH"
-#        - hash -r
-#        - conda config --set always_yes yes --set changeps1 no
-#        - conda update -q conda
-#        # Useful for debugging any issues with conda
-#        - conda info -a
-#        #########################
-#        - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
-#        - source activate test-environment
-#      install:
-#        - conda install nose numpy matplotlib bokeh pandas scipy jupyter ipython param flake8 mock filelock cartopy xarray geopandas numpy shapely gdal libgdal datashader --quiet
-#        - conda install -c conda-forge iris
-#        - pip install coveralls
-#        - pip install git+https://github.com/ioam/holoviews.git
-#        - python setup.py install
-#      script:
-#        - nosetests --with-doctest --with-coverage --cover-package=geoviews
-#        - flake8 --ignore=E,W . --exclude=./doc
-#
-#    - <<: *default
-#      python: "3.6"
+
+    ########## DEVELOPER INSTALL ##########
+
+    # quick tests in typical dev env (most tests are run on packages)
+
+    - &default
+      stage: test
+      env: DESC="dev test_all_quick"
+      before_install:
+        - pip install pyct && doit miniconda_install && pip uninstall -y doit pyct
+        - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
+        - conda config --set always_yes True
+        - conda install -c pyviz/label/dev pyct && doit ecosystem_setup
+      install:
+        - doit env_create --python=$PYENV_VERSION
+        - source activate test-environment
+        - doit develop_install $CHANNELS
+	# TODO
+	- conda remove --force holoviews && pip install git+https://github.com/ioam/holoviews.git
+        - doit env_capture
+      script: #TODO: doit test_all_quick
+        - doit test_flakes
+	- doit test_unit
+
+
+    # python 2 flake checking typically catches python 2 syntax
+    # errors where python 3's been assumed...
+    - <<: *default
+      env: DESC="py2 flakes" PYENV_VERSION=2.7
+      script: doit test_flakes
+
+
+# TODO coveralls (for just py3, or py2 py3 combined, or...?)
 #      after_success: coveralls
+
+
+    ########## DOCS ##########
+
+    # TODO
 
     - <<: *default
       stage: docs
-      python: "3.6"
+      env: DESC=""      
       script:
         # TODO: can't remember why I did this twice
         - python -c "import geoviews as gv; gv.sample_data('notebooks/user_guide/sample-data')"
@@ -80,21 +108,18 @@ jobs:
           on:
             branch: master
 
-    - &conda_default
+
+    ########## END-USER PACKAGES ##########
+
+    ## dev packages
+
+    - <<: *default
       stage: conda_dev_package
-      python: 3.6
-      before_install:
-        - pip install pyct && doit install_miniconda && rm -f .doit.db
-        - export PATH="$HOME/miniconda/bin:$PATH"
-        - conda install -y -c pyviz/label/dev -c conda-forge pyct
-        - doit ci_configure_conda
+      env: DESC=""
       install:
-        - export VERSIONHACK=$(python -c "import subprocess;desc=subprocess.check_output(['git','describe','--long']).decode('utf8');v,commits=desc.split('-')[0:2];newv=[int(x) for x in v.split('.')];newv[-1]+=1;print('.'.join(str(x) for x in newv)+'.dev'+commits)")      
-        - doit build_conda_package --channel ioam --channel conda-forge
-      script: true
-#        - doit upload_conda_package --token=$CONDA_UPLOAD_TOKEN
-#  
-#    - <<: *conda_default
-#      stage: conda_package
-#      script:
-#        - doit upload_conda_package --token=$CONDA_UPLOAD_TOKEN --label=main --label=dev
+        # TODO: increase tests
+        - doit package_build --recipe=core $CHANNELS $PKG_TEST_PYTHON
+	- doit package_build --recipe=recommended $CHANNELS $PKG_TEST_PYTHON --test-group=unit
+      script:
+        - doit package_upload --token=$CEBTMP --recipe=core --label=dev
+	- doit package_upload --token=$CEBTMP --recipe=recommended --label=dev

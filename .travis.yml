@@ -115,7 +115,7 @@ jobs:
       env: DESC=""
       install:
         - doit package_build --recipe=core $CHANNELS $PKG_TEST_PYTHON --test-group=unit
-        # TODO: increase tests to include running examples      
+        # TODO: examples tests
         - doit package_build --recipe=recommended $CHANNELS $PKG_TEST_PYTHON --test-group=unit
       script:
         # TODO: going to anaconda.org/ceball temporarily

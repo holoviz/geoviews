@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 import os
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup
+
+###############
+### autover ###
 
 def embed_version(basepath, ref='v0.2.2'):
     """
@@ -48,11 +48,17 @@ def get_setup_version(reponame):
         print("WARNING: param>=1.6.0 unavailable. If you are installing a package, this warning can safely be ignored. If you are creating a package or otherwise operating in a git repository, you should install param>=1.6.0.")
         return json.load(open(version_file_path, 'r'))['version_string']
 
+
+########################
+### package metadata ###
+
+    
 setup_args = dict(
     name='geoviews',
     version=get_setup_version("geoviews"),
     python_requires = '>=2.7',
     install_requires = [
+        # TODO: these need to be updated
         'param >=1.5.1',
         'numpy >=1.0',
         'holoviews >=1.9.4',
@@ -71,7 +77,8 @@ setup_args = dict(
             'ipython',
             'pygments',
         ]},
-    description='GeoViews is a Python library that makes it easy to explore and visualize geographical, meteorological, and oceanographic datasets, such as those used in weather, climate, and remote sensing research.',    
+    description='GeoViews is a Python library that makes it easy to explore and visualize geographical, meteorological, and oceanographic datasets, such as those used in weather, climate, and remote sensing research.',
+    # TODO: update to use md properly for pypi
     long_description=open('README.md').read() if os.path.isfile('README.md') else 'Consult README.md',
     platforms=['Windows', 'Mac OS X', 'Linux'],
     license='BSD 3-Clause',

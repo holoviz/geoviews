@@ -117,8 +117,8 @@ jobs:
       stage: conda_dev_package
       env: DESC=""
       install:
-        # TODO: increase tests to include running examples
-        - doit package_build --recipe=core $CHANNELS $PKG_TEST_PYTHON
+        - doit package_build --recipe=core $CHANNELS $PKG_TEST_PYTHON --test-group=unit
+        # TODO: increase tests to include running examples      
         - doit package_build --recipe=recommended $CHANNELS $PKG_TEST_PYTHON --test-group=unit
       script:
         # TODO: going to anaconda.org/ceball temporarily

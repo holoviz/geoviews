@@ -51,12 +51,12 @@ jobs:
         - doit env_create --python=$PYENV_VERSION
         - source activate test-environment
         - doit develop_install $CHANNELS
-	# TODO
-	- conda remove --force holoviews && pip install git+https://github.com/ioam/holoviews.git
+        # TODO
+        - conda remove --force holoviews && pip install git+https://github.com/ioam/holoviews.git
         - doit env_capture
       script: #TODO: doit test_all_quick
         - doit test_flakes
-	- doit test_unit
+        - doit test_unit
 
 
     # python 2 flake checking typically catches python 2 syntax
@@ -117,9 +117,10 @@ jobs:
       stage: conda_dev_package
       env: DESC=""
       install:
-        # TODO: increase tests
+        # TODO: increase tests to include running examples
         - doit package_build --recipe=core $CHANNELS $PKG_TEST_PYTHON
-	- doit package_build --recipe=recommended $CHANNELS $PKG_TEST_PYTHON --test-group=unit
+        - doit package_build --recipe=recommended $CHANNELS $PKG_TEST_PYTHON --test-group=unit
       script:
+        # TODO: going to anaconda.org/ceball temporarily
         - doit package_upload --token=$CEBTMP --recipe=core --label=dev
-	- doit package_upload --token=$CEBTMP --recipe=recommended --label=dev
+        - doit package_upload --token=$CEBTMP --recipe=recommended --label=dev

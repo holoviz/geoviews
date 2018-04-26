@@ -117,7 +117,7 @@ jobs:
 
     - <<: *default
       stage: conda_dev_package
-      env: DESC=""
+      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
       install:
         - doit package_build --recipe=core $CHANNELS $PKG_TEST_PYTHON --test-group=unit
         # TODO: examples tests

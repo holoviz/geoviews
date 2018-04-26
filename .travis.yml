@@ -4,13 +4,13 @@ sudo: false
 os:
   - linux
 
-cache:
-  directories:
-    - $HOME/miniconda
+#cache:
+#  directories:
+#    - $HOME/miniconda
 
-before_cache:
-  - rm -rf $HOME/miniconda/pkgs
-  - rm -rf $HOME/miniconda/conda-bld/*
+#before_cache:
+#  - rm -rf $HOME/miniconda/pkgs
+#  - rm -rf $HOME/miniconda/conda-bld/*
 
 env:
   global:
@@ -117,7 +117,7 @@ jobs:
 
     - <<: *default
       stage: conda_dev_package
-      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
+      env: DESC=""
       install:
         - doit package_build --recipe=core $CHANNELS $PKG_TEST_PYTHON --test-group=unit
         # TODO: examples tests

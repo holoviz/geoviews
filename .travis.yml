@@ -119,5 +119,5 @@ jobs:
         - doit package_build --recipe=recommended $CHANNELS $PKG_TEST_PYTHON --test-group=unit
       script:
         # TODO: going to anaconda.org/ceball temporarily
-        - doit package_upload --token=$CEBTMP --recipe=core --label=dev
-        - doit package_upload --token=$CEBTMP --recipe=recommended --label=dev
+        - doit package_upload --user=ceball --token=$CEBTMP --label=dev --recipe=core
+        - doit package_upload --user=ceball --token=$CEBTMP --label=dev --recipe=recommended

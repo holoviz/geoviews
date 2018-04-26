@@ -1,7 +1,6 @@
-import os, glob
+import os
 import requests
 from io import BytesIO
-from shutil import copyfile, copytree
 from zipfile import ZipFile
 
 import param
@@ -27,29 +26,13 @@ def examples(path='geoviews-examples', include_data=False, verbose=False):
     Copies the example notebooks to the supplied path. If
     include_data is enabled the sample data is also downloaded.
     """
-    candidates = [os.path.join(__path__[0], '../doc/'),
-                  os.path.join(__path__[0], '../../../../share/geoviews-examples')]
-
+    import warnings, distutils.dir_util
+    source = os.path.join(os.path.dirname(__file__),"examples")
     path = os.path.abspath(path)
-    asset_path = os.path.join(path, 'assets')
-    if not os.path.exists(path):
-        os.makedirs(path)
-        if verbose:
-            print('Created directory %s' % path)
-
-    for source in candidates:
-        if os.path.exists(source):
-            if not os.path.exists(asset_path):
-                copytree(os.path.join(source, 'assets'), asset_path)
-                if verbose:
-                    print('Copied assets to %s' % asset_path)
-            for nb in glob.glob(os.path.join(source, '*.ipynb')):
-                nb_name = os.path.basename(nb)
-                nb_path = os.path.join(path, nb_name)
-                copyfile(nb, nb_path)
-                if verbose:
-                    print("%s copied to %s" % (nb_name, path))
-            break
+    if os.path.exists(path):
+        warnings.warn("Path %s already exists; will not overwrite newer files."%path)
+    distutils.dir_util.copy_tree(source, path, verbose=verbose)
+    print("Installed examples at %s"%path)
 
     if include_data:
         data_path = os.path.join(path, 'sample-data')

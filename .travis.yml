@@ -120,8 +120,7 @@ jobs:
       env: DESC=""
       install:
         - doit package_build --recipe=core $CHANNELS $PKG_TEST_PYTHON --test-group=unit
-        # TODO: examples tests
-        - doit package_build --recipe=recommended $CHANNELS $PKG_TEST_PYTHON --test-group=unit
+        - doit package_build --recipe=recommended $CHANNELS $PKG_TEST_PYTHON --test-group=examples
       script:
         # TODO: going to anaconda.org/ceball temporarily
         - doit package_upload --user=ceball --token=$CEBTMP --label=dev --recipe=core

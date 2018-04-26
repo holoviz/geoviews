@@ -89,6 +89,7 @@ extras_require={
     ],
     'tests': [
         'nose',
+        'pytest',
         'flake8',
         'nbsmoke >=0.2.0',
         'iris',     # TODO
@@ -115,14 +116,14 @@ setup_args = dict(
     platforms=['Windows', 'Mac OS X', 'Linux'],
     license='BSD 3-Clause',
     url='http://geoviews.org',
-    packages = find_packages(), # TODO: unless there's something unusual in gv?
+    packages = find_packages(),
     package_data={'geoviews': ['.version']},
     include_package_data=True,
     entry_points={
         'console_scripts': [
             'geoviews = geoviews.__main__:main'
         ]
-    },       
+    },
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 1 - Planning Development Status",

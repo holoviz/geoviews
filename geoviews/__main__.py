@@ -1,23 +1,11 @@
 import argparse
 import inspect
-import warnings
-import os
-import distutils.dir_util
 
-from . import __version__
-
-
-SAMPLE_DATA_URL = 'http://assets.holoviews.org/geoviews-sample-data.zip'
-
+from . import __version__, examples
 
 def install_examples(args):
     """Install examples at the supplied path."""
-    source = os.path.join(os.path.dirname(__file__),"examples")
-    path = os.path.abspath(args.path)
-    if os.path.exists(path):
-        warnings.warn("Path %s already exists; will not overwrite newer files."%path)
-    distutils.dir_util.copy_tree(source, path, verbose=args.verbose)
-    print("Installed examples at %s"%path)
+    examples(args.path, args.include_data, args.verbose)
 
 def main(args=None):
     parser = argparse.ArgumentParser(description="GeoViews commands")
@@ -28,6 +16,7 @@ def main(args=None):
     eg_parser = subparsers.add_parser('install_examples', help=inspect.getdoc(install_examples))
     eg_parser.set_defaults(func=install_examples)
     eg_parser.add_argument('--path',type=str,help='where to install examples',default='geoviews-examples')
+    eg_parser.add_argument('--include-data',action='store_true',help='Also download sample data') 
     eg_parser.add_argument('-v', '--verbose', action='count', default=0)
     
     args = parser.parse_args()

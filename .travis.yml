@@ -4,13 +4,13 @@ sudo: false
 os:
   - linux
 
-#cache:
-#  directories:
-#    - $HOME/miniconda
+cache:
+  directories:
+    - $HOME/miniconda
 
-#before_cache:
-#  - rm -rf $HOME/miniconda/pkgs
-#  - rm -rf $HOME/miniconda/conda-bld/*
+before_cache:
+  - rm -rf $HOME/miniconda/pkgs
+  - rm -rf $HOME/miniconda/conda-bld/*
 
 env:
   global:
@@ -56,7 +56,7 @@ jobs:
         - source activate test-environment
         - doit develop_install $CHANNELS
         - doit env_capture
-      script: #TODO: doit test_all_quick
+      script: #TODO: doit test_all_quick or test_all (need to run at least some notebooks)
         - doit test_flakes
         - doit test_unit
 
@@ -78,7 +78,7 @@ jobs:
 
     - <<: *default
       stage: docs
-      env: DESC=""      
+      env: DESC="docs"
       script:
         # TODO: can't remember why I did this twice
         - python -c "import geoviews as gv; gv.sample_data('notebooks/user_guide/sample-data')"
@@ -117,7 +117,7 @@ jobs:
 
     - <<: *default
       stage: conda_dev_package
-      env: DESC=""
+      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
       install:
         - doit package_build --recipe=core $CHANNELS $PKG_TEST_PYTHON --test-group=unit
         - doit package_build --recipe=recommended $CHANNELS $PKG_TEST_PYTHON --test-group=examples

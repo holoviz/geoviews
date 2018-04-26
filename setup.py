@@ -118,6 +118,11 @@ setup_args = dict(
     packages = find_packages(), # TODO: unless there's something unusual in gv?
     package_data={'geoviews': ['.version']},
     include_package_data=True,
+    entry_points={
+        'console_scripts': [
+            'geoviews = geoviews.__main__:main'
+        ]
+    },       
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 1 - Planning Development Status",

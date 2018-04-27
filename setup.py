@@ -72,6 +72,7 @@ extras_require={
         'gdal', 'libgdal',
         'matplotlib',
         'pandas',
+        'pvutil',
         'scipy',
         'shapely',
         'xarray',

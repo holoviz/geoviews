@@ -1,6 +1,10 @@
 language: generic
 sudo: false
 
+# TODO: tmp, will remove
+git:
+  depth: 100
+  
 os:
   - linux
 

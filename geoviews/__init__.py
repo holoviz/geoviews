@@ -27,7 +27,7 @@ try:
     install_examples = partial(_examples,'geoviews')
     download_data = partial(_data,'geoviews')
 except ImportError:
-    def _missing_cmd(*args,**kw): return("install pvutil to enable this command; see ...")
+    def _missing_cmd(*args,**kw): return("install pvutil to enable this command (e.g. `conda install geoviews`)")
     _data = _examples = _missing_cmd
     def err(): raise ValueError(_missing_cmd())
     download_data = install_examples = err

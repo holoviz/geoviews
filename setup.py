@@ -52,13 +52,12 @@ def get_setup_version(reponame):
 ####################
 ### dependencies ###
 
-# TODO: versions need to be updated
 install_requires = [
     'bokeh >=0.12.13',   # not strictly required but shouldn't be problematic
     'cartopy >=0.14.2',  # prevents pip alone (requires external package manager)
-    'holoviews >=1.9.4',
+    'holoviews >=1.10.1',
     'numpy >=1.0',
-    'param >=1.5.1',
+    'param >=1.6.1',
 ]
 
 

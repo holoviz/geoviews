@@ -4,7 +4,7 @@ sudo: false
 # TODO: tmp, will remove
 git:
   depth: 100
-  
+
 os:
   - linux
 
@@ -29,16 +29,18 @@ env:
 #     release: ^v(\d+|\.)*[^a-z]\d*$
 # dev release: ^v(\d+|\.)*[a-z]\d*$
 
-# TODO: add conditionals for packages before merge
 stages:
   - test
   - name: docs
     # TODO: restore docs later
     if: (branch = doesnotexist)
+  - name: pip_dev_package
+    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: conda_dev_package
-    if: (branch = packaging)
-#    if: tag =~ ^v(\d+|\.)*[a-z]\d*$  
+    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
 #  - name: conda_package
+#    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
+#  - name: pip_package
 #    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
 
 jobs:
@@ -129,3 +131,16 @@ jobs:
         # TODO: going to anaconda.org/ceball temporarily
         - doit package_upload --user=ceball --token=$CEBTMP --label=dev --recipe=core
         - doit package_upload --user=ceball --token=$CEBTMP --label=dev --recipe=recommended
+
+    # use conda for gv's dependencies; pip-only install not currently possible
+    - <<: *default
+      stage: pip_dev_package
+      env: PYPI="https://test.pypi.org/legacy/" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
+      install:
+        # install deps using conda
+        - doit develop_install $CHANNELS -o tests && pip uninstall -y geoviews
+        # ecosystem=pip build tools installed with conda
+        - conda install -y -c pyviz/label/dev -c conda-forge tox virtualenv
+        - conda remove -y --force nose
+        - doit ecosystem=pip package_build --test-python=py36 --test-group=unit
+      script: doit ecosystem=pip package_upload -u $TPPU -p $TPPP -r ${PYPI}

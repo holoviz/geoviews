@@ -62,9 +62,10 @@ install_requires = [
 
 
 # TODO: need to verify this list (not sure all needed), plus some
-# versions may be needed
+# versions may be needed.
 extras_require={
     'recommended': [
+        'paramnb',
         'filelock', # TODO for iris?
         'datashader',
         'geopandas',
@@ -75,6 +76,7 @@ extras_require={
         'scipy',
         'shapely',
         'xarray',
+        'xesmf',
         #### intent of packages below is jupyter notebook with ipykernel?
         # seems like it could be simplified (or if for another
         # purpose, should be clarified)
@@ -93,6 +95,7 @@ extras_require={
         'flake8',
         'nbsmoke >=0.2.0',
         'iris',     # TODO
+        'iris-sample-data',
         'filelock', # TODO for iris?
         'mock'      # TODO for iris?
     ]

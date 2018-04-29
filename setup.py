@@ -114,8 +114,8 @@ setup_args = dict(
     extras_require = extras_require,
     tests_require = extras_require['tests'],
     description='GeoViews is a Python library that makes it easy to explore and visualize geographical, meteorological, and oceanographic datasets, such as those used in weather, climate, and remote sensing research.',
-    # TODO: update to use md properly for pypi
-    long_description=open('README.md').read() if os.path.isfile('README.md') else 'Consult README.md',
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
     platforms=['Windows', 'Mac OS X', 'Linux'],
     license='BSD 3-Clause',
     url='http://geoviews.org',

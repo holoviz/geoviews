@@ -65,20 +65,20 @@ extras_require={
         'datashader',
         'geopandas',
         'gdal', 'libgdal',
+        'jupyter',
         'matplotlib',
         'pandas',
         'pvutil',
         'scipy',
         'shapely',
         'xarray',
-        'xesmf',
-        'jupyter'
+        'xesmf'
     ],
     'tests': [
-        'nose',
-        'pytest',
         'flake8',
         'nbsmoke >=0.2.0',
+        'nose',
+        'pytest',
         ### below are for iris
         'iris',
         'iris-sample-data',

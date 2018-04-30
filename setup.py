@@ -129,7 +129,7 @@ setup_args = dict(
     },
     classifiers = [
         "License :: OSI Approved :: BSD License",
-        "Development Status :: 1 - Planning Development Status",
+        "Development Status :: 5 - Production/Stable",        
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",

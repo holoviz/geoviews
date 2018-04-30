@@ -31,6 +31,7 @@ env:
 
 stages:
   - test
+  # TODO: move to be after packages
   - name: docs
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: pip_dev_package
@@ -88,7 +89,7 @@ jobs:
         - geoviews download_data --path=examples
         - bokeh sampledata
         # TODO: should make this content available too rather than deleting it!
-        - rm examples/Colocated_cube_pair.ipynb examples/CubeExplorer_Prototype.ipynb examples/Dashboard_Demo.ipynb
+        - rm examples/Colocated_cube_pair.ipynb examples/CubeExplorer_Prototype.ipynb
         - cd doc
         - nbsite_nbpagebuild.py ioam geoviews ../examples .     
         ## TODO: should simplify after better gallery support in nbsite

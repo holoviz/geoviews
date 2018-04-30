@@ -65,7 +65,6 @@ install_requires = [
 # versions may be needed.
 extras_require={
     'recommended': [
-        'paramnb',
         'filelock', # TODO for iris?
         'datashader',
         'geopandas',

@@ -71,7 +71,6 @@ _recommended = [
     'scipy',
     'shapely',
     'xarray',
-    'xesmf'
 ]
 
 # can only currently run all examples with packages from conda-forge

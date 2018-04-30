@@ -98,6 +98,10 @@ extras_require={
         'iris-sample-data',
         'filelock', # TODO for iris?
         'mock'      # TODO for iris?
+    ],
+    'doc': [
+        'nbsite',
+        'sphinx_ioam_theme'
     ]
 }
 

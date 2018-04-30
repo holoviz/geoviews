@@ -61,11 +61,8 @@ install_requires = [
 ]
 
 
-# TODO: need to verify this list (not sure all needed), plus some
-# versions may be needed.
 extras_require={
     'recommended': [
-        'filelock', # TODO for iris?
         'datashader',
         'geopandas',
         'gdal', 'libgdal',
@@ -83,10 +80,11 @@ extras_require={
         'pytest',
         'flake8',
         'nbsmoke >=0.2.0',
-        'iris',     # TODO
+        ### below are for iris
+        'iris',
         'iris-sample-data',
-        'filelock', # TODO for iris?
-        'mock'      # TODO for iris?
+        'filelock',
+        'mock'
     ],
     'doc': [
         'nbsite',

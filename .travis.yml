@@ -140,12 +140,12 @@ jobs:
       install:
         # install deps using conda
         - doit develop_install $CHANNELS -o tests && pip uninstall -y geoviews
-        # some ecosystem=pip build tools must be installed with conda when using conda, and
-        # are only available via conda-forge...
-        - conda install -y -c pyviz/label/dev -c conda-forge tox virtualenv
-        # interferes with pip-installed nose
+        # some ecosystem=pip build tools must be installed with conda when using conda...
+        - conda install -y pip twine wheel
+        # ..and some are only available via conda-forge
+        - conda install -y -c conda-forge tox virtualenv
+        # this interferes with pip-installed nose
         - conda remove -y --force nose
         # now carry on as normal
-        - doit ecosystem_setup
         - doit ecosystem=pip package_build --test-python=py36 --test-group=unit
       script: doit ecosystem=pip package_upload -u $TPPU -p $TPPP -r ${PYPI}

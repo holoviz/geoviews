@@ -32,8 +32,7 @@ env:
 stages:
   - test
   - name: docs
-    # TODO: restore docs later
-    if: (branch = doesnotexist)
+    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: pip_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: conda_dev_package
@@ -80,29 +79,22 @@ jobs:
 
     ########## DOCS ##########
 
-    # TODO
-
     - <<: *default
       stage: docs
       env: DESC="docs"
       script:
-        # TODO: can't remember why I did this twice
-        - python -c "import geoviews as gv; gv.sample_data('notebooks/user_guide/sample-data')"
-        - python -c "import geoviews as gv; gv.sample_data('doc/sample-data')"
-        - python -c "import bokeh; bokeh.sampledata.download()"
-        - conda install -c pyviz/label/dev -c conda-forge nbsite sphinx_ioam_theme
-        - conda install -c nesii/label/dev-esmf -c conda-forge esmpy
-        - pip install xesmf
+        - doit develop_install $CHANNELS -o doc
+        # TODO: various doc steps will move out of .travis
+        - geoviews download_data --path=examples
+        - bokeh sampledata
         # TODO: should make this content available too rather than deleting it!
-        - rm notebooks/*.ipynb
+        - rm examples/Colocated_cube_pair.ipynb examples/CubeExplorer_Prototype.ipynb examples/Dashboard_Demo.ipynb
         - cd doc
-        - nbsite_nbpagebuild.py ioam geoviews ../notebooks .
-        # gallery notebooks depend on user guide assets
-        - mkdir -p _build/html/user_guide
-        - cp -r ../notebooks/user_guide/assets user_guide/
-        - cp -r ../notebooks/user_guide/assets _build/html/user_guide/
-        - cp -r ../notebooks/user_guide/sample-data _build/html/user_guide/
-        - nbsite_gallery.py .. notebooks None '.' matplotlib bokeh None 
+        - nbsite_nbpagebuild.py ioam geoviews ../examples .     
+        ## TODO: should simplify after better gallery support in nbsite
+        - mkdir -p _build/html && cp -r ../examples/user_guide/assets _build/html/user_guide/
+        - nbsite_gallery.py .. examples None '.' matplotlib bokeh None
+        ##
         - sphinx-build -b html . ./_build/html
         - nbsite_fix_links.py _build/html
         - nbsite_cleandisthtml.py ./_build/html take_a_chance
@@ -113,8 +105,16 @@ jobs:
           skip_cleanup: true
           github_token: $GITHUB_TOKEN
           local_dir: ./doc/_build/html
-          on:
-            branch: master
+          repo: ioam-docs/geoviews-dev
+          #on:
+          #  branch: gallery
+# TODO: on release tag
+#        - provider: pages
+#          skip_cleanup: true
+#          github_token: $GITHUB_TOKEN
+#          local_dir: ./doc/_build/html
+#          on:
+#            branch: master
 
 
     ########## END-USER PACKAGES ##########

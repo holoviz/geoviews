@@ -60,7 +60,6 @@ install_requires = [
     'param >=1.6.1',
 ]
 
-
 extras_require={
     'recommended': [
         'datashader',
@@ -120,7 +119,7 @@ setup_args = dict(
     },
     classifiers = [
         "License :: OSI Approved :: BSD License",
-        "Development Status :: 5 - Production/Stable",        
+        "Development Status :: 5 - Production/Stable",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",

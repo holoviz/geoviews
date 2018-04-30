@@ -67,12 +67,11 @@ jobs:
         - doit test_flakes
         - doit test_unit
 
-# TODO skip because enum34 and xesmf conda packages conflict on py27
-#    # python 2 flake checking typically catches python 2 syntax
-#    # errors where python 3's been assumed...
-#    - <<: *default
-#      env: DESC="py2 flakes" PYENV_VERSION=2.7
-#      script: doit test_flakes
+    # python 2 flake checking typically catches python 2 syntax
+    # errors where python 3's been assumed...
+    - <<: *default
+      env: DESC="py2 flakes" PYENV_VERSION=2.7
+      script: doit test_flakes
 
 
 # TODO coveralls (for just py3, or py2 py3 combined, or...?)

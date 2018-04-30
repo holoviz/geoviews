@@ -13,8 +13,10 @@ build:
 
 requirements:
   build:
-    - python
-    - setuptools
+    - python {{ sdata['python_requires'] }}
+    {% for dep in sdata['extras_require']['build'] %}
+    - {{ dep }}
+    {% endfor %}
   run:
     - python {{ sdata['python_requires'] }}
     {% for dep in sdata.get('install_requires',{}) %}

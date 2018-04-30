@@ -52,7 +52,7 @@ def get_setup_version(reponame):
 ####################
 ### dependencies ###
 
-install_requires = [
+_required = [
     'bokeh >=0.12.13',   # not strictly required but shouldn't be problematic
     'cartopy >=0.14.2',  # prevents pip alone (requires external package manager)
     'holoviews >=1.10.1',
@@ -60,36 +60,54 @@ install_requires = [
     'param >=1.6.1',
 ]
 
+_recommended = [
+    'datashader',
+    'geopandas',
+    'gdal', 'libgdal',
+    'jupyter',
+    'matplotlib',
+    'pandas',
+    'pvutil',
+    'scipy',
+    'shapely',
+    'xarray',
+    'xesmf'
+]
+
+# can only currently run all examples with packages from conda-forge
+_examples = _recommended + [
+    'xesmf',
+    ### below are for iris
+    'iris',
+    'iris-sample-data',
+    # TODO: test without these two
+    'filelock',
+    'mock'
+],
+
 extras_require={
-    'recommended': [
-        'datashader',
-        'geopandas',
-        'gdal', 'libgdal',
-        'jupyter',
-        'matplotlib',
-        'pandas',
-        'pvutil',
-        'scipy',
-        'shapely',
-        'xarray',
-        'xesmf'
+    'recommended': _recommended,
+    'examples': _examples,
+    'doc': _examples + [
+        'nbsite',
+        'sphinx_ioam_theme',
     ],
     'tests': [
         'flake8',
         'nbsmoke >=0.2.0',
         'nose',
         'pytest',
-        ### below are for iris
-        'iris',
-        'iris-sample-data',
-        'filelock',
-        'mock'
     ],
-    'doc': [
-        'nbsite',
-        'sphinx_ioam_theme'
-    ]
 }
+
+extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
+
+# until pyproject.toml/equivalent is widely supported; meanwhile
+# setup_requires doesn't work well with pip. Note: deliberately omitted from all.
+extras_require['build'] = [
+    'param >=1.6.1',
+    'setuptools' # should make this pip now
+]
 
 
 ########################
@@ -100,7 +118,7 @@ setup_args = dict(
     name='geoviews',
     version=get_setup_version("geoviews"),
     python_requires = '>=2.7',
-    install_requires = install_requires,
+    install_requires = _required,
     extras_require = extras_require,
     tests_require = extras_require['tests'],
     description='GeoViews is a Python library that makes it easy to explore and visualize geographical, meteorological, and oceanographic datasets, such as those used in weather, climate, and remote sensing research.',

@@ -59,7 +59,7 @@ jobs:
         - conda config --set always_yes True
         - conda install -c pyviz/label/dev pyct && doit ecosystem_setup
       install:
-        - doit env_create --python=$PYENV_VERSION
+        - doit env_create $CHANNELS --python=$PYENV_VERSION
         - source activate test-environment
         - doit develop_install $CHANNELS -o recommended
         - doit env_capture

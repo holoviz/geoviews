@@ -83,7 +83,7 @@ _examples = _recommended + [
     # TODO: test without these two
     'filelock',
     'mock'
-],
+]
 
 extras_require={
     'recommended': _recommended,

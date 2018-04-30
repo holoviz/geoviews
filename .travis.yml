@@ -108,8 +108,9 @@ jobs:
           github_token: $GITHUB_TOKEN
           local_dir: ./doc/_build/html
           repo: ioam-docs/geoviews-dev
-          #on:
-          #  branch: gallery
+          # TODO: remove this condition before merge
+          on:
+            branch: packaging
 # TODO: on release tag
 #        - provider: pages
 #          skip_cleanup: true

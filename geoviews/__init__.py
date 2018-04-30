@@ -1,8 +1,3 @@
-import os
-import requests
-from io import BytesIO
-from zipfile import ZipFile
-
 import param
 from .element import (_Element, Feature, Tiles,     # noqa (API import)
                       WMTS, LineContours, FilledContours, Text, Image,

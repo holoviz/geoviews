@@ -132,15 +132,20 @@ jobs:
         - doit package_upload --user=ceball --token=$CEBTMP --label=dev --recipe=core
         - doit package_upload --user=ceball --token=$CEBTMP --label=dev --recipe=recommended
 
-    # use conda for gv's dependencies; pip-only install not currently possible
+    # Awkward because we use conda for gv's dependencies when making
+    # the pip package (something pyct does not support, but could)
     - <<: *default
       stage: pip_dev_package
       env: PYPI="https://test.pypi.org/legacy/" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
       install:
         # install deps using conda
         - doit develop_install $CHANNELS -o tests && pip uninstall -y geoviews
-        # ecosystem=pip build tools installed with conda
+        # some ecosystem=pip build tools must be installed with conda when using conda, and
+        # are only available via conda-forge...
         - conda install -y -c pyviz/label/dev -c conda-forge tox virtualenv
+        # interferes with pip-installed nose
         - conda remove -y --force nose
+        # now carry on as normal
+        - doit ecosystem_setup
         - doit ecosystem=pip package_build --test-python=py36 --test-group=unit
       script: doit ecosystem=pip package_upload -u $TPPU -p $TPPP -r ${PYPI}

@@ -93,7 +93,7 @@ jobs:
         - cd doc
         - nbsite_nbpagebuild.py ioam geoviews ../examples .     
         ## TODO: should simplify after better gallery support in nbsite
-        - mkdir -p _build/html && cp -r ../examples/user_guide/assets _build/html/user_guide/
+        - mkdir -p _build/html && cp -r ../examples/assets _build/html/
         - nbsite_gallery.py .. examples None '.' matplotlib bokeh None
         ##
         - sphinx-build -b html . ./_build/html

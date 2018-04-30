@@ -1,3 +1,4 @@
+import unittest
 
 try:
     from iris.tests.stock import lat_lon_cube

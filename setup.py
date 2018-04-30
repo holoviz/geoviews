@@ -76,17 +76,7 @@ extras_require={
         'shapely',
         'xarray',
         'xesmf',
-        #### intent of packages below is jupyter notebook with ipykernel?
-        # seems like it could be simplified (or if for another
-        # purpose, should be clarified)
-        'ipython',
-        'jinja2',
-        'jsonschema',        
-        'jupyter',
-        'pygments',        
-        'pyzmq',
-        'tornado',
-        ####
+        'jupyter'
     ],
     'tests': [
         'nose',

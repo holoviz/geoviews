@@ -1,7 +1,7 @@
 language: generic
 sudo: false
 
-# TODO: tmp, will remove
+# TODO: tmp, remove before merge
 git:
   depth: 100
 
@@ -20,10 +20,7 @@ before_cache:
 env:
   global:
     - PYENV_VERSION=3.6
-    # TODO: update once basically working
-    - PKG_TEST_PYTHON="--test-python=py36"
-    # TODO: split channels for dev vs main pkg. Should be ioam/label/dev
-    #       for hv dev? except that is lagging ioam/label/main?
+    - PKG_TEST_PYTHON="--test-python=py36 --test-python=py27"
     - CHANNELS="-c pyviz/label/dev -c ioam -c conda-forge -c defaults"
 
 # quick hack to determine what tag means (improvements welcome)
@@ -32,17 +29,13 @@ env:
 
 stages:
   - test
-  # TODO: move to be after packages
   - name: pip_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: conda_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
-#  - name: conda_package
-#    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
-#  - name: pip_package
-#    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
   - name: docs
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
+  # TODO: add release packages and release docs (future PR)
 
 jobs:
   include:
@@ -81,7 +74,7 @@ jobs:
       env: DESC="docs"
       script:
         - doit develop_install $CHANNELS -o doc
-        # TODO: various doc steps will move out of .travis
+        # TODO: in future PR, various doc steps will move out of .travis
         - geoviews download_data --path=examples
         - bokeh sampledata
         # TODO: should make this content available too rather than deleting it!
@@ -103,16 +96,6 @@ jobs:
           github_token: $GITHUB_TOKEN
           local_dir: ./doc/_build/html
           repo: ioam-docs/geoviews-dev
-          # TODO: remove this condition before merge
-          on:
-            branch: packaging
-# TODO: on release tag
-#        - provider: pages
-#          skip_cleanup: true
-#          github_token: $GITHUB_TOKEN
-#          local_dir: ./doc/_build/html
-#          on:
-#            branch: master
 
 
     ########## END-USER PACKAGES ##########

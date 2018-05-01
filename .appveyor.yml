@@ -19,4 +19,4 @@ build: off
 
 test_script:
   - "doit test_unit"
-#TODO: "doit test_all_quick" or similar one day
+

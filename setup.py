@@ -79,7 +79,6 @@ _examples = _recommended + [
     ### below are for iris
     'iris',
     'iris-sample-data',
-    # TODO: test without these two
     'filelock',
     'mock'
 ]

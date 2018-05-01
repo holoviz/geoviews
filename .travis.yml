@@ -33,8 +33,6 @@ env:
 stages:
   - test
   # TODO: move to be after packages
-  - name: docs
-    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: pip_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: conda_dev_package
@@ -43,6 +41,8 @@ stages:
 #    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
 #  - name: pip_package
 #    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
+  - name: docs
+    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
 
 jobs:
   include:

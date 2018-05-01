@@ -91,6 +91,7 @@ extras_require={
         'sphinx_ioam_theme',
     ],
     'tests': [
+        'coveralls',
         'flake8',
         'nbsmoke >=0.2.0',
         'nose',

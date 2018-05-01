@@ -63,20 +63,16 @@ jobs:
         - source activate test-environment
         - doit develop_install $CHANNELS -o recommended
         - doit env_capture
-      script: #TODO: doit test_all_quick or test_all (need to run at least some notebooks)
+      script:
         - doit test_flakes
-        - doit test_unit
+        - doit test_coverage
+      after_success: coveralls
 
     # python 2 flake checking typically catches python 2 syntax
     # errors where python 3's been assumed...
     - <<: *default
       env: DESC="py2 flakes" PYENV_VERSION=2.7
       script: doit test_flakes
-
-
-# TODO coveralls (for just py3, or py2 py3 combined, or...?)
-#      after_success: coveralls
-
 
     ########## DOCS ##########
 

@@ -30,9 +30,9 @@ env:
 
 stages:
   - test
-  - name: pip_dev_package
-    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: conda_dev_package
+    if: tag =~ ^v(\d+|\.)*[a-z]\d*$  
+  - name: pip_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: docs
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$

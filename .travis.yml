@@ -21,7 +21,8 @@ env:
   global:
     - PYENV_VERSION=3.6
     - PKG_TEST_PYTHON="--test-python=py36 --test-python=py27"
-    - CHANNELS="-c pyviz/label/dev -c ioam -c conda-forge -c defaults"
+    - CHANS_DEV="-c pyviz/label/dev -c ioam -c defaults"
+    - CHANS="-c ioam -c defaults"
 
 # quick hack to determine what tag means (improvements welcome)
 #     release: ^v(\d+|\.)*[^a-z]\d*$
@@ -52,9 +53,9 @@ jobs:
         - conda config --set always_yes True
         - conda install -c pyviz/label/dev pyct && doit ecosystem_setup
       install:
-        - doit env_create $CHANNELS --python=$PYENV_VERSION
+        - doit env_create $CHANS_DEV --python=$PYENV_VERSION
         - source activate test-environment
-        - doit develop_install $CHANNELS -o recommended
+        - doit develop_install $CHANS_DEV -o recommended
         - doit env_capture
       script:
         - doit test_flakes
@@ -73,7 +74,7 @@ jobs:
       stage: docs
       env: DESC="docs"
       script:
-        - doit develop_install $CHANNELS -o doc
+        - doit develop_install -c conda-forge $CHANS_DEV -o doc
         # TODO: in future PR, various doc steps will move out of .travis
         - geoviews download_data --path=examples
         - bokeh sampledata
@@ -106,8 +107,8 @@ jobs:
       stage: conda_dev_package
       env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
       install:
-        - doit package_build --recipe=core $CHANNELS $PKG_TEST_PYTHON --test-group=unit
-        - doit package_build --recipe=recommended $CHANNELS $PKG_TEST_PYTHON --test-group=examples
+        - doit package_build --recipe=core $CHANS $PKG_TEST_PYTHON --test-group=unit
+        - doit package_build --recipe=recommended $CHANS $PKG_TEST_PYTHON --test-group=examples
       script:
         # TODO: going to anaconda.org/ceball temporarily
         - doit package_upload --user=ceball --token=$CEBTMP --label=dev --recipe=core
@@ -120,7 +121,7 @@ jobs:
       env: PYPI="https://test.pypi.org/legacy/" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
       install:
         # install deps using conda
-        - doit develop_install $CHANNELS -o tests && pip uninstall -y geoviews
+        - doit develop_install $CHANS_DEV -o tests && pip uninstall -y geoviews
         # some ecosystem=pip build tools must be installed with conda when using conda...
         - conda install -y pip twine wheel
         # ..and some are only available via conda-forge

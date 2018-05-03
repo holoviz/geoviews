@@ -74,6 +74,7 @@ jobs:
       stage: docs
       env: DESC="docs"
       script:
+        # some deps only available on conda-forge
         - doit develop_install -c conda-forge $CHANS_DEV -o doc
         # TODO: in future PR, various doc steps will move out of .travis
         - geoviews download_data --path=examples

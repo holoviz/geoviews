@@ -75,17 +75,17 @@ jobs:
       env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c ioam -c conda-forge"
       script:
         - doit develop_install $CHANS_DEV -o doc
-        # TODO: in future PR, various doc steps will move out of .travis
         - geoviews download_data --path=examples
         - bokeh sampledata
-        # TODO: should make this content available too rather than deleting it!
-        - rm examples/Colocated_cube_pair.ipynb examples/CubeExplorer_Prototype.ipynb
+        - rm examples/Colocated_cube_pair.ipynb examples/CubeExplorer_Prototype.ipynb # not currently part of website
+        # note: will vastly simplified in a future version of nbsite
         - cd doc
         - nbsite_nbpagebuild.py ioam geoviews ../examples .     
-        ## TODO: should simplify after better gallery support in nbsite
-        - mkdir -p _build/html && cp -r ../examples/assets _build/html/
+        ### gallery
+        - ln -s ../examples/assets assets
+        - ln -s ../examples/data data
         - nbsite_gallery.py .. examples None '.' matplotlib bokeh None
-        ##
+        ###
         - sphinx-build -b html . ./_build/html
         - nbsite_fix_links.py _build/html
         - nbsite_cleandisthtml.py ./_build/html take_a_chance

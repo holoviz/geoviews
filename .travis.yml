@@ -55,7 +55,10 @@ jobs:
         - source activate test-environment
         - doit develop_install $CHANS_DEV -o recommended
         - doit env_capture
-      script: doit test_all_recommended
+      script:
+        - geoviews download_data --path=examples
+        - bokeh sampledata
+        - doit test_all_recommended
       after_success: coveralls
 
     # python 2 flake checking typically catches python 2 syntax

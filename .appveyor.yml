@@ -12,10 +12,10 @@ install:
   - "conda install -y -c pyviz/label/dev pyct && doit ecosystem_setup"
   - "doit env_create %CHANS_DEV% --name=test --python=%PY%"
   - "activate test"
-  - "doit develop_install %CHANS_DEV%"
+  - "doit develop_install %CHANS_DEV% -o recommended"
   - "doit env_capture"
 
 build: off
 
 test_script:
-  - "doit test_unit"
+  - "doit test_all_recommended"

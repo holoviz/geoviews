@@ -42,11 +42,9 @@ jobs:
   include:
     ########## DEVELOPER INSTALL ##########
 
-    # quick tests in typical dev env (most tests are run on packages)
-
     - &default
       stage: test
-      env: DESC="dev test_all_quick"
+      env: DESC="dev test_all_recommended"
       before_install:
         - pip install pyct && doit miniconda_install && pip uninstall -y doit pyct
         - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
@@ -57,9 +55,7 @@ jobs:
         - source activate test-environment
         - doit develop_install $CHANS_DEV -o recommended
         - doit env_capture
-      script:
-        - doit test_flakes
-        - doit test_coverage
+      script: doit test_all_recommended
       after_success: coveralls
 
     # python 2 flake checking typically catches python 2 syntax

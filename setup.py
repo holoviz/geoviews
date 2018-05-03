@@ -147,7 +147,7 @@ _recommended = [
 ]
 
 # can only currently run all examples with packages from conda-forge
-_examples = _recommended + [
+_examples_extra = _recommended + [
     'xesmf',
     ### below are for iris
     'iris',
@@ -158,8 +158,8 @@ _examples = _recommended + [
 
 extras_require={
     'recommended': _recommended,
-    'examples': _examples,
-    'doc': _examples + [
+    'examples_extra': _examples_extra,
+    'doc': _examples_extra + [
         'nbsite',
         'sphinx_ioam_theme',
     ],

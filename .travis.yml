@@ -22,7 +22,7 @@ env:
     - PYENV_VERSION=3.6
     - PKG_TEST_PYTHON="--test-python=py36 --test-python=py27"
     - CHANS_DEV="-c pyviz/label/dev -c ioam"
-    - CHANS="-c ioam"
+    - CHANS="-c pyviz -c ioam"
 
 # quick hack to determine what tag means (improvements welcome)
 #     release: ^v(\d+|\.)*[^a-z]\d*$

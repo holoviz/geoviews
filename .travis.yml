@@ -74,8 +74,7 @@ jobs:
       # not possible to run all examples to build website using only defaults (see setup.py)
       env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c ioam -c conda-forge"
       script:
-        # TODO: some deps only available on conda-forge
-        - doit develop_install $CHANS_DEV -c conda-forge -o doc
+        - doit develop_install $CHANS_DEV -o doc
         # TODO: in future PR, various doc steps will move out of .travis
         - geoviews download_data --path=examples
         - bokeh sampledata

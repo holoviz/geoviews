@@ -7,10 +7,6 @@ package:
 source:
   path: ../..
 
-build:
-  noarch: python
-  skip: True
-
 requirements:
   build:
     - python {{ sdata['python_requires'] }}

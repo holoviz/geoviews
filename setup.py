@@ -138,6 +138,7 @@ _recommended = [
     'gdal', 'libgdal',
     'jupyter',
     'matplotlib',
+    'netcdf4',
     'pandas',
     'pvutil',
     'scipy',
@@ -200,7 +201,6 @@ setup_args = dict(
     url='http://geoviews.org',
     packages = find_packages() + packages,
     package_data={'geoviews': ['.version']},
-    include_package_data=True,
     entry_points={
         'console_scripts': [
             'geoviews = geoviews.__main__:main'
@@ -225,7 +225,7 @@ if __name__=="__main__":
                                 'geoviews/examples')
     if 'develop' not in sys.argv:
         package_assets(example_path)
-    
+
     setup(**setup_args)
 
     if os.path.isdir(example_path):

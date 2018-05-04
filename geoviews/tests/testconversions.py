@@ -1,4 +1,10 @@
-from iris.tests.stock import lat_lon_cube
+import unittest
+
+try:
+    from iris.tests.stock import lat_lon_cube
+except ImportError:
+    raise unittest.SkipTest("iris not available")
+
 from holoviews.core import HoloMap
 from holoviews.element import Curve
 

@@ -1,67 +1,86 @@
-# At some point, should probably change to generic (since using conda)
-language: python
-
+language: generic
 sudo: false
+os:
+  - linux
 
-TODO: update when to upload to ioam-docs before merging
+cache:
+  directories:
+    - $HOME/miniconda
+
+before_cache:
+  - rm -rf $HOME/miniconda/pkgs
+  - rm -rf $HOME/miniconda/conda-bld
+  - rm -rf $HOME/miniconda/envs/*/conda-bld
+
+env:
+  global:
+    - PYENV_VERSION=3.6
+    - PKG_TEST_PYTHON="--test-python=py36 --test-python=py27"
+    - CHANS_DEV="-c pyviz/label/dev -c ioam"
+    - CHANS="-c pyviz -c ioam"
+
+# quick hack to determine what tag means (improvements welcome)
+#     release: ^v(\d+|\.)*[^a-z]\d*$
+# dev release: ^v(\d+|\.)*[a-z]\d*$
+
 stages:
   - test
-  - doc
+  - name: conda_dev_package
+    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
+  - name: pip_dev_package
+    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
+  - name: docs
+    if: tag =~ ^v(\d+|\.).*$
+  # TODO: add release packages (future PR)
 
 jobs:
   include:
+    ########## DEVELOPER INSTALL ##########
+
     - &default
       stage: test
-      python: "2.7"
+      env: DESC="dev test_all_recommended"
       before_install:
-        #########################
-        ##### install conda #####
-        - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-        - bash miniconda.sh -b -p $HOME/miniconda
-        - export PATH="$HOME/miniconda/bin:$PATH"
-        - hash -r
-        - conda config --set always_yes yes --set changeps1 no
-        - conda update -q conda
-        # Useful for debugging any issues with conda
-        - conda info -a
-        #########################
-        - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
-        - source activate test-environment
+        - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
+        - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
+        - conda config --set always_yes True
+        - conda install -c pyviz/label/dev pyctdev && doit ecosystem_setup
       install:
-        - conda install nose numpy matplotlib bokeh pandas scipy jupyter ipython param flake8 mock filelock cartopy xarray geopandas numpy shapely gdal libgdal datashader --quiet
-        - conda install -c conda-forge iris
-        - pip install coveralls
-        - pip install git+https://github.com/ioam/holoviews.git
-        - python setup.py install
+        - doit env_create $CHANS_DEV --python=$PYENV_VERSION
+        - source activate test-environment
+        - doit develop_install $CHANS_DEV -o recommended
+        - doit env_capture
       script:
-        - nosetests --with-doctest --with-coverage --cover-package=geoviews
-        - flake8 --ignore=E,W . --exclude=./doc
-
-    - <<: *default
-      python: "3.6"
+        - geoviews fetch-data --path=examples
+        - bokeh sampledata
+        - doit test_all_recommended
       after_success: coveralls
 
+    # python 2 flake checking typically catches python 2 syntax
+    # errors where python 3's been assumed...
     - <<: *default
-      stage: doc
-      python: "3.6"
+      env: DESC="py2 flakes" PYENV_VERSION=2.7
+      script: doit test_flakes
+
+    ########## DOCS ##########
+
+    - <<: *default
+      stage: docs
+      # not possible to run all examples to build website using only defaults (see setup.py)
+      env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c ioam -c conda-forge"
       script:
-        # TODO: can't remember why I did this twice
-        - python -c "import geoviews as gv; gv.sample_data('notebooks/user_guide/sample-data')"
-        - python -c "import geoviews as gv; gv.sample_data('doc/sample-data')"
-        - python -c "import bokeh; bokeh.sampledata.download()"
-        - conda install -c pyviz/label/dev -c conda-forge nbsite sphinx_ioam_theme
-        - conda install -c nesii/label/dev-esmf -c conda-forge esmpy
-        - pip install xesmf
-        # TODO: should make this content available too rather than deleting it!
-        - rm notebooks/*.ipynb
+        - doit develop_install $CHANS_DEV -o doc
+        - geoviews fetch-data --path=examples
+        - bokeh sampledata
+        - rm examples/Colocated_cube_pair.ipynb examples/CubeExplorer_Prototype.ipynb # not currently part of website
+        # note: will vastly simplified in a future version of nbsite
         - cd doc
-        - nbsite_nbpagebuild.py ioam geoviews ../notebooks .
-        # gallery notebooks depend on user guide assets
-        - mkdir -p _build/html/user_guide
-        - cp -r ../notebooks/user_guide/assets user_guide/
-        - cp -r ../notebooks/user_guide/assets _build/html/user_guide/
-        - cp -r ../notebooks/user_guide/sample-data _build/html/user_guide/
-        - nbsite_gallery.py .. notebooks None '.' matplotlib bokeh None 
+        - nbsite_nbpagebuild.py ioam geoviews ../examples .
+        ### gallery
+        - ln -s ../examples/assets assets
+        - ln -s ../examples/data data
+        - nbsite_gallery.py .. examples None '.' matplotlib bokeh None
+        ###
         - sphinx-build -b html . ./_build/html
         - nbsite_fix_links.py _build/html
         - nbsite_cleandisthtml.py ./_build/html take_a_chance
@@ -72,5 +91,49 @@ jobs:
           skip_cleanup: true
           github_token: $GITHUB_TOKEN
           local_dir: ./doc/_build/html
+          repo: ioam-docs/geoviews-dev
           on:
-            branch: master
+            tags: true
+            all_branches: true
+            condition: $TRAVIS_TAG =~ [0-9]+[a-z][0-9]*$
+        - provider: pages
+          skip_cleanup: true
+          github_token: $GITHUB_TOKEN
+          local_dir: ./doc/_build/html
+          repo: ioam-docs/geoviews-release
+          on:
+            tags: true
+            all_branches: true
+            condition: $TRAVIS_TAG =~ [0-9]+[^a-z][0-9]*$
+
+    ########## END-USER PACKAGES ##########
+
+    ## dev packages
+
+    - <<: *default
+      stage: conda_dev_package
+      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
+      install:
+        - doit package_build --recipe=core $CHANS_DEV $PKG_TEST_PYTHON --test-group=unit
+        - doit package_build --recipe=recommended $CHANS_DEV $PKG_TEST_PYTHON --test-group=examples
+      script:
+        - doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --recipe=core
+        - doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --recipe=recommended
+
+    # Awkward because we use conda for gv's dependencies when making
+    # the pip package (something pyctdev does not support, but could)
+    - <<: *default
+      stage: pip_dev_package
+      env: PYPI="https://test.pypi.org/legacy/" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
+      install:
+        # install deps using conda
+        - doit develop_install $CHANS_DEV -o tests && pip uninstall -y geoviews
+        # some ecosystem=pip build tools must be installed with conda when using conda...
+        - conda install -y pip twine wheel
+        # ..and some are only available via conda-forge
+        - conda install -y -c conda-forge tox virtualenv
+        # this interferes with pip-installed nose
+        - conda remove -y --force nose
+        # now carry on as normal
+        - doit ecosystem=pip package_build --test-python=py36 --test-group=unit
+      script: doit ecosystem=pip package_upload -u $TPPU -p $TPPP -r ${PYPI}

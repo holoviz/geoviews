@@ -6,7 +6,7 @@ GeoViews
 **Geographic visualizations for HoloViews**
 
 
-.. notebook:: geoviews Homepage.ipynb
+.. notebook:: geoviews ../examples/Homepage.ipynb
 
 
 Please see the `User Guide <user_guide>`_ for further documentation.

@@ -1,0 +1,37 @@
+{% set sdata = load_setup_py_data() %}
+
+package:
+  name: geoviews
+  version: {{ sdata['version'] }}
+
+source:
+  path: ../..
+
+build:
+  noarch: python
+
+requirements:
+  build:
+    - python {{ sdata['python_requires'] }}
+    {% for dep in sdata['extras_require']['build'] %}
+    - {{ dep }}
+    {% endfor %}
+  run:
+    - python {{ sdata['python_requires'] }}
+    - geoviews-core ={{ sdata['version'] }}
+    {% for dep in sdata['extras_require']['recommended'] %}
+    - {{ dep }}
+    {% endfor %}
+
+test:
+  imports:
+    - geoviews
+  requires:
+    {% for dep in sdata['extras_require']['tests'] %}
+    - {{ dep }}
+    {% endfor %}
+
+about:
+  home: {{ sdata['url'] }}
+  summary: {{ sdata['description'] }}
+  license: {{ sdata['license'] }}

@@ -9,7 +9,7 @@ Contents:
 
 * `Geometries <Geometries.html>`_
    Working with geometries and shapes.
-   
+
 * `Gridded Datasets I <Gridded_Datasets_I.html>`_
    Make full use of multidimensional gridded datasets stored in netCDF and other common formats.
 
@@ -33,4 +33,4 @@ Contents:
     Gridded Datasets I <Gridded_Datasets_I>
     Gridded Datasets II <Gridded_Datasets_II>
     Working with Bokeh <Working_with_Bokeh>
-	Resampling Grids <Resampling_Grids>
+    Resampling Grids <Resampling_Grids>

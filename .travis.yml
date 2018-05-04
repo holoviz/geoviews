@@ -1,10 +1,5 @@
 language: generic
 sudo: false
-
-# TODO: tmp, remove before merge
-git:
-  depth: 100
-
 os:
   - linux
 
@@ -35,8 +30,8 @@ stages:
   - name: pip_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: docs
-    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
-  # TODO: add release packages and release docs (future PR)
+    if: tag =~ ^v(\d+|\.).*$
+  # TODO: add release packages (future PR)
 
 jobs:
   include:
@@ -97,7 +92,19 @@ jobs:
           github_token: $GITHUB_TOKEN
           local_dir: ./doc/_build/html
           repo: ioam-docs/geoviews-dev
-
+          on:
+            tags: true
+            all_branches: true
+            condition: $TRAVIS_TAG =~ [a-z]$
+        - provider: pages
+          skip_cleanup: true
+          github_token: $GITHUB_TOKEN
+          local_dir: ./doc/_build/html
+          repo: ioam-docs/geoviews-release
+          on:
+            tags: true
+            all_branches: true
+            condition: $TRAVIS_TAG =~ [^a-z]$
 
     ########## END-USER PACKAGES ##########
 

@@ -14,16 +14,16 @@ __version__ = str(param.version.Version(fpath=__file__, archive_commit="$Format:
                               reponame="geoviews"))
 
 
-
-# make pvutil's install_examples() and download_data() available if possible
+# make pyct's example/data commands available if possible
 from functools import partial
 try:
-    from pvutil.cmd import install_examples as _examples, download_data as _data
-    install_examples = partial(_examples,'geoviews')
-    download_data = partial(_data,'geoviews')
+    from pvutil.cmd import copy_examples as _copy, fetch_data as _fetch, examples as _examples
+    copy_examples = partial(_copy,'geoviews')
+    fetch_data = partial(_fetch,'geoviews')
+    examples = partial(_examples,'geoviews')
 except ImportError:
-    def _missing_cmd(*args,**kw): return("install pvutil to enable this command (e.g. `conda install geoviews`)")
-    _data = _examples = _missing_cmd
+    def _missing_cmd(*args,**kw): return("install pyct to enable this command (e.g. `conda install pyct`)")
+    _copy = _fetch = _examples = _missing_cmd
     def err(): raise ValueError(_missing_cmd())
-    download_data = install_examples = err
-del partial, _examples, _data
+    fetch_data = copy_examples = examples = err
+del partial, _examples, _copy, _fetch

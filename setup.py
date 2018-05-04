@@ -140,7 +140,7 @@ _recommended = [
     'jupyter',
     'matplotlib',
     'pandas',
-    'pvutil',
+    'pyct',
     'scipy',
     'shapely',
     'xarray',

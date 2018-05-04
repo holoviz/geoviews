@@ -117,9 +117,8 @@ jobs:
         - doit package_build --recipe=core $CHANS_DEV $PKG_TEST_PYTHON --test-group=unit
         - doit package_build --recipe=recommended $CHANS_DEV $PKG_TEST_PYTHON --test-group=examples
       script:
-        # TODO: going to anaconda.org/ceball temporarily
-        - doit package_upload --user=ceball --token=$CEBTMP --label=dev --recipe=core
-        - doit package_upload --user=ceball --token=$CEBTMP --label=dev --recipe=recommended
+        - doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --recipe=core
+        - doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --recipe=recommended
 
     # Awkward because we use conda for gv's dependencies when making
     # the pip package (something pyctdev does not support, but could)

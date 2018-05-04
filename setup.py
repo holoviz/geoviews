@@ -222,7 +222,7 @@ setup_args = dict(
 
 if __name__=="__main__":
     example_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                'geoviews/examples')
+                                'geoviews','examples')
     if 'develop' not in sys.argv:
         package_assets(example_path)
 

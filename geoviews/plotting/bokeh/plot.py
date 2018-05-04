@@ -10,6 +10,7 @@ from bokeh.models.tools import BoxZoomTool, WheelZoomTool
 from bokeh.models import MercatorTickFormatter, MercatorTicker
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 from holoviews.plotting.bokeh.util import bokeh_version
+from holoviews.core.util import dimension_sanitizer, basestring
 
 from ...element import is_geographic, _Element
 from ...util import project_extents
@@ -47,6 +48,38 @@ class GeoPlot(ElementPlot):
             axis_props['ticker'] = MercatorTicker(dimension=dimension)
             axis_props['formatter'] = MercatorTickFormatter(dimension=dimension)
         return axis_props
+
+
+    def _postprocess_hover(self, renderer, source):
+        super(GeoPlot, self)._postprocess_hover(renderer, source)
+        hover = self.handles.get('hover')
+        try:
+            from bokeh.models import CustomJSHover
+        except:
+            CustomJSHover = None
+        if (not self.geographic or None in (hover, CustomJSHover) or
+            isinstance(hover.tooltips, basestring)):
+            return
+        element = self.current_frame
+        xdim, ydim = [dimension_sanitizer(kd.name) for kd in element.kdims]
+        code = """
+        var projections = require("core/util/projections");
+        var x = special_vars.data_x
+        var y = special_vars.data_y
+        var coords = projections.wgs84_mercator.inverse([x, y])
+        return "" + (coords[%d]).toFixed(4)
+        """
+        formatters={
+            xdim: CustomJSHover(formatter=code % 0),
+            ydim : CustomJSHover(formatter=code % 1),
+        }
+        tooltips = []
+        for name, formatter in hover.tooltips:
+            if formatter in ('@{%s}'%xdim, '@{%s}'%ydim):
+                formatter += '{custom}'
+            tooltips.append((name, formatter))
+        hover.tooltips = tooltips
+        hover.formatters = formatters
 
 
     def get_extents(self, element, ranges):

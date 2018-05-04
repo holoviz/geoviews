@@ -46,10 +46,10 @@ jobs:
       stage: test
       env: DESC="dev test_all_recommended"
       before_install:
-        - pip install pyct && doit miniconda_install && pip uninstall -y doit pyct
+        - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
         - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
         - conda config --set always_yes True
-        - conda install -c pyviz/label/dev pyct && doit ecosystem_setup
+        - conda install -c pyviz/label/dev pyctdev && doit ecosystem_setup
       install:
         - doit env_create $CHANS_DEV --python=$PYENV_VERSION
         - source activate test-environment
@@ -115,7 +115,7 @@ jobs:
         - doit package_upload --user=ceball --token=$CEBTMP --label=dev --recipe=recommended
 
     # Awkward because we use conda for gv's dependencies when making
-    # the pip package (something pyct does not support, but could)
+    # the pip package (something pyctdev does not support, but could)
     - <<: *default
       stage: pip_dev_package
       env: PYPI="https://test.pypi.org/legacy/" TRAVIS_NOCACHE=$TRAVIS_JOB_ID

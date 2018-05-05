@@ -4,11 +4,9 @@ os:
   - linux
 
 cache:
+  timeout: 300
   directories:
     - $HOME/miniconda
-
-cache:
-  timeout: 300
 
 before_cache:
   - rm -rf $HOME/miniconda/pkgs

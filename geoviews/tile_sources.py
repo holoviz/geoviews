@@ -1,5 +1,32 @@
 from .element import WMTS
 
+# Mapping between patterns to match specified as tuples and tuples containing attributions
+_ATTRIBUTIONS = {
+    ('openstreetmap',)      : (
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    ),
+    ('cartodb') : (
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,'
+        '&copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
+    ),
+    ('cartocdn') : (
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,'
+        '&copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
+    ),
+    ('stamen', 'terrain'): (
+        'Map tiles by <a href="https://stamen.com">Stamen Design</a>, '
+        'under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. '
+        'Data by <a href="https://openstreetmap.org">OpenStreetMap</a>, '
+        'under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
+    ),
+    ('stamen', 'toner'): (
+        'Map tiles by <a href="https://stamen.com">Stamen Design</a>, '
+        'under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. '
+        'Data by <a href="https://openstreetmap.org">OpenStreetMap</a>, '
+        'under <a href="https://www.openstreetmap.org/copyright">ODbL</a>.'
+    )
+}
+
 # CartoDB basemaps
 CartoDark = WMTS('https://cartodb-basemaps-4.global.ssl.fastly.net/dark_all/{Z}/{X}/{Y}.png')
 CartoEco = WMTS('http://3.api.cartocdn.com/base-eco/{Z}/{X}/{Y}.png')

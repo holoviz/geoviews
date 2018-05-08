@@ -21,6 +21,7 @@ from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
                         HexTiles)
 from ...operation import (project_image, project_shape, project_points,
                           project_path, project_graph, project_quadmesh)
+from ...tile_sources import _ATTRIBUTIONS
 from ...util import geom_to_array
 from .plot import GeoPlot, OverlayPlot, DEFAULT_PROJ
 from . import callbacks # noqa
@@ -50,8 +51,14 @@ class TilePlot(GeoPlot):
         elif all(kw in element.data for kw in ('{X}', '{Y}', '{Z}')):
             tile_source = WMTSTileSource
         else:
-            raise ValueError('Tile source URL format not recognized.')
-        return {}, {'tile_source': tile_source(url=element.data)}, style
+            raise ValueError('Tile source URL format not recognized. '
+                             'Must contain {X}/{Y}/{Z}, {XMIN}/{XMAX}/{YMIN}/{YMAX} '
+                             'or {Q} template strings.')
+        params = {'url': element.data}
+        for key, attribution in _ATTRIBUTIONS.items():
+            if all(k in element.data for k in key):
+                params['attribution'] = attribution
+        return {}, {'tile_source': tile_source(**params)}, style
 
     def _update_glyph(self, renderer, properties, mapping, glyph):
         allowed_properties = glyph.properties()

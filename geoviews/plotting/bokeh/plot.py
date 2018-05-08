@@ -34,6 +34,14 @@ class GeoPlot(ElementPlot):
     # Project operation to apply to the element
     _project_operation = None
 
+    _hover_code = """
+        var projections = require("core/util/projections");
+        var x = special_vars.data_x
+        var y = special_vars.data_y
+        var coords = projections.wgs84_mercator.inverse([x, y])
+        return "" + (coords[%d]).toFixed(4)
+    """
+
     def __init__(self, element, **params):
         super(GeoPlot, self).__init__(element, **params)
         self.geographic = is_geographic(self.hmap.last)
@@ -62,22 +70,22 @@ class GeoPlot(ElementPlot):
             return
         element = self.current_frame
         xdim, ydim = [dimension_sanitizer(kd.name) for kd in element.kdims]
-        code = """
-        var projections = require("core/util/projections");
-        var x = special_vars.data_x
-        var y = special_vars.data_y
-        var coords = projections.wgs84_mercator.inverse([x, y])
-        return "" + (coords[%d]).toFixed(4)
-        """
-        formatters={
-            xdim: CustomJSHover(formatter=code % 0),
-            ydim : CustomJSHover(formatter=code % 1),
-        }
-        tooltips = []
+        formatters, tooltips = {}, []
+        xhover = CustomJSHover(code=self._hover_code % 0)
+        yhover = CustomJSHover(code=self._hover_code % 1)
         for name, formatter in hover.tooltips:
-            if formatter in ('@{%s}'%xdim, '@{%s}'%ydim):
+            customjs = None
+            if formatter in ('@{%s}' % xdim, '$x'):
+                dim = xdim
+                customjs = xhover
+            elif formatter in ('@{%s}' % ydim, '$y'):
+                dim = ydim
+                customjs = yhover
+            if customjs:
+                key = formatter if formatter in ('$x', '$y') else dim
+                formatters[key] = customjs
                 formatter += '{custom}'
-            tooltips.append((name, formatter))
+                tooltips.append((name, formatter))
         hover.tooltips = tooltips
         hover.formatters = formatters
 

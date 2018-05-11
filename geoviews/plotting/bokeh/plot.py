@@ -85,7 +85,7 @@ class GeoPlot(ElementPlot):
                 key = formatter if formatter in ('$x', '$y') else dim
                 formatters[key] = customjs
                 formatter += '{custom}'
-                tooltips.append((name, formatter))
+            tooltips.append((name, formatter))
         hover.tooltips = tooltips
         hover.formatters = formatters
 

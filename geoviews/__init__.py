@@ -1,6 +1,8 @@
 import param
 
-from holoviews import extension, help, opts, output, renderer, Store, Cycle, Palette # noqa (API import)
+from holoviews import (extension, help, opts, output, renderer, Store, # noqa (API import)
+                       Cycle, Palette, Overlay, Layout, NdOverlay, NdLayout,
+                       HoloMap, DynamicMap, GridSpace, Dimension)
 
 from .element import (_Element, Feature, Tiles,     # noqa (API import)
                       WMTS, LineContours, FilledContours, Text, Image,

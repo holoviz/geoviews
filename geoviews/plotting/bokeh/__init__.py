@@ -1,6 +1,7 @@
 import copy
 
 import param
+import numpy as np
 import shapely.geometry
 from bokeh.models import WMTSTileSource, BBoxTileSource, QUADKEYTileSource
 
@@ -35,9 +36,9 @@ class TilePlot(GeoPlot):
 
     def get_extents(self, element, ranges):
         extents = super(TilePlot, self).get_extents(element, ranges)
-        if not self.overlaid:
+        if not self.overlaid and all(e is None or not np.isfinite(e) for e in extents):
             global_extent = (-20026376.39, -20048966.10, 20026376.39, 20048966.10)
-            return util.max_extents([extents, global_extent])
+            return global_extent
         return extents
 
     def get_data(self, element, ranges, style):

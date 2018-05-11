@@ -11,7 +11,7 @@ from . import data                                  # noqa (API import)
 from . import operation                             # noqa (API import)
 from . import plotting                              # noqa (API import)
 from . import feature                               # noqa (API import)
-
+from . import tile_sources                          # noqa (API import)
 
 __version__ = str(param.version.Version(fpath=__file__, archive_commit="$Format:%h$",
                                         reponame="geoviews"))

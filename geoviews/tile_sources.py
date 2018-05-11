@@ -45,3 +45,5 @@ StamenLabels = WMTS('http://tile.stamen.com/toner-labels/{Z}/{X}/{Y}.png')
 OSM = WMTS('http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png')
 ESRI = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}.jpg')
 Wikipedia = WMTS('https://maps.wikimedia.org/osm-intl/{Z}/{X}/{Y}@2x.png')
+
+tile_sources = {k: v for k, v in locals().items() if isinstance(v, WMTS)}

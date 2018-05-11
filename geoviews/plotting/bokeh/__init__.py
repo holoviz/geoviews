@@ -1,6 +1,7 @@
 import copy
 
 import param
+import numpy as np
 import shapely.geometry
 from bokeh.models import WMTSTileSource, BBoxTileSource, QUADKEYTileSource
 

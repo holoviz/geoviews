@@ -24,6 +24,8 @@ _NAV =  (
         ('About', 'about')
 )
 
+templates_path = ['_templates']
+
 html_context.update({
     'PROJECT': project,
     'DESCRIPTION': description,

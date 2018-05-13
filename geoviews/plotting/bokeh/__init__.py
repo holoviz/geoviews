@@ -195,6 +195,9 @@ class GeoShapePlot(GeoPolygonPlot):
 
 class FeaturePlot(GeoPolygonPlot):
 
+    apply_ranges = param.Boolean(default=False, doc="""
+        Whether to compute the plot bounds from the data itself.""")
+
     scale = param.ObjectSelector(default='110m',
                                  objects=['10m', '50m', '110m'],
                                  doc="The scale of the Feature in meters.")

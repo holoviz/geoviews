@@ -92,18 +92,32 @@ class LayoutPlot(ProjectionPlot, HvLayoutPlot):
 
 
 
-class OverlayPlot(ProjectionPlot, HvOverlayPlot):
+class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
     """
     Extends HoloViews OverlayPlot with functionality to determine
     the correct projection for each axis.
     """
 
+    is_global = param.Boolean(default=False, doc="""
+        Whether the plot should display the whole globe.""")
+
+    _propagate_options = HvOverlayPlot._propagate_options + ['is_global']
+
     def __init__(self, element, **params):
-        super(OverlayPlot, self).__init__(element, **params)
+        super(GeoOverlayPlot, self).__init__(element, **params)
         plot_opts = self.lookup_options(self.hmap.last, 'plot').options
         self.geographic = any(self.hmap.traverse(is_geographic, [Element]))
         if 'aspect' not in plot_opts and self.geographic:
             self.aspect = 'equal'
+
+    def _finalize_axis(self, *args, **kwargs):
+        ret = super(GeoOverlayPlot, self)._finalize_axis(*args, **kwargs)
+        axis = self.handles['axis']
+        if self.show_grid:
+            axis.gridlines()
+        if self.is_global:
+            axis.set_global()
+        return ret
 
 
 
@@ -114,6 +128,9 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
     apply_ranges = param.Boolean(default=False, doc="""
         Do not use ranges to compute plot extents by default.""")
+
+    is_global = param.Boolean(default=False, doc="""
+        Whether the plot should display the whole globe.""")
 
     projection = param.Parameter(default=ccrs.PlateCarree())
 
@@ -166,9 +183,11 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
     def _finalize_axis(self, *args, **kwargs):
         ret = super(GeoPlot, self)._finalize_axis(*args, **kwargs)
+        axis = self.handles['axis']
         if self.show_grid:
-            axis = self.handles['axis']
             axis.gridlines()
+        if self.is_global:
+            axis.set_global()
         return ret
 
 
@@ -544,7 +563,7 @@ Store.register({LineContours: LineContourPlot,
                 Text: GeoTextPlot,
                 Layout: LayoutPlot,
                 NdLayout: LayoutPlot,
-                Overlay: OverlayPlot,
+                Overlay: GeoOverlayPlot,
                 Polygons: GeoPolygonPlot,
                 Path: GeoPathPlot,
                 Contours: GeoContourPlot,

@@ -28,6 +28,9 @@ class GeoPlot(ElementPlot):
                                         BoxZoomTool(match_aspect=True), 'reset'],
         doc="A list of plugin tools to use on the plot.")
 
+    is_global = param.Boolean(default=False, doc="""
+        Whether the plot should display the whole globe.""")
+
     show_grid = param.Boolean(default=False, doc="""
         Whether to show gridlines on the plot.""")
 
@@ -96,6 +99,8 @@ class GeoPlot(ElementPlot):
         set_extent method to project the extents to the
         Elements coordinate reference system.
         """
+        if self.is_global:
+            return (-20026376.39, -20048966.10, 20026376.39, 20048966.10)
         extents = super(GeoPlot, self).get_extents(element, ranges)
         if not getattr(element, 'crs', None) or not self.geographic:
             return extents
@@ -120,6 +125,8 @@ class OverlayPlot(GeoPlot, HvOverlayPlot):
     Subclasses the HoloViews OverlayPlot to add custom behavior
     for geographic plots.
     """
+
+    _propagate_options = HvOverlayPlot._propagate_options + ['is_global']
 
     def __init__(self, element, **params):
         super(OverlayPlot, self).__init__(element, **params)

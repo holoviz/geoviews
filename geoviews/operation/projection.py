@@ -63,6 +63,8 @@ class project_path(_project_operation):
                 # Handle continuously varying path case
                 geom = path.columns()
                 xs, ys = geom[xdim.name], geom[ydim.name]
+                if not len(xs):
+                    continue
                 path = geom_type(np.column_stack([xs, ys]))
                 path = path.intersection(boundary_poly)
                 proj = self.p.projection.project_geometry(path, element.crs)
@@ -76,6 +78,8 @@ class project_path(_project_operation):
                 geom = path.geom()
                 if boundary_poly:
                     geom = geom.intersection(boundary_poly)
+                if not geom:
+                    continue
                 proj = self.p.projection.project_geometry(geom, element.crs)
                 for geom in proj:
                     xs, ys = np.array(geom.array_interface_base['data']).reshape(-1, 2).T

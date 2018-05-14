@@ -113,9 +113,10 @@ class project_points(_project_operation):
         xdim, ydim = element.dimensions()[:2]
         xs, ys = (element.dimension_values(i) for i in range(2))
         coordinates = self.p.projection.transform_points(element.crs, xs, ys)
-        new_data = element.columns()
-        new_data[xdim.name] = coordinates[:, 0]
-        new_data[ydim.name] = coordinates[:, 1]
+        mask = np.isfinite(coordinates[:, 0])
+        new_data = {k: v[mask] for k, v in element.columns().items()}
+        new_data[xdim.name] = coordinates[mask, 0]
+        new_data[ydim.name] = coordinates[mask, 1]
         datatype = [element.interface.datatype]+element.datatype
         return element.clone(new_data, crs=self.p.projection,
                              datatype=datatype)

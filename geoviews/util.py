@@ -117,6 +117,8 @@ def polygon_to_geom(poly, multi=True):
 
 def geom_to_arr(geom):
     arr = geom.array_interface_base['data']
+    if (len(arr) % 2) != 0:
+        arr = arr[:-1]
     return np.array(arr).reshape(int(len(arr)/2), 2)
 
 
@@ -124,7 +126,7 @@ def geom_to_array(geom):
     if hasattr(geom, 'exterior'):
         xs = np.array(geom.exterior.coords.xy[0])
         ys = np.array(geom.exterior.coords.xy[1])
-    elif geom.geom_type == 'LineString':
+    elif geom.geom_type in ('LineString', 'LinearRing'):
         arr = geom_to_arr(geom)
         xs, ys = arr[:, 0], arr[:, 1]
     else:

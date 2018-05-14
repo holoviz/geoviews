@@ -217,7 +217,7 @@ class FeaturePlot(GeoPolygonPlot):
             self._plot_methods = dict(single='patches', batched='patches')
         geoms = [self.projection.project_geometry(geom, element.crs)
                  for geom in geoms]
-        xs, ys = zip(*(geom_to_array(geom).T for geom in geoms))
+        xs, ys = zip(*(geom_to_array(geom).T for geom in geoms if geom != []))
         data = dict(xs=list(xs), ys=list(ys))
         return data, mapping, style
 

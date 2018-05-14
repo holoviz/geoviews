@@ -14,9 +14,10 @@ from holoviews.core.util import dimension_sanitizer, basestring
 
 from ...element import is_geographic, _Element
 from ...util import project_extents
+from ..plot import ProjectionPlot
 
 
-class GeoPlot(ElementPlot):
+class GeoPlot(ProjectionPlot, ElementPlot):
     """
     Plotting baseclass for geographic plots with a cartopy projection.
     """

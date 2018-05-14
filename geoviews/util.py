@@ -69,6 +69,8 @@ def path_to_geom(path, multi=True):
             for i, path in enumerate(paths):
                 if i != (len(paths)-1):
                     path = path[:-1]
+                if not len(path):
+                    continue
                 lines.append(LineString(path[:, :2]))
             continue
         elif path.geom_type == 'MultiPolygon':

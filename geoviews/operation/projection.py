@@ -63,6 +63,8 @@ class project_path(_project_operation):
                 # Handle continuously varying path case
                 geom = path.columns()
                 xs, ys = geom[xdim.name], geom[ydim.name]
+                if not len(xs):
+                    continue
                 path = geom_type(np.column_stack([xs, ys]))
                 path = path.intersection(boundary_poly)
                 proj = self.p.projection.project_geometry(path, element.crs)
@@ -76,6 +78,8 @@ class project_path(_project_operation):
                 geom = path.geom()
                 if boundary_poly:
                     geom = geom.intersection(boundary_poly)
+                if not geom:
+                    continue
                 proj = self.p.projection.project_geometry(geom, element.crs)
                 for geom in proj:
                     xs, ys = np.array(geom.array_interface_base['data']).reshape(-1, 2).T
@@ -109,9 +113,10 @@ class project_points(_project_operation):
         xdim, ydim = element.dimensions()[:2]
         xs, ys = (element.dimension_values(i) for i in range(2))
         coordinates = self.p.projection.transform_points(element.crs, xs, ys)
-        new_data = element.columns()
-        new_data[xdim.name] = coordinates[:, 0]
-        new_data[ydim.name] = coordinates[:, 1]
+        mask = np.isfinite(coordinates[:, 0])
+        new_data = {k: v[mask] for k, v in element.columns().items()}
+        new_data[xdim.name] = coordinates[mask, 0]
+        new_data[ydim.name] = coordinates[mask, 1]
         datatype = [element.interface.datatype]+element.datatype
         return element.clone(new_data, crs=self.p.projection,
                              datatype=datatype)

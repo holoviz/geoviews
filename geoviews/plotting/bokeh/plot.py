@@ -5,7 +5,7 @@ Module for geographic bokeh plot baseclasses.
 import param
 import numpy as np
 
-from cartopy.crs import GOOGLE_MERCATOR
+from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator
 from bokeh.models.tools import BoxZoomTool, WheelZoomTool
 from bokeh.models import MercatorTickFormatter, MercatorTicker
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
@@ -58,7 +58,10 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     def __init__(self, element, **params):
         super(GeoPlot, self).__init__(element, **params)
         self.geographic = is_geographic(self.hmap.last)
-
+        if self.geographic and not isinstance(self.projection, (PlateCarree, Mercator)):
+            self.xaxis = None
+            self.yaxis = None
+            self.show_frame = False
 
     def _axis_properties(self, axis, key, plot, dimension=None,
                          ax_mapping={'x': 0, 'y': 1}):
@@ -71,12 +74,14 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             axis_props['formatter'] = MercatorTickFormatter(dimension=dimension)
         return axis_props
 
-    def _init_plot(self, key, element, plots, ranges=None):
-        fig = super(GeoPlot, self)._init_plot(key, element, plots, ranges)
-        if self.show_bounds:
+    def initialize_plot(self, ranges=None, plot=None, plots=None, source=None):
+        opts = {} if isinstance(self, HvOverlayPlot) else {'source': source}
+        fig = super(GeoPlot, self).initialize_plot(ranges, plot, plots, **opts)
+        if self.geographic and self.show_bounds and not self.overlaid:
             from . import GeoShapePlot
             shape = Shape(self.projection.boundary, crs=self.projection)
-            shapeplot = GeoShapePlot(shape, projection=self.projection)
+            shapeplot = GeoShapePlot(shape, projection=self.projection,
+                                     overlaid=True, renderer=self.renderer)
             shapeplot.initialize_plot(plot=fig)
         return fig
 

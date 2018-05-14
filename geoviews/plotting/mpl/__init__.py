@@ -10,8 +10,7 @@ try:
 except:
     WebMapTileService = None
 
-from holoviews.core import (Store, HoloMap, Layout, Overlay,
-                            CompositeOverlay, Element, NdLayout)
+from holoviews.core import Store, HoloMap, Layout, Overlay, Element, NdLayout
 from holoviews.core import util
 from holoviews.core.data import GridInterface
 from holoviews.core.options import SkipRendering, Options
@@ -32,50 +31,10 @@ from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
                         HexTiles, Labels)
 from ...util import project_extents, geo_mesh
+from ..plot import ProjectionPlot
 
 from ...operation import project_points, project_path, project_graph, project_quadmesh
 
-
-def _get_projection(el):
-    """
-    Get coordinate reference system from non-auxiliary elements.
-    Return value is a tuple of a precedence integer and the projection,
-    to allow non-auxiliary components to take precedence.
-    """
-    result = None
-    if hasattr(el, 'crs'):
-        result = (int(el._auxiliary_component), el.crs)
-    return result
-
-
-class ProjectionPlot(object):
-    """
-    Implements custom _get_projection method to make the coordinate
-    reference system available to HoloViews plots as a projection.
-    """
-
-    def _get_projection(cls, obj):
-        # Look up custom projection in options
-        isoverlay = lambda x: isinstance(x, CompositeOverlay)
-        opts = cls._traverse_options(obj, 'plot', ['projection'],
-                                     [CompositeOverlay, Element],
-                                     keyfn=isoverlay, defaults=False)
-        from_overlay = not all(p is None for p in opts[True]['projection'])
-        projections = opts[from_overlay]['projection']
-        custom_projs = [p for p in projections if p is not None]
-        if len(set([type(p) for p in custom_projs])) > 1:
-            raise Exception("An axis may only be assigned one projection type")
-        elif custom_projs:
-            return custom_projs[0]
-
-        # If no custom projection is supplied traverse object to get
-        # the custom projections and sort by precedence
-        projections = sorted([p for p in obj.traverse(_get_projection, [Element])
-                              if p is not None and p[1] is not None])
-        if projections:
-            return projections[0][1]
-        else:
-            return None
 
 
 class LayoutPlot(ProjectionPlot, HvLayoutPlot):
@@ -98,10 +57,10 @@ class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
     the correct projection for each axis.
     """
 
-    is_global = param.Boolean(default=False, doc="""
-        Whether the plot should display the whole globe.""")
+    global_extent = param.Boolean(default=False, doc="""
+        Set the extent of the Axes to the limits of the projection.""")
 
-    _propagate_options = HvOverlayPlot._propagate_options + ['is_global']
+    _propagate_options = HvOverlayPlot._propagate_options + ['global_extent']
 
     def __init__(self, element, **params):
         super(GeoOverlayPlot, self).__init__(element, **params)
@@ -115,7 +74,7 @@ class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
         axis = self.handles['axis']
         if self.show_grid:
             axis.gridlines()
-        if self.is_global:
+        if self.global_extent:
             axis.set_global()
         return ret
 
@@ -129,7 +88,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     apply_ranges = param.Boolean(default=False, doc="""
         Do not use ranges to compute plot extents by default.""")
 
-    is_global = param.Boolean(default=False, doc="""
+    global_extent = param.Boolean(default=False, doc="""
         Whether the plot should display the whole globe.""")
 
     projection = param.Parameter(default=ccrs.PlateCarree())
@@ -186,7 +145,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         axis = self.handles['axis']
         if self.show_grid:
             axis.gridlines()
-        if self.is_global:
+        if self.global_extent:
             axis.set_global()
         return ret
 

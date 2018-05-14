@@ -100,6 +100,8 @@ class project_shape(_project_operation):
         if not len(element):
             return element.clone(crs=self.p.projection)
         geom = self.p.projection.project_geometry(element.geom(), element.crs)
+        if isinstance(geom, tuple):
+            geom = [g for g in geom if g != []][0]
         return element.clone(geom, crs=self.p.projection)
 
 

@@ -3,6 +3,7 @@ import copy
 import param
 import numpy as np
 import shapely.geometry
+from cartopy.crs import GOOGLE_MERCATOR
 from bokeh.models import WMTSTileSource, BBoxTileSource, QUADKEYTileSource
 
 from holoviews import Store, Overlay, NdOverlay
@@ -24,7 +25,7 @@ from ...operation import (project_image, project_shape, project_points,
                           project_path, project_graph, project_quadmesh)
 from ...tile_sources import _ATTRIBUTIONS
 from ...util import geom_to_array
-from .plot import GeoPlot, OverlayPlot, DEFAULT_PROJ
+from .plot import GeoPlot, GeoOverlayPlot
 from . import callbacks # noqa
 
 line_types = (shapely.geometry.MultiLineString, shapely.geometry.LineString)
@@ -37,7 +38,8 @@ class TilePlot(GeoPlot):
     def get_extents(self, element, ranges):
         extents = super(TilePlot, self).get_extents(element, ranges)
         if not self.overlaid and all(e is None or not np.isfinite(e) for e in extents):
-            global_extent = (-20026376.39, -20048966.10, 20026376.39, 20048966.10)
+            (x0, x1), (y0, y1) = GOOGLE_MERCATOR.x_limits, GOOGLE_MERCATOR.y_limits
+            global_extent = (x0, y0, x1, y1)
             return global_extent
         return extents
 
@@ -150,8 +152,8 @@ class GeoShapePlot(GeoPolygonPlot):
         if self.static_source:
             data = {}
         else:
-            if self.geographic and element.crs != DEFAULT_PROJ:
-                element = project_shape(element)
+            if self.geographic and element.crs != self.projection:
+                element = project_shape(element, projection=self.projection)
             xs, ys = geom_to_array(element.geom()).T
             if self.invert_axes: xs, ys = ys, xs
             data = dict(xs=[xs], ys=[ys])
@@ -195,12 +197,24 @@ class GeoShapePlot(GeoPolygonPlot):
 
 class FeaturePlot(GeoPolygonPlot):
 
-    apply_ranges = param.Boolean(default=False, doc="""
-        Whether to compute the plot bounds from the data itself.""")
-
     scale = param.ObjectSelector(default='110m',
                                  objects=['10m', '50m', '110m'],
                                  doc="The scale of the Feature in meters.")
+
+    def get_extents(self, element, ranges):
+        """
+        Subclasses the get_extents method using the GeoAxes
+        set_extent method to project the extents to the
+        Elements coordinate reference system.
+        """
+        proj = self.projection
+        if self.global_extent:
+            (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
+            return (x0, y0, x1, y1)
+        elif self.overlaid:
+            return (np.NaN,)*4
+        return super(FeaturePlot, self).get_extents(element, ranges)
+
 
     def get_data(self, element, ranges, style):
         mapping = dict(self._mapping)
@@ -213,9 +227,9 @@ class FeaturePlot(GeoPolygonPlot):
             self._plot_methods = dict(single='multi_line')
         else:
             self._plot_methods = dict(single='patches', batched='patches')
-        geoms = [DEFAULT_PROJ.project_geometry(geom, element.crs)
+        geoms = [self.projection.project_geometry(geom, element.crs)
                  for geom in geoms]
-        xs, ys = zip(*(geom_to_array(geom).T for geom in geoms))
+        xs, ys = zip(*(geom_to_array(geom).T for geom in geoms if geom != []))
         data = dict(xs=list(xs), ys=list(ys))
         return data, mapping, style
 
@@ -227,8 +241,8 @@ class GeoTextPlot(GeoPlot, TextPlot):
         if not self.geographic:
             return super(GeoTextPlot, self).get_data(element, ranges, style)
         if element.crs:
-            x, y = DEFAULT_PROJ.transform_point(element.x, element.y,
-                                                element.crs)
+            x, y = self.projection.transform_point(element.x, element.y,
+                                                   element.crs)
         return (dict(x=[x], y=[y], text=[element.text]), mapping, style)
 
     def get_extents(self, element, ranges=None):
@@ -273,8 +287,8 @@ Store.register({WMTS: TilePlot,
                 Feature: FeaturePlot,
                 HexTiles: HexTilesPlot,
                 Text: GeoTextPlot,
-                Overlay: OverlayPlot,
-                NdOverlay: OverlayPlot,
+                Overlay: GeoOverlayPlot,
+                NdOverlay: GeoOverlayPlot,
                 Graph: GeoGraphPlot,
                 TriMesh: GeoTriMeshPlot,
                 Nodes: GeoPointPlot,

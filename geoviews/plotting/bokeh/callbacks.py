@@ -11,7 +11,7 @@ from holoviews.streams import (Stream, PointerXY, RangeXY, RangeX, RangeY,
                                MouseLeave, Bounds, BoundsXY)
 
 from ...util import project_extents
-from .plot import DEFAULT_PROJ, OverlayPlot
+from .plot import GeoOverlayPlot
 
 
 def get_cb_plot(cb, plot=None):
@@ -19,7 +19,7 @@ def get_cb_plot(cb, plot=None):
     Finds the subplot with the corresponding stream.
     """
     plot = plot or cb.plot
-    if isinstance(plot, OverlayPlot):
+    if isinstance(plot, GeoOverlayPlot):
         plots = [get_cb_plot(cb, p) for p in plot.subplots.values()]
         plots = [p for p in plots if any(s in cb.streams and getattr(s, '_triggering', False)
                                          for s in p.streams)]
@@ -50,7 +50,7 @@ def project_ranges(cb, msg, attributes):
     x0, x1 = msg.get('x_range', (0, 1000))
     y0, y1 = msg.get('y_range', (0, 1000))
     extents = x0, y0, x1, y1
-    x0, y0, x1, y1 = project_extents(extents, DEFAULT_PROJ,
+    x0, y0, x1, y1 = project_extents(extents, plot.projection,
                                      plot.current_frame.crs)
     coords = {'x_range': (x0, x1), 'y_range': (y0, y1)}
     return {k: v for k, v in coords.items() if k in attributes}
@@ -64,7 +64,7 @@ def project_point(cb, msg, attributes=('x', 'y')):
     plot = get_cb_plot(cb)
     x, y = msg.get('x', 0), msg.get('y', 0)
     crs = plot.current_frame.crs
-    coordinates = crs.transform_points(DEFAULT_PROJ, np.array([x]), np.array([y]))
+    coordinates = crs.transform_points(plot.projection, np.array([x]), np.array([y]))
     msg['x'], msg['y'] = coordinates[0, :2]
     return {k: v for k, v in msg.items() if k in attributes}
 
@@ -95,7 +95,7 @@ class GeoBoundsXYCallback(BoundsCallback):
         msg = super(GeoBoundsXYCallback, self)._process_msg(msg)
         if skip(self, msg, ('bounds',)): return msg
         plot = get_cb_plot(self)
-        msg['bounds'] = project_extents(msg['bounds'], DEFAULT_PROJ,
+        msg['bounds'] = project_extents(msg['bounds'], plot.projection,
                                         plot.current_frame.crs)
         return msg
 
@@ -107,7 +107,7 @@ class GeoBoundsXCallback(BoundsXCallback):
         if skip(self, msg, ('boundsx',)): return msg
         x0, x1 = msg['boundsx']
         plot = get_cb_plot(self)
-        x0, _, x1, _ = project_extents((x0, 0, x1, 0), DEFAULT_PROJ,
+        x0, _, x1, _ = project_extents((x0, 0, x1, 0), plot.projection,
                                         plot.current_frame.crs)
         return {'boundsx': (x0, x1)}
 
@@ -119,7 +119,7 @@ class GeoBoundsYCallback(BoundsYCallback):
         if skip(self, msg, ('boundsy',)): return msg
         y0, y1 = msg['boundsy']
         plot = get_cb_plot(self)
-        _, y0, _, y1 = project_extents((0, y0, 0, y1), DEFAULT_PROJ,
+        _, y0, _, y1 = project_extents((0, y0, 0, y1), plot.projection,
                                         plot.current_frame.crs)
         return {'boundsy': (y0, y1)}
 

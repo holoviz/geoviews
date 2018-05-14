@@ -1,23 +1,25 @@
 """
 Module for geographic bokeh plot baseclasses.
 """
+from distutils.version import LooseVersion
 
 import param
 import numpy as np
+import holoviews as hv
 
-from cartopy.crs import GOOGLE_MERCATOR
+from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator
 from bokeh.models.tools import BoxZoomTool, WheelZoomTool
 from bokeh.models import MercatorTickFormatter, MercatorTicker
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 from holoviews.plotting.bokeh.util import bokeh_version
 from holoviews.core.util import dimension_sanitizer, basestring
 
-from ...element import is_geographic, _Element
+from ...element import is_geographic, _Element, Shape
 from ...util import project_extents
+from ..plot import ProjectionPlot
 
-DEFAULT_PROJ = GOOGLE_MERCATOR
 
-class GeoPlot(ElementPlot):
+class GeoPlot(ProjectionPlot, ElementPlot):
     """
     Plotting baseclass for geographic plots with a cartopy projection.
     """
@@ -28,11 +30,21 @@ class GeoPlot(ElementPlot):
                                         BoxZoomTool(match_aspect=True), 'reset'],
         doc="A list of plugin tools to use on the plot.")
 
-    is_global = param.Boolean(default=False, doc="""
+    global_extent = param.Boolean(default=False, doc="""
         Whether the plot should display the whole globe.""")
+
+    infer_projection = param.Boolean(default=False, doc="""
+        Whether the projection should be inferred from the element crs.""")
 
     show_grid = param.Boolean(default=False, doc="""
         Whether to show gridlines on the plot.""")
+
+    show_bounds = param.Boolean(default=False, doc="""
+        Whether to show gridlines on the plot.""")
+
+    projection = param.Parameter(default=GOOGLE_MERCATOR, doc="""
+        Allows supplying a custom projection to transform the axis
+        coordinates during display. Defaults to GOOGLE_MERCATOR.""")
 
     # Project operation to apply to the element
     _project_operation = None
@@ -48,18 +60,32 @@ class GeoPlot(ElementPlot):
     def __init__(self, element, **params):
         super(GeoPlot, self).__init__(element, **params)
         self.geographic = is_geographic(self.hmap.last)
-
+        if self.geographic and not isinstance(self.projection, (PlateCarree, Mercator)):
+            self.xaxis = None
+            self.yaxis = None
+            self.show_frame = False
 
     def _axis_properties(self, axis, key, plot, dimension=None,
                          ax_mapping={'x': 0, 'y': 1}):
         axis_props = super(GeoPlot, self)._axis_properties(axis, key, plot,
                                                            dimension, ax_mapping)
-        if self.geographic:
+        proj = self.projection
+        if self.geographic and proj is GOOGLE_MERCATOR:
             dimension = 'lon' if axis == 'x' else 'lat'
             axis_props['ticker'] = MercatorTicker(dimension=dimension)
             axis_props['formatter'] = MercatorTickFormatter(dimension=dimension)
         return axis_props
 
+    def initialize_plot(self, ranges=None, plot=None, plots=None, source=None):
+        opts = {} if isinstance(self, HvOverlayPlot) else {'source': source}
+        fig = super(GeoPlot, self).initialize_plot(ranges, plot, plots, **opts)
+        if self.geographic and self.show_bounds and not self.overlaid:
+            from . import GeoShapePlot
+            shape = Shape(self.projection.boundary, crs=self.projection)
+            shapeplot = GeoShapePlot(shape, projection=self.projection,
+                                     overlaid=True, renderer=self.renderer)
+            shapeplot.initialize_plot(plot=fig)
+        return fig
 
     def _postprocess_hover(self, renderer, source):
         super(GeoPlot, self)._postprocess_hover(renderer, source)
@@ -99,8 +125,10 @@ class GeoPlot(ElementPlot):
         set_extent method to project the extents to the
         Elements coordinate reference system.
         """
-        if self.is_global:
-            return (-20026376.39, -20048966.10, 20026376.39, 20048966.10)
+        proj = self.projection
+        if self.global_extent:
+            (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
+            return (x0, y0, x1, y1)
         extents = super(GeoPlot, self).get_extents(element, ranges)
         if not getattr(element, 'crs', None) or not self.geographic:
             return extents
@@ -108,28 +136,37 @@ class GeoPlot(ElementPlot):
             extents = None
         else:
             try:
-                extents = project_extents(extents, element.crs, DEFAULT_PROJ)
+                extents = project_extents(extents, element.crs, proj)
             except:
                 extents = None
         return (np.NaN,)*4 if not extents else extents
 
 
     def get_data(self, element, ranges, style):
-        if self._project_operation and self.geographic and element.crs != DEFAULT_PROJ:
-            element = self._project_operation(element)
+        proj = self.projection
+        if self._project_operation and self.geographic and element.crs != proj:
+            element = self._project_operation(element, projection=proj)
         return super(GeoPlot, self).get_data(element, ranges, style)
 
 
-class OverlayPlot(GeoPlot, HvOverlayPlot):
+class GeoOverlayPlot(GeoPlot, HvOverlayPlot):
     """
     Subclasses the HoloViews OverlayPlot to add custom behavior
     for geographic plots.
     """
 
-    _propagate_options = HvOverlayPlot._propagate_options + ['is_global']
+    global_extent = param.Boolean(default=False, doc="""
+        Whether the plot should display the whole globe.""")
+
+    _propagate_options = HvOverlayPlot._propagate_options + ['global_extent', 'show_bounds']
 
     def __init__(self, element, **params):
-        super(OverlayPlot, self).__init__(element, **params)
+        super(GeoOverlayPlot, self).__init__(element, **params)
         self.geographic = any(element.traverse(is_geographic, [_Element]))
         if self.geographic:
             self.show_grid = False
+        if LooseVersion(hv.__version__) < '1.10.4':
+            projection = self._get_projection(element)
+            self.projection = projection
+            for p in self.subplots.values():
+                p.projection = projection

@@ -4,7 +4,7 @@ from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles
 from cartopy.io.shapereader import Reader
-from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
+from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay, Overlay
 from holoviews.core.util import (basestring, pd, max_extents,
                                  dimension_range, get_param_values)
 from holoviews.element import (
@@ -42,8 +42,8 @@ def is_geographic(element, kdims=None):
     a subset of its key dimensions represent a geographic coordinate
     system.
     """
-    if isinstance(element, NdOverlay):
-        element = element.last
+    if isinstance(element, (Overlay, NdOverlay)):
+        return any(element.traverse(is_geographic, [_Element]))
 
     if kdims:
         kdims = [element.get_dimension(d) for d in kdims]

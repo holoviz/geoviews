@@ -158,7 +158,8 @@ class GeoOverlayPlot(GeoPlot, HvOverlayPlot):
     global_extent = param.Boolean(default=False, doc="""
         Whether the plot should display the whole globe.""")
 
-    _propagate_options = HvOverlayPlot._propagate_options + ['global_extent', 'show_bounds']
+    _propagate_options = (HvOverlayPlot._propagate_options +
+                          ['global_extent', 'show_bounds', 'infer_projection'])
 
     def __init__(self, element, **params):
         super(GeoOverlayPlot, self).__init__(element, **params)

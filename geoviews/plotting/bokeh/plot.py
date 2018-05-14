@@ -15,7 +15,6 @@ from holoviews.core.util import dimension_sanitizer, basestring
 from ...element import is_geographic, _Element
 from ...util import project_extents
 
-DEFAULT_PROJ = GOOGLE_MERCATOR
 
 class GeoPlot(ElementPlot):
     """
@@ -33,6 +32,10 @@ class GeoPlot(ElementPlot):
 
     show_grid = param.Boolean(default=False, doc="""
         Whether to show gridlines on the plot.""")
+
+    projection = param.Parameter(default=GOOGLE_MERCATOR, doc="""
+        Allows supplying a custom projection to transform the axis
+        coordinates during display. Defaults to GOOGLE_MERCATOR.""")
 
     # Project operation to apply to the element
     _project_operation = None
@@ -54,7 +57,8 @@ class GeoPlot(ElementPlot):
                          ax_mapping={'x': 0, 'y': 1}):
         axis_props = super(GeoPlot, self)._axis_properties(axis, key, plot,
                                                            dimension, ax_mapping)
-        if self.geographic:
+        proj = self.projection
+        if self.geographic and proj is GOOGLE_MERCATOR:
             dimension = 'lon' if axis == 'x' else 'lat'
             axis_props['ticker'] = MercatorTicker(dimension=dimension)
             axis_props['formatter'] = MercatorTickFormatter(dimension=dimension)
@@ -99,8 +103,11 @@ class GeoPlot(ElementPlot):
         set_extent method to project the extents to the
         Elements coordinate reference system.
         """
+
+        proj = self.projection
         if self.is_global:
-            return (-20026376.39, -20048966.10, 20026376.39, 20048966.10)
+            (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
+            return (x0, y0, x1, y1)
         extents = super(GeoPlot, self).get_extents(element, ranges)
         if not getattr(element, 'crs', None) or not self.geographic:
             return extents
@@ -108,15 +115,16 @@ class GeoPlot(ElementPlot):
             extents = None
         else:
             try:
-                extents = project_extents(extents, element.crs, DEFAULT_PROJ)
+                extents = project_extents(extents, element.crs, proj)
             except:
                 extents = None
         return (np.NaN,)*4 if not extents else extents
 
 
     def get_data(self, element, ranges, style):
-        if self._project_operation and self.geographic and element.crs != DEFAULT_PROJ:
-            element = self._project_operation(element)
+        proj = self.projection
+        if self._project_operation and self.geographic and element.crs != proj:
+            element = self._project_operation(element, projection=proj)
         return super(GeoPlot, self).get_data(element, ranges, style)
 
 

@@ -57,10 +57,10 @@ class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
     the correct projection for each axis.
     """
 
-    is_global = param.Boolean(default=False, doc="""
-        Whether the plot should display the whole globe.""")
+    global_extent = param.Boolean(default=False, doc="""
+        Set the extent of the Axes to the limits of the projection.""")
 
-    _propagate_options = HvOverlayPlot._propagate_options + ['is_global']
+    _propagate_options = HvOverlayPlot._propagate_options + ['global_extent']
 
     def __init__(self, element, **params):
         super(GeoOverlayPlot, self).__init__(element, **params)
@@ -74,7 +74,7 @@ class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
         axis = self.handles['axis']
         if self.show_grid:
             axis.gridlines()
-        if self.is_global:
+        if self.global_extent:
             axis.set_global()
         return ret
 
@@ -88,7 +88,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     apply_ranges = param.Boolean(default=False, doc="""
         Do not use ranges to compute plot extents by default.""")
 
-    is_global = param.Boolean(default=False, doc="""
+    global_extent = param.Boolean(default=False, doc="""
         Whether the plot should display the whole globe.""")
 
     projection = param.Parameter(default=ccrs.PlateCarree())
@@ -145,7 +145,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         axis = self.handles['axis']
         if self.show_grid:
             axis.gridlines()
-        if self.is_global:
+        if self.global_extent:
             axis.set_global()
         return ret
 

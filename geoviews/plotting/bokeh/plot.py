@@ -28,7 +28,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                                         BoxZoomTool(match_aspect=True), 'reset'],
         doc="A list of plugin tools to use on the plot.")
 
-    is_global = param.Boolean(default=False, doc="""
+    global_extent = param.Boolean(default=False, doc="""
         Whether the plot should display the whole globe.""")
 
     show_grid = param.Boolean(default=False, doc="""
@@ -106,7 +106,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         """
 
         proj = self.projection
-        if self.is_global:
+        if self.global_extent:
             (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
             return (x0, y0, x1, y1)
         extents = super(GeoPlot, self).get_extents(element, ranges)
@@ -135,7 +135,7 @@ class OverlayPlot(GeoPlot, HvOverlayPlot):
     for geographic plots.
     """
 
-    _propagate_options = HvOverlayPlot._propagate_options + ['is_global']
+    _propagate_options = HvOverlayPlot._propagate_options + ['global_extent']
 
     def __init__(self, element, **params):
         super(OverlayPlot, self).__init__(element, **params)

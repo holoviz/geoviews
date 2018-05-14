@@ -25,7 +25,7 @@ from ...operation import (project_image, project_shape, project_points,
                           project_path, project_graph, project_quadmesh)
 from ...tile_sources import _ATTRIBUTIONS
 from ...util import geom_to_array
-from .plot import GeoPlot, OverlayPlot
+from .plot import GeoPlot, GeoOverlayPlot
 from . import callbacks # noqa
 
 line_types = (shapely.geometry.MultiLineString, shapely.geometry.LineString)
@@ -197,12 +197,24 @@ class GeoShapePlot(GeoPolygonPlot):
 
 class FeaturePlot(GeoPolygonPlot):
 
-    apply_ranges = param.Boolean(default=False, doc="""
-        Whether to compute the plot bounds from the data itself.""")
-
     scale = param.ObjectSelector(default='110m',
                                  objects=['10m', '50m', '110m'],
                                  doc="The scale of the Feature in meters.")
+
+    def get_extents(self, element, ranges):
+        """
+        Subclasses the get_extents method using the GeoAxes
+        set_extent method to project the extents to the
+        Elements coordinate reference system.
+        """
+        proj = self.projection
+        if self.global_extent:
+            (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
+            return (x0, y0, x1, y1)
+        elif self.overlaid:
+            return (np.NaN,)*4
+        return super(FeaturePlot, self).get_extents(element, ranges)
+
 
     def get_data(self, element, ranges, style):
         mapping = dict(self._mapping)
@@ -275,8 +287,8 @@ Store.register({WMTS: TilePlot,
                 Feature: FeaturePlot,
                 HexTiles: HexTilesPlot,
                 Text: GeoTextPlot,
-                Overlay: OverlayPlot,
-                NdOverlay: OverlayPlot,
+                Overlay: GeoOverlayPlot,
+                NdOverlay: GeoOverlayPlot,
                 Graph: GeoGraphPlot,
                 TriMesh: GeoTriMeshPlot,
                 Nodes: GeoPointPlot,

@@ -12,7 +12,7 @@ from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverl
 from holoviews.plotting.bokeh.util import bokeh_version
 from holoviews.core.util import dimension_sanitizer, basestring
 
-from ...element import is_geographic, _Element
+from ...element import is_geographic, _Element, Shape
 from ...util import project_extents
 from ..plot import ProjectionPlot
 
@@ -31,7 +31,13 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     global_extent = param.Boolean(default=False, doc="""
         Whether the plot should display the whole globe.""")
 
+    infer_projection = param.Boolean(default=False, doc="""
+        Whether the projection should be inferred from the element crs.""")
+
     show_grid = param.Boolean(default=False, doc="""
+        Whether to show gridlines on the plot.""")
+
+    show_bounds = param.Boolean(default=False, doc="""
         Whether to show gridlines on the plot.""")
 
     projection = param.Parameter(default=GOOGLE_MERCATOR, doc="""
@@ -65,6 +71,14 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             axis_props['formatter'] = MercatorTickFormatter(dimension=dimension)
         return axis_props
 
+    def _init_plot(self, key, element, plots, ranges=None):
+        fig = super(GeoPlot, self)._init_plot(key, element, plots, ranges)
+        if self.show_bounds:
+            from . import GeoShapePlot
+            shape = Shape(self.projection.boundary, crs=self.projection)
+            shapeplot = GeoShapePlot(shape, projection=self.projection)
+            shapeplot.initialize_plot(plot=fig)
+        return fig
 
     def _postprocess_hover(self, renderer, source):
         super(GeoPlot, self)._postprocess_hover(renderer, source)
@@ -104,7 +118,6 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         set_extent method to project the extents to the
         Elements coordinate reference system.
         """
-
         proj = self.projection
         if self.global_extent:
             (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
@@ -129,16 +142,19 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         return super(GeoPlot, self).get_data(element, ranges, style)
 
 
-class OverlayPlot(GeoPlot, HvOverlayPlot):
+class GeoOverlayPlot(GeoPlot, HvOverlayPlot):
     """
     Subclasses the HoloViews OverlayPlot to add custom behavior
     for geographic plots.
     """
 
-    _propagate_options = HvOverlayPlot._propagate_options + ['global_extent']
+    global_extent = param.Boolean(default=False, doc="""
+        Whether the plot should display the whole globe.""")
+
+    _propagate_options = HvOverlayPlot._propagate_options + ['global_extent', 'show_bounds']
 
     def __init__(self, element, **params):
-        super(OverlayPlot, self).__init__(element, **params)
+        super(GeoOverlayPlot, self).__init__(element, **params)
         self.geographic = any(element.traverse(is_geographic, [_Element]))
         if self.geographic:
             self.show_grid = False

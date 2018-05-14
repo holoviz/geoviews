@@ -1,3 +1,4 @@
+import param
 from holoviews.core import CompositeOverlay, Element
 
 
@@ -13,18 +14,21 @@ def _get_projection(el):
     return result
 
 
-class ProjectionPlot(object):
+class ProjectionPlot(param.Parameterized):
     """
     Implements custom _get_projection method to make the coordinate
     reference system available to HoloViews plots as a projection.
     """
 
-    def _get_projection(cls, obj):
+    infer_projection = param.Boolean(default=True, doc="""
+        Whether the projection should be inferred from the element crs.""")
+
+    def _get_projection(self, obj):
         # Look up custom projection in options
         isoverlay = lambda x: isinstance(x, CompositeOverlay)
-        opts = cls._traverse_options(obj, 'plot', ['projection'],
-                                     [CompositeOverlay, Element],
-                                     keyfn=isoverlay, defaults=False)
+        opts = self._traverse_options(obj, 'plot', ['projection'],
+                                      [CompositeOverlay, Element],
+                                      keyfn=isoverlay, defaults=False)
         from_overlay = not all(p is None for p in opts[True]['projection'])
         projections = opts[from_overlay]['projection']
         custom_projs = [p for p in projections if p is not None]
@@ -32,6 +36,8 @@ class ProjectionPlot(object):
             raise Exception("An axis may only be assigned one projection type")
         elif custom_projs:
             return custom_projs[0]
+        if not self.infer_projection:
+            return self.projection
 
         # If no custom projection is supplied traverse object to get
         # the custom projections and sort by precedence

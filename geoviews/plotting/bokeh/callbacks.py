@@ -11,7 +11,7 @@ from holoviews.streams import (Stream, PointerXY, RangeXY, RangeX, RangeY,
                                MouseLeave, Bounds, BoundsXY)
 
 from ...util import project_extents
-from .plot import OverlayPlot
+from .plot import GeoOverlayPlot
 
 
 def get_cb_plot(cb, plot=None):
@@ -19,7 +19,7 @@ def get_cb_plot(cb, plot=None):
     Finds the subplot with the corresponding stream.
     """
     plot = plot or cb.plot
-    if isinstance(plot, OverlayPlot):
+    if isinstance(plot, GeoOverlayPlot):
         plots = [get_cb_plot(cb, p) for p in plot.subplots.values()]
         plots = [p for p in plots if any(s in cb.streams and getattr(s, '_triggering', False)
                                          for s in p.streams)]

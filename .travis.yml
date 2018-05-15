@@ -87,7 +87,7 @@ jobs:
         ### gallery
         - ln -s ../examples/assets assets
         - ln -s ../examples/data data
-        - nbsite_gallery.py .. examples None '.' matplotlib bokeh None
+        - nbsite_gallery.py .. examples None '.' bokeh matplotlib None
         ###
         - sphinx-build -b html . ./_build/html
         - nbsite_fix_links.py _build/html

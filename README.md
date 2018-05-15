@@ -57,6 +57,20 @@ jupyter notebook
 --path geoviews-examples && geoviews fetch-data --path
 geoviews-examples`.)
 
+To work with JupyterLab you will also need the PyViz JupyterLab
+extension:
+
+```
+conda install -c conda-forge jupyterlab
+jupyter labextension install @pyviz/jupyterlab_pyviz
+```
+
+Once you have installed JupyterLab and the extension launch it with:
+
+```
+jupyter-lab
+```
+
 If you want to try out the latest features between releases, you can
 get the latest dev release by specifying `-c pyviz/label/dev` in place
 of `-c pyviz`.

@@ -33,7 +33,7 @@ poly_types = (shapely.geometry.MultiPolygon, shapely.geometry.Polygon)
 
 class TilePlot(GeoPlot):
 
-    style_opts = ['alpha', 'render_parents', 'level']
+    style_opts = ['alpha', 'render_parents', 'level', 'min_zoom', 'max_zoom']
 
     def get_extents(self, element, ranges):
         extents = super(TilePlot, self).get_extents(element, ranges)
@@ -58,6 +58,9 @@ class TilePlot(GeoPlot):
                              'Must contain {X}/{Y}/{Z}, {XMIN}/{XMAX}/{YMIN}/{YMAX} '
                              'or {Q} template strings.')
         params = {'url': element.data}
+        for zoom in ('min_zoom', 'max_zoom'):
+            if zoom in style:
+                params[zoom] = style[zoom]
         for key, attribution in _ATTRIBUTIONS.items():
             if all(k in element.data for k in key):
                 params['attribution'] = attribution

@@ -64,6 +64,9 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             self.xaxis = None
             self.yaxis = None
             self.show_frame = False
+            show_bounds = self._traverse_options(element, 'plot', ['show_bounds'],
+                                                 defaults=False)
+            self.show_bounds = not any(not sb for sb in show_bounds['show_bounds'])
 
     def _axis_properties(self, axis, key, plot, dimension=None,
                          ax_mapping={'x': 0, 'y': 1}):

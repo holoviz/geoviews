@@ -312,9 +312,15 @@ class project(Operation):
         Projection the image type is projected to.""")
 
     def _process(self, element, key=None):
-        element = element.map(project_path, project_path.supported_types)
-        element = element.map(project_image, project_image.supported_types)
-        element = element.map(project_shape, project_shape.supported_types)
-        element = element.map(project_graph, project_graph.supported_types)
-        element = element.map(project_quadmesh, project_quadmesh.supported_types)
-        return element.map(project_points, project_points.supported_types)
+        element = element.map(project_path.instance(projection=self.p.projection),
+                              project_path.supported_types)
+        element = element.map(project_image.instance(projection=self.p.projection),
+                              project_image.supported_types)
+        element = element.map(project_shape.instance(projection=self.p.projection),
+                              project_shape.supported_types)
+        element = element.map(project_graph.instance(projection=self.p.projection),
+                              project_graph.supported_types)
+        element = element.map(project_quadmesh.instance(projection=self.p.projection),
+                              project_quadmesh.supported_types)
+        return element.map(project_points.instance(projection=self.p.projection),
+                           project_points.supported_types)

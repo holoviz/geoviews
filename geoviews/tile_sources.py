@@ -2,7 +2,7 @@ from .element import WMTS
 
 # Mapping between patterns to match specified as tuples and tuples containing attributions
 _ATTRIBUTIONS = {
-    ('openstreetmap',)      : (
+    ('openstreetmap',) : (
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     ),
     ('cartodb') : (
@@ -13,17 +13,20 @@ _ATTRIBUTIONS = {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,'
         '&copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
     ),
-    ('stamen', 'terrain'): (
+    ('stamen', 'terrain') : (
         'Map tiles by <a href="https://stamen.com">Stamen Design</a>, '
         'under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. '
         'Data by <a href="https://openstreetmap.org">OpenStreetMap</a>, '
         'under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
     ),
-    ('stamen', 'toner'): (
+    ('stamen', 'toner') : (
         'Map tiles by <a href="https://stamen.com">Stamen Design</a>, '
         'under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. '
         'Data by <a href="https://openstreetmap.org">OpenStreetMap</a>, '
         'under <a href="https://www.openstreetmap.org/copyright">ODbL</a>.'
+    ),
+    ('wikimedia',) : (
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     )
 }
 

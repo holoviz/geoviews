@@ -3,8 +3,8 @@
 from nbsite.shared_conf import *
 
 project = u'GeoViews'
-authors = u'GeoViews developers'
-copyright = u'2017 ' + authors
+authors = u'PyViz Developers'
+copyright = u'2018 ' + authors
 description = 'Geographic visualizations for HoloViews.'
 
 import geoviews

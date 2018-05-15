@@ -67,7 +67,7 @@ in how non-Python packages are built between conda-forge and defaults.
 -----
 
 GeoViews itself is also installable using `pip`, but to do that you
-will first need to have installed the [dependencies of cartopy](http://scitools.org.uk/cartopy/docs/v0.15/installing.html#requirements),
+will first need to have installed the `dependencies of cartopy <http://scitools.org.uk/cartopy/docs/v0.15/installing.html#requirements>`_,
 or else have set up your system to be able to build them.
 
 

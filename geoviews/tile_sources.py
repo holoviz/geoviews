@@ -30,15 +30,15 @@ _ATTRIBUTIONS = {
     ),
     ('arcgis','Terrain') : (
         '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>,'
-        'HERE, Garmin, FAO, NOAA'
+        'USGS, NOAA'
     ),
     ('arcgis','Reference') : (
         '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>,'
-        'HERE, Garmin, FAO, NOAA'
+        'Garmin, USGS, NPS'
     ),
     ('arcgis','Imagery') : (
         '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>,'
-        'HERE, Garmin, FAO, NOAA | Earthstar Geographics'
+        'Earthstar Geographics'
     ),
     ('arcgis','NatGeo') : (
         '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>,'

@@ -185,6 +185,10 @@ class project_quadmesh(_project_operation):
                 zs[mask] = np.NaN
 
         params = get_param_values(element)
+        if PX.ndim < 2:
+            PX = PX.reshape(zs.shape)
+        if PY.ndim < 2:
+            PY = PY.reshape(zs.shape)
         return QuadMesh((PX, PY, zs), crs=self.projection, **params)
 
 

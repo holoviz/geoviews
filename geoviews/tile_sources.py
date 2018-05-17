@@ -6,11 +6,11 @@ _ATTRIBUTIONS = {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     ),
     ('cartodb',) : (
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,'
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, '
         '&copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
     ),
     ('cartocdn',) : (
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,'
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, '
         '&copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
     ),
     ('stamen', 'terrain') : (
@@ -29,23 +29,23 @@ _ATTRIBUTIONS = {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     ),
     ('arcgis','Terrain') : (
-        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>,'
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
         'USGS, NOAA'
     ),
     ('arcgis','Reference') : (
-        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>,'
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
         'Garmin, USGS, NPS'
     ),
     ('arcgis','Imagery') : (
-        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>,'
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
         'Earthstar Geographics'
     ),
     ('arcgis','NatGeo') : (
-        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>,'
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
         'NatGeo, Garmin, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, increment P Corp.'
     ),
     ('arcgis','USA_Topo') : (
-        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>,'
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
         'NatGeo, i-cubed'
     )
 }

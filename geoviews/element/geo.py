@@ -285,6 +285,7 @@ class QuadMesh(_Element, HvQuadMesh):
     def trimesh(self):
         trimesh = super(QuadMesh, self).trimesh()
         node_params = get_param_values(trimesh.nodes)
+        node_params['crs'] = self.crs
         nodes = TriMesh.node_type(trimesh.nodes.data, **node_params)
         return TriMesh((trimesh.data, nodes), crs=self.crs,
                        **get_param_values(trimesh))

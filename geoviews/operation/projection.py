@@ -10,7 +10,7 @@ from shapely.geometry import Polygon, LineString
 from ..element import (Image, Shape, Polygons, Path, Points, Contours,
                        RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField,
                        HexTiles, Labels)
-from ..util import project_extents, geom_to_array
+from ..util import project_extents, geom_to_array, wrap_path_data
 
 
 class _project_operation(Operation):
@@ -65,19 +65,30 @@ class project_path(_project_operation):
                 xs, ys = geom[xdim.name], geom[ydim.name]
                 if not len(xs):
                     continue
-                path = geom_type(np.column_stack([xs, ys]))
-                path = path.intersection(boundary_poly)
-                proj = self.p.projection.project_geometry(path, element.crs)
-                proj_arr = geom_to_array(proj)
+
+                proj_arr = self.p.projection.quick_vertices_transform(
+                    np.column_stack([xs, ys]), element.crs)
+
+                if proj_arr is None:
+                    vertices = np.column_stack([xs, ys])
+                    if isinstance(element.crs, ccrs.PlateCarree):
+                        vertices = wrap_path_data(vertices, element.crs, element.crs)
+                    path = geom_type(vertices)
+                    path = path.intersection(boundary_poly)
+                    proj = self.p.projection.project_geometry(path, element.crs)
+                    proj_arr = geom_to_array(proj)
                 geom[xdim.name] = proj_arr[:, 0]
                 geom[ydim.name] = proj_arr[:, 1]
                 projected.append(geom)
             else:
                 # Handle iso-contour case
                 data = {k: vals[0] for k, vals in data.items()}
-                geom = path.geom()
-                if boundary_poly:
-                    geom = geom.intersection(boundary_poly)
+                if isinstance(element.crs, ccrs.PlateCarree):
+                    vertices = wrap_path_data(path.array([0, 1]), element.crs, element.crs)
+                    geom = type(element)([vertices]).geom()
+                else:
+                    geom = path.geom()
+
                 if not geom:
                     continue
                 proj = self.p.projection.project_geometry(geom, element.crs)
@@ -85,7 +96,6 @@ class project_path(_project_operation):
                     xs, ys = np.array(geom.array_interface_base['data']).reshape(-1, 2).T
                     projected.append(dict(data, **{xdim.name: xs, ydim.name: ys}))
         return element.clone(projected, crs=self.p.projection)
-
 
 
 class project_shape(_project_operation):

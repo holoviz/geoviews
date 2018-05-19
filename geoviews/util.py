@@ -71,7 +71,7 @@ def path_to_geom(path, multi=True):
             for i, path in enumerate(paths):
                 if i != (len(paths)-1):
                     path = path[:-1]
-                if not len(path):
+                if len(path) < 2:
                     continue
                 lines.append(LineString(path[:, :2]))
             continue
@@ -101,6 +101,8 @@ def polygon_to_geom(poly, multi=True):
             for i, path in enumerate(paths):
                 if i != (len(paths)-1):
                     path = path[:-1]
+                if len(path) < 3:
+                    continue
                 lines.append(Polygon(path[:, :2]))
             continue
         elif path.geom_type == 'MultiLineString':
@@ -177,7 +179,7 @@ def geo_mesh(element):
     return xs, ys, zs
 
 
-def wrap_data(vertices, src_crs, tgt_crs):
+def wrap_path_data(vertices, src_crs, tgt_crs):
     """
     Wraps path coordinates along the longitudinal axis.
     """

@@ -5,7 +5,7 @@ from cartopy import crs as ccrs
 from cartopy.img_transform import warp_array, _determine_bounds
 from holoviews.core.util import cartesian_product, get_param_values
 from holoviews.operation import Operation
-from shapely.geometry import Polygon, LineString
+from shapely.geometry import Polygon, LineString, MultiPolygon, MultiLineString
 
 from ..element import (Image, Shape, Polygons, Path, Points, Contours,
                        RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField,
@@ -54,7 +54,10 @@ class project_path(_project_operation):
         boundary_poly = element.crs.project_geometry(Polygon(self.p.projection.boundary),
                                                      self.p.projection)
 
-        geom_type = Polygon if isinstance(element, Polygons) else LineString
+        if isinstance(element, Polygons):
+            multi_type, geom_type = MultiPolygon, Polygon
+        else:
+            multi_type, geom_type = MultiLineString, LineString
         xdim, ydim = element.kdims[:2]
         projected = []
         for path in element.split():
@@ -83,18 +86,43 @@ class project_path(_project_operation):
             else:
                 # Handle iso-contour case
                 data = {k: vals[0] for k, vals in data.items()}
+
+                # Wrap longitudes
                 if isinstance(element.crs, ccrs.PlateCarree):
                     vertices = wrap_path_data(path.array([0, 1]), element.crs, element.crs)
                     geom = type(element)([vertices]).geom()
                 else:
                     geom = path.geom()
 
-                if not geom:
+                # Clip path to projection boundaries
+                geoms = []
+                for g in geom:
+                    if np.isinf(np.array(g.array_interface_base['data'])).sum():
+                        continue
+                    try:
+                        g = g.intersection(boundary_poly)
+                    except:
+                        continue
+                    if 'Multi' in g.geom_type or 'Collection' in g.geom_type:
+                        for p in g:
+                            try:
+                                geoms.append(geom_type(p))
+                            except:
+                                continue
+                    else:
+                        geoms.append(g)
+
+                if not geoms:
                     continue
+                geom = multi_type(geoms)
+
+                # Project geometry
                 proj = self.p.projection.project_geometry(geom, element.crs)
                 for geom in proj:
-                    xs, ys = np.array(geom.array_interface_base['data']).reshape(-1, 2).T
-                    projected.append(dict(data, **{xdim.name: xs, ydim.name: ys}))
+                    vertices = np.array(geom.array_interface_base['data']).reshape(-1, 2)
+                    xs, ys = vertices.T
+                    if len(xs):
+                        projected.append(dict(data, **{xdim.name: xs, ydim.name: ys}))
         return element.clone(projected, crs=self.p.projection)
 
 

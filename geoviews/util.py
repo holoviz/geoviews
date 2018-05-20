@@ -208,3 +208,10 @@ def wrap_path_data(vertices, src_crs, tgt_crs):
                 vertices = vertices + [[-offset, 0]]
                 break
     return vertices
+
+
+def is_multi_geometry(geom):
+    """
+    Whether the shapely geometry is a Multi or Collection type.
+    """
+    return 'Multi' in geom.geom_type or 'Collection' in geom.geom_type

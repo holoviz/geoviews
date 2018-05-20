@@ -133,9 +133,9 @@ class project_path(_project_operation):
         for path in element.split():
             data = {vd.name: path.dimension_values(vd, expanded=False) for vd in path.vdims}
             if any(len(vals) > 1 for vals in data.values()):
-                projected += self._process_path(element, path, data, boundary, geom_type, multi_type)
+                projected += self._project_path(element, path, data, boundary, geom_type, multi_type)
             else:
-                projected += self._process_contour(element, path, data, boundary, geom_type, multi_type)
+                projected += self._project_contour(element, path, data, boundary, geom_type, multi_type)
         return element.clone(projected, crs=self.p.projection)
 
 

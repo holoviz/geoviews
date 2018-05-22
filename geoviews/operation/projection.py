@@ -53,7 +53,8 @@ class project_path(_project_operation):
 
         if proj_arr is None:
             vertices = np.column_stack([xs, ys])
-            vertices = wrap_path_data(vertices, element.crs, element.crs)
+            if hasattr(element.crs, '_bbox_and_offset'):
+                vertices = wrap_path_data(vertices, element.crs, element.crs)
             path = geom_type(vertices)
             path = path.intersection(boundary)
             proj = self.p.projection.project_geometry(path, element.crs)
@@ -70,7 +71,9 @@ class project_path(_project_operation):
         data = {k: vals[0] for k, vals in data.items()}
 
         # Wrap longitudes
-        vertices = wrap_path_data(contour.array([0, 1]), element.crs, element.crs)
+        vertices = contour.array([0, 1])
+        if hasattr(element.crs, '_bbox_and_offset'):
+            vertices = wrap_path_data(vertices, element.crs, element.crs)
         geom = type(element)([vertices]).geom()
 
         # Clip path to projection boundaries

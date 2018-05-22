@@ -1,4 +1,6 @@
 import numpy as np
+import shapely.geometry as sgeom
+
 from cartopy import crs as ccrs
 from shapely.geometry import (MultiLineString, LineString, MultiPolygon, Polygon)
 
@@ -69,7 +71,7 @@ def path_to_geom(path, multi=True):
             for i, path in enumerate(paths):
                 if i != (len(paths)-1):
                     path = path[:-1]
-                if not len(path):
+                if len(path) < 2:
                     continue
                 lines.append(LineString(path[:, :2]))
             continue
@@ -99,6 +101,8 @@ def polygon_to_geom(poly, multi=True):
             for i, path in enumerate(paths):
                 if i != (len(paths)-1):
                     path = path[:-1]
+                if len(path) < 3:
+                    continue
                 lines.append(Polygon(path[:, :2]))
             continue
         elif path.geom_type == 'MultiLineString':
@@ -114,7 +118,17 @@ def polygon_to_geom(poly, multi=True):
         else:
             path = path
         lines.append(path)
+    lines = [to_ccw(line) for line in lines]
     return MultiPolygon(lines) if multi else lines
+
+
+def to_ccw(geom):
+    """
+    Reorients polygon to be wound counter-clockwise.
+    """
+    if isinstance(geom, sgeom.Polygon) and not geom.exterior.is_ccw:
+        geom = sgeom.polygon.orient(geom)
+    return geom
 
 
 def geom_to_arr(geom):
@@ -164,3 +178,40 @@ def geo_mesh(element):
         zs = np.ma.concatenate([zs, zs[:, 0:1]], axis=1)
     return xs, ys, zs
 
+
+def wrap_path_data(vertices, src_crs, tgt_crs):
+    """
+    Wraps path coordinates along the longitudinal axis.
+    """
+    self_params = tgt_crs.proj4_params.copy()
+    src_params = src_crs.proj4_params.copy()
+    self_params.pop('lon_0'), src_params.pop('lon_0')
+
+    xs, ys = vertices[:, 0], vertices[:, 1]
+    potential = (self_params == src_params and
+                 tgt_crs.y_limits[0] <= ys.min() and
+                 tgt_crs.y_limits[1] >= ys.max())
+    if not potential:
+        return vertices
+
+    bboxes, proj_offset = tgt_crs._bbox_and_offset(src_crs)
+    mod = np.diff(src_crs.x_limits)[0]
+    x_lim = xs.min(), xs.max()
+    for poly in bboxes:
+        # Arbitrarily choose the number of moduli to look
+        # above and below the -180->180 range. If data is beyond
+        # this range, we're not going to transform it quickly.
+        for i in [-1, 0, 1, 2]:
+            offset = mod * i - proj_offset
+            if ((poly[0] + offset) <= x_lim[0] and
+                (poly[1] + offset) >= x_lim[1]):
+                vertices = vertices + [[-offset, 0]]
+                break
+    return vertices
+
+
+def is_multi_geometry(geom):
+    """
+    Whether the shapely geometry is a Multi or Collection type.
+    """
+    return 'Multi' in geom.geom_type or 'Collection' in geom.geom_type

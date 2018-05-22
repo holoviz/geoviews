@@ -103,6 +103,7 @@ class GeoPandasInterface(MultiInterface):
     @classmethod
     def length(cls, dataset):
         length = 0
+        if len(dataset.data) == 0: return 0
         arr = geom_to_array(dataset.data.geometry.iloc[0])
         ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
         for d in dataset.data.geometry:

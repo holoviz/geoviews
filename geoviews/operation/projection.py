@@ -5,12 +5,12 @@ from cartopy import crs as ccrs
 from cartopy.img_transform import warp_array, _determine_bounds
 from holoviews.core.util import cartesian_product, get_param_values
 from holoviews.operation import Operation
-from shapely.geometry import Polygon, LineString
+from shapely.geometry import Polygon, LineString, MultiPolygon, MultiLineString
 
 from ..element import (Image, Shape, Polygons, Path, Points, Contours,
                        RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField,
                        HexTiles, Labels)
-from ..util import project_extents, geom_to_array
+from ..util import project_extents, geom_to_array, wrap_path_data, is_multi_geometry
 
 
 class _project_operation(Operation):
@@ -31,7 +31,6 @@ class _project_operation(Operation):
         return element.map(self._process_element, self.supported_types)
 
 
-
 class project_path(_project_operation):
     """
     Projects Polygons and Path Elements from their source coordinate
@@ -40,52 +39,107 @@ class project_path(_project_operation):
 
     supported_types = [Polygons, Path, Contours, EdgePaths]
 
+    def _project_path(self, element, path, data, boundary, geom_type, multi_type):
+        """
+        Handle case of continuously varying path
+        """
+        xdim, ydim = path.kdims[:2]
+        xs, ys = (path.dimension_values(0) for i in range(2))
+        if not len(xs):
+            return []
+
+        proj_arr = self.p.projection.quick_vertices_transform(
+            np.column_stack([xs, ys]), element.crs)
+
+        if proj_arr is None:
+            vertices = np.column_stack([xs, ys])
+            if hasattr(element.crs, '_bbox_and_offset'):
+                vertices = wrap_path_data(vertices, element.crs, element.crs)
+            path = geom_type(vertices)
+            path = path.intersection(boundary)
+            proj = self.p.projection.project_geometry(path, element.crs)
+            proj_arr = geom_to_array(proj)
+            data[xdim.name] = proj_arr[:, 0]
+            data[ydim.name] = proj_arr[:, 1]
+        return [data]
+
+    def _project_contour(self, element, contour, data, boundary, geom_type, multi_type):
+        """
+        Handle case of iso-contour
+        """
+        xdim, ydim = contour.kdims[:2]
+        data = {k: vals[0] for k, vals in data.items()}
+
+        # Wrap longitudes
+        vertices = contour.array([0, 1])
+        if hasattr(element.crs, '_bbox_and_offset'):
+            vertices = wrap_path_data(vertices, element.crs, element.crs)
+        geom = type(element)([vertices]).geom()
+
+        # Clip path to projection boundaries
+        geoms = []
+        for g in geom:
+            if np.isinf(np.array(g.array_interface_base['data'])).sum():
+                # Skip if infinity in path
+                continue
+            try:
+                # Compute boundary intersections
+                g = g.intersection(boundary)
+            except:
+                continue
+            if is_multi_geometry(g):
+                for p in g:
+                    try:
+                        geoms.append(geom_type(p))
+                    except:
+                        continue
+            else:
+                geoms.append(g)
+        if not geoms:
+            return []
+
+        # Project geometry
+        projected = []
+        geom = multi_type(geoms) if len(geoms) > 1 else geom
+        proj = self.p.projection.project_geometry(geom, element.crs)
+        proj = proj if is_multi_geometry(proj) else [proj]
+        for geom in proj:
+            vertices = np.array(geom.array_interface_base['data']).reshape(-1, 2)
+            xs, ys = vertices.T
+            if len(xs):
+                projected.append(dict(data, **{xdim.name: xs, ydim.name: ys}))
+        return projected
+
+    def _project_geodataframe(self, element):
+        geoms = element.split(datatype='geom')
+        projected = [self.p.projection.project_geometry(geom, element.crs)
+                     for geom in geoms]
+        new_data = element.data.copy()
+        new_data['geometry'] = projected
+        return element.clone(new_data, crs=self.p.projection)
+
     def _process_element(self, element):
         if not len(element):
             return element.clone(crs=self.p.projection)
         elif element.interface.datatype == 'geodataframe':
-            geoms = element.split(datatype='geom')
-            projected = [self.p.projection.project_geometry(geom, element.crs)
-                         for geom in geoms]
-            new_data = element.data.copy()
-            new_data['geometry'] = projected
-            return element.clone(new_data, crs=self.p.projection)
+            return self._project_geodataframe(element)
 
-        boundary_poly = element.crs.project_geometry(Polygon(self.p.projection.boundary),
-                                                     self.p.projection)
+        boundary = element.crs.project_geometry(Polygon(self.p.projection.boundary),
+                                                self.p.projection)
 
-        geom_type = Polygon if isinstance(element, Polygons) else LineString
-        xdim, ydim = element.kdims[:2]
+        if isinstance(element, Polygons):
+            multi_type, geom_type = MultiPolygon, Polygon
+        else:
+            multi_type, geom_type = MultiLineString, LineString
+
         projected = []
         for path in element.split():
             data = {vd.name: path.dimension_values(vd, expanded=False) for vd in path.vdims}
             if any(len(vals) > 1 for vals in data.values()):
-                # Handle continuously varying path case
-                geom = path.columns()
-                xs, ys = geom[xdim.name], geom[ydim.name]
-                if not len(xs):
-                    continue
-                path = geom_type(np.column_stack([xs, ys]))
-                path = path.intersection(boundary_poly)
-                proj = self.p.projection.project_geometry(path, element.crs)
-                proj_arr = geom_to_array(proj)
-                geom[xdim.name] = proj_arr[:, 0]
-                geom[ydim.name] = proj_arr[:, 1]
-                projected.append(geom)
+                projected += self._project_path(element, path, data, boundary, geom_type, multi_type)
             else:
-                # Handle iso-contour case
-                data = {k: vals[0] for k, vals in data.items()}
-                geom = path.geom()
-                if boundary_poly:
-                    geom = geom.intersection(boundary_poly)
-                if not geom:
-                    continue
-                proj = self.p.projection.project_geometry(geom, element.crs)
-                for geom in proj:
-                    xs, ys = np.array(geom.array_interface_base['data']).reshape(-1, 2).T
-                    projected.append(dict(data, **{xdim.name: xs, ydim.name: ys}))
+                projected += self._project_contour(element, path, data, boundary, geom_type, multi_type)
         return element.clone(projected, crs=self.p.projection)
-
 
 
 class project_shape(_project_operation):
@@ -99,9 +153,13 @@ class project_shape(_project_operation):
     def _process_element(self, element):
         if not len(element):
             return element.clone(crs=self.p.projection)
-        geom = self.p.projection.project_geometry(element.geom(), element.crs)
-        if isinstance(geom, tuple):
-            geom = [g for g in geom if g != []][0]
+        geom = element.geom()
+        vertices = geom_to_array(geom)
+        if isinstance(geom, (MultiPolygon, Polygon)):
+            obj = Polygons([vertices])
+        else:
+            obj = Path([vertices])
+        geom = project_path(obj, projection=self.p.projection).geom()
         return element.clone(geom, crs=self.p.projection)
 
 
@@ -315,16 +373,11 @@ class project(Operation):
                                      instantiate=False, doc="""
         Projection the image type is projected to.""")
 
+    _operations = [project_path, project_image, project_shape,
+                   project_graph, project_quadmesh, project_points]
+
     def _process(self, element, key=None):
-        element = element.map(project_path.instance(projection=self.p.projection),
-                              project_path.supported_types)
-        element = element.map(project_image.instance(projection=self.p.projection),
-                              project_image.supported_types)
-        element = element.map(project_shape.instance(projection=self.p.projection),
-                              project_shape.supported_types)
-        element = element.map(project_graph.instance(projection=self.p.projection),
-                              project_graph.supported_types)
-        element = element.map(project_quadmesh.instance(projection=self.p.projection),
-                              project_quadmesh.supported_types)
-        return element.map(project_points.instance(projection=self.p.projection),
-                           project_points.supported_types)
+        for op in self._operations:
+            element = element.map(op.instance(projection=self.p.projection),
+                                  op.supported_types)
+        return element

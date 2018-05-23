@@ -151,6 +151,8 @@ class GeoPandasInterface(MultiInterface):
     def split(cls, dataset, start, end, datatype, **kwargs):
         objs = []
         xdim, ydim = dataset.kdims[:2]
+        if not len(dataset.data):
+            return []
         row = dataset.data.iloc[0]
         arr = geom_to_array(row['geometry'])
         d = {(xdim.name, ydim.name): arr}

@@ -84,7 +84,8 @@ class project_path(_project_operation):
                 continue
             try:
                 # Compute boundary intersections
-                g = g.intersection(boundary)
+                if boundary:
+                    g = g.intersection(boundary)
             except:
                 continue
             if is_multi_geometry(g):

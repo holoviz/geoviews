@@ -36,7 +36,6 @@ stages:
     if: tag =~ ^v(\d+|\.)*[^a-z]\d*$    
   - name: docs
     if: tag =~ ^v(\d+|\.).*$
-  # TODO: add release packages (future PR)
 
 jobs:
   include:

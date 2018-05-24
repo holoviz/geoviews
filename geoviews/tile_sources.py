@@ -13,17 +13,17 @@ _ATTRIBUTIONS = {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, '
         '&copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
     ),
-    ('stamen', 'terrain') : (
-        'Map tiles by <a href="https://stamen.com">Stamen Design</a>, '
-        'under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. '
-        'Data by <a href="https://openstreetmap.org">OpenStreetMap</a>, '
-        'under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
-    ),
-    ('stamen', 'toner') : (
+    ('stamen', 'com/t') : ( # to match both 'toner' and 'terrain'
         'Map tiles by <a href="https://stamen.com">Stamen Design</a>, '
         'under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. '
         'Data by <a href="https://openstreetmap.org">OpenStreetMap</a>, '
         'under <a href="https://www.openstreetmap.org/copyright">ODbL</a>.'
+    ),
+    ('stamen', 'watercolor') : (
+        'Map tiles by <a href="https://stamen.com">Stamen Design</a>, '
+        'under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. '
+        'Data by <a href="https://openstreetmap.org">OpenStreetMap</a>, '
+        'under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
     ),
     ('wikimedia',) : (
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -59,7 +59,7 @@ CartoMidnight = WMTS('http://3.api.cartocdn.com/base-midnight/{Z}/{X}/{Y}.png')
 # Stamen basemaps
 StamenTerrain = WMTS('http://tile.stamen.com/terrain/{Z}/{X}/{Y}.png')
 StamenTerrainRetina = WMTS('http://tile.stamen.com/terrain/{Z}/{X}/{Y}@2x.png')
-StamenWatercolor = WMTS('http://c.tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg')
+StamenWatercolor = WMTS('http://tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg')
 StamenToner = WMTS('http://tile.stamen.com/toner/{Z}/{X}/{Y}.png')
 StamenTonerBackground = WMTS('http://tile.stamen.com/toner-background/{Z}/{X}/{Y}.png')
 StamenLabels = WMTS('http://tile.stamen.com/toner-labels/{Z}/{X}/{Y}.png')
@@ -78,4 +78,4 @@ OSM = WMTS('http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png')
 Wikipedia = WMTS('https://maps.wikimedia.org/osm-intl/{Z}/{X}/{Y}@2x.png')
 
 
-tile_sources = {k: v for k, v in locals().items() if isinstance(v, WMTS)}
+tile_sources = {k: v for k, v in locals().items() if isinstance(v, WMTS) and k != 'ESRI'}

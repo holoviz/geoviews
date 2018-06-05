@@ -44,7 +44,7 @@ class project_path(_project_operation):
         Handle case of continuously varying path
         """
         xdim, ydim = path.kdims[:2]
-        xs, ys = (path.dimension_values(0) for i in range(2))
+        xs, ys = (path.dimension_values(i) for i in range(2))
         if not len(xs):
             return []
 
@@ -56,11 +56,12 @@ class project_path(_project_operation):
             if hasattr(element.crs, '_bbox_and_offset'):
                 vertices = wrap_path_data(vertices, element.crs, element.crs)
             path = geom_type(vertices)
-            path = path.intersection(boundary)
+            if boundary:
+                path = path.intersection(boundary)
             proj = self.p.projection.project_geometry(path, element.crs)
             proj_arr = geom_to_array(proj)
-            data[xdim.name] = proj_arr[:, 0]
-            data[ydim.name] = proj_arr[:, 1]
+        data[xdim.name] = proj_arr[:, 0]
+        data[ydim.name] = proj_arr[:, 1]
         return [data]
 
     def _project_contour(self, element, contour, data, boundary, geom_type, multi_type):

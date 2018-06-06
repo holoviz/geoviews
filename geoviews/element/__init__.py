@@ -1,4 +1,7 @@
-from holoviews.element import ElementConversion, Points as HvPoints
+from holoviews.element import (
+    ElementConversion, Points as HvPoints, Polygons as HvPolygons,
+    Path as HvPath
+)
 
 from .geo import (_Element, Feature, Tiles, is_geographic,     # noqa (API import)
                   WMTS, Points, Image, Text, LineContours, RGB,
@@ -51,6 +54,16 @@ class GeoConversion(ElementConversion):
     def points(self, kdims=None, vdims=None, mdims=None, **kwargs):
         if kdims is None: kdims = self._element.kdims
         el_type = Points if is_geographic(self._element, kdims) else HvPoints
+        return self(el_type, kdims, vdims, mdims, **kwargs)
+
+    def polygons(self, kdims=None, vdims=None, mdims=None, **kwargs):
+        if kdims is None: kdims = self._element.kdims
+        el_type = Polygons if is_geographic(self._element, kdims) else HvPolygons
+        return self(el_type, kdims, vdims, mdims, **kwargs)
+
+    def path(self, kdims=None, vdims=None, mdims=None, **kwargs):
+        if kdims is None: kdims = self._element.kdims
+        el_type = Path if is_geographic(self._element, kdims) else HvPath
         return self(el_type, kdims, vdims, mdims, **kwargs)
 
 

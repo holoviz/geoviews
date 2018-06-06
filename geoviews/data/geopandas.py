@@ -3,10 +3,10 @@ from __future__ import absolute_import
 import numpy as np
 from geopandas import GeoDataFrame
 
-from holoviews.core.data import Interface, MultiInterface
+from holoviews.core.data import Interface, MultiInterface, PandasInterface
 from holoviews.core.data.interface  import DataError
 from holoviews.core.util import max_range
-from holoviews.element import Path
+from holoviews.element import Path, Points
 
 from ..util import geom_to_array
 
@@ -32,6 +32,10 @@ class GeoPandasInterface(MultiInterface):
                                 % len(kdims))
         else:
             kdims = eltype.kdims
+
+        if len(set(data.geom_type)) != 1:
+            raise ValueError('The GeopandasInterface can only read dataframes which '
+                             'share a common geometry type')
 
         if vdims is None:
             vdims = eltype.vdims
@@ -91,25 +95,21 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def shape(cls, dataset):
-        rows, cols = 0, 0
+        rows, cols = 0, len(dataset.dimensions())
+        if len(dataset.data) == 0: return rows, cols
         arr = geom_to_array(dataset.data.geometry.iloc[0])
         ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
         for d in dataset.data.geometry:
             ds.data = geom_to_array(d)
             r, cols = ds.interface.shape(ds)
             rows += r
-        return rows+len(dataset.data)-1, cols
+        geom_type = dataset.data.geom_type.iloc[0]
+        offset = 0 if geom_type == 'Point' else len(dataset.data)-1
+        return rows+offset, cols
 
     @classmethod
     def length(cls, dataset):
-        length = 0
-        if len(dataset.data) == 0: return 0
-        arr = geom_to_array(dataset.data.geometry.iloc[0])
-        ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
-        for d in dataset.data.geometry:
-            ds.data = geom_to_array(d)
-            length += ds.interface.length(ds)
-        return length+len(dataset.data)-1
+        return cls.shape(dataset)[0]
 
     @classmethod
     def nonzero(cls, dataset):
@@ -117,13 +117,7 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def redim(cls, dataset, dimensions):
-        new_data = []
-        arr = geom_to_array(dataset.data.geometry.iloc[0])
-        ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
-        for d in dataset.data.geometry:
-            ds.data = geom_to_array(d)
-            new_data.append(ds.interface.redim(ds, dimensions))
-        return new_data
+        return PandasInterface.redim(dataset, dimensions)
 
     @classmethod
     def values(cls, dataset, dimension, expanded, flat):
@@ -132,6 +126,10 @@ class GeoPandasInterface(MultiInterface):
         data = dataset.data
         if idx not in [0, 1] and not expanded:
             return data[dimension.name].values
+        elif not len(data):
+            return np.array([])
+
+        geom_type = dataset.data.geom_type.iloc[0]
         values = []
         columns = list(data.columns)
         arr = geom_to_array(data.geometry.iloc[0])
@@ -144,7 +142,8 @@ class GeoPandasInterface(MultiInterface):
             else:
                 arr = np.full(len(arr), data.iloc[i, columns.index(dimension.name)])
                 values.append(arr)
-            values.append([np.NaN])
+            if geom_type != 'Point':
+                values.append([np.NaN])
         return np.concatenate(values[:-1]) if values else np.array([])
 
     @classmethod
@@ -182,3 +181,4 @@ class GeoPandasInterface(MultiInterface):
 
 Interface.register(GeoPandasInterface)
 Path.datatype += ['geodataframe']
+Points.datatype += ['geodataframe']

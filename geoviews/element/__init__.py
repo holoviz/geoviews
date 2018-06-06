@@ -25,7 +25,19 @@ class GeoConversion(ElementConversion):
         group_type = args[0]
         if 'crs' not in kwargs and issubclass(group_type, _Element):
             kwargs['crs'] = self._element.crs
-        return super(GeoConversion, self).__call__(*args, **kwargs)
+        is_gpd = self._element.interface.datatype == 'geopandas'
+        if is_gpd:
+            kdims = args[1] if len(args) > 1 else kwargs.get('kdims', None)
+            if len(args) > 1:
+                args = (Dataset, [])+args[2:]
+            else:
+                args = (Dataset,)
+                kwargs['kdims'] = []
+        converted = super(GeoConversion, self).__call__(*args, **kwargs)
+        if is_gpd:
+            if kdims is None: kdims = group_type.kdims
+            converted = converted.map(lambda x: x.clone(kdims=kdims, new_type=group_type), Dataset)
+        return converted
 
     def linecontours(self, kdims=None, vdims=None, mdims=None, **kwargs):
         return self(LineContours, kdims, vdims, mdims, **kwargs)

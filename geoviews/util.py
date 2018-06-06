@@ -139,6 +139,8 @@ def geom_to_arr(geom):
 
 
 def geom_to_array(geom):
+    if geom.geom_type == 'Point':
+        return np.array([[geom.x, geom.y]])
     if hasattr(geom, 'exterior'):
         xs = np.array(geom.exterior.coords.xy[0])
         ys = np.array(geom.exterior.coords.xy[1])

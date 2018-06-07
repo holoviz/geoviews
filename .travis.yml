@@ -79,7 +79,6 @@ jobs:
         - pip install git+https://github.com/pyviz/nbsite.git
         - geoviews fetch-data --path=examples
         - bokeh sampledata
-        - rm examples/Colocated_cube_pair.ipynb examples/CubeExplorer_Prototype.ipynb # not currently part of website
         # note: will vastly simplified in a future version of nbsite
         - cd doc
         - nbsite_nbpagebuild.py ioam geoviews ../examples .

@@ -23,6 +23,11 @@ Immediate, already funded priorities for 2018 include:
 4. **Simpler deployment of large-scale visualizations**: Automatic
    generation of slippy-map tiles for exploration of large datasets
    using standard web servers
+   
+5. **Rasterization of polygons**: A very common problem in GIS applications
+   is combining gridded and geometry data, as part of ongoing work datashader
+   will gain the ability to rasterize arbitrary geometries by value or simply
+   as boolean masks.
 
 Other things we'd like to see in GeoViews or in other supporting tools
 in the PyViz ecosystem include:
@@ -65,6 +70,10 @@ in the PyViz ecosystem include:
    [OpenLayers](https://openlayers.org/),
    [Deck.GL](http://uber.github.io/deck.gl), and
    [Leaflet](https://leafletjs.com/).
+   
+5. Scalable rasterization of raster data, as well as recti- and curvi-linear
+   grids, implemented using dask and numba in datashader and exposed in
+   HoloViews and GeoViews.
    
 If any of the functionality above is interesting to you (or you have
 ideas of your own!) and can offer help with implementation, please

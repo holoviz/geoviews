@@ -24,12 +24,12 @@ class GeoPandasInterface(MultiInterface):
         if not isinstance(data, GeoDataFrame):
             raise ValueError("GeoPandasInterface only support geopandas DataFrames.")
         elif 'geometry' not in data:
-            raise DataError("GeoPandas dataframe must contain geometry column, "
-                            "to plot non-geographic data use pandas DataFrame.", cls)
+            raise ValueError("GeoPandas dataframe must contain geometry column, "
+                             "to plot non-geographic data use pandas DataFrame.", cls)
         if kdims is not None:
             if len(kdims) != 2:
-                raise DataError("Expected two kdims to use GeoDataFrame, found %d."
-                                % len(kdims))
+                raise ValueError("Expected two kdims to use GeoDataFrame, found %d."
+                                 % len(kdims))
         else:
             kdims = eltype.kdims
 

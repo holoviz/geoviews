@@ -75,6 +75,9 @@ in the PyViz ecosystem include:
    grids, implemented using Dask and Numba in Datashader and exposed in
    HoloViews and GeoViews as fast distributed rendering for Image and
    QuadMesh objects.
+
+6. Support for [cartograms](https://en.wikipedia.org/wiki/Cartogram),
+   presumably via an interface to an external program or library.
    
 If any of the functionality above is interesting to you (or you have
 ideas of your own!) and can offer help with implementation, please

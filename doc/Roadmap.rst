@@ -25,7 +25,7 @@ Immediate, already funded priorities for 2018 include:
    using standard web servers
    
 5. **Rasterization of polygons**: A very common problem in GIS applications
-   is combining gridded and geometry data, as part of ongoing work datashader
+   is combining gridded and geometry data.  As part of ongoing work, datashader
    will gain the ability to rasterize arbitrary geometries by value or simply
    as boolean masks.
 
@@ -72,8 +72,9 @@ in the PyViz ecosystem include:
    [Leaflet](https://leafletjs.com/).
    
 5. Scalable rasterization of raster data, as well as recti- and curvi-linear
-   grids, implemented using dask and numba in datashader and exposed in
-   HoloViews and GeoViews.
+   grids, implemented using Dask and Numba in Datashader and exposed in
+   HoloViews and GeoViews as fast distributed rendering for Image and
+   QuadMesh objects.
    
 If any of the functionality above is interesting to you (or you have
 ideas of your own!) and can offer help with implementation, please

@@ -10,7 +10,10 @@ from shapely.geometry import Polygon, LineString, MultiPolygon, MultiLineString
 from ..element import (Image, Shape, Polygons, Path, Points, Contours,
                        RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField,
                        HexTiles, Labels)
-from ..util import project_extents, geom_to_array, wrap_path_data, is_multi_geometry
+from ..util import (
+    project_extents, geom_to_array, wrap_path_data, is_multi_geometry,
+    polygon_to_geom, path_to_geom
+)
 
 
 class _project_operation(Operation):
@@ -75,11 +78,12 @@ class project_path(_project_operation):
         vertices = contour.array([0, 1])
         if hasattr(element.crs, '_bbox_and_offset'):
             vertices = wrap_path_data(vertices, element.crs, element.crs)
-        geom = type(element)([vertices]).geom()
+        element = type(element)([vertices])
+        to_geom = polygon_to_geom if isinstance(element, Polygon) else path_to_geom
 
         # Clip path to projection boundaries
         geoms = []
-        for g in geom:
+        for g in to_geom(element, multi=False, skip_invalid=False):
             if np.isinf(np.array(g.array_interface_base['data'])).sum():
                 # Skip if infinity in path
                 continue
@@ -97,19 +101,17 @@ class project_path(_project_operation):
                         continue
             else:
                 geoms.append(g)
-        if not geoms:
-            return []
 
         # Project geometry
         projected = []
-        geom = multi_type(geoms) if len(geoms) > 1 else geom
-        proj = self.p.projection.project_geometry(geom, element.crs)
-        proj = proj if is_multi_geometry(proj) else [proj]
-        for geom in proj:
-            vertices = np.array(geom.array_interface_base['data']).reshape(-1, 2)
-            xs, ys = vertices.T
-            if len(xs):
-                projected.append(dict(data, **{xdim.name: xs, ydim.name: ys}))
+        for g in geoms:
+            proj = self.p.projection.project_geometry(g, element.crs)
+            proj = proj if is_multi_geometry(proj) else [proj]
+            for geom in proj:
+                vertices = np.array(geom.array_interface_base['data']).reshape(-1, 2)
+                xs, ys = vertices.T
+                if len(xs):
+                    projected.append(dict(data, **{xdim.name: xs, ydim.name: ys}))
         return projected
 
     def _project_geodataframe(self, element):

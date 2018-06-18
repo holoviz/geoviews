@@ -98,7 +98,8 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         except:
             CustomJSHover = None
         if (not self.geographic or None in (hover, CustomJSHover) or
-            isinstance(hover.tooltips, basestring) or self.projection is not GOOGLE_MERCATOR):
+            isinstance(hover.tooltips, basestring) or self.projection is not GOOGLE_MERCATOR
+            or hover.tooltips is None):
             return
         element = self.current_frame
         xdim, ydim = [dimension_sanitizer(kd.name) for kd in element.kdims]

@@ -54,14 +54,15 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
             dest_name =type(dest_proj).__name__
             raise ValueError('Could not project data from %s projection '
                              'to %s projection. Ensure the coordinate '
-                             'reference system (crs) matches your data.' %
+                             'reference system (crs) matches your data '
+                             'and the kdims.' %
                              (src_name, dest_name))
     else:
         geom_in_crs = boundary_poly.intersection(domain_in_src_proj)
     return geom_in_crs.bounds
 
 
-def path_to_geom(path, multi=True):
+def path_to_geom(path, multi=True, skip_invalid=True):
     lines = []
     datatype = 'geom' if path.interface.datatype == 'geodataframe' else 'array'
     for path in path.split(datatype=datatype):
@@ -91,7 +92,7 @@ def path_to_geom(path, multi=True):
     return MultiLineString(lines) if multi else lines
 
 
-def polygon_to_geom(poly, multi=True):
+def polygon_to_geom(poly, multi=True, skip_invalid=True):
     lines = []
     datatype = 'geom' if poly.interface.datatype == 'geodataframe' else 'array'
     for path in poly.split(datatype=datatype):
@@ -101,24 +102,22 @@ def polygon_to_geom(poly, multi=True):
             for i, path in enumerate(paths):
                 if i != (len(paths)-1):
                     path = path[:-1]
+                geom = Polygon
                 if len(path) < 3:
-                    continue
-                lines.append(Polygon(path[:, :2]))
-            continue
+                    if skip_invalid:
+                        continue
+                    geom = LineString
+                lines.append(geom(path[:, :2]))
         elif path.geom_type == 'MultiLineString':
             for geom in path:
                 lines.append(geom.convex_hull)
-            continue
         elif path.geom_type == 'MultiPolygon':
             for geom in path:
                 lines.append(geom)
-            continue
         elif path.geom_type == 'LineString':
-            path = path.convex_hull
+            lines.append(path.convex_hull)
         else:
-            path = path
-        lines.append(path)
-    lines = [to_ccw(line) for line in lines]
+            lines.append(path)
     return MultiPolygon(lines) if multi else lines
 
 

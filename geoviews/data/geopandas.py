@@ -33,7 +33,7 @@ class GeoPandasInterface(MultiInterface):
         else:
             kdims = eltype.kdims
 
-        if len(set([gt[5:] if 'Multi' in gt else gt for gt in data.geom_type])) != 1:
+        if len(set([gt[5:] if 'Multi' in gt else gt for gt in data.geom_type])) > 1:
             raise ValueError('The GeopandasInterface can only read dataframes which '
                              'share a common geometry type')
 

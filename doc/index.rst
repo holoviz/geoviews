@@ -84,4 +84,5 @@ welcome to chat with the developers on `gitter
    Introduction <self>
    User Guide <user_guide/index>
    Gallery <gallery/index>
+   Roadmap <Roadmap>
    About <about>

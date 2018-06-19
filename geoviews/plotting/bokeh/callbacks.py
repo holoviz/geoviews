@@ -1,16 +1,22 @@
 import numpy as np
+import cartopy.crs as ccrs
 
 from holoviews.plotting.bokeh.callbacks import (
     RangeXYCallback, BoundsCallback, BoundsXCallback, BoundsYCallback,
     PointerXYCallback, PointerXCallback, PointerYCallback, TapCallback,
     SingleTapCallback, DoubleTapCallback, MouseEnterCallback,
-    MouseLeaveCallback, RangeXCallback, RangeYCallback)
-from holoviews.streams import (Stream, PointerXY, RangeXY, RangeX, RangeY,
-                               PointerX, PointerY, BoundsX, BoundsY,
-                               Tap, SingleTap, DoubleTap, MouseEnter,
-                               MouseLeave, Bounds, BoundsXY)
+    MouseLeaveCallback, RangeXCallback, RangeYCallback, PolyDrawCallback,
+    PointDrawCallback
+)
+from holoviews.streams import (
+    Stream, PointerXY, RangeXY, RangeX, RangeY, PointerX, PointerY,
+    BoundsX, BoundsY, Tap, SingleTap, DoubleTap, MouseEnter, MouseLeave,
+    Bounds, BoundsXY, PolyDraw, PointDraw
+)
 
+from ...element.geo import _Element
 from ...util import project_extents
+from ...operation import project
 from .plot import GeoOverlayPlot
 
 
@@ -67,6 +73,22 @@ def project_point(cb, msg, attributes=('x', 'y')):
     coordinates = crs.transform_points(plot.projection, np.array([x]), np.array([y]))
     msg['x'], msg['y'] = coordinates[0, :2]
     return {k: v for k, v in msg.items() if k in attributes}
+
+
+def project_drawn(cb, msg):
+    """
+    Projects a drawn element to the declared coordinate system
+    """
+    stream = cb.streams[0]
+    old_data = stream.data
+    stream.update(data=msg['data'])
+    element = stream.element
+    stream.update(data=old_data)
+    if element.crs == ccrs.GOOGLE_MERCATOR or not isinstance(element, _Element):
+        return None
+    crs = element.crs
+    element.crs = ccrs.GOOGLE_MERCATOR
+    return project(element, projection=crs)
 
 
 class GeoRangeXYCallback(RangeXYCallback):
@@ -180,6 +202,38 @@ class GeoMouseLeaveCallback(MouseLeaveCallback):
         return project_point(self, msg)
 
 
+class GeoPolyDrawCallback(PolyDrawCallback):
+
+    def _process_msg(self, msg):
+        msg = super(GeoPolyDrawCallback, self)._process_msg(msg)
+        if not msg['data']:
+            return msg
+        projected = project_drawn(self, msg)
+        if projected is None:
+            return msg
+        split = projected.split()
+        data = {d.name: [el.dimension_values(d) for el in split]
+                for d in projected.dimensions()}
+        xd, yd = projected.kdims
+        data['xs'] = data.pop(xd.name)
+        data['ys'] = data.pop(yd.name)
+        msg['data'] = data
+        return msg
+
+
+class GeoPointDrawCallback(PointDrawCallback):
+
+    def _process_msg(self, msg):
+        msg = super(GeoPointDrawCallback, self)._process_msg(msg)
+        if not msg['data']:
+            return msg
+        projected = project_drawn(self, msg)
+        if projected is None:
+            return msg
+        msg['data'] = projected.columns()
+        return msg
+
+
 callbacks = Stream._callbacks['bokeh']
 
 callbacks[RangeXY]     = GeoRangeXYCallback
@@ -197,3 +251,5 @@ callbacks[SingleTap]   = GeoSingleTapCallback
 callbacks[DoubleTap]   = GeoDoubleTapCallback
 callbacks[MouseEnter]  = GeoMouseEnterCallback
 callbacks[MouseLeave]  = GeoMouseLeaveCallback
+callbacks[PolyDraw]    = GeoPolyDrawCallback
+callbacks[PointDraw]   = GeoPointDrawCallback

@@ -61,6 +61,8 @@ class project_path(_project_operation):
             path = geom_type(vertices)
             if boundary:
                 path = path.intersection(boundary)
+            if not path:
+                return []
             proj = self.p.projection.project_geometry(path, element.crs)
             proj_arr = geom_to_array(proj)
         data[xdim.name] = proj_arr[:, 0]
@@ -131,18 +133,30 @@ class project_path(_project_operation):
         boundary = element.crs.project_geometry(Polygon(self.p.projection.boundary),
                                                 self.p.projection)
 
+
         if isinstance(element, Polygons):
             multi_type, geom_type = MultiPolygon, Polygon
         else:
             multi_type, geom_type = MultiLineString, LineString
 
         projected = []
-        for path in element.split():
+        data = element.split()
+        for path in data:
             data = {vd.name: path.dimension_values(vd, expanded=False) for vd in path.vdims}
             if any(len(vals) > 1 for vals in data.values()):
                 projected += self._project_path(element, path, data, boundary, geom_type, multi_type)
             else:
                 projected += self._project_contour(element, path, data, boundary, geom_type, multi_type)
+
+        if len(data) and len(projected) == 0:
+            self.warning('While projecting a %s element from a %s coordinate '
+                         'reference system (crs) to a %s projection none of '
+                         'the projected paths were contained within the bounds '
+                         'specified by the projection. Ensure you have specified '
+                         'the correct coordinate system for your data.' %
+                         (type(element).__name__, type(element.crs).__name__,
+                          type(self.p.projection).__name__))
+
         return element.clone(projected, crs=self.p.projection)
 
 
@@ -182,6 +196,16 @@ class project_points(_project_operation):
         new_data[xdim.name] = coordinates[mask, 0]
         new_data[ydim.name] = coordinates[mask, 1]
         datatype = [element.interface.datatype]+element.datatype
+
+        if len(new_data[xdim.name]) == 0:
+            self.warning('While projecting a %s element from a %s coordinate '
+                         'reference system (crs) to a %s projection none of '
+                         'the projected paths were contained within the bounds '
+                         'specified by the projection. Ensure you have specified '
+                         'the correct coordinate system for your data.' %
+                         (type(element).__name__, type(element.crs).__name__,
+                          type(self.p.projection).__name__))
+
         return element.clone(new_data, crs=self.p.projection,
                              datatype=datatype)
 

@@ -107,7 +107,7 @@ class project_path(_project_operation):
         # Project geometry
         projected = []
         for g in geoms:
-            proj = self.p.projection.project_geometry(g, element.crs)
+            proj = self.p.projection.project_geometry(g, contour.crs)
             proj = proj if is_multi_geometry(proj) else [proj]
             for geom in proj:
                 vertices = np.array(geom.array_interface_base['data']).reshape(-1, 2)
@@ -140,15 +140,15 @@ class project_path(_project_operation):
             multi_type, geom_type = MultiLineString, LineString
 
         projected = []
-        data = element.split()
-        for path in data:
+        paths = element.split()
+        for path in paths:
             data = {vd.name: path.dimension_values(vd, expanded=False) for vd in path.vdims}
             if any(len(vals) > 1 for vals in data.values()):
                 projected += self._project_path(element, path, data, boundary, geom_type, multi_type)
             else:
                 projected += self._project_contour(element, path, data, boundary, geom_type, multi_type)
 
-        if len(data) and len(projected) == 0:
+        if len(paths) and len(projected) == 0:
             self.warning('While projecting a %s element from a %s coordinate '
                          'reference system (crs) to a %s projection none of '
                          'the projected paths were contained within the bounds '

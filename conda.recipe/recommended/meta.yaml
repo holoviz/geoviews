@@ -11,7 +11,7 @@ build:
   noarch: python
 
 requirements:
-  build:
+  host:
     - python {{ sdata['python_requires'] }}
     {% for dep in sdata['extras_require']['build'] %}
     - {{ dep }}

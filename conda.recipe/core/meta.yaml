@@ -18,6 +18,8 @@ build:
     {% endfor %}
 
 requirements:
+  run_constrained:
+    - geoviews {{ version }}
   build:
     - python {{ sdata['python_requires'] }}
     {% for dep in sdata['extras_require']['build'] %}

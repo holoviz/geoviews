@@ -138,6 +138,7 @@ _recommended = [
     'datashader',
     'geopandas',
     'gdal',
+    'netcdf4 <1.4.0', # TODO: currently needed for libgdal on defaults (but not c-f)
     'jupyter',
     'matplotlib',
     'pandas',

@@ -137,8 +137,7 @@ _required = [
 _recommended = [
     'datashader',
     'geopandas',
-    'gdal', 'libgdal', # TODO: doesn't gdal depend on libgdal? remove?
-    'netcdf4 <1.4.0', # TODO: currently needed for libgdal on defaults (but not c-f)
+    'gdal',
     'jupyter',
     'matplotlib',
     'pandas',

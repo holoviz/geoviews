@@ -20,7 +20,7 @@ build:
 requirements:
   run_constrained:
     - geoviews {{ version }}
-  build:
+  host:
     - python {{ sdata['python_requires'] }}
     {% for dep in sdata['extras_require']['build'] %}
     - {{ dep }}

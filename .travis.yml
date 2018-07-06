@@ -138,7 +138,7 @@ jobs:
     - &pip_pkg
       <<: *default
       stage: pip_dev_package
-      env: TRAVIS_NOCACHE=$TRAVIS_JOB_ID PYPI=testpypi PYPIUSER=$TPPU PYPIPASS=$TPYPIP
+      env: TRAVIS_NOCACHE=$TRAVIS_JOB_ID PYPI=testpypi PYPIUSER=$TPPU PYPIPASS=$TPPP
       install:
         - doit develop_install $CHANS_DEV -o tests && pip uninstall -y geoviews
         - doit pip_on_conda

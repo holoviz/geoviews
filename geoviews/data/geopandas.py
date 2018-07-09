@@ -144,7 +144,8 @@ class GeoPandasInterface(MultiInterface):
                 values.append(arr)
             if geom_type != 'Point':
                 values.append([np.NaN])
-        return np.concatenate(values[:-1]) if values else np.array([])
+        values = values if geom_type == 'Point' else values[:-1]
+        return np.concatenate(values) if values else np.array([])
 
     @classmethod
     def split(cls, dataset, start, end, datatype, **kwargs):

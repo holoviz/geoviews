@@ -1,6 +1,4 @@
-[![Travis](https://api.travis-ci.org/ioam/geoviews.svg?branch=master)](https://travis-ci.org/ioam/geoviews)
-[![Coveralls](https://img.shields.io/coveralls/ioam/geoviews.svg)](https://coveralls.io/github/ioam/geoviews)
-[![Waffle](https://badge.waffle.io/ioam/geoviews.png?label=ready&title=ready)](https://waffle.io/ioam/geoviews)
+[![Travis](https://api.travis-ci.org/pyviz/geoviews.svg?branch=master)](https://travis-ci.org/pyivz/geoviews)
 
 <h1>
 GeoViews <img src="/doc/_static/geoviews-logo.png" width="50" height="50">

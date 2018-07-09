@@ -1,5 +1,4 @@
 import numpy as np
-import cartopy.crs as ccrs
 
 from holoviews.plotting.bokeh.callbacks import (
     RangeXYCallback, BoundsCallback, BoundsXCallback, BoundsYCallback,
@@ -84,10 +83,11 @@ def project_drawn(cb, msg):
     stream.update(data=msg['data'])
     element = stream.element
     stream.update(data=old_data)
-    if element.crs == ccrs.GOOGLE_MERCATOR or not isinstance(element, _Element):
+    proj = cb.plot.projection
+    if element.crs == proj or not isinstance(element, _Element):
         return None
     crs = element.crs
-    element.crs = ccrs.GOOGLE_MERCATOR
+    element.crs = proj
     return project(element, projection=crs)
 
 
@@ -217,8 +217,7 @@ class GeoPolyDrawCallback(PolyDrawCallback):
         xd, yd = projected.kdims
         data['xs'] = data.pop(xd.name)
         data['ys'] = data.pop(yd.name)
-        msg['data'] = data
-        return msg
+        return {'data': data}
 
 
 class GeoPointDrawCallback(PointDrawCallback):

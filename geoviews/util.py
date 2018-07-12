@@ -67,7 +67,7 @@ def path_to_geom(path, multi=True, skip_invalid=True):
     datatype = 'geom' if path.interface.datatype == 'geodataframe' else 'array'
     for path in path.split(datatype=datatype):
         if datatype == 'array':
-            splits = np.where(np.isnan(path).sum(axis=1))[0]
+            splits = np.where(np.isnan(path[:, :2].astype('float')).sum(axis=1))[0]
             paths = np.split(path, splits+1) if len(splits) else [path]
             for i, path in enumerate(paths):
                 if i != (len(paths)-1):
@@ -97,7 +97,7 @@ def polygon_to_geom(poly, multi=True, skip_invalid=True):
     datatype = 'geom' if poly.interface.datatype == 'geodataframe' else 'array'
     for path in poly.split(datatype=datatype):
         if datatype == 'array':
-            splits = np.where(np.isnan(path[:, :2]).sum(axis=1))[0]
+            splits = np.where(np.isnan(path[:, :2].astype('float')).sum(axis=1))[0]
             paths = np.split(path, splits+1) if len(splits) else [path]
             for i, path in enumerate(paths):
                 if i != (len(paths)-1):

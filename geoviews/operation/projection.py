@@ -318,8 +318,11 @@ class project_image(_project_operation):
         arrays = []
         for vd in img.vdims:
             arr = img.dimension_values(vd, flat=False)
-            projected, extents = warp_array(arr, proj, img.crs, (xn, yn),
-                                            src_ext, trgt_ext)
+            if arr.size:
+                projected, extents = warp_array(arr, proj, img.crs, (xn, yn),
+                                                src_ext, trgt_ext)
+            else:
+                projected, extents = arr, trgt_ext
             arrays.append(projected)
         projected = np.dstack(arrays) if len(arrays) > 1 else arrays[0]
         data = np.flipud(projected)

@@ -77,10 +77,11 @@ class TilePlot(GeoPlot):
         """
         Returns a Bokeh glyph object.
         """
+        tile_source = mapping['tile_source']
         level = properties.pop('level', 'underlay')
-        renderer = plot.add_tile(mapping['tile_source'], level=level)
+        renderer = plot.add_tile(tile_source, level=level)
         renderer.alpha = properties.get('alpha', 1)
-        return renderer, renderer
+        return renderer, tile_source
 
 
 class GeoPointPlot(GeoPlot, PointPlot):

@@ -72,6 +72,8 @@ class TilePlot(GeoPlot):
         merged = dict(properties, **mapping)
         glyph.update(**{k: v for k, v in merged.items()
                         if k in allowed_properties})
+        if 'alpha' in properties:
+            renderer.alpha = properties['alpha']
 
     def _init_glyph(self, plot, mapping, properties):
         """

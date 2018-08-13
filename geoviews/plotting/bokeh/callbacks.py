@@ -235,6 +235,17 @@ class GeoPointDrawCallback(PointDrawCallback):
 
 callbacks = Stream._callbacks['bokeh']
 
+try:
+    # Handle FreehandDraw (available in HoloViews 1.11.0)
+    from holoviews.plotting.bokeh.callbacks import FreehandDrawCallback
+    from holoviews.streams import FreehandDraw
+    class GeoFreehandDrawCallback(FreehandDrawCallback, GeoPolyDrawCallback):
+        def _process_msg(self, msg):
+            return GeoPolyDrawCallback._process_msg(self, msg)
+    callbacks[FreehandDraw] = GeoFreehandDrawCallback
+except:
+    pass
+
 callbacks[RangeXY]     = GeoRangeXYCallback
 callbacks[RangeX]      = GeoRangeXCallback
 callbacks[RangeY]      = GeoRangeYCallback

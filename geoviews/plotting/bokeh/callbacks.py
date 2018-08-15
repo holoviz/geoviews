@@ -92,6 +92,22 @@ def project_drawn(cb, msg):
     return project(element, projection=crs)
 
 
+def project_poly(cb, msg):
+    if not msg['data']:
+        return msg
+    projected = project_drawn(cb, msg)
+    if projected is None:
+        return msg
+    split = projected.split()
+    data = {d.name: [el.dimension_values(d) for el in split]
+            for d in projected.dimensions()}
+    xd, yd = projected.kdims
+    data['xs'] = data.pop(xd.name)
+    data['ys'] = data.pop(yd.name)
+    return {'data': data}
+
+
+
 class GeoRangeXYCallback(RangeXYCallback):
 
     def _process_msg(self, msg):
@@ -207,18 +223,7 @@ class GeoPolyDrawCallback(PolyDrawCallback):
 
     def _process_msg(self, msg):
         msg = super(GeoPolyDrawCallback, self)._process_msg(msg)
-        if not msg['data']:
-            return msg
-        projected = project_drawn(self, msg)
-        if projected is None:
-            return msg
-        split = projected.split()
-        data = {d.name: [el.dimension_values(d) for el in split]
-                for d in projected.dimensions()}
-        xd, yd = projected.kdims
-        data['xs'] = data.pop(xd.name)
-        data['ys'] = data.pop(yd.name)
-        return {'data': data}
+        return project_poly(self, msg)
 
 
 class GeoBoxEditCallback(BoxEditCallback):
@@ -229,6 +234,7 @@ class GeoBoxEditCallback(BoxEditCallback):
         element = self.source
         if isinstance(element, UniformNdMapping):
             element = element.last
+
         if element.crs == proj or not isinstance(element, _Element):
             return msg
 
@@ -262,9 +268,10 @@ try:
     # Handle FreehandDraw (available in HoloViews 1.11.0)
     from holoviews.plotting.bokeh.callbacks import FreehandDrawCallback
     from holoviews.streams import FreehandDraw
-    class GeoFreehandDrawCallback(FreehandDrawCallback, GeoPolyDrawCallback):
+    class GeoFreehandDrawCallback(FreehandDrawCallback):
         def _process_msg(self, msg):
-            return GeoPolyDrawCallback._process_msg(self, msg)
+            msg = super(GeoFreehandDrawCallback, self)._process_msg(msg)
+            return project_poly(self, msg)
     callbacks[FreehandDraw] = GeoFreehandDrawCallback
 except:
     pass

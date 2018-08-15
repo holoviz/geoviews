@@ -1,16 +1,17 @@
 import numpy as np
 
+from holoviews.core.ndmapping import UniformNdMapping
 from holoviews.plotting.bokeh.callbacks import (
     RangeXYCallback, BoundsCallback, BoundsXCallback, BoundsYCallback,
     PointerXYCallback, PointerXCallback, PointerYCallback, TapCallback,
     SingleTapCallback, DoubleTapCallback, MouseEnterCallback,
     MouseLeaveCallback, RangeXCallback, RangeYCallback, PolyDrawCallback,
-    PointDrawCallback
+    PointDrawCallback, BoxEditCallback
 )
 from holoviews.streams import (
     Stream, PointerXY, RangeXY, RangeX, RangeY, PointerX, PointerY,
     BoundsX, BoundsY, Tap, SingleTap, DoubleTap, MouseEnter, MouseLeave,
-    Bounds, BoundsXY, PolyDraw, PointDraw
+    Bounds, BoundsXY, PolyDraw, PointDraw, BoxEdit
 )
 
 from ...element.geo import _Element
@@ -220,6 +221,28 @@ class GeoPolyDrawCallback(PolyDrawCallback):
         return {'data': data}
 
 
+class GeoBoxEditCallback(BoxEditCallback):
+
+    def _process_msg(self, msg):
+        msg = super(GeoBoxEditCallback, self)._process_msg(msg)
+        proj = self.plot.projection
+        element = self.source
+        if isinstance(element, UniformNdMapping):
+            element = element.last
+        if element.crs == proj or not isinstance(element, _Element):
+            return msg
+
+        boxes = msg['data']
+        data = {'x0': [], 'y0': [], 'x1': [], 'y1': []}
+        for extent in zip(boxes['x0'], boxes['y0'], boxes['x1'], boxes['y1']):
+            x0, y0, x1, y1 = project_extents(extent, proj, element.crs)
+            data['x0'].append(x0)
+            data['y0'].append(y0)
+            data['x1'].append(x1)
+            data['y1'].append(y1)
+        return {'data': data}
+
+
 class GeoPointDrawCallback(PointDrawCallback):
 
     def _process_msg(self, msg):
@@ -263,3 +286,4 @@ callbacks[MouseEnter]  = GeoMouseEnterCallback
 callbacks[MouseLeave]  = GeoMouseLeaveCallback
 callbacks[PolyDraw]    = GeoPolyDrawCallback
 callbacks[PointDraw]   = GeoPointDrawCallback
+callbacks[BoxEdit]     = GeoBoxEditCallback

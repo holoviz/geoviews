@@ -85,7 +85,7 @@ def project_drawn(cb, msg):
     element = stream.element
     stream.update(data=old_data)
     proj = cb.plot.projection
-    if element.crs == proj or not isinstance(element, _Element):
+    if not isinstance(element, _Element) or element.crs == proj:
         return None
     crs = element.crs
     element.crs = proj
@@ -235,7 +235,7 @@ class GeoBoxEditCallback(BoxEditCallback):
         if isinstance(element, UniformNdMapping):
             element = element.last
 
-        if element.crs == proj or not isinstance(element, _Element):
+        if not isinstance(element, _Element) or element.crs == proj:
             return msg
 
         boxes = msg['data']

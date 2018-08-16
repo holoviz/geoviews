@@ -32,7 +32,7 @@ try:
 except:
     WebMapTileService = None
 
-from ..util import path_to_geom, polygon_to_geom, geom_to_array
+from ..util import path_to_geom, polygon_to_geom, geom_to_array, process_crs
 
 geographic_types = (GoogleTiles, cFeature, BaseGeometry)
 
@@ -312,6 +312,55 @@ class RGB(_Element, HvRGB):
 
         If an alpha channel is supplied, the defined alpha_dimension
         is automatically appended to this list.""")
+
+    @classmethod
+    def load_tiff(cls, filename, crs=None, apply_transform=False, **kwargs):
+        """
+        Returns an RGB element or xarray loaded from a geotiff file.
+
+        The data is loaded using xarray and rasterio. If a crs attribute
+        is present on the loaded data it will attempt to decode it into
+        a cartopy projection otherwise it will default to a non-geographic
+        HoloViews element.
+        """
+        try:
+            import xarray as xr
+        except:
+            raise ImportError('Loading tiffs requires xarray to be installed')
+
+        da = xr.open_rasterio(filename)
+        if crs:
+            kwargs['crs'] = crs
+        elif hasattr(da, 'crs'):
+            try:
+                kwargs['crs'] = process_crs(da.crs)
+            except:
+                param.main.warning('Could not decode projection from crs string %r, '
+                                   'defaulting to non-geographic element.' % da.crs)
+
+        coords = list(da.coords)
+        y, x = coords[1:]
+        bands = len(da.coords[coords[0]])
+        if apply_transform:
+            from affine import Affine
+            transform = Affine(*da.attrs['transform'][:6])
+            nx, ny = da.sizes[x], da.sizes[y]
+            xs, ys = np.meshgrid(np.arange(nx)+0.5, np.arange(ny)+0.5) * transform
+            data = (xs, ys)
+        else:
+            xs, ys = da.coords[x], da.coords[y]
+        data = (xs, ys)
+        data += tuple(da[b].values for b in range(bands))
+
+        if xs.ndim > 1:
+            el = QuadMesh if 'crs' in kwargs else HvQuadMesh
+            return el(data, [x, y], **kwargs)
+        elif bands == 1:
+            el = Image if 'crs' in kwargs else HvImage
+            return el(data, [x, y], **kwargs)
+        vdims = cls.vdims[:bands]
+        el = cls if 'crs' in kwargs else HvRGB
+        return el(data, [x, y], vdims, **kwargs)
 
 
 

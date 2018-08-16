@@ -74,7 +74,7 @@ class project_path(_project_operation):
         Handle case of iso-contour
         """
         xdim, ydim = contour.kdims[:2]
-        data = {k: vals[0] for k, vals in data.items()}
+        data = {k: vals for k, vals in data.items()}
 
         # Wrap longitudes
         vertices = contour.array([0, 1])
@@ -133,7 +133,6 @@ class project_path(_project_operation):
         boundary = element.crs.project_geometry(Polygon(self.p.projection.boundary),
                                                 self.p.projection)
 
-
         if isinstance(element, Polygons):
             multi_type, geom_type = MultiPolygon, Polygon
         else:
@@ -142,8 +141,12 @@ class project_path(_project_operation):
         projected = []
         paths = element.split()
         for path in paths:
-            data = {vd.name: path.dimension_values(vd, expanded=False) for vd in path.vdims}
-            if any(len(vals) > 1 for vals in data.values()):
+            data = {}
+            for vd in path.vdims:
+                scalar = path.interface.isscalar(path, vd)
+                values = path.dimension_values(vd, expanded=not scalar)
+                data[vd.name] = values[0] if scalar else values
+            if any(vals is not None and not np.isscalar(vals) and len(vals) > 1 for vals in data.values()):
                 projected += self._project_path(element, path, data, boundary, geom_type, multi_type)
             else:
                 projected += self._project_contour(element, path, data, boundary, geom_type, multi_type)
@@ -206,8 +209,9 @@ class project_points(_project_operation):
                          (type(element).__name__, type(element.crs).__name__,
                           type(self.p.projection).__name__))
 
-        return element.clone(new_data, crs=self.p.projection,
-                             datatype=datatype)
+        return element.clone(tuple(new_data[d.name] for d in element.dimensions()),
+                             crs=self.p.projection, datatype=datatype)
+
 
 
 class project_graph(_project_operation):

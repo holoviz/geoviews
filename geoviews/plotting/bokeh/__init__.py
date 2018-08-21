@@ -33,7 +33,7 @@ poly_types = (shapely.geometry.MultiPolygon, shapely.geometry.Polygon)
 
 class TilePlot(GeoPlot):
 
-    style_opts = ['alpha', 'render_parents', 'level', 'min_zoom', 'max_zoom']
+    style_opts = ['alpha', 'render_parents', 'level', 'smoothing', 'min_zoom', 'max_zoom']
 
     def get_extents(self, element, ranges):
         extents = super(TilePlot, self).get_extents(element, ranges)
@@ -67,13 +67,11 @@ class TilePlot(GeoPlot):
         return {}, {'tile_source': tile_source(**params)}, style
 
     def _update_glyph(self, renderer, properties, mapping, glyph):
-        allowed_properties = glyph.properties()
-        mapping['url'] = mapping.pop('tile_source').url
-        merged = dict(properties, **mapping)
-        glyph.update(**{k: v for k, v in merged.items()
-                        if k in allowed_properties})
-        if 'alpha' in properties:
-            renderer.alpha = properties['alpha']
+        glyph.url = mapping['tile_source'].url
+        glyph.update(**{k: v for k, v in properties.items()
+                           if k in glyph.properties()})
+        renderer.update(**{k: v for k, v in properties.items()
+                           if k in renderer.properties()})
 
     def _init_glyph(self, plot, mapping, properties):
         """

@@ -305,7 +305,7 @@ class project_image(_project_operation):
         when applying project_image, backends that support linked streams
         update RangeXY streams on the inputs of the operation.""")
 
-    supported_types = [Image]
+    supported_types = [Image, RGB]
 
     def _process(self, img, key=None):
         if self.p.fast:

@@ -371,15 +371,21 @@ class RGB(_Element, HvRGB):
         data = (xs, ys)
         data += tuple(da[b].values for b in range(bands))
 
+        if 'datatype' not in kwargs:
+            kwargs['datatype'] = ['xarray', 'grid', 'image']
+
         if xs.ndim > 1:
             el = QuadMesh if 'crs' in kwargs else HvQuadMesh
-            return el(data, [x, y], **kwargs)
+            el = el(data, [x, y], **kwargs)
         elif bands < 3:
             el = Image if 'crs' in kwargs else HvImage
-            return el(data, [x, y], **kwargs)
-        vdims = cls.vdims[:bands]
-        el = cls if 'crs' in kwargs else HvRGB
-        return el(data, [x, y], vdims, **kwargs)
+            el = el(data, [x, y], **kwargs)
+        else:
+            vdims = cls.vdims[:bands]
+            el = cls if 'crs' in kwargs else HvRGB
+            el = el(data, [x, y], vdims, **kwargs)
+        el.data.attrs = da.attrs
+        return el
 
 
 

@@ -333,11 +333,11 @@ class RGB(_Element, HvRGB):
         with warnings.catch_warnings():
             warnings.filterwarnings('ignore')
             da = xr.open_rasterio(filename)
-        return cls.from_tiff(da, crs, apply_transform, **kwargs)
+        return cls.from_xarray(da, crs, apply_transform, **kwargs)
 
 
     @classmethod
-    def from_tiff(cls, da, crs=None, apply_transform=False, **kwargs):
+    def from_xarray(cls, da, crs=None, apply_transform=False, **kwargs):
         """
         Returns an RGB or Image element given an xarray DataArray
         loaded using xr.open_rasterio.

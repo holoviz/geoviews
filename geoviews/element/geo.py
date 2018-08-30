@@ -318,7 +318,7 @@ class RGB(_Element, HvRGB):
     @classmethod
     def load_tiff(cls, filename, crs=None, apply_transform=False, **kwargs):
         """
-        Returns an RGB element or xarray loaded from a geotiff file.
+        Returns an RGB or Image element loaded from a geotiff file.
 
         The data is loaded using xarray and rasterio. If a crs attribute
         is present on the loaded data it will attempt to decode it into
@@ -333,7 +333,19 @@ class RGB(_Element, HvRGB):
         with warnings.catch_warnings():
             warnings.filterwarnings('ignore')
             da = xr.open_rasterio(filename)
+        return cls.from_tiff(da, crs, apply_transform, **kwargs)
 
+
+    @classmethod
+    def from_tiff(cls, da, crs=None, apply_transform=False, **kwargs):
+        """
+        Returns an RGB or Image element given an xarray DataArray
+        loaded using xr.open_rasterio.
+
+        If a crs attribute is present on the loaded data it will
+        attempt to decode it into a cartopy projection otherwise it
+        will default to a non-geographic HoloViews element.
+        """
         if crs:
             kwargs['crs'] = crs
         elif hasattr(da, 'crs'):

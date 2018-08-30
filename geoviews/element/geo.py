@@ -1,3 +1,5 @@
+import warnings
+
 import param
 import numpy as np
 from cartopy import crs as ccrs
@@ -328,7 +330,10 @@ class RGB(_Element, HvRGB):
         except:
             raise ImportError('Loading tiffs requires xarray to be installed')
 
-        da = xr.open_rasterio(filename)
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore')
+            da = xr.open_rasterio(filename)
+
         if crs:
             kwargs['crs'] = crs
         elif hasattr(da, 'crs'):
@@ -348,14 +353,16 @@ class RGB(_Element, HvRGB):
             xs, ys = np.meshgrid(np.arange(nx)+0.5, np.arange(ny)+0.5) * transform
             data = (xs, ys)
         else:
-            xs, ys = da.coords[x], da.coords[y]
+            xres, yres = da.attrs['res'] if 'res' in da.attrs else (1, 1)
+            xs = da.coords[x][::-1] if xres < 0 else da.coords[x]
+            ys = da.coords[y][::-1] if yres < 0 else da.coords[y]
         data = (xs, ys)
         data += tuple(da[b].values for b in range(bands))
 
         if xs.ndim > 1:
             el = QuadMesh if 'crs' in kwargs else HvQuadMesh
             return el(data, [x, y], **kwargs)
-        elif bands == 1:
+        elif bands < 3:
             el = Image if 'crs' in kwargs else HvImage
             return el(data, [x, y], **kwargs)
         vdims = cls.vdims[:bands]

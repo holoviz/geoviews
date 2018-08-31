@@ -6,15 +6,15 @@ from holoviews.plotting.bokeh.callbacks import (
     PointerXYCallback, PointerXCallback, PointerYCallback, TapCallback,
     SingleTapCallback, DoubleTapCallback, MouseEnterCallback,
     MouseLeaveCallback, RangeXCallback, RangeYCallback, PolyDrawCallback,
-    PointDrawCallback, BoxEditCallback
+    PointDrawCallback, BoxEditCallback, PolyEditCallback
 )
 from holoviews.streams import (
     Stream, PointerXY, RangeXY, RangeX, RangeY, PointerX, PointerY,
     BoundsX, BoundsY, Tap, SingleTap, DoubleTap, MouseEnter, MouseLeave,
-    Bounds, BoundsXY, PolyDraw, PointDraw, BoxEdit
+    Bounds, BoundsXY, PolyDraw, PolyEdit, PointDraw, BoxEdit
 )
 
-from ...element.geo import _Element
+from ...element.geo import _Element, Shape
 from ...util import project_extents
 from ...operation import project
 from .plot import GeoOverlayPlot
@@ -225,6 +225,19 @@ class GeoPolyDrawCallback(PolyDrawCallback):
         msg = super(GeoPolyDrawCallback, self)._process_msg(msg)
         return project_poly(self, msg)
 
+    def _update_cds_vdims(self):
+        if isinstance(self.source, Shape):
+            return
+        super(GeoPolyDrawCallback, self)._update_cds_vdims()
+
+
+class GeoPolyEditCallback(PolyEditCallback):
+
+    def _update_cds_vdims(self):
+        if isinstance(self.source, Shape):
+            return
+        super(GeoPolyEditCallback, self)._update_cds_vdims()
+
 
 class GeoBoxEditCallback(BoxEditCallback):
 
@@ -272,6 +285,11 @@ try:
         def _process_msg(self, msg):
             msg = super(GeoFreehandDrawCallback, self)._process_msg(msg)
             return project_poly(self, msg)
+
+        def _update_cds_vdims(self):
+            if isinstance(self.source, Shape):
+                return
+            super(GeoFreehandDrawCallback, self)._update_cds_vdims()
     callbacks[FreehandDraw] = GeoFreehandDrawCallback
 except:
     pass
@@ -292,5 +310,6 @@ callbacks[DoubleTap]   = GeoDoubleTapCallback
 callbacks[MouseEnter]  = GeoMouseEnterCallback
 callbacks[MouseLeave]  = GeoMouseLeaveCallback
 callbacks[PolyDraw]    = GeoPolyDrawCallback
+callbacks[PolyEdit]    = GeoPolyEditCallback
 callbacks[PointDraw]   = GeoPointDrawCallback
 callbacks[BoxEdit]     = GeoBoxEditCallback

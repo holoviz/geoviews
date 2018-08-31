@@ -1,3 +1,5 @@
+import warnings
+
 import param
 import numpy as np
 from cartopy import crs as ccrs
@@ -316,7 +318,7 @@ class RGB(_Element, HvRGB):
     @classmethod
     def load_tiff(cls, filename, crs=None, apply_transform=False, **kwargs):
         """
-        Returns an RGB element or xarray loaded from a geotiff file.
+        Returns an RGB or Image element loaded from a geotiff file.
 
         The data is loaded using xarray and rasterio. If a crs attribute
         is present on the loaded data it will attempt to decode it into
@@ -328,7 +330,22 @@ class RGB(_Element, HvRGB):
         except:
             raise ImportError('Loading tiffs requires xarray to be installed')
 
-        da = xr.open_rasterio(filename)
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore')
+            da = xr.open_rasterio(filename)
+        return cls.from_xarray(da, crs, apply_transform, **kwargs)
+
+
+    @classmethod
+    def from_xarray(cls, da, crs=None, apply_transform=False, **kwargs):
+        """
+        Returns an RGB or Image element given an xarray DataArray
+        loaded using xr.open_rasterio.
+
+        If a crs attribute is present on the loaded data it will
+        attempt to decode it into a cartopy projection otherwise it
+        will default to a non-geographic HoloViews element.
+        """
         if crs:
             kwargs['crs'] = crs
         elif hasattr(da, 'crs'):
@@ -348,19 +365,27 @@ class RGB(_Element, HvRGB):
             xs, ys = np.meshgrid(np.arange(nx)+0.5, np.arange(ny)+0.5) * transform
             data = (xs, ys)
         else:
-            xs, ys = da.coords[x], da.coords[y]
+            xres, yres = da.attrs['res'] if 'res' in da.attrs else (1, 1)
+            xs = da.coords[x][::-1] if xres < 0 else da.coords[x]
+            ys = da.coords[y][::-1] if yres < 0 else da.coords[y]
         data = (xs, ys)
         data += tuple(da[b].values for b in range(bands))
 
+        if 'datatype' not in kwargs:
+            kwargs['datatype'] = ['xarray', 'grid', 'image']
+
         if xs.ndim > 1:
             el = QuadMesh if 'crs' in kwargs else HvQuadMesh
-            return el(data, [x, y], **kwargs)
-        elif bands == 1:
+            el = el(data, [x, y], **kwargs)
+        elif bands < 3:
             el = Image if 'crs' in kwargs else HvImage
-            return el(data, [x, y], **kwargs)
-        vdims = cls.vdims[:bands]
-        el = cls if 'crs' in kwargs else HvRGB
-        return el(data, [x, y], vdims, **kwargs)
+            el = el(data, [x, y], **kwargs)
+        else:
+            vdims = cls.vdims[:bands]
+            el = cls if 'crs' in kwargs else HvRGB
+            el = el(data, [x, y], vdims, **kwargs)
+        el.data.attrs = da.attrs
+        return el
 
 
 

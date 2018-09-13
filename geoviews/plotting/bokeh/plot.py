@@ -123,7 +123,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         hover.formatters = formatters
 
 
-    def get_extents(self, element, ranges):
+    def get_extents(self, element, ranges, range_type='combined'):
         """
         Subclasses the get_extents method using the GeoAxes
         set_extent method to project the extents to the
@@ -133,7 +133,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         if self.global_extent:
             (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
             return (x0, y0, x1, y1)
-        extents = super(GeoPlot, self).get_extents(element, ranges)
+        extents = super(GeoPlot, self).get_extents(element, ranges, range_type)
         if not getattr(element, 'crs', None) or not self.geographic:
             return extents
         elif any(e is None or not np.isfinite(e) for e in extents):

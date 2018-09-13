@@ -107,14 +107,14 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             self.aspect = 'equal' if self.geographic else 'square'
 
 
-    def get_extents(self, element, ranges):
+    def get_extents(self, element, ranges, range_type='combined'):
         """
         Subclasses the get_extents method using the GeoAxes
         set_extent method to project the extents to the
         Elements coordinate reference system.
         """
         ax = self.handles['axis']
-        extents = super(GeoPlot, self).get_extents(element, ranges)
+        extents = super(GeoPlot, self).get_extents(element, ranges, range_type)
         x0, y0, x1, y1 = extents
         if not self.geographic:
             return extents

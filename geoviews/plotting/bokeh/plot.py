@@ -4,7 +4,6 @@ Module for geographic bokeh plot baseclasses.
 from distutils.version import LooseVersion
 
 import param
-import numpy as np
 import holoviews as hv
 
 from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator
@@ -15,7 +14,6 @@ from holoviews.plotting.bokeh.util import bokeh_version
 from holoviews.core.util import dimension_sanitizer, basestring
 
 from ...element import is_geographic, _Element, Shape
-from ...util import project_extents
 from ..plot import ProjectionPlot
 
 
@@ -121,30 +119,6 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             tooltips.append((name, formatter))
         hover.tooltips = tooltips
         hover.formatters = formatters
-
-
-    def get_extents(self, element, ranges, range_type='combined'):
-        """
-        Subclasses the get_extents method using the GeoAxes
-        set_extent method to project the extents to the
-        Elements coordinate reference system.
-        """
-        proj = self.projection
-        if self.global_extent and range_type in ('combined', 'data'):
-            (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
-            return (x0, y0, x1, y1)
-        extents = super(GeoPlot, self).get_extents(element, ranges, range_type)
-        if not getattr(element, 'crs', None) or not self.geographic:
-            return extents
-        elif any(e is None or not np.isfinite(e) for e in extents):
-            extents = None
-        else:
-            try:
-                extents = project_extents(extents, element.crs, proj)
-            except:
-                extents = None
-        return (np.NaN,)*4 if not extents else extents
-
 
     def get_data(self, element, ranges, style):
         proj = self.projection

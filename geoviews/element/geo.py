@@ -139,7 +139,7 @@ class Feature(_GeoFeature):
             l, b, r, t = util.max_extents([geom.bounds for geom in self.data.geometries()])
             lower, upper = (b, t) if didx else (l, r)
             if dimension_range:
-                return util.dimension_range(lower, upper, dim)
+                return util.dimension_range(lower, upper, dim.range, dim.soft_range)
             else:
                 return lower, upper
         return super(Feature, self).range(dim, data_range, dimension_range)
@@ -718,7 +718,7 @@ class Shape(_Element):
             l, b, r, t = self.data.bounds
             lower, upper = (b, t) if idx else (l, r)
         if dimension_range:
-            return util.dimension_range(lower, upper, dim)
+            return util.dimension_range(lower, upper, dim.range, dim.soft_range)
         else:
             return lower, upper
 

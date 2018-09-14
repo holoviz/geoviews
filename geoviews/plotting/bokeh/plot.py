@@ -130,7 +130,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         Elements coordinate reference system.
         """
         proj = self.projection
-        if self.global_extent:
+        if self.global_extent and range_type in ('combined', 'data'):
             (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
             return (x0, y0, x1, y1)
         extents = super(GeoPlot, self).get_extents(element, ranges, range_type)

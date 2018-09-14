@@ -1,4 +1,5 @@
 [![Travis](https://api.travis-ci.org/pyviz/geoviews.svg?branch=master)](https://travis-ci.org/pyivz/geoviews)
+[![Windows build status](https://ci.appveyor.com/api/projects/status/4yl8w4kie2m0xu1q/branch/master?svg=true)](https://ci.appveyor.com/project/pyviz/geoviews/branch/master)
 
 <h1>
 GeoViews <img src="/doc/_static/geoviews-logo.png" width="50" height="50">

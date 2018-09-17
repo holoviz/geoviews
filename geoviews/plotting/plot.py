@@ -1,5 +1,9 @@
 import param
+import numpy as np
+
 from holoviews.core import CompositeOverlay, Element
+
+from ..util import project_extents
 
 
 def _get_projection(el):
@@ -49,3 +53,22 @@ class ProjectionPlot(param.Parameterized):
             return projections[0][1]
         else:
             return None
+
+    def get_extents(self, element, ranges, range_type='combined'):
+        """
+        Subclasses the get_extents method using the GeoAxes
+        set_extent method to project the extents to the
+        Elements coordinate reference system.
+        """
+        proj = self.projection
+        if self.global_extent and range_type in ('combined', 'data'):
+            (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
+            return (x0, y0, x1, y1)
+        extents = super(ProjectionPlot, self).get_extents(element, ranges, range_type)
+        if not getattr(element, 'crs', None) or not self.geographic:
+            return extents
+        elif any(e is None or not np.isfinite(e) for e in extents):
+            extents = None
+        else:
+            extents = project_extents(extents, element.crs, proj)
+        return (np.NaN,)*4 if not extents else extents

@@ -35,9 +35,10 @@ class TilePlot(GeoPlot):
 
     style_opts = ['alpha', 'render_parents', 'level', 'smoothing', 'min_zoom', 'max_zoom']
 
-    def get_extents(self, element, ranges):
-        extents = super(TilePlot, self).get_extents(element, ranges)
-        if not self.overlaid and all(e is None or not np.isfinite(e) for e in extents):
+    def get_extents(self, element, ranges, range_type='combined'):
+        extents = super(TilePlot, self).get_extents(element, ranges, range_type)
+        if (not self.overlaid and all(e is None or not np.isfinite(e) for e in extents)
+            and range_type in ('combined', 'data')):
             (x0, x1), (y0, y1) = GOOGLE_MERCATOR.x_limits, GOOGLE_MERCATOR.y_limits
             global_extent = (x0, y0, x1, y1)
             return global_extent
@@ -205,19 +206,14 @@ class FeaturePlot(GeoPolygonPlot):
                                  objects=['10m', '50m', '110m'],
                                  doc="The scale of the Feature in meters.")
 
-    def get_extents(self, element, ranges):
-        """
-        Subclasses the get_extents method using the GeoAxes
-        set_extent method to project the extents to the
-        Elements coordinate reference system.
-        """
+    def get_extents(self, element, ranges, range_type='combined'):
         proj = self.projection
-        if self.global_extent:
+        if self.global_extent and range_type in ('combined', 'data'):
             (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
             return (x0, y0, x1, y1)
         elif self.overlaid:
             return (np.NaN,)*4
-        return super(FeaturePlot, self).get_extents(element, ranges)
+        return super(FeaturePlot, self).get_extents(element, ranges, range_type)
 
 
     def get_data(self, element, ranges, style):
@@ -254,9 +250,6 @@ class GeoTextPlot(GeoPlot, TextPlot):
             x, y = self.projection.transform_point(element.x, element.y,
                                                    element.crs)
         return (dict(x=[x], y=[y], text=[element.text]), mapping, style)
-
-    def get_extents(self, element, ranges=None):
-        return None, None, None, None
 
 
 class GeoLabelsPlot(GeoPlot, LabelsPlot):

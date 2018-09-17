@@ -30,7 +30,7 @@ from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         Path, Polygons, Shape, RGB, Contours, Nodes,
                         EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
                         HexTiles, Labels)
-from ...util import project_extents, geo_mesh
+from ...util import geo_mesh
 from ..plot import ProjectionPlot
 
 from ...operation import project_points, project_path, project_graph, project_quadmesh
@@ -106,40 +106,6 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         if 'aspect' not in plot_opts:
             self.aspect = 'equal' if self.geographic else 'square'
 
-
-    def get_extents(self, element, ranges):
-        """
-        Subclasses the get_extents method using the GeoAxes
-        set_extent method to project the extents to the
-        Elements coordinate reference system.
-        """
-        ax = self.handles['axis']
-        extents = super(GeoPlot, self).get_extents(element, ranges)
-        x0, y0, x1, y1 = extents
-        if not self.geographic:
-            return extents
-
-        # If extent can't be determined autoscale, otherwise use
-        # set_extent to convert coordinates to native coordinate
-        # system
-        if (None in extents or any(not np.isfinite(e) for e in extents) or
-            x0 == x1 or y0 == y1):
-            extents = None
-        else:
-            try:
-                extents = project_extents((x0, y0, x1, y1), element.crs,
-                                          self.projection)
-            except:
-                extents = (np.NaN,)*4
-
-        if extents:
-            l, b, r, t = extents
-        else:
-            ax.autoscale_view()
-            (l, r), (b, t) = ax.get_xlim(), ax.get_ylim()
-
-        return l, b, r, t
-
     def _finalize_axis(self, *args, **kwargs):
         ret = super(GeoPlot, self)._finalize_axis(*args, **kwargs)
         axis = self.handles['axis']
@@ -149,12 +115,10 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             axis.set_global()
         return ret
 
-
     def get_data(self, element, ranges, style):
         if self._project_operation and self.geographic and element.crs != self.projection:
             element = self._project_operation(element, projection=self.projection)
         return super(GeoPlot, self).get_data(element, ranges, style)
-
 
     def teardown_handles(self):
         """

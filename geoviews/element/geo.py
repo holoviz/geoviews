@@ -7,8 +7,7 @@ from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles
 from cartopy.io.shapereader import Reader
 from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay, Overlay
-from holoviews.core.util import (basestring, pd, max_extents,
-                                 dimension_range, get_param_values)
+from holoviews.core import util
 from holoviews.element import (
     Contours as HvContours, Graph as HvGraph, Image as HvImage,
     Nodes as HvNodes, Path as HvPath, Polygons as HvPolygons,
@@ -133,14 +132,17 @@ class Feature(_GeoFeature):
                             % type(data).__name__)
         super(Feature, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
-    def range(self, dim, data_range=True):
+    def range(self, dim, data_range=True, dimension_range=True):
         didx = self.get_dimension_index(dim)
         if didx in [0, 1] and data_range:
             dim = self.get_dimension(dim)
-            l, b, r, t = max_extents([geom.bounds for geom in self.data.geometries()])
+            l, b, r, t = util.max_extents([geom.bounds for geom in self.data.geometries()])
             lower, upper = (b, t) if didx else (l, r)
-            return dimension_range(lower, upper, dim)
-        return super(Feature, self).range(dim, data_range)
+            if dimension_range:
+                return util.dimension_range(lower, upper, dim.range, dim.soft_range)
+            else:
+                return lower, upper
+        return super(Feature, self).range(dim, data_range, dimension_range)
 
 
 class WMTS(_GeoFeature):
@@ -161,7 +163,7 @@ class WMTS(_GeoFeature):
             data = data.url
         elif WebMapTileService and isinstance(data, WebMapTileService):
             pass
-        elif not isinstance(data, basestring):
+        elif not isinstance(data, util.basestring):
             raise TypeError('%s data should be a tile service URL not a %s type.'
                             % (type(self).__name__, type(data).__name__) )
         super(WMTS, self).__init__(data, kdims=kdims, vdims=vdims, **params)
@@ -286,11 +288,11 @@ class QuadMesh(_Element, HvQuadMesh):
 
     def trimesh(self):
         trimesh = super(QuadMesh, self).trimesh()
-        node_params = get_param_values(trimesh.nodes)
+        node_params = util.get_param_values(trimesh.nodes)
         node_params['crs'] = self.crs
         nodes = TriMesh.node_type(trimesh.nodes.data, **node_params)
         return TriMesh((trimesh.data, nodes), crs=self.crs,
-                       **get_param_values(trimesh))
+                       **util.get_param_values(trimesh))
 
 
 class RGB(_Element, HvRGB):
@@ -633,7 +635,7 @@ class Shape(_Element):
             raise ValueError('To merge dataset with shapes mapping '
                              'must define attribute(s) to merge on.')
 
-        if pd and isinstance(dataset, pd.DataFrame):
+        if util.pd and isinstance(dataset, util.pd.DataFrame):
             dataset = Dataset(dataset)
 
         if not isinstance(on, (dict, list)):
@@ -705,22 +707,20 @@ class Shape(_Element):
         else:
             return []
 
-
-    def range(self, dim, data_range=True):
+    def range(self, dim, data_range=True, dimension_range=True):
         dim = self.get_dimension(dim)
-        if dim.range != (None, None):
-            return dim.range
-
         idx = self.get_dimension_index(dim)
-        if idx == 2 and data_range:
-            return self.level, self.level
-        if idx in [0, 1] and data_range:
+        if not data_range:
+            return super(Shape, self).range(dim, data_range, dimension_range)
+        elif idx == 2:
+            lower, upper = self.level, self.level
+        elif idx in [0, 1]:
             l, b, r, t = self.data.bounds
             lower, upper = (b, t) if idx else (l, r)
-            return dimension_range(lower, upper, dim)
+        if dimension_range:
+            return util.dimension_range(lower, upper, dim.range, dim.soft_range)
         else:
-            return super(Shape, self).range(dim, data_range)
-
+            return lower, upper
 
     def geom(self):
         """

@@ -502,8 +502,8 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
         el = el(data, [x, y], **kwargs)
     else:
         from .element.geo import RGB, HvRGB
-        vdims = cls.vdims[:bands]
-        el = cls if 'crs' in kwargs else HvRGB
+        el = RGB if 'crs' in kwargs else HvRGB
+        vdims = el.vdims[:bands]
         el = el(data, [x, y], vdims, **kwargs)
     if hasattr(el.data, 'attrs'):
         el.data.attrs = da.attrs

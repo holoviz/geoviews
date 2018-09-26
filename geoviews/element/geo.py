@@ -1,5 +1,3 @@
-import warnings
-
 import param
 import numpy as np
 from cartopy import crs as ccrs
@@ -34,7 +32,7 @@ except:
     WebMapTileService = None
 
 from ..util import (path_to_geom, polygon_to_geom, geom_to_array,
-                    process_crs, load_tiff, from_xarray)
+                    load_tiff, from_xarray)
 
 geographic_types = (GoogleTiles, cFeature, BaseGeometry)
 

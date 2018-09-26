@@ -456,6 +456,11 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
                                'defaulting to non-geographic element.' % da.crs)
 
     coords = list(da.coords)
+    if coords not in (['band', 'y', 'x'], ['y', 'x']):
+        from .element.geo import Dataset, HvDataset
+        el = Dataset if 'crs' in kwargs else HvDataset
+        return el(da, **kwargs)
+
     if len(coords) == 2:
         y, x = coords
         bands = 1

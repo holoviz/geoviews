@@ -9,6 +9,7 @@ from .element import (_Element, Feature, Tiles,     # noqa (API import)
                       Points, Path, Polygons, Shape, Dataset, RGB,
                       Contours, Graph, TriMesh, Nodes, EdgePaths,
                       QuadMesh, VectorField, HexTiles, Labels)
+from .util import load_tiff, from_xarray # noqa (API import)
 from .operation import project                      # noqa (API import)
 from . import data                                  # noqa (API import)
 from . import operation                             # noqa (API import)

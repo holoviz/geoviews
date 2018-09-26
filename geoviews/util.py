@@ -382,7 +382,7 @@ def process_crs(crs):
     return crs
 
 
-def load_tiff(filename, crs=None, apply_transform=False, **kwargs):
+def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
     """
     Returns an RGB or Image element loaded from a geotiff file.
 
@@ -399,6 +399,8 @@ def load_tiff(filename, crs=None, apply_transform=False, **kwargs):
        Overrides CRS inferred from the data
     apply_transform: boolean
        Whether to apply affine transform if defined on the data
+    nan_nodata: boolean
+       If data contains nodata values convert them to NaNs
     **kwargs:
        Keyword arguments passed to the HoloViews/GeoViews element
 
@@ -415,10 +417,10 @@ def load_tiff(filename, crs=None, apply_transform=False, **kwargs):
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore')
         da = xr.open_rasterio(filename)
-    return from_xarray(da, crs, apply_transform, **kwargs)
+    return from_xarray(da, crs, apply_transform, nan_nodata, **kwargs)
 
 
-def from_xarray(da, crs=None, apply_transform=False, **kwargs):
+def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
     """
     Returns an RGB or Image element given an xarray DataArray
     loaded using xr.open_rasterio.
@@ -435,6 +437,8 @@ def from_xarray(da, crs=None, apply_transform=False, **kwargs):
        Overrides CRS inferred from the data
     apply_transform: boolean
        Whether to apply affine transform if defined on the data
+    nan_nodata: boolean
+       If data contains nodata values convert them to NaNs
     **kwargs:
        Keyword arguments passed to the HoloViews/GeoViews element
 
@@ -469,8 +473,16 @@ def from_xarray(da, crs=None, apply_transform=False, **kwargs):
         xres, yres = da.attrs['res'] if 'res' in da.attrs else (1, 1)
         xs = da.coords[x][::-1] if xres < 0 else da.coords[x]
         ys = da.coords[y][::-1] if yres < 0 else da.coords[y]
+
     data = (xs, ys)
-    data += tuple(da[b].values for b in range(bands))
+    for b in range(bands):
+        values = da[b].values
+        if nan_nodata and da.attrs.get('nodatavals', []):
+            
+            values = values.astype(float)
+            for d in da.attrs['nodatavals']:
+                values[values==d] = np.NaN
+        data += (values,)
 
     if 'datatype' not in kwargs:
         kwargs['datatype'] = ['xarray', 'grid', 'image']

@@ -265,11 +265,13 @@ class Image(_Element, HvImage):
     group = param.String(default='Image')
 
     @classmethod
-    def load_tiff(cls, filename, crs=None, apply_transform=False, **kwargs):
+    def load_tiff(cls, filename, crs=None, apply_transform=False,
+                  nan_nodata=False, **kwargs):
         return load_tiff(filename, crs, apply_transform, **kwargs)
 
     @classmethod
-    def from_xarray(cls, da, crs=None, apply_transform=False, **kwargs):
+    def from_xarray(cls, da, crs=None, apply_transform=False,
+                    nan_nodata=False, **kwargs):
         return from_xarray(da, crs, apply_transform, **kwargs)
 
 
@@ -297,11 +299,13 @@ class QuadMesh(_Element, HvQuadMesh):
     _binned = True
 
     @classmethod
-    def load_tiff(cls, filename, crs=None, apply_transform=False, **kwargs):
+    def load_tiff(cls, filename, crs=None, apply_transform=False,
+                  nan_nodata=False, **kwargs):
         return load_tiff(filename, crs, apply_transform, **kwargs)
 
     @classmethod
-    def from_xarray(cls, da, crs=None, apply_transform=False, **kwargs):
+    def from_xarray(cls, da, crs=None, apply_transform=False,
+                    nan_nodata=False, **kwargs):
         return from_xarray(da, crs, apply_transform, **kwargs)
 
     def trimesh(self):
@@ -336,11 +340,13 @@ class RGB(_Element, HvRGB):
         is automatically appended to this list.""")
 
     @classmethod
-    def load_tiff(cls, filename, crs=None, apply_transform=False, **kwargs):
+    def load_tiff(cls, filename, crs=None, apply_transform=False,
+                  nan_nodata=False, **kwargs):
         return load_tiff(filename, crs, apply_transform, **kwargs)
 
     @classmethod
-    def from_xarray(cls, da, crs=None, apply_transform=False, **kwargs):
+    def from_xarray(cls, da, crs=None, apply_transform=False,
+                    nan_nodata=False, **kwargs):
         return from_xarray(da, crs, apply_transform, **kwargs)
 
 

@@ -1,3 +1,6 @@
+import warnings
+
+import param
 import numpy as np
 import shapely.geometry as sgeom
 
@@ -377,3 +380,131 @@ def process_crs(crs):
     elif not isinstance(crs, ccrs.CRS):
         raise ValueError("Projection must be defined as a EPSG code, proj4 string, cartopy CRS or pyproj.Proj.")
     return crs
+
+
+def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
+    """
+    Returns an RGB or Image element loaded from a geotiff file.
+
+    The data is loaded using xarray and rasterio. If a crs attribute
+    is present on the loaded data it will attempt to decode it into
+    a cartopy projection otherwise it will default to a non-geographic
+    HoloViews element.
+
+    Arguments
+    ---------
+    filename: string
+       Filename pointing to geotiff file to load
+    crs: Cartopy CRS or EPSG string (optional)
+       Overrides CRS inferred from the data
+    apply_transform: boolean
+       Whether to apply affine transform if defined on the data
+    nan_nodata: boolean
+       If data contains nodata values convert them to NaNs
+    **kwargs:
+       Keyword arguments passed to the HoloViews/GeoViews element
+
+    Returns
+    -------
+    element: Image/RGB/QuadMesh element
+
+    """
+    try:
+        import xarray as xr
+    except:
+        raise ImportError('Loading tiffs requires xarray to be installed')
+
+    with warnings.catch_warnings():
+        warnings.filterwarnings('ignore')
+        da = xr.open_rasterio(filename)
+    return from_xarray(da, crs, apply_transform, nan_nodata, **kwargs)
+
+
+def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
+    """
+    Returns an RGB or Image element given an xarray DataArray
+    loaded using xr.open_rasterio.
+
+    If a crs attribute is present on the loaded data it will
+    attempt to decode it into a cartopy projection otherwise it
+    will default to a non-geographic HoloViews element.
+
+    Arguments
+    ---------
+    da: xarray.DataArray
+       DataArray to convert to element
+    crs: Cartopy CRS or EPSG string (optional)
+       Overrides CRS inferred from the data
+    apply_transform: boolean
+       Whether to apply affine transform if defined on the data
+    nan_nodata: boolean
+       If data contains nodata values convert them to NaNs
+    **kwargs:
+       Keyword arguments passed to the HoloViews/GeoViews element
+
+    Returns
+    -------
+    element: Image/RGB/QuadMesh element
+    """
+    if crs:
+        kwargs['crs'] = crs
+    elif hasattr(da, 'crs'):
+        try:
+            kwargs['crs'] = process_crs(da.crs)
+        except:
+            param.main.warning('Could not decode projection from crs string %r, '
+                               'defaulting to non-geographic element.' % da.crs)
+
+    coords = list(da.coords)
+    if coords not in (['band', 'y', 'x'], ['y', 'x']):
+        from .element.geo import Dataset, HvDataset
+        el = Dataset if 'crs' in kwargs else HvDataset
+        return el(da, **kwargs)
+
+    if len(coords) == 2:
+        y, x = coords
+        bands = 1
+    else:
+        y, x = coords[1:]
+        bands = len(da.coords[coords[0]])
+
+    if apply_transform:
+        from affine import Affine
+        transform = Affine(*da.attrs['transform'][:6])
+        nx, ny = da.sizes[x], da.sizes[y]
+        xs, ys = np.meshgrid(np.arange(nx)+0.5, np.arange(ny)+0.5) * transform
+        data = (xs, ys)
+    else:
+        xres, yres = da.attrs['res'] if 'res' in da.attrs else (1, 1)
+        xs = da.coords[x][::-1] if xres < 0 else da.coords[x]
+        ys = da.coords[y][::-1] if yres < 0 else da.coords[y]
+
+    data = (xs, ys)
+    for b in range(bands):
+        values = da[b].values
+        if nan_nodata and da.attrs.get('nodatavals', []):
+            
+            values = values.astype(float)
+            for d in da.attrs['nodatavals']:
+                values[values==d] = np.NaN
+        data += (values,)
+
+    if 'datatype' not in kwargs:
+        kwargs['datatype'] = ['xarray', 'grid', 'image']
+
+    if xs.ndim > 1:
+        from .element.geo import QuadMesh, HvQuadMesh
+        el = QuadMesh if 'crs' in kwargs else HvQuadMesh
+        el = el(data, [x, y], **kwargs)
+    elif bands < 3:
+        from .element.geo import Image, HvImage
+        el = Image if 'crs' in kwargs else HvImage
+        el = el(data, [x, y], **kwargs)
+    else:
+        from .element.geo import RGB, HvRGB
+        el = RGB if 'crs' in kwargs else HvRGB
+        vdims = el.vdims[:bands]
+        el = el(data, [x, y], vdims, **kwargs)
+    if hasattr(el.data, 'attrs'):
+        el.data.attrs = da.attrs
+    return el

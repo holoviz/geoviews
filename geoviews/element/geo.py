@@ -1,5 +1,3 @@
-import warnings
-
 import param
 import numpy as np
 from cartopy import crs as ccrs
@@ -33,7 +31,8 @@ try:
 except:
     WebMapTileService = None
 
-from ..util import path_to_geom, polygon_to_geom, geom_to_array, process_crs
+from ..util import (path_to_geom, polygon_to_geom, geom_to_array,
+                    load_tiff, from_xarray)
 
 geographic_types = (GoogleTiles, cFeature, BaseGeometry)
 
@@ -263,6 +262,17 @@ class Image(_Element, HvImage):
 
     group = param.String(default='Image')
 
+    @classmethod
+    def load_tiff(cls, filename, crs=None, apply_transform=False,
+                  nan_nodata=False, **kwargs):
+        return load_tiff(filename, crs, apply_transform, **kwargs)
+
+    @classmethod
+    def from_xarray(cls, da, crs=None, apply_transform=False,
+                    nan_nodata=False, **kwargs):
+        return from_xarray(da, crs, apply_transform, **kwargs)
+
+
 
 class QuadMesh(_Element, HvQuadMesh):
     """
@@ -285,6 +295,16 @@ class QuadMesh(_Element, HvQuadMesh):
     group = param.String(default='QuadMesh')
 
     _binned = True
+
+    @classmethod
+    def load_tiff(cls, filename, crs=None, apply_transform=False,
+                  nan_nodata=False, **kwargs):
+        return load_tiff(filename, crs, apply_transform, **kwargs)
+
+    @classmethod
+    def from_xarray(cls, da, crs=None, apply_transform=False,
+                    nan_nodata=False, **kwargs):
+        return from_xarray(da, crs, apply_transform, **kwargs)
 
     def trimesh(self):
         trimesh = super(QuadMesh, self).trimesh()
@@ -318,76 +338,14 @@ class RGB(_Element, HvRGB):
         is automatically appended to this list.""")
 
     @classmethod
-    def load_tiff(cls, filename, crs=None, apply_transform=False, **kwargs):
-        """
-        Returns an RGB or Image element loaded from a geotiff file.
-
-        The data is loaded using xarray and rasterio. If a crs attribute
-        is present on the loaded data it will attempt to decode it into
-        a cartopy projection otherwise it will default to a non-geographic
-        HoloViews element.
-        """
-        try:
-            import xarray as xr
-        except:
-            raise ImportError('Loading tiffs requires xarray to be installed')
-
-        with warnings.catch_warnings():
-            warnings.filterwarnings('ignore')
-            da = xr.open_rasterio(filename)
-        return cls.from_xarray(da, crs, apply_transform, **kwargs)
-
+    def load_tiff(cls, filename, crs=None, apply_transform=False,
+                  nan_nodata=False, **kwargs):
+        return load_tiff(filename, crs, apply_transform, **kwargs)
 
     @classmethod
-    def from_xarray(cls, da, crs=None, apply_transform=False, **kwargs):
-        """
-        Returns an RGB or Image element given an xarray DataArray
-        loaded using xr.open_rasterio.
-
-        If a crs attribute is present on the loaded data it will
-        attempt to decode it into a cartopy projection otherwise it
-        will default to a non-geographic HoloViews element.
-        """
-        if crs:
-            kwargs['crs'] = crs
-        elif hasattr(da, 'crs'):
-            try:
-                kwargs['crs'] = process_crs(da.crs)
-            except:
-                param.main.warning('Could not decode projection from crs string %r, '
-                                   'defaulting to non-geographic element.' % da.crs)
-
-        coords = list(da.coords)
-        y, x = coords[1:]
-        bands = len(da.coords[coords[0]])
-        if apply_transform:
-            from affine import Affine
-            transform = Affine(*da.attrs['transform'][:6])
-            nx, ny = da.sizes[x], da.sizes[y]
-            xs, ys = np.meshgrid(np.arange(nx)+0.5, np.arange(ny)+0.5) * transform
-            data = (xs, ys)
-        else:
-            xres, yres = da.attrs['res'] if 'res' in da.attrs else (1, 1)
-            xs = da.coords[x][::-1] if xres < 0 else da.coords[x]
-            ys = da.coords[y][::-1] if yres < 0 else da.coords[y]
-        data = (xs, ys)
-        data += tuple(da[b].values for b in range(bands))
-
-        if 'datatype' not in kwargs:
-            kwargs['datatype'] = ['xarray', 'grid', 'image']
-
-        if xs.ndim > 1:
-            el = QuadMesh if 'crs' in kwargs else HvQuadMesh
-            el = el(data, [x, y], **kwargs)
-        elif bands < 3:
-            el = Image if 'crs' in kwargs else HvImage
-            el = el(data, [x, y], **kwargs)
-        else:
-            vdims = cls.vdims[:bands]
-            el = cls if 'crs' in kwargs else HvRGB
-            el = el(data, [x, y], vdims, **kwargs)
-        el.data.attrs = da.attrs
-        return el
+    def from_xarray(cls, da, crs=None, apply_transform=False,
+                    nan_nodata=False, **kwargs):
+        return from_xarray(da, crs, apply_transform, **kwargs)
 
 
 

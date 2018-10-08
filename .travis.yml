@@ -121,8 +121,8 @@ jobs:
       stage: conda_dev_package
       env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID CHANS=$CHANS_DEV LABELS=$LABELS_DEV
       install:
-        - doit package_build --recipe=core $CHANS $PKG_TEST_PYTHON --test-group=unit
-        - doit package_build --recipe=recommended $CHANS $PKG_TEST_PYTHON --test-group=examples
+        - travis_wait doit package_build --recipe=core $CHANS $PKG_TEST_PYTHON --test-group=unit
+        - travis_wait doit package_build --recipe=recommended $CHANS $PKG_TEST_PYTHON --test-group=examples
       script:
         - doit package_upload --token=$CONDA_UPLOAD_TOKEN $LABELS --recipe=core
         - doit package_upload --token=$CONDA_UPLOAD_TOKEN $LABELS --recipe=recommended

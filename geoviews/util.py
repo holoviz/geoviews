@@ -192,9 +192,12 @@ def wrap_path_data(vertices, src_crs, tgt_crs):
     self_params.pop('lon_0'), src_params.pop('lon_0')
 
     xs, ys = vertices[:, 0], vertices[:, 1]
+    with warnings.catch_warnings():
+        warnings.filterwarnings('ignore')
+        ymin, ymax = ys.min(), ys.max()
     potential = (self_params == src_params and
-                 tgt_crs.y_limits[0] <= ys.min() and
-                 tgt_crs.y_limits[1] >= ys.max())
+                 tgt_crs.y_limits[0] <= ymin and
+                 tgt_crs.y_limits[1] >= ymax)
     if not potential:
         return vertices
 

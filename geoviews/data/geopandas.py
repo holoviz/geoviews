@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 
+import sys
+
 import numpy as np
-from geopandas import GeoDataFrame
 
 from holoviews.core.data import Interface, MultiInterface, PandasInterface
 from holoviews.core.data.interface  import DataError
@@ -13,14 +14,27 @@ from ..util import geom_to_array
 
 class GeoPandasInterface(MultiInterface):
 
-    types = (GeoDataFrame,)
+    types = ()
 
     datatype = 'geodataframe'
 
     multi = True
 
     @classmethod
+    def loaded(cls):
+        return 'geopandas' in sys.modules
+
+    @classmethod
+    def applies(cls, obj):
+        if not cls.loaded():
+            return False
+        from geopandas import GeoDataFrame
+        return isinstance(obj, GeoDataFrame)
+
+    @classmethod
     def init(cls, eltype, data, kdims, vdims):
+        from geopandas import GeoDataFrame
+
         if not isinstance(data, GeoDataFrame):
             raise ValueError("GeoPandasInterface only support geopandas DataFrames.")
         elif 'geometry' not in data:

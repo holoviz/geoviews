@@ -28,8 +28,10 @@ env:
 
 stages:
   - test
-  - name: conda_dev_package
+  - name: conda_core_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
+  - name: conda_recommended_dev_package
+    if: tag =~ ^v(\d+|\.)*[a-z]\d*$	
   - name: pip_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: conda_package

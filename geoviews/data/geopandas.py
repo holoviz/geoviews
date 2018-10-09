@@ -4,10 +4,10 @@ import sys
 
 import numpy as np
 
-from holoviews.core.data import Interface, MultiInterface, PandasInterface
+from holoviews.core.data import Dataset, Interface, MultiInterface, PandasInterface
 from holoviews.core.data.interface  import DataError
 from holoviews.core.util import max_range
-from holoviews.element import Path, Points
+from holoviews.element import Path
 
 from ..util import geom_to_array
 
@@ -195,5 +195,5 @@ class GeoPandasInterface(MultiInterface):
 
 
 Interface.register(GeoPandasInterface)
-Path.datatype += ['geodataframe']
-Points.datatype += ['geodataframe']
+Dataset.datatype = ['geodataframe']+Dataset.datatype
+Path.datatype = ['geodataframe']+Path.datatype

@@ -32,7 +32,7 @@ except:
     WebMapTileService = None
 
 from ..util import (path_to_geom, polygon_to_geom, geom_to_array,
-                    load_tiff, from_xarray)
+                    load_tiff, from_xarray, poly_types)
 
 geographic_types = (GoogleTiles, cFeature, BaseGeometry)
 
@@ -78,7 +78,10 @@ class _Element(Element2D):
 
     def __init__(self, data, kdims=None, vdims=None, **kwargs):
         crs = None
-        crs_data = data.data if isinstance(data, HvDataset) else data
+        if isinstance(data, HvDataset):
+            crs_data = data.data
+        else:
+            crs_data = data
         if Cube and isinstance(crs_data, Cube):
             coord_sys = crs_data.coord_system()
             if hasattr(coord_sys, 'as_cartopy_projection'):
@@ -92,6 +95,8 @@ class _Element(Element2D):
                              'system must match crs of the data.')
         elif crs:
             kwargs['crs'] = crs
+        elif isinstance(data, _Element):
+            kwargs['crs'] = data.crs
         super(_Element, self).__init__(data, kdims=kdims, vdims=vdims, **kwargs)
 
 
@@ -528,24 +533,30 @@ class Polygons(_Element, HvPolygons):
         return polygon_to_geom(self)
 
 
-class Shape(_Element):
+class Shape(Dataset):
     """
     Shape wraps any shapely geometry type.
     """
 
     group = param.String(default='Shape')
 
+    datatype = param.List(default=['geom_dictionary'])
+
     level = param.Number(default=None, doc="""
         Optional level associated with the set of Contours.""")
 
-    vdims = param.List(default=[Dimension('Level')], doc="""
-        Contours optionally accept a value dimension, corresponding
-        to the supplied values.""", bounds=(1,1))
+    vdims = param.List(default=[], doc="""
+        Shpae optionally accept a value dimension, corresponding
+        to the supplied values.""", bounds=(0, None))
 
     def __init__(self, data, kdims=None, vdims=None, **params):
-        if not isinstance(data, BaseGeometry):
-            raise TypeError('%s data has to be a shapely geometry type.'
-                            % type(data).__name__)
+        if params.get('level') is not None:
+            if vdims is None:
+                vdims = [Dimension('Level')]
+            self.warning('Supplying a level to a Shape is deprecated '
+                         'provide the value as part of a dictionary of '
+                         'the form {\'geometry\': <shapely.Geometry>, '
+                         '\'level\': %s} instead' % params['level'])
         super(Shape, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
 
@@ -561,8 +572,8 @@ class Shape(_Element):
 
 
     @classmethod
-    def from_records(cls, records, dataset=None, on=None,
-                     value=None, index=[], drop_missing=False, **kwargs):
+    def from_records(cls, records, dataset=None, on=None, value=None,
+                     index=[], drop_missing=False, element=None, **kwargs):
         """
         Load data from a collection of
         ``cartopy.io.shapereader.Record`` objects and optionally merge
@@ -604,7 +615,7 @@ class Shape(_Element):
             index = [index]
 
         kdims = []
-        for ind in (index if index else ['Index']):
+        for ind in index:
             if dataset and dataset.get_dimension(ind):
                 dim = dataset.get_dimension(ind)
             else:
@@ -613,27 +624,33 @@ class Shape(_Element):
 
         ddims = []
         if dataset:
-            vdim = dataset.get_dimension(value)
-            kwargs['vdims'] = [vdim]
-            if not vdim:
+            if value:
+                vdims = [dataset.get_dimension(value)]
+            else:
+                vdims = dataset.vdims
+            if None in vdims:
                 raise ValueError('Value dimension not found '
-                                 'in dataset: {}'.format(vdim))
+                                 'in dataset: {}'.format(value))
             ddims = dataset.dimensions()
+        else:
+            vdims = []
 
         data = []
         notfound = False
         for i, rec in enumerate(records):
+            geom = {}
             if dataset:
                 selection = {dim: rec.attributes.get(attr, None)
                              for attr, dim in on.items()}
                 row = dataset.select(**selection)
                 if len(row):
-                    value = row[vdim.name][0]
+                    values = {k: v[0] for k, v in row.iloc[0].columns().items()}
                 elif drop_missing:
                     continue
                 else:
-                    value = np.NaN
-                kwargs['level'] = value
+                    values = {vd.name: np.nan for vd in vdims}
+                geom.update(values)
+
             if index:
                 key = []
                 for kdim in kdims:
@@ -643,49 +660,25 @@ class Shape(_Element):
                         k = rec.attributes[kdim.name]
                     else:
                         k = None
-                        notfound = True
-                    key.append(k)
-                key = tuple(key)
+                    geom[kdim.name] = k
+            geom['geometry'] = rec.geometry
+            data.append(geom)
+
+        if element is not None:
+            pass
+        elif data and data[0]:
+            if isinstance(data[0]['geometry'], poly_types):
+                element = Polygons
             else:
-                key = (i,)
-            data.append((key, Shape(rec.geometry, **kwargs)))
-        if notfound:
-            kdims = ['Index']+kdims
-            data = [((i,)+subk, v) for i, (subk, v) in enumerate(data)]
-        return NdOverlay(data, kdims=kdims)
-
-
-    def dimension_values(self, dimension, expanded=True, flat=True):
-        """
-        Shapes do not support convert to array values.
-        """
-        dim = self.get_dimension(dimension)
-        if dim in self.vdims:
-            return np.full(len(self), self.level) if expanded else np.array([self.level])
+                element = Path
         else:
-            return []
+            element = Polygons
 
-    def range(self, dim, data_range=True, dimension_range=True):
-        dim = self.get_dimension(dim)
-        idx = self.get_dimension_index(dim)
-        if not data_range:
-            return super(Shape, self).range(dim, data_range, dimension_range)
-        elif idx == 2:
-            lower, upper = self.level, self.level
-        elif idx in [0, 1]:
-            l, b, r, t = self.data.bounds
-            lower, upper = (b, t) if idx else (l, r)
-        if dimension_range:
-            return util.dimension_range(lower, upper, dim.range, dim.soft_range)
-        else:
-            return lower, upper
+        return Polygons(data, vdims=kdims+vdims, **kwargs).options(color_index=value)
+
 
     def geom(self):
         """
         Returns Shape as a shapely geometry
         """
-        return self.data
-
-
-    def __len__(self):
-        return len(geom_to_array(self.data))
+        return self.data['geometry']

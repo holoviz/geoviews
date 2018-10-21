@@ -346,7 +346,7 @@ class GeoShapePlot(GeometryPlot, PolygonPlot):
                 self._norm_kwargs(element, ranges, style, vdim)
                 style['clim'] = style.pop('vmin'), style.pop('vmax')
                 style['array'] = np.array([value])
-            return ([element.data], element.crs), style, {}
+            return ([element.data['geometry']], element.crs), style, {}
         else:
             SkipRendering('Shape can only be plotted on geographic plot, '
                           'supply a coordinate reference system.')

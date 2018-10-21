@@ -3,6 +3,8 @@ from __future__ import absolute_import
 import param
 from holoviews.core.data import Dataset
 
+from . import geom_dict # noqa (API import)
+
 try:
     from . import geopandas # noqa (API import)
 except ImportError:

@@ -6,13 +6,13 @@ from cartopy.img_transform import warp_array, _determine_bounds
 from holoviews.core.util import cartesian_product, get_param_values
 from holoviews.operation import Operation
 from shapely.geometry import Polygon, LineString, MultiPolygon, MultiLineString
+from shapely.geometry.collection import GeometryCollection
 
 from ..element import (Image, Shape, Polygons, Path, Points, Contours,
                        RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField,
                        HexTiles, Labels)
 from ..util import (
-    project_extents, geom_to_array, wrap_path_data, is_multi_geometry,
-    polygon_to_geom, path_to_geom
+    project_extents, geom_to_array, path_to_geom_dicts, polygons_to_geom_dicts
 )
 
 
@@ -42,116 +42,63 @@ class project_path(_project_operation):
 
     supported_types = [Polygons, Path, Contours, EdgePaths]
 
-    def _project_path(self, element, path, data, boundary, geom_type, multi_type):
-        """
-        Handle case of continuously varying path
-        """
-        xdim, ydim = path.kdims[:2]
-        xs, ys = (path.dimension_values(i) for i in range(2))
-        if not len(xs):
-            return []
-
-        proj_arr = self.p.projection.quick_vertices_transform(
-            np.column_stack([xs, ys]), element.crs)
-
-        if proj_arr is None:
-            vertices = np.column_stack([xs, ys])
-            if hasattr(element.crs, '_bbox_and_offset'):
-                vertices = wrap_path_data(vertices, element.crs, element.crs)
-            path = geom_type(vertices)
-            if boundary:
-                path = path.intersection(boundary)
-            if not path:
-                return []
-            proj = self.p.projection.project_geometry(path, element.crs)
-            proj_arr = geom_to_array(proj)
-        data[xdim.name] = proj_arr[:, 0]
-        data[ydim.name] = proj_arr[:, 1]
-        return [data]
-
-    def _project_contour(self, element, contour, data, boundary, geom_type, multi_type):
-        """
-        Handle case of iso-contour
-        """
-        xdim, ydim = contour.kdims[:2]
-        data = {k: vals for k, vals in data.items()}
-
-        # Wrap longitudes
-        vertices = contour.array([0, 1])
-        if hasattr(element.crs, '_bbox_and_offset'):
-            vertices = wrap_path_data(vertices, element.crs, element.crs)
-        element = type(element)([vertices])
-        to_geom = polygon_to_geom if isinstance(element, Polygon) else path_to_geom
-
-        # Clip path to projection boundaries
-        geoms = []
-        for g in to_geom(element, multi=False, skip_invalid=False):
-            if np.isinf(np.array(g.array_interface_base['data'])).sum():
-                # Skip if infinity in path
-                continue
-            try:
-                # Compute boundary intersections
-                if boundary:
-                    g = g.intersection(boundary)
-            except:
-                continue
-            if is_multi_geometry(g):
-                for p in g:
-                    try:
-                        geoms.append(geom_type(p))
-                    except:
-                        continue
-            else:
-                geoms.append(g)
-
-        # Project geometry
-        projected = []
-        for g in geoms:
-            proj = self.p.projection.project_geometry(g, contour.crs)
-            proj = proj if is_multi_geometry(proj) else [proj]
-            for geom in proj:
-                vertices = np.array(geom.array_interface_base['data']).reshape(-1, 2)
-                xs, ys = vertices.T
-                if len(xs):
-                    projected.append(dict(data, **{xdim.name: xs, ydim.name: ys}))
-        return projected
-
-    def _project_geodataframe(self, element):
-        geoms = element.split(datatype='geom')
-        projected = [self.p.projection.project_geometry(geom, element.crs)
-                     for geom in geoms]
-        new_data = element.data.copy()
-        new_data['geometry'] = projected
-        return element.clone(new_data, crs=self.p.projection)
-
     def _process_element(self, element):
+        if element.crs == self.p.projection:
+            return element
         if not len(element):
             return element.clone(crs=self.p.projection)
-        elif element.interface.datatype == 'geodataframe':
-            return self._project_geodataframe(element)
 
-        boundary = element.crs.project_geometry(Polygon(self.p.projection.boundary),
-                                                self.p.projection)
+        crs = element.crs
+        cylindrical = isinstance(crs, ccrs._CylindricalProjection)
+        proj = self.p.projection
+        if isinstance(proj, ccrs.CRS) and not isinstance(proj, ccrs.Projection):
+            raise ValueError('invalid transform:'
+                             ' Spherical contouring is not supported - '
+                             ' consider using PlateCarree/RotatedPole.')
 
+        import shapely
+        boundary = crs.project_geometry(Polygon(proj.boundary), proj)
+        bounds = [round(b, 10) for b in boundary.bounds]
+        xoffset = round((boundary.bounds[2]-boundary.bounds[0])/2.)
         if isinstance(element, Polygons):
-            multi_type, geom_type = MultiPolygon, Polygon
+            geoms = polygons_to_geom_dicts(element)
         else:
-            multi_type, geom_type = MultiLineString, LineString
+            geoms = path_to_geom_dicts(element)
 
         projected = []
-        paths = element.split()
-        for path in paths:
-            data = {}
-            for vd in path.vdims:
-                scalar = path.interface.isscalar(path, vd)
-                values = path.dimension_values(vd, expanded=not scalar)
-                data[vd.name] = values[0] if scalar else values
-            if any(vals is not None and not np.isscalar(vals) and len(vals) > 1 for vals in data.values()):
-                projected += self._project_path(element, path, data, boundary, geom_type, multi_type)
-            else:
-                projected += self._project_contour(element, path, data, boundary, geom_type, multi_type)
+        for path in geoms:
+            geom = path['geometry']
+            geom_bounds = [round(b, 10) for b in geom.bounds]
+            if (cylindrical and geom_bounds[0] >= (bounds[0]+xoffset) and
+                geom_bounds[2] > (bounds[2]+xoffset//2)):
+                # Offset if lon and not centered on 0 longitude
+                # i.e. lon_min > 0 and lon_max > 270
+                geom = shapely.affinity.translate(geom, xoff=-xoffset)
+                geom_bounds = [round(b, 10) for b in geom.bounds]
+                
+            if boundary and (geom_bounds[0] < bounds[0] or
+                             geom_bounds[2] > bounds[2]):
+                try:
+                    geom = geom.intersection(boundary)
+                except:
+                    pass
 
-        if len(paths) and len(projected) == 0:
+            # Ensure minimum area for polygons (precision issues cause errors)
+            if isinstance(geom, Polygon) and geom.area < 1e-15:
+                continue
+            elif isinstance(geom, MultiPolygon):
+                polys = [g for g in geom if g.area > 1e-15]
+                if not polys:
+                    continue
+                geom = MultiPolygon(polys)
+            elif (not geom or isinstance(geom, GeometryCollection)):
+                continue
+
+            proj_geom = proj.project_geometry(geom, element.crs)
+            data = dict(path, geometry=proj_geom)
+            projected.append(data)
+
+        if len(geoms) and len(projected) == 0:
             self.warning('While projecting a %s element from a %s coordinate '
                          'reference system (crs) to a %s projection none of '
                          'the projected paths were contained within the bounds '

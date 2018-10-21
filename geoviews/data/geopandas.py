@@ -3,9 +3,11 @@ from __future__ import absolute_import
 import sys
 
 import numpy as np
+import pandas as pd
 
 from holoviews.core.data import Dataset, Interface, MultiInterface, PandasInterface
 from holoviews.core.data.interface  import DataError
+from holoviews.core.dimension import dimension_name
 from holoviews.core.util import max_range
 from holoviews.element import Path
 
@@ -47,12 +49,26 @@ class GeoPandasInterface(MultiInterface):
         else:
             kdims = eltype.kdims
 
+        if vdims is None:
+            vdims = eltype.vdims
+
+        index_names = data.index.names if isinstance(data, pd.DataFrame) else [data.index.name]
+        if index_names == [None]:
+            index_names = ['index']
+
+        for kd in kdims+vdims:
+            kd = dimension_name(kd)
+            if kd in data.columns:
+                continue
+            if any(kd == ('index' if name is None else name)
+                   for name in index_names):
+                data = data.reset_index()
+                break
+
         if len(set([gt[5:] if 'Multi' in gt else gt for gt in data.geom_type])) > 1:
             raise ValueError('The GeopandasInterface can only read dataframes which '
                              'share a common geometry type')
 
-        if vdims is None:
-            vdims = eltype.vdims
         return data, {'kdims': kdims, 'vdims': vdims}, {}
 
     @classmethod
@@ -64,6 +80,32 @@ class GeoPandasInterface(MultiInterface):
             raise DataError("Supplied data does not contain specified "
                              "dimensions, the following dimensions were "
                              "not found: %s" % repr(not_found))
+
+    @classmethod
+    def has_holes(cls, dataset):
+        from shapely.geometry import Polygon, MultiPolygon
+        for geom in dataset.data.geometry:
+            if isinstance(geom, Polygon) and geom.interiors:
+                return True
+            elif isinstance(geom, MultiPolygon):
+                for g in geom:
+                    if isinstance(g, Polygon) and g.interiors:
+                        return True
+        return False
+
+    @classmethod
+    def holes(cls, dataset):
+        from shapely.geometry import Polygon, MultiPolygon
+        holes = []
+        for geom in dataset.data.geometry:
+            if isinstance(geom, Polygon) and geom.interiors:
+                holes.append([geom_to_array(h) for h in geom.interiors])
+            elif isinstance(geom, MultiPolygon):
+                for g in geom:
+                    holes.append([geom_to_array(h) for h in g.interiors])
+            else:
+                holes.append([])
+        return holes
 
     @classmethod
     def dimension_type(cls, dataset, dim):
@@ -163,6 +205,8 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def split(cls, dataset, start, end, datatype, **kwargs):
+        from shapely.geometry import Polygon, MultiPolygon
+
         objs = []
         xdim, ydim = dataset.kdims[:2]
         if not len(dataset.data):
@@ -176,7 +220,9 @@ class GeoPandasInterface(MultiInterface):
             if datatype == 'geom':
                 objs.append(row['geometry'])
                 continue
-            arr = geom_to_array(row['geometry'])
+            geom = row.geometry
+            geoms = geom if isinstance(geom, MultiPolygon) else [geom]
+            arr = geom_to_array(geom)
             d = {xdim.name: arr[:, 0], ydim.name: arr[:, 1]}
             d.update({vd.name: row[vd.name] for vd in dataset.vdims})
             ds.data = d

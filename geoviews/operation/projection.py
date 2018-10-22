@@ -58,6 +58,8 @@ class project_path(_project_operation):
 
         import shapely
         boundary = crs.project_geometry(Polygon(proj.boundary), proj)
+        if not boundary:
+            boundary = Polygon(crs.boundary)
         bounds = [round(b, 10) for b in boundary.bounds]
         xoffset = round((boundary.bounds[2]-boundary.bounds[0])/2.)
         if isinstance(element, Polygons):

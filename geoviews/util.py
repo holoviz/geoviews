@@ -165,7 +165,9 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
 
         invalid = False
         subpolys = []
-        subholes = [LinearRing(h) for h in holes[i]] if holes else []
+        subholes = None
+        if has_holes:
+            subholes = [[LinearRing(h) for h in hs] for hs in holes[i]]
         for j, arr in enumerate(arrays):
             if j != (len(arrays)-1):
                 arr = arr[:-1] # Drop nan
@@ -176,10 +178,10 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
                 poly = LineString(arr)
                 invalid = True
             elif not len(splits):
-                poly = Polygon(arr, subholes)
+                poly = Polygon(arr, (subholes[j] if has_holes else []))
             else:
                 poly = Polygon(arr)
-                hs = [h for h in subholes if poly.intersects(h)]
+                hs = [h for h in subholes[j]] if has_holes else []
                 poly = Polygon(poly.exterior, holes=hs)
             subpolys.append(poly)
 

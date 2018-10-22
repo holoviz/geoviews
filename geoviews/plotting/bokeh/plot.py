@@ -65,6 +65,12 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             show_bounds = self._traverse_options(element, 'plot', ['show_bounds'],
                                                  defaults=False)
             self.show_bounds = not any(not sb for sb in show_bounds['show_bounds'])
+            if self.show_grid:
+                param.main.warning(
+                    'Grid lines do not reflect {0}; to do so '
+                    'multiply the current element by gv.feature.grid() '
+                    'and disable the show_grid option.'.format(self.projection)
+                )
 
     def _axis_properties(self, axis, key, plot, dimension=None,
                          ax_mapping={'x': 0, 'y': 1}):

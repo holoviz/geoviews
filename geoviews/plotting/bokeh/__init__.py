@@ -308,4 +308,5 @@ options.Feature.Land   = Options('style', fill_color='#efefdb', line_color='#efe
 options.Feature.Ocean  = Options('style', fill_color='#97b6e1', line_color='#97b6e1')
 options.Feature.Lakes  = Options('style', fill_color='#97b6e1', line_color='#97b6e1')
 options.Feature.Rivers = Options('style', line_color='#97b6e1')
+options.Feature.Grid = Options('style', line_width=0.5, alpha=0.5, line_color='gray')
 options.Shape = Options('style', line_color='black', fill_color='#30A2DA')

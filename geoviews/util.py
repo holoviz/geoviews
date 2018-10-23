@@ -156,8 +156,8 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
 
     polys = []
     xdim, ydim = polygons.kdims
-    has_holes = polygons.interface.has_holes(polygons)
-    holes = polygons.interface.holes(polygons) if has_holes else None
+    has_holes = polygons.has_holes
+    holes = polygons.holes() if has_holes else None
     for i, polygon in enumerate(polygons.split(datatype='columns')):
         array = np.column_stack([polygon.pop(xdim.name), polygon.pop(ydim.name)])
         splits = np.where(np.isnan(array[:, :2].astype('float')).sum(axis=1))[0]
@@ -192,6 +192,8 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
             geom = subpolys[0]
         elif subpolys:
             geom = MultiPolygon(subpolys)
+        else:
+            continue
         polygon['geometry'] = geom
         polys.append(polygon)
     return polys

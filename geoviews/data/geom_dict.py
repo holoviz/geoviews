@@ -76,9 +76,31 @@ class GeomDictInterface(DictInterface):
         return data, {'kdims':kdims, 'vdims':vdims}, {}
 
     @classmethod
-    def validate(cls, dataset):
+    def validate(cls, dataset, validate_vdims):
         assert len([d for d in dataset.kdims + dataset.vdims
                     if d.name not in dataset.data]) == 2
+
+    @classmethod
+    def has_holes(cls, dataset):
+        from shapely.geometry import Polygon, MultiPolygon
+        geom = dataset.data['geometry']
+        if isinstance(geom, Polygon) and geom.interiors:
+            return True
+        elif isinstance(geom, MultiPolygon):
+            for g in geom:
+                if isinstance(g, Polygon) and g.interiors:
+                    return True
+        return False
+
+    @classmethod
+    def holes(cls, dataset):
+        from shapely.geometry import Polygon, MultiPolygon
+        geom = dataset.data['geometry']
+        if isinstance(geom, Polygon) and geom.interiors:
+            return [[[geom_to_array(h) for h in geom.interiors]]]
+        elif isinstance(geom, MultiPolygon):
+            return [[[geom_to_array(h) for h in g.interiors] for g in geom]]
+        return []
 
     @classmethod
     def dimension_type(cls, dataset, dim):
@@ -89,8 +111,17 @@ class GeomDictInterface(DictInterface):
         return type(values) if isscalar(values) else values.dtype.type
 
     @classmethod
-    def redim(cls, dataset, dimensions):
-        pass
+    def range(cls, dataset, dim):
+        dim = dataset.get_dimension(dim)
+        geom_dims = cls.geom_dims(dataset)
+        if dim in geom_dims:
+            bounds = dataset.data['geometry'].bounds
+            if geom_dims.index(dim) == 0:
+                return bounds[0], bounds[2]
+            else:
+                return bounds[1], bounds[3]
+        else:
+            return DictInterface.range(dataset, dim)
 
     @classmethod
     def length(cls, dataset):
@@ -100,30 +131,16 @@ class GeomDictInterface(DictInterface):
     def geom_dims(cls, dataset):
         return [d for d in dataset.kdims + dataset.vdims
                 if d.name not in dataset.data]
-    
-    @classmethod
-    def xdim(cls, dataset):
-        return [d for d in dataset.kdims + dataset.vdims
-                if d.name not in dataset.data][0]
-
-    @classmethod
-    def ydim(cls, dataset):
-        return [d for d in dataset.kdims + dataset.vdims
-                if d.name not in dataset.data][1]
 
     @classmethod
     def values(cls, dataset, dim, expanded=True, flat=True):
         d = dataset.get_dimension(dim)
-        array = geom_to_array(dataset.data['geometry'])
-        if d is cls.xdim(dataset):
-            return array[:, 0]
-        elif d is cls.ydim(dataset):
-            return array[:, 1]
+        geom_dims = cls.geom_dims(dataset)
+        if d in geom_dims:
+            array = geom_to_array(dataset.data['geometry'])
+            idx = geom_dims.index(d)
+            return array[:, idx]
         return DictInterface.values(dataset, dim, expanded, flat)
-
-    @classmethod
-    def validate(cls, dataset, vdims=True):
-        pass
 
     @classmethod
     def iloc(cls, dataset, index):
@@ -141,5 +158,5 @@ class GeomDictInterface(DictInterface):
     def concat(cls, datasets, dimensions, vdims):
         raise NotImplementedError()
 
-MultiInterface.subtypes.append('geom_dictionary')
+MultiInterface.subtypes.insert(0, 'geom_dictionary')
 Interface.register(GeomDictInterface)

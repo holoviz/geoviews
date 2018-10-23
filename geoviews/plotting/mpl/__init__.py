@@ -130,54 +130,6 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             pass
 
 
-class LineContourPlot(GeoPlot, ColorbarPlot):
-    """
-    Draws a contour plot.
-    """
-
-    colorbar = param.Boolean(default=True)
-
-    levels = param.ClassSelector(default=5, class_=(int, list), doc="""
-        The levels of the contour as a number or list.""")
-
-    style_opts = ['antialiased', 'alpha', 'cmap', 'linewidths', 'colors']
-
-    _plot_methods = dict(single='contour')
-
-    def get_data(self, element, ranges, style):
-        args = geo_mesh(element)
-        style.pop('label', None)
-        if isinstance(self.levels, int):
-            args += (self.levels,)
-        else:
-            style['levels'] = self.levels
-        style['transform'] = element.crs
-        return args, style, {}
-
-
-    def teardown_handles(self):
-        """
-        Iterate over the artists in the collection and remove
-        them individually.
-        """
-        if 'artist' in self.handles:
-            for coll in self.handles['artist'].collections:
-                try:
-                    coll.remove()
-                except ValueError:
-                    pass
-
-
-class FilledContourPlot(LineContourPlot):
-    """
-    Draws a filled contour plot.
-    """
-
-    style_opts = ['antialiased', 'alpha', 'cmap', 'linewidths']
-
-    _plot_methods = dict(single='contourf')
-
-
 
 class GeoImagePlot(GeoPlot, RasterPlot):
     """
@@ -329,6 +281,24 @@ class GeoPolygonPlot(GeoPlot, PolygonPlot):
     apply_ranges = param.Boolean(default=True)
 
     _project_operation = project_path
+
+
+class LineContourPlot(GeoContourPlot):
+    """
+    Draws a contour plot.
+    """
+
+    levels = param.ClassSelector(default=10, class_=(list, int), doc="""
+        A list of scalar values used to specify the contour levels.""")
+
+
+class FilledContourPlot(GeoPolygonPlot):
+    """
+    Draws a filled contour plot.
+    """
+
+    levels = param.ClassSelector(default=10, class_=(list, int), doc="""
+        A list of scalar values used to specify the contour levels.""")
 
 
 class GeoShapePlot(GeometryPlot, PolygonPlot):

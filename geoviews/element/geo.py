@@ -234,29 +234,6 @@ class VectorField(_Element, HvVectorField):
                                 Dimension('Magnitude')], bounds=(1, None))
 
 
-
-class LineContours(_Element, HvImage):
-    """
-    Contours represents a 2D array of some quantity with
-    some associated coordinates, which may be discretized
-    into one or more line contours.
-    """
-
-    vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
-
-    group = param.String(default='LineContours')
-
-
-class FilledContours(LineContours):
-    """
-    Contours represents a 2D array of some quantity with
-    some associated coordinates, which may be discretized
-    into one or more filled contours.
-    """
-
-    group = param.String(default='FilledContours')
-
-
 class Image(_Element, HvImage):
     """
     Image represents a 2D array of some quantity with
@@ -318,6 +295,26 @@ class QuadMesh(_Element, HvQuadMesh):
         nodes = TriMesh.node_type(trimesh.nodes.data, **node_params)
         return TriMesh((trimesh.data, nodes), crs=self.crs,
                        **util.get_param_values(trimesh))
+
+
+class LineContours(QuadMesh):
+    """
+    LineContours represents a 2D array of some quantity with
+    some associated coordinates, which may be discretized
+    into one or more line contours.
+    """
+
+    group = param.String(default='LineContours')
+
+
+class FilledContours(QuadMesh):
+    """
+    Contours represents a 2D array of some quantity with
+    some associated coordinates, which may be discretized
+    into one or more filled contours.
+    """
+
+    group = param.String(default='FilledContours')
 
 
 class RGB(_Element, HvRGB):

@@ -20,7 +20,7 @@ from holoviews.plotting.bokeh.util import mpl_to_bokeh
 from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
                         Image, Feature, Text, RGB, Nodes, EdgePaths,
                         Graph, TriMesh, QuadMesh, VectorField, Labels,
-                        HexTiles)
+                        HexTiles, LineContours, FilledContours)
 from ...operation import (project_image, project_shape, project_points,
                           project_path, project_graph, project_quadmesh)
 from ...tile_sources import _ATTRIBUTIONS
@@ -134,6 +134,24 @@ class GeoContourPlot(GeoPlot, ContourPlot):
     _project_operation = project_path
 
 
+class LineContourPlot(GeoContourPlot):
+    """
+    Draws a contour plot.
+    """
+
+    levels = param.ClassSelector(default=10, class_=(list, int), doc="""
+        A list of scalar values used to specify the contour levels.""")
+
+
+class FilledContourPlot(GeoPolygonPlot):
+    """
+    Draws a filled contour plot.
+    """
+
+    levels = param.ClassSelector(default=10, class_=(list, int), doc="""
+        A list of scalar values used to specify the contour levels.""")
+    
+
 class GeoPathPlot(GeoPlot, PathPlot):
 
     _project_operation = project_path
@@ -245,6 +263,8 @@ Store.register({WMTS: TilePlot,
                 Shape: GeoShapePlot,
                 Image: GeoRasterPlot,
                 RGB: GeoRGBPlot,
+                LineContours: LineContourPlot,
+                FilledContours: FilledContourPlot,
                 Feature: FeaturePlot,
                 HexTiles: HexTilesPlot,
                 Text: GeoTextPlot,

@@ -132,11 +132,13 @@ class project_path(_project_operation):
             projected = gpd.GeoDataFrame(projected, columns=element.data.columns)
         elif element.interface is MultiInterface:
             x, y = element.kdims
-            item = element.data[0]
-            if isinstance(item, dict) and 'geometry' in item:
+            item = element.data[0] if element.data else None
+            if item is None or (isinstance(item, dict) and 'geometry' in item):
                 return element.clone(projected, crs=self.p.projection)
             projected = [geom_dict_to_array_dict(p, [x.name, y.name]) for p in projected]
-            if pd and isinstance(item, pd.DataFrame):
+            if any('holes' in p for p in projected):
+                pass
+            elif pd and isinstance(item, pd.DataFrame):
                 projected = [pd.DataFrame(p, columns=item.columns) for p in projected]
             elif isinstance(item, np.ndarray):
                 projected = [np.column_stack([p[d.name] for d in element.dimensions()])

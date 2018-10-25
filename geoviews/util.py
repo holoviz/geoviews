@@ -97,7 +97,8 @@ def geom_dict_to_array_dict(geom_dict, coord_names=['Longitude', 'Latitude']):
         holes = []
         for interior in geom.interiors:
             holes.append(geom_to_array(interior))
-        new_dict['holes'] = [holes]
+        if holes:
+            new_dict['holes'] = [holes]
     elif geom.geom_type == 'MultiPolygon':
         outer_holes = []
         for g in geom:
@@ -105,7 +106,8 @@ def geom_dict_to_array_dict(geom_dict, coord_names=['Longitude', 'Latitude']):
             for interior in g.interiors:
                 holes.append(geom_to_array(interior))
             outer_holes.append(holes)
-        new_dict['holes'] = outer_holes
+        if any(hs for hs in outer_holes):
+            new_dict['holes'] = outer_holes
     return new_dict
 
 

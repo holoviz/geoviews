@@ -217,15 +217,23 @@ class project_quadmesh(_project_operation):
                         for kd in element.kdims)
         zs = element.dimension_values(2, flat=False)
         if irregular:
-            X, Y = [np.asarray(element.interface.coords(element, kd, expanded=True))
+            X, Y = [np.asarray(element.interface.coords(
+                element, kd, expanded=True, edges=True))
                     for kd in element.kdims]
         else:
-            X = element.dimension_values(0, expanded=True)
-            Y = element.dimension_values(1, expanded=True)
-            zs = zs.T
+            X = element.interface.coords(element, 0, True, True, True)
+            if np.all(X[0, 1:] < X[0, :-1]):
+                X = X[:, ::-1]
+            Y = element.interface.coords(element, 1, True, True, True)
+            if np.all(Y[1:, 0] > X[:-1, 0]):
+                Y = Y[::-1, :]
+            zs = zs
 
-        coords = proj.transform_points(element.crs, X, Y)
+        Ny, Nx = X.shape
+        coords = proj.transform_points(element.crs, X.flatten(), Y.flatten())
         PX, PY = coords[..., 0], coords[..., 1]
+        xpoints = PX.reshape((Ny, Nx))
+        ypoints = PY.reshape((Ny, Nx))
 
         # Mask quads which are wrapping around the x-axis
         wrap_proj_types = (ccrs._RectangularProjection,
@@ -234,9 +242,10 @@ class project_quadmesh(_project_operation):
                            ccrs.Mercator)
         if isinstance(proj, wrap_proj_types):
             with np.errstate(invalid='ignore'):
+                
                 edge_lengths = np.hypot(
-                    np.diff(PX , axis=1),
-                    np.diff(PY, axis=1)
+                    np.diff(xpoints , axis=1),
+                    np.diff(ypoints, axis=1)
                 )
                 to_mask = (
                     (edge_lengths >= abs(proj.x_limits[1] -
@@ -245,22 +254,12 @@ class project_quadmesh(_project_operation):
                 )
             if np.any(to_mask):
                 mask = np.zeros(zs.shape, dtype=np.bool)
-                mask[:, 1:][to_mask] = True
-                mask[:, 2:][to_mask[:, :-1]] = True
-                mask[:, :-1][to_mask] = True
-                mask[:, :-2][to_mask[:, 1:]] = True
-                mask[1:, 1:][to_mask[:-1]] = True
-                mask[1:, :-1][to_mask[:-1]] = True
-                mask[:-1, 1:][to_mask[1:]] = True
-                mask[:-1, :-1][to_mask[1:]] = True
+                mask[to_mask[:-1, :]] = True  # Edges above a cell.
+                mask[to_mask[1:, :]] = True  # Edges below a cell.
                 zs[mask] = np.NaN
 
         params = get_param_values(element)
-        if PX.ndim < 2:
-            PX = PX.reshape(zs.shape)
-        if PY.ndim < 2:
-            PY = PY.reshape(zs.shape)
-        return QuadMesh((PX, PY, zs), crs=self.projection, **params)
+        return QuadMesh((xpoints, ypoints, zs), crs=self.projection, **params)
 
 
 class project_image(_project_operation):

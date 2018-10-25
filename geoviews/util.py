@@ -267,10 +267,11 @@ def path_to_geom_dicts(path, skip_invalid=True):
             if len(arr) == 1:
                 if skip_invalid:
                     continue
-                poly = Point(arr[0])
+                g = Point(arr[0])
                 invalid = True
             else:
-                subpaths.append(LineString(arr))
+                g = LineString(arr)
+            subpaths.append(g)
 
         if invalid:
             geoms += [dict(path, geometry=sp) for sp in subpaths]

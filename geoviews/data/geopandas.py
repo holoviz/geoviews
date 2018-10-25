@@ -4,7 +4,7 @@ import sys
 
 import numpy as np
 
-from holoviews.core.data import Dataset, Interface, MultiInterface, PandasInterface
+from holoviews.core.data import Dataset, Interface, MultiInterface
 from holoviews.core.data.interface  import DataError
 from holoviews.core.dimension import dimension_name
 from holoviews.element import Path
@@ -153,6 +153,7 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def groupby(cls, columns, dimensions, container_type, group_type, **kwargs):
+        from holoviews.core.data import PandasInterface
         return PandasInterface.groupby(columns, dimensions, container_type, group_type, **kwargs)
 
     @classmethod
@@ -165,10 +166,12 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def shape(cls, dataset):
+        from holoviews.core.data import PandasInterface
         return PandasInterface.shape(dataset)
 
     @classmethod
     def length(cls, dataset):
+        from holoviews.core.data import PandasInterface
         length = sum([geom_length(g) for g in dataset.data.geometry])
         geom_type = dataset.data.geom_type.iloc[0]
         if geom_type != 'Point':
@@ -181,10 +184,12 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def redim(cls, dataset, dimensions):
+        from holoviews.core.data import PandasInterface
         return PandasInterface.redim(dataset, dimensions)
 
     @classmethod
     def select(cls, dataset, selection_mask=None, **selection):
+        from holoviews.core.data import PandasInterface
         return PandasInterface.select(dataset, selection_mask, **selection)
 
     @classmethod

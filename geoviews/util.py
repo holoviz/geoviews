@@ -294,12 +294,12 @@ def geom_length(geom):
         return 1
     if hasattr(geom, 'exterior'):
         geom = geom.exterior
-    if hasattr(geom, 'array_interface_base'):
+    if not geom.geom_type.startswith('Multi') and hasattr(geom, 'array_interface_base'):
         return len(geom.array_interface_base['data'])//2
     else:
         length = 0
         for g in geom:
-            length += geom_length(geom)
+            length += geom_length(g)
         return length
 
 

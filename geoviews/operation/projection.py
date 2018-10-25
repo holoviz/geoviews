@@ -1,18 +1,25 @@
+import warnings
+import logging
+
 import param
+import shapely
 import numpy as np
 
 from cartopy import crs as ccrs
 from cartopy.img_transform import warp_array, _determine_bounds
-from holoviews.core.util import cartesian_product, get_param_values
+from holoviews.core.data import MultiInterface
+from holoviews.core.util import cartesian_product, get_param_values, max_extents, pd
 from holoviews.operation import Operation
 from shapely.geometry import Polygon, LineString, MultiPolygon, MultiLineString
 from shapely.geometry.collection import GeometryCollection
 
+from ..data import GeoPandasInterface
 from ..element import (Image, Shape, Polygons, Path, Points, Contours,
                        RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField,
                        HexTiles, Labels)
 from ..util import (
-    project_extents, geom_to_array, path_to_geom_dicts, polygons_to_geom_dicts
+    project_extents, geom_to_array, path_to_geom_dicts, polygons_to_geom_dicts,
+    geom_dict_to_array_dict
 )
 
 
@@ -45,7 +52,7 @@ class project_path(_project_operation):
     def _process_element(self, element):
         if element.crs == self.p.projection:
             return element
-        if not len(element):
+        elif not len(element):
             return element.clone(crs=self.p.projection)
 
         crs = element.crs
@@ -56,10 +63,7 @@ class project_path(_project_operation):
                              ' Spherical contouring is not supported - '
                              ' consider using PlateCarree/RotatedPole.')
 
-        import shapely
-        boundary = crs.project_geometry(Polygon(proj.boundary), proj)
-        if not boundary:
-            boundary = Polygon(crs.boundary)
+        boundary = Polygon(crs.boundary)
         bounds = [round(b, 10) for b in boundary.bounds]
         xoffset = round((boundary.bounds[2]-boundary.bounds[0])/2.)
         if isinstance(element, Polygons):
@@ -67,21 +71,23 @@ class project_path(_project_operation):
         else:
             geoms = path_to_geom_dicts(element)
 
+        data_bounds = max_extents([g['geometry'].bounds for g in geoms])
+        total_bounds = tuple(round(b, 10) for b in data_bounds)
+
         projected = []
         for path in geoms:
             geom = path['geometry']
-            geom_bounds = [round(b, 10) for b in geom.bounds]
-            if (cylindrical and geom_bounds[0] >= (bounds[0]+xoffset) and
-                geom_bounds[2] > (bounds[2]+xoffset//2)):
+            if (cylindrical and total_bounds[0] >= (bounds[0]+xoffset) and
+                total_bounds[2] > (bounds[2]+xoffset//2)):
                 # Offset if lon and not centered on 0 longitude
                 # i.e. lon_min > 0 and lon_max > 270
                 geom = shapely.affinity.translate(geom, xoff=-xoffset)
-                geom_bounds = [round(b, 10) for b in geom.bounds]
-                
+            geom_bounds = [round(b, 10) for b in geom.bounds]
+
             if boundary and (geom_bounds[0] < bounds[0] or
                              geom_bounds[2] > bounds[2]):
                 try:
-                    geom = geom.intersection(boundary)
+                    geom = boundary.intersection(geom)
                 except:
                     pass
 
@@ -97,6 +103,18 @@ class project_path(_project_operation):
                 continue
 
             proj_geom = proj.project_geometry(geom, element.crs)
+
+            # Attempt to fix geometry without being noisy about it
+            logger = logging.getLogger()
+            try:
+                prev = logger.level
+                logger.setLevel(logging.ERROR)
+                if not proj_geom.is_valid:
+                    proj_geom = proj.project_geometry(geom.buffer(0), element.crs)
+            except:
+                continue
+            finally:
+                logger.setLevel(prev)
             data = dict(path, geometry=proj_geom)
             projected.append(data)
 
@@ -109,6 +127,21 @@ class project_path(_project_operation):
                          (type(element).__name__, type(element.crs).__name__,
                           type(self.p.projection).__name__))
 
+        # Try casting back to original types
+        if element.interface is GeoPandasInterface:
+            import geopandas as gpd
+            projected = gpd.GeoDataFrame(projected, columns=element.data.columns)
+        elif element.interface is MultiInterface:
+            x, y = element.kdims
+            item = element.data[0]
+            if isinstance(item, dict) and 'geometry' in item:
+                return element.clone(projected, crs=self.p.projection)
+            projected = [geom_dict_to_array_dict(p, [x.name, y.name]) for p in projected]
+            if pd and isinstance(item, pd.DataFrame):
+                projected = [pd.DataFrame(p, columns=item.columns) for p in projected]
+            elif isinstance(item, np.ndarray):
+                projected = [np.column_stack([p[d.name] for d in element.dimensions()])
+                             for p in projected]
         return element.clone(projected, crs=self.p.projection)
 
 

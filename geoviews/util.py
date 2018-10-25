@@ -81,6 +81,34 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     return geom_in_crs.bounds
 
 
+def geom_dict_to_array_dict(geom_dict, coord_names=['Longitude', 'Latitude']):
+    """
+    Converts a dictionary containing an geometry key to a dictionary
+    of x- and y-coordinate arrays and if present a list-of-lists of
+    hole array.
+    """
+    x, y = coord_names
+    geom = geom_dict['geometry']
+    new_dict = {k: v for k, v in geom_dict.items() if k != 'geometry'}
+    array = geom_to_array(geom)
+    new_dict[x] = array[:, 0]
+    new_dict[y] = array[:, 1]
+    if geom.geom_type == 'Polygon':
+        holes = []
+        for interior in geom.interiors:
+            holes.append(geom_to_array(interior))
+        new_dict['holes'] = [holes]
+    elif geom.geom_type == 'MultiPolygon':
+        outer_holes = []
+        for g in geom:
+            holes = []
+            for interior in g.interiors:
+                holes.append(geom_to_array(interior))
+            outer_holes.append(holes)
+        new_dict['holes'] = outer_holes
+    return new_dict
+
+
 def path_to_geom(path, multi=True, skip_invalid=True):
     lines = []
     datatype = 'geom' if path.interface.datatype == 'geodataframe' else 'array'

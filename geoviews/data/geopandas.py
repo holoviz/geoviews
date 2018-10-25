@@ -3,7 +3,6 @@ from __future__ import absolute_import
 import sys
 
 import numpy as np
-import pandas as pd
 
 from holoviews.core.data import Dataset, Interface, MultiInterface, PandasInterface
 from holoviews.core.data.interface  import DataError
@@ -34,6 +33,7 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def init(cls, eltype, data, kdims, vdims):
+        import pandas as pd
         from geopandas import GeoDataFrame
 
         if isinstance(data, list):

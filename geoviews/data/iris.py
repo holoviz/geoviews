@@ -6,6 +6,7 @@ from itertools import product
 
 import numpy as np
 
+from holoviews.core.data import Dataset
 from holoviews.core.data.interface import Interface, DataError
 from holoviews.core.data.grid import GridInterface
 from holoviews.core.dimension import Dimension, asdim
@@ -364,7 +365,6 @@ class CubeInterface(GridInterface):
         Apply a selection to the data.
         """
         import iris
-        
         constraint = cls.select_to_constraint(dataset, selection)
         pre_dim_coords = [c.name() for c in dataset.data.dim_coords]
         indexed = cls.indexed(dataset, selection)
@@ -380,3 +380,4 @@ class CubeInterface(GridInterface):
 
 
 Interface.register(CubeInterface)
+Dataset.datatype.append('cube')

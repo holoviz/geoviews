@@ -11,7 +11,7 @@ from holoviews.core.dimension import dimension_name
 from holoviews.core.util import max_range
 from holoviews.element import Path
 
-from ..util import geom_to_array
+from ..util import geom_to_array, geom_types, geom_length
 
 
 class GeoPandasInterface(MultiInterface):
@@ -37,7 +37,12 @@ class GeoPandasInterface(MultiInterface):
     def init(cls, eltype, data, kdims, vdims):
         from geopandas import GeoDataFrame
 
-        if not isinstance(data, GeoDataFrame):
+        if isinstance(data, list):
+            if all(isinstance(d, geom_types) for d in data):
+                data = [{'geometry': d} for d in data]
+            if all('geometry' in d and isinstance(d['geometry'], geom_types) for d in data):
+                data = GeoDataFrame(data)
+        elif not isinstance(data, GeoDataFrame):
             raise ValueError("GeoPandasInterface only support geopandas DataFrames.")
         elif 'geometry' not in data:
             raise ValueError("GeoPandas dataframe must contain geometry column, "
@@ -70,11 +75,19 @@ class GeoPandasInterface(MultiInterface):
     @classmethod
     def validate(cls, dataset, vdims=True):
         dim_types = 'key' if vdims else 'all'
-        assert len(cls.geom_dims(dataset)) == 2
-        #if not_found:
-        #    raise DataError("Supplied data does not contain specified "
-        #                     "dimensions, the following dimensions were "
-        #                     "not found: %s" % repr(not_found))
+        geom_dims = cls.geom_dims(dataset)
+        if len(geom_dims) != 2:
+            raise DataError('Expected %s instance to declare two key '
+                            'dimensions corresponding to the geometry '
+                            'coordinates but %d dimensions were found '
+                            'which did not refer to any columns.'
+                            % (type(dataset).__name__, len(geom_dims)), cls)
+        not_found = [d.name for d in dataset.dimensions()
+                     if d not in geom_dims and d.name not in dataset.data]
+        if not_found:
+            raise DataError("Supplied data does not contain specified "
+                             "dimensions, the following dimensions were "
+                             "not found: %s" % repr(not_found), cls)
 
     @classmethod
     def has_holes(cls, dataset):
@@ -153,21 +166,15 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def shape(cls, dataset):
-        rows, cols = 0, len(dataset.dimensions())
-        if len(dataset.data) == 0: return rows, cols
-        arr = geom_to_array(dataset.data.geometry.iloc[0])
-        ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
-        for d in dataset.data.geometry:
-            ds.data = geom_to_array(d)
-            r, cols = ds.interface.shape(ds)
-            rows += r
-        geom_type = dataset.data.geom_type.iloc[0]
-        offset = 0 if geom_type == 'Point' else len(dataset.data)-1
-        return rows+offset, cols
+        return PandasInterface.shape(dataset)
 
     @classmethod
     def length(cls, dataset):
-        return cls.shape(dataset)[0]
+        length = sum([geom_length(g) for g in dataset.data.geometry])
+        geom_type = dataset.data.geom_type.iloc[0]
+        if geom_type != 'Point':
+            length += (PandasInterface.length(dataset)-1)
+        return length
 
     @classmethod
     def nonzero(cls, dataset):
@@ -178,7 +185,11 @@ class GeoPandasInterface(MultiInterface):
         return PandasInterface.redim(dataset, dimensions)
 
     @classmethod
-    def values(cls, dataset, dimension, expanded, flat):
+    def select(cls, dataset, selection_mask=None, **selection):
+        return PandasInterface.select(dataset, selection_mask, **selection)
+
+    @classmethod
+    def values(cls, dataset, dimension, expanded=True, flat=True):
         dimension = dataset.get_dimension(dimension)
         geom_dims = dataset.interface.geom_dims(dataset)
         data = dataset.data
@@ -187,23 +198,21 @@ class GeoPandasInterface(MultiInterface):
         elif not len(data):
             return np.array([])
 
-        geom_type = dataset.data.geom_type.iloc[0]
         values = []
-        columns = list(data.columns)
-        arr = geom_to_array(data.geometry.iloc[0])
-        ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
-        for i, d in enumerate(data.geometry):
-            arr = geom_to_array(d)
-            if dimension in geom_dims:
-                ds.data = arr
-                values.append(ds.interface.values(ds, dimension))
-            else:
-                arr = np.full(len(arr), data.iloc[i, columns.index(dimension.name)])
-                values.append(arr)
+        geom_type = data.geom_type.iloc[0]
+        ds = dataset.clone(data.iloc[0].to_dict(), datatype=['geom_dictionary'])
+        for i, row in data.iterrows():
+            ds.data = row.to_dict()
+            values.append(ds.interface.values(ds, dimension))
             if geom_type != 'Point':
                 values.append([np.NaN])
         values = values if geom_type == 'Point' else values[:-1]
-        return np.concatenate(values) if values else np.array([])
+        if len(values) == 1:
+            return values[0]
+        elif not values:
+            return np.array([])
+        else:
+            return np.concatenate(values)
 
     @classmethod
     def split(cls, dataset, start, end, datatype, **kwargs):

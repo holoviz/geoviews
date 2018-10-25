@@ -1,3 +1,5 @@
+from __future__ import division
+
 import warnings
 
 import param
@@ -50,12 +52,20 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
                                   [x2, y2], [x1, y2],
                                   [x1, y1]])
     boundary_poly = Polygon(src_proj.boundary)
+    dest_poly = src_proj.project_geometry(Polygon(dest_proj.boundary), dest_proj).buffer(0)
     if src_proj != dest_proj:
         # Erode boundary by threshold to avoid transform issues.
         # This is a workaround for numerical issues at the boundary.
         eroded_boundary = boundary_poly.buffer(-src_proj.threshold)
         geom_in_src_proj = eroded_boundary.intersection(
             domain_in_src_proj)
+        try:
+            geom_clipped_to_dest_proj = dest_poly.intersection(
+                geom_in_src_proj)
+        except:
+            geom_clipped_to_dest_proj = None
+        if geom_clipped_to_dest_proj:
+            geom_in_src_proj = geom_clipped_to_dest_proj
         try:
             geom_in_crs = dest_proj.project_geometry(geom_in_src_proj, src_proj)
         except ValueError:
@@ -247,6 +257,23 @@ def geom_to_arr(geom):
     if (len(arr) % 2) != 0:
         arr = arr[:-1]
     return np.array(arr).reshape(int(len(arr)/2), 2)
+
+
+def geom_length(geom):
+    """
+    Calculates the length of coordinates in a shapely geometry.
+    """
+    if geom.geom_type == 'Point':
+        return 1
+    if hasattr(geom, 'exterior'):
+        geom = geom.exterior
+    if hasattr(geom, 'array_interface_base'):
+        return len(geom.array_interface_base['data'])//2
+    else:
+        length = 0
+        for g in geom:
+            length += geom_length(geom)
+        return length
 
 
 def geom_to_array(geom):

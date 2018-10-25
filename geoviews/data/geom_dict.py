@@ -6,13 +6,11 @@ except ImportError:
     pass
 
 import numpy as np
-
-
 from holoviews.core.data import Interface, DictInterface, MultiInterface
 from holoviews.core.dimension import OrderedDict as cyODict, dimension_name
 from holoviews.core.util import isscalar
 
-from ..util import geom_types, geom_to_array
+from ..util import geom_types, geom_to_array, geom_length
 
 
 class GeomDictInterface(DictInterface):
@@ -96,7 +94,7 @@ class GeomDictInterface(DictInterface):
     def holes(cls, dataset):
         from shapely.geometry import Polygon, MultiPolygon
         geom = dataset.data['geometry']
-        if isinstance(geom, Polygon) and geom.interiors:
+        if isinstance(geom, Polygon):
             return [[[geom_to_array(h) for h in geom.interiors]]]
         elif isinstance(geom, MultiPolygon):
             return [[[geom_to_array(h) for h in g.interiors] for g in geom]]
@@ -125,7 +123,7 @@ class GeomDictInterface(DictInterface):
 
     @classmethod
     def length(cls, dataset):
-        return len(geom_to_array(dataset.data['geometry']))
+        return geom_length(dataset.data['geometry'])
 
     @classmethod
     def geom_dims(cls, dataset):
@@ -143,20 +141,25 @@ class GeomDictInterface(DictInterface):
         return DictInterface.values(dataset, dim, expanded, flat)
 
     @classmethod
+    def select(cls, dataset, selection_mask=None, **selection):
+        raise NotImplementedError('select operation not implemented on geometries')
+
+    @classmethod
     def iloc(cls, dataset, index):
-        raise NotImplementedError()
+        raise NotImplementedError('iloc operation not implemented for geometries.')
 
     @classmethod
     def sample(cls, dataset, samples=[]):
-        raise NotImplementedError()
+        raise NotImplementedError('sampling operation not implemented for geometries.')
 
     @classmethod
     def aggregate(cls, dataset, kdims, function, **kwargs):
-        raise NotImplementedError()
+        raise NotImplementedError('aggregate operation not implemented for geometries.')
 
     @classmethod
     def concat(cls, datasets, dimensions, vdims):
-        raise NotImplementedError()
+        raise NotImplementedError('concat operation not implemented for geometries.')
+
 
 MultiInterface.subtypes.insert(0, 'geom_dictionary')
 Interface.register(GeomDictInterface)

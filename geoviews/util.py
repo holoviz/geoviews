@@ -209,7 +209,12 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
             if j != (len(arrays)-1):
                 arr = arr[:-1] # Drop nan
 
-            if len(arr) < 3:
+            if len(arr) == 1:
+                if skip_invalid:
+                    continue
+                poly = Point(arr[0])
+                invalid = True
+            elif len(arr) == 2:
                 if skip_invalid:
                     continue
                 poly = LineString(arr)
@@ -236,7 +241,7 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
     return polys
 
 
-def path_to_geom_dicts(path):
+def path_to_geom_dicts(path, skip_invalid=True):
     """
     Converts a Path element into a list of geometry dictionaries,
     preserving all value dimensions.
@@ -248,6 +253,7 @@ def path_to_geom_dicts(path):
         return path.data
 
     geoms = []
+    invalid = False
     xdim, ydim = path.kdims
     for i, path in enumerate(path.split(datatype='columns')):
         array = np.column_stack([path.pop(xdim.name), path.pop(ydim.name)])
@@ -257,11 +263,19 @@ def path_to_geom_dicts(path):
         for j, arr in enumerate(arrays):
             if j != (len(arrays)-1):
                 arr = arr[:-1] # Drop nan
-            if len(arr) < 2:
-                continue
-            subpaths.append(LineString(arr))
+            
+            if len(arr) == 1:
+                if skip_invalid:
+                    continue
+                poly = Point(arr[0])
+                invalid = True
+            else:
+                subpaths.append(LineString(arr))
 
-        if len(subpaths) == 1:
+        if invalid:
+            geoms += [dict(path, geometry=sp) for sp in subpaths]
+            continue
+        elif len(subpaths) == 1:
             geom = subpaths[0]
         elif subpaths:
             geom = MultiLineString(subpaths)

@@ -66,9 +66,9 @@ class project_path(_project_operation):
         bounds = [round(b, 10) for b in boundary.bounds]
         xoffset = round((boundary.bounds[2]-boundary.bounds[0])/2.)
         if isinstance(element, Polygons):
-            geoms = polygons_to_geom_dicts(element)
+            geoms = polygons_to_geom_dicts(element, skip_invalid=False)
         else:
-            geoms = path_to_geom_dicts(element)
+            geoms = path_to_geom_dicts(element, skip_invalid=False)
 
         data_bounds = max_extents([g['geometry'].bounds for g in geoms])
         total_bounds = tuple(round(b, 10) for b in data_bounds)

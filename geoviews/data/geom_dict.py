@@ -1,9 +1,5 @@
 import sys
-from collections import OrderedDict, defaultdict
-try:
-    import itertools.izip as zip
-except ImportError:
-    pass
+from collections import OrderedDict
 
 import numpy as np
 from holoviews.core.data import Interface, DictInterface, MultiInterface

@@ -31,8 +31,8 @@ try:
 except:
     WebMapTileService = None
 
-from ..util import (path_to_geom, polygon_to_geom, geom_to_array,
-                    load_tiff, from_xarray, poly_types)
+from ..util import (path_to_geom, polygon_to_geom, load_tiff,
+                    from_xarray, poly_types)
 
 geographic_types = (GoogleTiles, cFeature, BaseGeometry)
 
@@ -633,7 +633,6 @@ class Shape(Dataset):
             vdims = []
 
         data = []
-        notfound = False
         for i, rec in enumerate(records):
             geom = {}
             if dataset:
@@ -649,7 +648,6 @@ class Shape(Dataset):
                 geom.update(values)
 
             if index:
-                key = []
                 for kdim in kdims:
                     if kdim in ddims and len(row):
                         k = row[kdim.name][0]

@@ -8,7 +8,6 @@ import pandas as pd
 from holoviews.core.data import Dataset, Interface, MultiInterface, PandasInterface
 from holoviews.core.data.interface  import DataError
 from holoviews.core.dimension import dimension_name
-from holoviews.core.util import max_range
 from holoviews.element import Path
 
 from ..util import geom_to_array, geom_types, geom_length
@@ -82,7 +81,7 @@ class GeoPandasInterface(MultiInterface):
                             'coordinates but %d dimensions were found '
                             'which did not refer to any columns.'
                             % (type(dataset).__name__, len(geom_dims)), cls)
-        not_found = [d.name for d in dataset.dimensions()
+        not_found = [d.name for d in dataset.dimensions(dim_types)
                      if d not in geom_dims and d.name not in dataset.data]
         if not_found:
             raise DataError("Supplied data does not contain specified "
@@ -216,8 +215,6 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def split(cls, dataset, start, end, datatype, **kwargs):
-        from shapely.geometry import Polygon, MultiPolygon
-
         objs = []
         xdim, ydim = dataset.kdims[:2]
         if not len(dataset.data):
@@ -232,7 +229,6 @@ class GeoPandasInterface(MultiInterface):
                 objs.append(row['geometry'])
                 continue
             geom = row.geometry
-            geoms = geom if isinstance(geom, MultiPolygon) else [geom]
             arr = geom_to_array(geom)
             d = {xdim.name: arr[:, 0], ydim.name: arr[:, 1]}
             d.update({vd.name: row[vd.name] for vd in dataset.vdims})

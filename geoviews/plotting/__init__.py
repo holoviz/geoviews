@@ -1,7 +1,7 @@
 from holoviews.core.options import Compositor
 from holoviews.operation.element import contours
 
-from ..element import LineContours, FilledContours, Contours, Polygons
+from ..element import Contours, Polygons
 from . import mpl # noqa
 
 try:

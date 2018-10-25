@@ -1,4 +1,3 @@
-import warnings
 import logging
 
 import param
@@ -10,7 +9,7 @@ from cartopy.img_transform import warp_array, _determine_bounds
 from holoviews.core.data import MultiInterface
 from holoviews.core.util import cartesian_product, get_param_values, max_extents, pd
 from holoviews.operation import Operation
-from shapely.geometry import Polygon, LineString, MultiPolygon, MultiLineString
+from shapely.geometry import Polygon, MultiPolygon
 from shapely.geometry.collection import GeometryCollection
 
 from ..data import GeoPandasInterface

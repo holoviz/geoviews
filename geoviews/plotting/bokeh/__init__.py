@@ -2,7 +2,6 @@ import copy
 
 import param
 import numpy as np
-import shapely.geometry
 from cartopy.crs import GOOGLE_MERCATOR
 from bokeh.models import WMTSTileSource, BBoxTileSource, QUADKEYTileSource
 
@@ -15,16 +14,15 @@ from holoviews.plotting.bokeh.graphs import TriMeshPlot, GraphPlot
 from holoviews.plotting.bokeh.hex_tiles import hex_binning, HexTilesPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
 from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot, QuadMeshPlot
-from holoviews.plotting.bokeh.util import mpl_to_bokeh
 
 from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
                         Image, Feature, Text, RGB, Nodes, EdgePaths,
                         Graph, TriMesh, QuadMesh, VectorField, Labels,
                         HexTiles, LineContours, FilledContours)
-from ...operation import (project_image, project_shape, project_points,
-                          project_path, project_graph, project_quadmesh)
+from ...operation import (project_image, project_points, project_path,
+                          project_graph, project_quadmesh)
 from ...tile_sources import _ATTRIBUTIONS
-from ...util import geom_to_array, poly_types, line_types
+from ...util import poly_types, line_types
 from .plot import GeoPlot, GeoOverlayPlot
 from . import callbacks # noqa
 

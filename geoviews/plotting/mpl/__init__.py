@@ -14,14 +14,12 @@ from holoviews.core import Store, HoloMap, Layout, Overlay, Element, NdLayout
 from holoviews.core import util
 from holoviews.core.data import GridInterface
 from holoviews.core.options import SkipRendering, Options
-from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
-                                    AnnotationPlot, TextPlot,
-                                    LayoutPlot as HvLayoutPlot,
-                                    OverlayPlot as HvOverlayPlot,
-                                    PathPlot, PolygonPlot, RasterPlot,
-                                    ContourPlot, GraphPlot, TriMeshPlot,
-                                    QuadMeshPlot, VectorFieldPlot,
-                                    HexTilesPlot, LabelsPlot)
+from holoviews.plotting.mpl import (
+    ElementPlot, PointPlot, AnnotationPlot, TextPlot, LabelsPlot,
+    LayoutPlot as HvLayoutPlot, OverlayPlot as HvOverlayPlot,
+    PathPlot, PolygonPlot, RasterPlot, ContourPlot, GraphPlot,
+    TriMeshPlot, QuadMeshPlot, VectorFieldPlot, HexTilesPlot
+)
 from holoviews.plotting.mpl.util import get_raster_array
 
 

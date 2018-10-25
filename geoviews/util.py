@@ -142,7 +142,6 @@ def path_to_geom(path, multi=True, skip_invalid=True):
 def polygon_to_geom(poly, multi=True, skip_invalid=True):
     lines = []
     datatype = 'geom' if poly.interface.datatype == 'geodataframe' else 'array'
-    has_holes = poly.interface.has_holes(poly)
     for path in poly.split(datatype=datatype):
         if datatype == 'array':
             splits = np.where(np.isnan(path[:, :2].astype('float')).sum(axis=1))[0]

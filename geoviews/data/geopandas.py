@@ -3,13 +3,14 @@ from __future__ import absolute_import
 import sys
 
 import numpy as np
+import pandas as pd
 
 from holoviews.core.data import Dataset, Interface, MultiInterface, PandasInterface
 from holoviews.core.data.interface  import DataError
-from holoviews.core.util import max_range
+from holoviews.core.dimension import dimension_name
 from holoviews.element import Path
 
-from ..util import geom_to_array
+from ..util import geom_to_array, geom_types, geom_length
 
 
 class GeoPandasInterface(MultiInterface):
@@ -35,35 +36,87 @@ class GeoPandasInterface(MultiInterface):
     def init(cls, eltype, data, kdims, vdims):
         from geopandas import GeoDataFrame
 
-        if not isinstance(data, GeoDataFrame):
+        if isinstance(data, list):
+            if all(isinstance(d, geom_types) for d in data):
+                data = [{'geometry': d} for d in data]
+            if all('geometry' in d and isinstance(d['geometry'], geom_types) for d in data):
+                data = GeoDataFrame(data)
+        elif not isinstance(data, GeoDataFrame):
             raise ValueError("GeoPandasInterface only support geopandas DataFrames.")
         elif 'geometry' not in data:
             raise ValueError("GeoPandas dataframe must contain geometry column, "
                              "to plot non-geographic data use pandas DataFrame.", cls)
-        if kdims is not None:
-            if len(kdims) != 2:
-                raise ValueError("Expected two kdims to use GeoDataFrame, found %d."
-                                 % len(kdims))
-        else:
+        if kdims is None:
             kdims = eltype.kdims
+
+        if vdims is None:
+            vdims = eltype.vdims
+
+        index_names = data.index.names if isinstance(data, pd.DataFrame) else [data.index.name]
+        if index_names == [None]:
+            index_names = ['index']
+
+        for kd in kdims+vdims:
+            kd = dimension_name(kd)
+            if kd in data.columns:
+                continue
+            if any(kd == ('index' if name is None else name)
+                   for name in index_names):
+                data = data.reset_index()
+                break
 
         if len(set([gt[5:] if 'Multi' in gt else gt for gt in data.geom_type])) > 1:
             raise ValueError('The GeopandasInterface can only read dataframes which '
                              'share a common geometry type')
 
-        if vdims is None:
-            vdims = eltype.vdims
         return data, {'kdims': kdims, 'vdims': vdims}, {}
 
     @classmethod
     def validate(cls, dataset, vdims=True):
         dim_types = 'key' if vdims else 'all'
-        not_found = [d for d in dataset.dimensions(dim_types, label='name')[2:]
-                     if d not in dataset.data.columns]
+        geom_dims = cls.geom_dims(dataset)
+        if len(geom_dims) != 2:
+            raise DataError('Expected %s instance to declare two key '
+                            'dimensions corresponding to the geometry '
+                            'coordinates but %d dimensions were found '
+                            'which did not refer to any columns.'
+                            % (type(dataset).__name__, len(geom_dims)), cls)
+        not_found = [d.name for d in dataset.dimensions(dim_types)
+                     if d not in geom_dims and d.name not in dataset.data]
         if not_found:
             raise DataError("Supplied data does not contain specified "
                              "dimensions, the following dimensions were "
-                             "not found: %s" % repr(not_found))
+                             "not found: %s" % repr(not_found), cls)
+
+    @classmethod
+    def has_holes(cls, dataset):
+        from shapely.geometry import Polygon, MultiPolygon
+        for geom in dataset.data.geometry:
+            if isinstance(geom, Polygon) and geom.interiors:
+                return True
+            elif isinstance(geom, MultiPolygon):
+                for g in geom:
+                    if isinstance(g, Polygon) and g.interiors:
+                        return True
+        return False
+
+    @classmethod
+    def holes(cls, dataset):
+        from shapely.geometry import Polygon, MultiPolygon
+        holes = []
+        for geom in dataset.data.geometry:
+            if isinstance(geom, Polygon) and geom.interiors:
+                holes.append([[geom_to_array(h) for h in geom.interiors]])
+            elif isinstance(geom, MultiPolygon):
+                holes += [[[geom_to_array(h) for h in g.interiors] for g in geom]]
+            else:
+                holes.append([[]])
+        return holes
+
+    @classmethod
+    def geom_dims(cls, dataset):
+        return [d for d in dataset.kdims + dataset.vdims
+                if d.name not in dataset.data]
 
     @classmethod
     def dimension_type(cls, dataset, dim):
@@ -81,17 +134,16 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def range(cls, dataset, dim):
-        dim = dataset.get_dimension_index(dim)
-        if dim in [0, 1]:
-            ranges = []
-            arr = geom_to_array(dataset.data.geometry.iloc[0])
-            ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
-            for d in dataset.data.geometry:
-                ds.data = geom_to_array(d)
-                ranges.append(ds.interface.range(ds, dim))
-            return max_range(ranges)
+        dim = dataset.get_dimension(dim)
+        geom_dims = cls.geom_dims(dataset)
+        if dim in geom_dims:
+            idx = geom_dims.index(dim)
+            bounds = dataset.data.geometry.bounds
+            if idx == 0:
+                return bounds.minx.min(), bounds.maxx.max()
+            else:
+                return bounds.miny.min(), bounds.maxy.max()
         else:
-            dim = dataset.get_dimension(dim)
             vals = dataset.data[dim.name]
             return vals.min(), vals.max()
 
@@ -101,7 +153,11 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def groupby(cls, columns, dimensions, container_type, group_type, **kwargs):
-        raise NotImplementedError
+        return PandasInterface.groupby(columns, dimensions, container_type, group_type, **kwargs)
+
+    @classmethod
+    def reindex(cls, dataset, kdims=None, vdims=None):
+        return dataset.data
 
     @classmethod
     def sample(cls, columns, samples=[]):
@@ -109,21 +165,15 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def shape(cls, dataset):
-        rows, cols = 0, len(dataset.dimensions())
-        if len(dataset.data) == 0: return rows, cols
-        arr = geom_to_array(dataset.data.geometry.iloc[0])
-        ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
-        for d in dataset.data.geometry:
-            ds.data = geom_to_array(d)
-            r, cols = ds.interface.shape(ds)
-            rows += r
-        geom_type = dataset.data.geom_type.iloc[0]
-        offset = 0 if geom_type == 'Point' else len(dataset.data)-1
-        return rows+offset, cols
+        return PandasInterface.shape(dataset)
 
     @classmethod
     def length(cls, dataset):
-        return cls.shape(dataset)[0]
+        length = sum([geom_length(g) for g in dataset.data.geometry])
+        geom_type = dataset.data.geom_type.iloc[0]
+        if geom_type != 'Point':
+            length += (PandasInterface.length(dataset)-1)
+        return length
 
     @classmethod
     def nonzero(cls, dataset):
@@ -134,32 +184,34 @@ class GeoPandasInterface(MultiInterface):
         return PandasInterface.redim(dataset, dimensions)
 
     @classmethod
-    def values(cls, dataset, dimension, expanded, flat):
+    def select(cls, dataset, selection_mask=None, **selection):
+        return PandasInterface.select(dataset, selection_mask, **selection)
+
+    @classmethod
+    def values(cls, dataset, dimension, expanded=True, flat=True):
         dimension = dataset.get_dimension(dimension)
-        idx = dataset.get_dimension_index(dimension)
+        geom_dims = dataset.interface.geom_dims(dataset)
         data = dataset.data
-        if idx not in [0, 1] and not expanded:
+        if dimension not in geom_dims and not expanded:
             return data[dimension.name].values
         elif not len(data):
             return np.array([])
 
-        geom_type = dataset.data.geom_type.iloc[0]
         values = []
-        columns = list(data.columns)
-        arr = geom_to_array(data.geometry.iloc[0])
-        ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
-        for i, d in enumerate(data.geometry):
-            arr = geom_to_array(d)
-            if idx in [0, 1]:
-                ds.data = arr
-                values.append(ds.interface.values(ds, dimension))
-            else:
-                arr = np.full(len(arr), data.iloc[i, columns.index(dimension.name)])
-                values.append(arr)
+        geom_type = data.geom_type.iloc[0]
+        ds = dataset.clone(data.iloc[0].to_dict(), datatype=['geom_dictionary'])
+        for i, row in data.iterrows():
+            ds.data = row.to_dict()
+            values.append(ds.interface.values(ds, dimension))
             if geom_type != 'Point':
                 values.append([np.NaN])
         values = values if geom_type == 'Point' else values[:-1]
-        return np.concatenate(values) if values else np.array([])
+        if len(values) == 1:
+            return values[0]
+        elif not values:
+            return np.array([])
+        else:
+            return np.concatenate(values)
 
     @classmethod
     def split(cls, dataset, start, end, datatype, **kwargs):
@@ -176,7 +228,8 @@ class GeoPandasInterface(MultiInterface):
             if datatype == 'geom':
                 objs.append(row['geometry'])
                 continue
-            arr = geom_to_array(row['geometry'])
+            geom = row.geometry
+            arr = geom_to_array(geom)
             d = {xdim.name: arr[:, 0], ydim.name: arr[:, 1]}
             d.update({vd.name: row[vd.name] for vd in dataset.vdims})
             ds.data = d

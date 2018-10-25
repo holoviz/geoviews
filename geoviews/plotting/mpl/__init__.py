@@ -14,14 +14,12 @@ from holoviews.core import Store, HoloMap, Layout, Overlay, Element, NdLayout
 from holoviews.core import util
 from holoviews.core.data import GridInterface
 from holoviews.core.options import SkipRendering, Options
-from holoviews.plotting.mpl import (ElementPlot, ColorbarPlot, PointPlot,
-                                    AnnotationPlot, TextPlot,
-                                    LayoutPlot as HvLayoutPlot,
-                                    OverlayPlot as HvOverlayPlot,
-                                    PathPlot, PolygonPlot, RasterPlot,
-                                    ContourPlot, GraphPlot, TriMeshPlot,
-                                    QuadMeshPlot, VectorFieldPlot,
-                                    HexTilesPlot, LabelsPlot)
+from holoviews.plotting.mpl import (
+    ElementPlot, PointPlot, AnnotationPlot, TextPlot, LabelsPlot,
+    LayoutPlot as HvLayoutPlot, OverlayPlot as HvOverlayPlot,
+    PathPlot, PolygonPlot, RasterPlot, ContourPlot, GraphPlot,
+    TriMeshPlot, QuadMeshPlot, VectorFieldPlot, HexTilesPlot
+)
 from holoviews.plotting.mpl.util import get_raster_array
 
 
@@ -128,54 +126,6 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             self.handles['artist'].remove()
         except ValueError:
             pass
-
-
-class LineContourPlot(GeoPlot, ColorbarPlot):
-    """
-    Draws a contour plot.
-    """
-
-    colorbar = param.Boolean(default=True)
-
-    levels = param.ClassSelector(default=5, class_=(int, list), doc="""
-        The levels of the contour as a number or list.""")
-
-    style_opts = ['antialiased', 'alpha', 'cmap', 'linewidths', 'colors']
-
-    _plot_methods = dict(single='contour')
-
-    def get_data(self, element, ranges, style):
-        args = geo_mesh(element)
-        style.pop('label', None)
-        if isinstance(self.levels, int):
-            args += (self.levels,)
-        else:
-            style['levels'] = self.levels
-        style['transform'] = element.crs
-        return args, style, {}
-
-
-    def teardown_handles(self):
-        """
-        Iterate over the artists in the collection and remove
-        them individually.
-        """
-        if 'artist' in self.handles:
-            for coll in self.handles['artist'].collections:
-                try:
-                    coll.remove()
-                except ValueError:
-                    pass
-
-
-class FilledContourPlot(LineContourPlot):
-    """
-    Draws a filled contour plot.
-    """
-
-    style_opts = ['antialiased', 'alpha', 'cmap', 'linewidths']
-
-    _plot_methods = dict(single='contourf')
 
 
 
@@ -331,6 +281,24 @@ class GeoPolygonPlot(GeoPlot, PolygonPlot):
     _project_operation = project_path
 
 
+class LineContourPlot(GeoContourPlot):
+    """
+    Draws a contour plot.
+    """
+
+    levels = param.ClassSelector(default=10, class_=(list, int), doc="""
+        A list of scalar values used to specify the contour levels.""")
+
+
+class FilledContourPlot(GeoPolygonPlot):
+    """
+    Draws a filled contour plot.
+    """
+
+    levels = param.ClassSelector(default=10, class_=(list, int), doc="""
+        A list of scalar values used to specify the contour levels.""")
+
+
 class GeoShapePlot(GeometryPlot, PolygonPlot):
     """
     Draws a scatter plot from the data in a Points Element.
@@ -346,7 +314,7 @@ class GeoShapePlot(GeometryPlot, PolygonPlot):
                 self._norm_kwargs(element, ranges, style, vdim)
                 style['clim'] = style.pop('vmin'), style.pop('vmax')
                 style['array'] = np.array([value])
-            return ([element.data], element.crs), style, {}
+            return ([element.data['geometry']], element.crs), style, {}
         else:
             SkipRendering('Shape can only be plotted on geographic plot, '
                           'supply a coordinate reference system.')

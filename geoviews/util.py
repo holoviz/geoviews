@@ -1,3 +1,5 @@
+from __future__ import division
+
 import warnings
 
 import param
@@ -5,8 +7,14 @@ import numpy as np
 import shapely.geometry as sgeom
 
 from cartopy import crs as ccrs
-from shapely.geometry import (MultiLineString, LineString, MultiPolygon, Polygon)
+from shapely.geometry import (MultiLineString, LineString, MultiPolygon,
+                              Polygon, LinearRing, Point, MultiPoint)
 from holoviews.core.util import basestring
+
+geom_types = (MultiLineString, LineString, MultiPolygon, Polygon,
+              LinearRing, Point, MultiPoint)
+line_types = (MultiLineString, LineString)
+poly_types = (MultiPolygon, Polygon, LinearRing)
 
 
 def wrap_lons(lons, base, period):
@@ -44,12 +52,20 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
                                   [x2, y2], [x1, y2],
                                   [x1, y1]])
     boundary_poly = Polygon(src_proj.boundary)
+    dest_poly = src_proj.project_geometry(Polygon(dest_proj.boundary), dest_proj).buffer(0)
     if src_proj != dest_proj:
         # Erode boundary by threshold to avoid transform issues.
         # This is a workaround for numerical issues at the boundary.
         eroded_boundary = boundary_poly.buffer(-src_proj.threshold)
         geom_in_src_proj = eroded_boundary.intersection(
             domain_in_src_proj)
+        try:
+            geom_clipped_to_dest_proj = dest_poly.intersection(
+                geom_in_src_proj)
+        except:
+            geom_clipped_to_dest_proj = None
+        if geom_clipped_to_dest_proj:
+            geom_in_src_proj = geom_clipped_to_dest_proj
         try:
             geom_in_crs = dest_proj.project_geometry(geom_in_src_proj, src_proj)
         except ValueError:
@@ -63,6 +79,34 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     else:
         geom_in_crs = boundary_poly.intersection(domain_in_src_proj)
     return geom_in_crs.bounds
+
+
+def geom_dict_to_array_dict(geom_dict, coord_names=['Longitude', 'Latitude']):
+    """
+    Converts a dictionary containing an geometry key to a dictionary
+    of x- and y-coordinate arrays and if present a list-of-lists of
+    hole array.
+    """
+    x, y = coord_names
+    geom = geom_dict['geometry']
+    new_dict = {k: v for k, v in geom_dict.items() if k != 'geometry'}
+    array = geom_to_array(geom)
+    new_dict[x] = array[:, 0]
+    new_dict[y] = array[:, 1]
+    if geom.geom_type == 'Polygon':
+        holes = []
+        for interior in geom.interiors:
+            holes.append(geom_to_array(interior))
+        new_dict['holes'] = [holes]
+    elif geom.geom_type == 'MultiPolygon':
+        outer_holes = []
+        for g in geom:
+            holes = []
+            for interior in g.interiors:
+                holes.append(geom_to_array(interior))
+            outer_holes.append(holes)
+        new_dict['holes'] = outer_holes
+    return new_dict
 
 
 def path_to_geom(path, multi=True, skip_invalid=True):
@@ -124,6 +168,123 @@ def polygon_to_geom(poly, multi=True, skip_invalid=True):
     return MultiPolygon(lines) if multi else lines
 
 
+def polygons_to_geom_dicts(polygons, skip_invalid=True):
+    """
+    Converts a Polygons element into a list of geometry dictionaries,
+    preserving all value dimensions.
+
+    For array conversion the following conventions are applied:
+
+    * Any nan separated array are converted into a MultiPolygon
+    * Any array without nans is converted to a Polygon
+    * If there are holes associated with a nan separated array
+      the holes are assigned to the polygons by testing for an
+      intersection
+    * If any single array does not have at least three coordinates
+      it is skipped by default
+    * If skip_invalid=False and an array has less than three
+      coordinates it will be converted to a LineString
+    """
+    interface = polygons.interface.datatype
+    if interface == 'geodataframe':
+        return [row.to_dict() for _, row in polygons.data.iterrows()]
+    elif interface == 'geom_dictionary':
+        return polygons.data
+
+    polys = []
+    xdim, ydim = polygons.kdims
+    has_holes = polygons.has_holes
+    holes = polygons.holes() if has_holes else None
+    for i, polygon in enumerate(polygons.split(datatype='columns')):
+        array = np.column_stack([polygon.pop(xdim.name), polygon.pop(ydim.name)])
+        splits = np.where(np.isnan(array[:, :2].astype('float')).sum(axis=1))[0]
+        arrays = np.split(array, splits+1) if len(splits) else [array]
+
+        invalid = False
+        subpolys = []
+        subholes = None
+        if has_holes:
+            subholes = [[LinearRing(h) for h in hs] for hs in holes[i]]
+        for j, arr in enumerate(arrays):
+            if j != (len(arrays)-1):
+                arr = arr[:-1] # Drop nan
+
+            if len(arr) == 1:
+                if skip_invalid:
+                    continue
+                poly = Point(arr[0])
+                invalid = True
+            elif len(arr) == 2:
+                if skip_invalid:
+                    continue
+                poly = LineString(arr)
+                invalid = True
+            elif not len(splits):
+                poly = Polygon(arr, (subholes[j] if has_holes else []))
+            else:
+                poly = Polygon(arr)
+                hs = [h for h in subholes[j]] if has_holes else []
+                poly = Polygon(poly.exterior, holes=hs)
+            subpolys.append(poly)
+
+        if invalid:
+            polys += [dict(polygon, geometry=sp) for sp in subpolys]
+            continue
+        elif len(subpolys) == 1:
+            geom = subpolys[0]
+        elif subpolys:
+            geom = MultiPolygon(subpolys)
+        else:
+            continue
+        polygon['geometry'] = geom
+        polys.append(polygon)
+    return polys
+
+
+def path_to_geom_dicts(path, skip_invalid=True):
+    """
+    Converts a Path element into a list of geometry dictionaries,
+    preserving all value dimensions.
+    """
+    interface = path.interface.datatype
+    if interface == 'geodataframe':
+        return [row.to_dict() for _, row in path.data.iterrows()]
+    elif interface == 'geom_dictionary':
+        return path.data
+
+    geoms = []
+    invalid = False
+    xdim, ydim = path.kdims
+    for i, path in enumerate(path.split(datatype='columns')):
+        array = np.column_stack([path.pop(xdim.name), path.pop(ydim.name)])
+        splits = np.where(np.isnan(array[:, :2].astype('float')).sum(axis=1))[0]
+        arrays = np.split(array, splits+1) if len(splits) else [array]
+        subpaths = []
+        for j, arr in enumerate(arrays):
+            if j != (len(arrays)-1):
+                arr = arr[:-1] # Drop nan
+            
+            if len(arr) == 1:
+                if skip_invalid:
+                    continue
+                g = Point(arr[0])
+                invalid = True
+            else:
+                g = LineString(arr)
+            subpaths.append(g)
+
+        if invalid:
+            geoms += [dict(path, geometry=sp) for sp in subpaths]
+            continue
+        elif len(subpaths) == 1:
+            geom = subpaths[0]
+        elif subpaths:
+            geom = MultiLineString(subpaths)
+        path['geometry'] = geom
+        geoms.append(path)
+    return geoms
+
+
 def to_ccw(geom):
     """
     Reorients polygon to be wound counter-clockwise.
@@ -140,6 +301,23 @@ def geom_to_arr(geom):
     return np.array(arr).reshape(int(len(arr)/2), 2)
 
 
+def geom_length(geom):
+    """
+    Calculates the length of coordinates in a shapely geometry.
+    """
+    if geom.geom_type == 'Point':
+        return 1
+    if hasattr(geom, 'exterior'):
+        geom = geom.exterior
+    if not geom.geom_type.startswith('Multi') and hasattr(geom, 'array_interface_base'):
+        return len(geom.array_interface_base['data'])//2
+    else:
+        length = 0
+        for g in geom:
+            length += geom_length(g)
+        return length
+
+
 def geom_to_array(geom):
     if geom.geom_type == 'Point':
         return np.array([[geom.x, geom.y]])
@@ -148,7 +326,7 @@ def geom_to_array(geom):
         ys = np.array(geom.exterior.coords.xy[1])
     elif geom.geom_type in ('LineString', 'LinearRing'):
         arr = geom_to_arr(geom)
-        xs, ys = arr[:, 0], arr[:, 1]
+        return arr
     else:
         xs, ys = [], []
         for g in geom:
@@ -183,46 +361,11 @@ def geo_mesh(element):
     return xs, ys, zs
 
 
-def wrap_path_data(vertices, src_crs, tgt_crs):
-    """
-    Wraps path coordinates along the longitudinal axis.
-    """
-    self_params = tgt_crs.proj4_params.copy()
-    src_params = src_crs.proj4_params.copy()
-    self_params.pop('lon_0'), src_params.pop('lon_0')
-
-    xs, ys = vertices[:, 0], vertices[:, 1]
-    with warnings.catch_warnings():
-        warnings.filterwarnings('ignore')
-        ymin, ymax = ys.min(), ys.max()
-    potential = (self_params == src_params and
-                 tgt_crs.y_limits[0] <= ymin and
-                 tgt_crs.y_limits[1] >= ymax)
-    if not potential:
-        return vertices
-
-    bboxes, proj_offset = tgt_crs._bbox_and_offset(src_crs)
-    mod = np.diff(src_crs.x_limits)[0]
-    x_lim = xs.min(), xs.max()
-    for poly in bboxes:
-        # Arbitrarily choose the number of moduli to look
-        # above and below the -180->180 range. If data is beyond
-        # this range, we're not going to transform it quickly.
-        for i in [-1, 0, 1, 2]:
-            offset = mod * i - proj_offset
-            if ((poly[0] + offset) <= x_lim[0] and
-                (poly[1] + offset) >= x_lim[1]):
-                vertices = vertices + [[-offset, 0]]
-                break
-    return vertices
-
-
 def is_multi_geometry(geom):
     """
     Whether the shapely geometry is a Multi or Collection type.
     """
     return 'Multi' in geom.geom_type or 'Collection' in geom.geom_type
-
 
 
 def check_crs(crs):
@@ -486,7 +629,7 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
     for b in range(bands):
         values = da[b].values
         if nan_nodata and da.attrs.get('nodatavals', []):
-            
+
             values = values.astype(float)
             for d in da.attrs['nodatavals']:
                 values[values==d] = np.NaN

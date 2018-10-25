@@ -2,7 +2,6 @@ import copy
 
 import param
 import numpy as np
-import shapely.geometry
 from cartopy.crs import GOOGLE_MERCATOR
 from bokeh.models import WMTSTileSource, BBoxTileSource, QUADKEYTileSource
 
@@ -15,21 +14,18 @@ from holoviews.plotting.bokeh.graphs import TriMeshPlot, GraphPlot
 from holoviews.plotting.bokeh.hex_tiles import hex_binning, HexTilesPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
 from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot, QuadMeshPlot
-from holoviews.plotting.bokeh.util import mpl_to_bokeh
 
 from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
                         Image, Feature, Text, RGB, Nodes, EdgePaths,
                         Graph, TriMesh, QuadMesh, VectorField, Labels,
-                        HexTiles)
-from ...operation import (project_image, project_shape, project_points,
-                          project_path, project_graph, project_quadmesh)
+                        HexTiles, LineContours, FilledContours)
+from ...operation import (project_image, project_points, project_path,
+                          project_graph, project_quadmesh)
 from ...tile_sources import _ATTRIBUTIONS
-from ...util import geom_to_array
+from ...util import poly_types, line_types
 from .plot import GeoPlot, GeoOverlayPlot
 from . import callbacks # noqa
 
-line_types = (shapely.geometry.MultiLineString, shapely.geometry.LineString)
-poly_types = (shapely.geometry.MultiPolygon, shapely.geometry.Polygon)
 
 class TilePlot(GeoPlot):
 
@@ -136,6 +132,24 @@ class GeoContourPlot(GeoPlot, ContourPlot):
     _project_operation = project_path
 
 
+class LineContourPlot(GeoContourPlot):
+    """
+    Draws a contour plot.
+    """
+
+    levels = param.ClassSelector(default=10, class_=(list, int), doc="""
+        A list of scalar values used to specify the contour levels.""")
+
+
+class FilledContourPlot(GeoPolygonPlot):
+    """
+    Draws a filled contour plot.
+    """
+
+    levels = param.ClassSelector(default=10, class_=(list, int), doc="""
+        A list of scalar values used to specify the contour levels.""")
+    
+
 class GeoPathPlot(GeoPlot, PathPlot):
 
     _project_operation = project_path
@@ -154,50 +168,17 @@ class GeoTriMeshPlot(GeoPlot, TriMeshPlot):
 class GeoShapePlot(GeoPolygonPlot):
 
     def get_data(self, element, ranges, style):
-        if self.static_source:
-            data = {}
+        if not isinstance(element.data['geometry'], poly_types):
+            style['fill_alpha'] = 0
+        if isinstance(element.data['geometry'], line_types):
+            el_type = Contours
+            style['plot_method'] = 'multi_line'
+            style.pop('fill_color', None)
+            style.pop('fill_alpha', None)
         else:
-            if self.geographic and element.crs != self.projection:
-                element = project_shape(element, projection=self.projection)
-            xs, ys = geom_to_array(element.geom()).T
-            if self.invert_axes: xs, ys = ys, xs
-            data = dict(xs=[xs], ys=[ys])
-
-        mapping = dict(self._mapping)
-        dim = element.vdims[0].name if element.vdims else None
-        if element.level is not None:
-            cmap = style.get('palette', style.get('cmap', None))
-            if cmap and dim:
-                cdim = element.vdims[0]
-                dim_name = util.dimension_sanitizer(cdim.name)
-                cmapper = self._get_colormapper(cdim, element, ranges, style)
-                data[dim_name] = [element.level]
-                mapping['fill_color'] = {'field': dim_name,
-                                         'transform': cmapper}
-
-        if 'hover' in self.tools+self.default_tools:
-            if dim:
-                dim_name = util.dimension_sanitizer(dim)
-                data[dim_name] = [element.level]
-            for k, v in self.overlay_dims.items():
-                dim = util.dimension_sanitizer(k.name)
-                data[dim] = [v for _ in range(len(xs))]
-        return data, mapping, style
-
-    def _init_glyph(self, plot, mapping, properties):
-        """
-        Returns a Bokeh glyph object.
-        """
-        properties = mpl_to_bokeh(properties)
-        if isinstance(self.current_frame.data, line_types):
-            properties = {k: v for k, v in properties.items()
-                          if 'fill_' not in k}
-            plot_method = plot.multi_line
-        else:
-            plot_method = plot.patches
-        renderer = plot_method(**dict(properties, **mapping))
-        return renderer, renderer.glyph
-
+            el_type = Polygons
+        polys = el_type([element.data], crs=element.crs, **util.get_param_values(element))
+        return super(GeoShapePlot, self).get_data(polys, ranges, style)
 
 
 class FeaturePlot(GeoPolygonPlot):
@@ -210,34 +191,27 @@ class FeaturePlot(GeoPolygonPlot):
         proj = self.projection
         if self.global_extent and range_type in ('combined', 'data'):
             (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
-            return (x0, y0, x1, y1)
+            return tuple(round(c, 12) for c in (x0, y0, x1, y1))
         elif self.overlaid:
             return (np.NaN,)*4
         return super(FeaturePlot, self).get_extents(element, ranges, range_type)
 
-
     def get_data(self, element, ranges, style):
         mapping = dict(self._mapping)
         if self.static_source: return {}, mapping, style
-
         feature = copy.copy(element.data)
         feature.scale = self.scale
         geoms = list(feature.geometries())
         if isinstance(geoms[0], line_types):
-            self._plot_methods = dict(single='multi_line')
+            el_type = Contours
+            style['plot_method'] = 'multi_line'
+            style.pop('fill_color', None)
+            style.pop('fill_alpha', None)
         else:
-            self._plot_methods = dict(single='patches', batched='patches')
-        geoms = [self.projection.project_geometry(geom, element.crs)
-                 for geom in geoms]
-
-        arrays = []
-        for geom in geoms:
-            if geom == []:
-                continue
-            arrays.append(geom_to_array(geom).T)
-        xs, ys = zip(*arrays) if arrays else ([], [])
-        data = dict(xs=list(xs), ys=list(ys))
-        return data, mapping, style
+            el_type = Polygons
+        polys = el_type(geoms, crs=element.crs, **util.get_param_values(element))
+        return super(FeaturePlot, self).get_data(polys, ranges, style)
+        
 
 
 class GeoTextPlot(GeoPlot, TextPlot):
@@ -287,6 +261,8 @@ Store.register({WMTS: TilePlot,
                 Shape: GeoShapePlot,
                 Image: GeoRasterPlot,
                 RGB: GeoRGBPlot,
+                LineContours: LineContourPlot,
+                FilledContours: FilledContourPlot,
                 Feature: FeaturePlot,
                 HexTiles: HexTilesPlot,
                 Text: GeoTextPlot,

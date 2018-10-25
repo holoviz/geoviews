@@ -88,7 +88,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         fig = super(GeoPlot, self).initialize_plot(ranges, plot, plots, **opts)
         if self.geographic and self.show_bounds and not self.overlaid:
             from . import GeoShapePlot
-            shape = Shape(self.projection.boundary, crs=self.projection)
+            shape = Shape(self.projection.boundary, crs=self.projection).options(fill_alpha=0)
             shapeplot = GeoShapePlot(shape, projection=self.projection,
                                      overlaid=True, renderer=self.renderer)
             shapeplot.initialize_plot(plot=fig)

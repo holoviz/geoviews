@@ -209,6 +209,7 @@ class project_graph(_project_operation):
         return element.clone(data, crs=self.projection)
 
 
+
 class project_quadmesh(_project_operation):
 
     supported_types = [QuadMesh]
@@ -229,7 +230,6 @@ class project_quadmesh(_project_operation):
             Y = element.interface.coords(element, 1, True, True, True)
             if np.all(Y[1:, 0] > X[:-1, 0]):
                 Y = Y[::-1, :]
-            zs = zs
 
         Ny, Nx = X.shape
         coords = proj.transform_points(element.crs, X.flatten(), Y.flatten())
@@ -244,10 +244,9 @@ class project_quadmesh(_project_operation):
                            ccrs.Mercator)
         if isinstance(proj, wrap_proj_types):
             with np.errstate(invalid='ignore'):
-                
                 edge_lengths = np.hypot(
-                    np.diff(xpoints , axis=1),
-                    np.diff(ypoints, axis=1)
+                    np.diff(xpoints, axis=0),
+                    np.diff(ypoints, axis=0)
                 )
                 to_mask = (
                     (edge_lengths >= abs(proj.x_limits[1] -
@@ -256,8 +255,8 @@ class project_quadmesh(_project_operation):
                 )
             if np.any(to_mask):
                 mask = np.zeros(zs.shape, dtype=np.bool)
-                mask[to_mask[:-1, :]] = True  # Edges above a cell.
-                mask[to_mask[1:, :]] = True  # Edges below a cell.
+                mask[to_mask[:, :-1]] = True # Edges above a cell.
+                mask[to_mask[:, 1:]] = True  # Edges below a cell.
                 zs[mask] = np.NaN
 
         params = get_param_values(element)

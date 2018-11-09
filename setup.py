@@ -127,9 +127,9 @@ def package_assets(example_path):
 ### dependencies ###
 
 _required = [
-    'bokeh >=0.12.15',   # not strictly required but shouldn't be problematic
+    'bokeh >=0.12.15',
     'cartopy >=0.14.2',  # prevents pip alone (requires external package manager)
-    'holoviews >=1.11.0a7',
+    'holoviews >=1.11.0a9',
     'numpy >=1.0',
     'param >=1.6.1'
 ]

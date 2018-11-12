@@ -63,7 +63,7 @@ class TilePlot(GeoPlot):
                 params['attribution'] = attribution
         return {}, {'tile_source': tile_source(**params)}, style
 
-    def _update_glyph(self, renderer, properties, mapping, glyph, data=None):
+    def _update_glyph(self, renderer, properties, mapping, glyph, source=None, data=None):
         glyph.url = mapping['tile_source'].url
         glyph.update(**{k: v for k, v in properties.items()
                            if k in glyph.properties()})

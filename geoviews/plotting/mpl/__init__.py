@@ -352,8 +352,11 @@ class FeaturePlot(GeoPlot):
                   'visible']
 
     def get_data(self, element, ranges, style):
-        feature = copy.copy(element.data)
-        feature.scale = self.scale
+        if hasattr(element.data, 'with_scale'):
+            feature = element.data.with_scale(self.scale)
+        else:
+            feature = copy.copy(element.data)
+            feature.scale = self.scale
         return (feature,), style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):

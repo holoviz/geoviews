@@ -199,8 +199,11 @@ class FeaturePlot(GeoPolygonPlot):
     def get_data(self, element, ranges, style):
         mapping = dict(self._mapping)
         if self.static_source: return {}, mapping, style
-        feature = copy.copy(element.data)
-        feature.scale = self.scale
+        if hasattr(element.data, 'with_scale'):
+            feature = element.data.with_scale(self.scale)
+        else:
+            feature = copy.copy(element.data)
+            feature.scale = self.scale
         geoms = list(feature.geometries())
         if isinstance(geoms[0], line_types):
             el_type = Contours

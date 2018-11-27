@@ -11,7 +11,7 @@ from holoviews.plotting.bokeh.callbacks import (
 from holoviews.streams import (
     Stream, PointerXY, RangeXY, RangeX, RangeY, PointerX, PointerY,
     BoundsX, BoundsY, Tap, SingleTap, DoubleTap, MouseEnter, MouseLeave,
-    Bounds, BoundsXY, PolyDraw, PolyEdit, PointDraw, BoxEdit
+    BoundsXY, PolyDraw, PolyEdit, PointDraw, BoxEdit
 )
 
 from ...element.geo import _Element, Shape
@@ -297,7 +297,6 @@ except:
 callbacks[RangeXY]     = GeoRangeXYCallback
 callbacks[RangeX]      = GeoRangeXCallback
 callbacks[RangeY]      = GeoRangeYCallback
-callbacks[Bounds]      = GeoBoundsXYCallback
 callbacks[BoundsXY]    = GeoBoundsXYCallback
 callbacks[BoundsX]     = GeoBoundsXCallback
 callbacks[BoundsY]     = GeoBoundsYCallback

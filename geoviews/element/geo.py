@@ -333,7 +333,7 @@ class RGB(_Element, HvRGB):
     vdims = param.List(
         default=[Dimension('R', range=(0,1)), Dimension('G',range=(0,1)),
                  Dimension('B', range=(0,1)), Dimension('A', range=(0,1))],
-        bounds=(3, None), doc="""
+        bounds=(3, 3), doc="""
         The dimension description of the data held in the matrix.
 
         If an alpha channel is supplied, the defined alpha_dimension

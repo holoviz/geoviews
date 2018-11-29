@@ -4,6 +4,12 @@ from holoviews import (extension, help, opts, output, renderer, Store, # noqa (A
                        Cycle, Palette, Overlay, Layout, NdOverlay, NdLayout,
                        HoloMap, DynamicMap, GridSpace, Dimension)
 
+try:
+    # Only available in HoloViews >=1.11
+    from holoviews import render, save # noqa (API import)
+except:
+    pass
+
 from .element import (_Element, Feature, Tiles,     # noqa (API import)
                       WMTS, LineContours, FilledContours, Text, Image,
                       Points, Path, Polygons, Shape, Dataset, RGB,

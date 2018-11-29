@@ -3,7 +3,7 @@ import copy
 import param
 import numpy as np
 from cartopy.crs import GOOGLE_MERCATOR
-from bokeh.models import WMTSTileSource, BBoxTileSource, QUADKEYTileSource
+from bokeh.models import WMTSTileSource, BBoxTileSource, QUADKEYTileSource, SaveTool
 
 from holoviews import Store, Overlay, NdOverlay
 from holoviews.core import util
@@ -78,6 +78,9 @@ class TilePlot(GeoPlot):
         level = properties.pop('level', 'underlay')
         renderer = plot.add_tile(tile_source, level=level)
         renderer.alpha = properties.get('alpha', 1)
+
+        # Remove save tool
+        plot.tools = [t for t in plot.tools if not isinstance(t, SaveTool)]
         return renderer, tile_source
 
 

@@ -618,7 +618,7 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
 
     if apply_transform:
         from affine import Affine
-        transform = Affine(*da.attrs['transform'][:6])
+        transform = Affine.from_gdal(*da.attrs['transform'][:6])
         nx, ny = da.sizes[x], da.sizes[y]
         xs, ys = np.meshgrid(np.arange(nx)+0.5, np.arange(ny)+0.5) * transform
         data = (xs, ys)

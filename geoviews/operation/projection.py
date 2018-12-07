@@ -228,7 +228,7 @@ class project_quadmesh(_project_operation):
             if np.all(X[0, 1:] < X[0, :-1]):
                 X = X[:, ::-1]
             Y = element.interface.coords(element, 1, True, True, False)
-            if np.all(Y[1:, 0] > X[:-1, 0]):
+            if np.all(Y[1:, 0] < Y[:-1, 0]):
                 Y = Y[::-1, :]
 
         if X.shape != zs.shape:

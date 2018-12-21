@@ -15,11 +15,11 @@ class TestProjection(ComparisonTestCase):
         proj = project(img, projection=ccrs.PlateCarree())
         zs = proj.dimension_values('z', flat=False)
         self.assertEqual(zs, np.array([
-            [-16200.,     -0.,  -8100.],
+            [-24300.,     -0.,  -8100.],
             [     0.,      0.,      0.],
             [     0.,      0.,      0.],
             [     0.,      0.,      0.],
-            [ 16200.,      0.,   8100.]
+            [ 24300.,      0.,   8100.]
         ]))
 
     def test_image_project_latlon_to_mercator(self):

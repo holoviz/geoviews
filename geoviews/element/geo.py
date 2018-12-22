@@ -136,6 +136,9 @@ class Feature(_GeoFeature):
                             % type(data).__name__)
         super(Feature, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
+    def __call__(self, *args, **kwargs):
+        return self.opts(*args, **kwargs)
+
     def range(self, dim, data_range=True, dimension_range=True):
         didx = self.get_dimension_index(dim)
         if didx in [0, 1] and data_range:

@@ -228,7 +228,7 @@ class project_quadmesh(_project_operation):
             if np.all(X[0, 1:] < X[0, :-1]):
                 X = X[:, ::-1]
             Y = element.interface.coords(element, 1, True, True, False)
-            if np.all(Y[1:, 0] > X[:-1, 0]):
+            if np.all(Y[1:, 0] < Y[:-1, 0]):
                 Y = Y[::-1, :]
 
         if X.shape != zs.shape:
@@ -302,8 +302,6 @@ class project_image(_project_operation):
         if self.p.fast:
             return self._fast_process(img, key)
         proj = self.p.projection
-        if proj == img.crs:
-            return img
         x0, x1 = img.range(0)
         y0, y1 = img.range(1)
         xn, yn = img.interface.shape(img, gridded=True)[:2]
@@ -319,10 +317,11 @@ class project_image(_project_operation):
             else:
                 projected, extents = arr, trgt_ext
             arrays.append(projected)
-        projected = np.dstack(arrays) if len(arrays) > 1 else arrays[0]
-        data = np.flipud(projected)
-        bounds = (extents[0], extents[2], extents[1], extents[3])
-        return img.clone(data, bounds=bounds, kdims=img.kdims,
+        xunit = ((extents[1]-extents[0])/float(xn))/2.
+        yunit = ((extents[3]-extents[2])/float(yn))/2.
+        xs = np.linspace(extents[0]+xunit, extents[1]-xunit, xn)
+        ys = np.linspace(extents[2]+yunit, extents[3]-yunit, yn)
+        return img.clone((xs, ys, *arrays), bounds=None, kdims=img.kdims,
                          vdims=img.vdims, crs=proj, xdensity=None,
                          ydensity=None)
 

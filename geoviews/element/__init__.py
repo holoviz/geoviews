@@ -28,7 +28,7 @@ class GeoConversion(ElementConversion):
         group_type = args[0]
         if 'crs' not in kwargs and issubclass(group_type, _Element):
             kwargs['crs'] = self._element.crs
-        is_gpd = self._element.interface.datatype == 'geopandas'
+        is_gpd = self._element.interface.datatype == 'geodataframe'
         if is_gpd:
             kdims = args[1] if len(args) > 1 else kwargs.get('kdims', None)
             if len(args) > 1:

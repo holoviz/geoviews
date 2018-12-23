@@ -297,6 +297,15 @@ def to_ccw(geom):
 
 
 def geom_to_arr(geom):
+    try:
+        xy = getattr(geom, 'xy', None)
+    except NotImplementedError:
+        xy = None
+    if xy is not None:
+        return np.column_stack(xy)
+    if hasattr(geom, 'array_interface'):
+        data = geom.array_interface()
+        return np.array(data['data']).reshape(data['shape'])[:, :2]
     arr = geom.array_interface_base['data']
     if (len(arr) % 2) != 0:
         arr = arr[:-1]

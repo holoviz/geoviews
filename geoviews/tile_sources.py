@@ -51,31 +51,31 @@ _ATTRIBUTIONS = {
 }
 
 # CartoDB basemaps
-CartoDark = WMTS('https://cartodb-basemaps-4.global.ssl.fastly.net/dark_all/{Z}/{X}/{Y}.png')
-CartoEco = WMTS('http://3.api.cartocdn.com/base-eco/{Z}/{X}/{Y}.png')
-CartoLight = WMTS('https://cartodb-basemaps-4.global.ssl.fastly.net/light_all/{Z}/{X}/{Y}.png')
-CartoMidnight = WMTS('http://3.api.cartocdn.com/base-midnight/{Z}/{X}/{Y}.png')
+CartoDark = WMTS('https://cartodb-basemaps-4.global.ssl.fastly.net/dark_all/{Z}/{X}/{Y}.png', name="CartoDark")
+CartoEco = WMTS('http://3.api.cartocdn.com/base-eco/{Z}/{X}/{Y}.png', name="CartoEco")
+CartoLight = WMTS('https://cartodb-basemaps-4.global.ssl.fastly.net/light_all/{Z}/{X}/{Y}.png', name="CartoLight")
+CartoMidnight = WMTS('http://3.api.cartocdn.com/base-midnight/{Z}/{X}/{Y}.png', name="CartoMidnight")
 
 # Stamen basemaps
-StamenTerrain = WMTS('http://tile.stamen.com/terrain/{Z}/{X}/{Y}.png')
-StamenTerrainRetina = WMTS('http://tile.stamen.com/terrain/{Z}/{X}/{Y}@2x.png')
-StamenWatercolor = WMTS('http://tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg')
-StamenToner = WMTS('http://tile.stamen.com/toner/{Z}/{X}/{Y}.png')
-StamenTonerBackground = WMTS('http://tile.stamen.com/toner-background/{Z}/{X}/{Y}.png')
-StamenLabels = WMTS('http://tile.stamen.com/toner-labels/{Z}/{X}/{Y}.png')
+StamenTerrain = WMTS('http://tile.stamen.com/terrain/{Z}/{X}/{Y}.png', name="StamenTerrain")
+StamenTerrainRetina = WMTS('http://tile.stamen.com/terrain/{Z}/{X}/{Y}@2x.png', name="StamenTerrainRetina")
+StamenWatercolor = WMTS('http://tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg', name="StamenWatercolor")
+StamenToner = WMTS('http://tile.stamen.com/toner/{Z}/{X}/{Y}.png', name="StamenToner")
+StamenTonerBackground = WMTS('http://tile.stamen.com/toner-background/{Z}/{X}/{Y}.png', name="StamenTonerBackground")
+StamenLabels = WMTS('http://tile.stamen.com/toner-labels/{Z}/{X}/{Y}.png', name="StamenLabels")
 
 # Esri maps (see https://server.arcgisonline.com/arcgis/rest/services for the full list)
-EsriImagery = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}.jpg')
-EsriNatGeo = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{Z}/{Y}/{X}')
-EsriUSATopo = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{Z}/{Y}/{X}')
-EsriTerrain = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{Z}/{Y}/{X}')
-EsriReference = WMTS('http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{Z}/{Y}/{X}')
+EsriImagery = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}.jpg', name="EsriImagery")
+EsriNatGeo = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{Z}/{Y}/{X}', name="EsriNatGeo")
+EsriUSATopo = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{Z}/{Y}/{X}', name="EsriUSATopo")
+EsriTerrain = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{Z}/{Y}/{X}', name="EsriTerrain")
+EsriReference = WMTS('http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{Z}/{Y}/{X}', name="EsriReference")
 ESRI = EsriImagery # For backwards compatibility with gv 1.5
 
 
 # Miscellaneous
-OSM = WMTS('http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png')
-Wikipedia = WMTS('https://maps.wikimedia.org/osm-intl/{Z}/{X}/{Y}@2x.png')
+OSM = WMTS('http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png', name="OSM")
+Wikipedia = WMTS('https://maps.wikimedia.org/osm-intl/{Z}/{X}/{Y}@2x.png', name="Wikipedia")
 
 
 tile_sources = {k: v for k, v in locals().items() if isinstance(v, WMTS) and k != 'ESRI'}

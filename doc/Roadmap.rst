@@ -69,8 +69,9 @@ in the PyViz ecosystem include:
 4. Integration with other tools like
    [OpenLayers](https://openlayers.org/),
    [Deck.GL](http://uber.github.io/deck.gl), and
-   [Leaflet](https://leafletjs.com/).
-   
+   [Leaflet](https://leafletjs.com/) (e.g. via
+   [Folium](https://github.com/python-visualization/folium)).
+
 5. Scalable rasterization of raster data, as well as recti- and curvi-linear
    grids, implemented using Dask and Numba in Datashader and exposed in
    HoloViews and GeoViews as fast distributed rendering for Image and

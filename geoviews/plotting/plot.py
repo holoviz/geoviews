@@ -27,32 +27,6 @@ class ProjectionPlot(param.Parameterized):
     infer_projection = param.Boolean(default=True, doc="""
         Whether the projection should be inferred from the element crs.""")
 
-    padding = param.ClassSelector(default=0.1, class_=(int, float, tuple), doc="""
-        Fraction by which to increase auto-ranged extents to make
-        datapoints more visible around borders.
-
-        To compute padding, the axis whose screen size is largest is
-        chosen, and the range of that axis is increased by the
-        specified fraction along each axis.  Other axes are then
-        padded ensuring that the amount of screen space devoted to
-        padding is equal for all axes. If specified as a tuple, the
-        int or float values in the tuple will be used for padding in
-        each axis, in order (x,y or x,y,z).
-
-        For example, for padding=0.2 on a 800x800-pixel plot, an x-axis
-        with the range [0,10] will be padded by 20% to be [-1,11], while
-        a y-axis with a range [0,1000] will be padded to be [-100,1100],
-        which should make the padding be approximately the same number of
-        pixels. But if the same plot is changed to have a height of only
-        200, the y-range will then be [-400,1400] so that the y-axis
-        padding will still match that of the x-axis.
-
-        It is also possible to declare non-equal padding value for the
-        lower and upper bound of an axis by supplying nested tuples,
-        e.g. padding=(0.1, (0, 0.1)) will pad the x-axis lower and
-        upper bound as well as the y-axis upper bound by a fraction of
-        0.1 while the y-axis lower bound is not padded at all.""")
-
     def _get_projection(self, obj):
         # Look up custom projection in options
         isoverlay = lambda x: isinstance(x, CompositeOverlay)

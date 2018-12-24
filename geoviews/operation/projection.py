@@ -319,7 +319,7 @@ class project_image(_project_operation):
         yunit = ((extents[3]-extents[2])/float(yn))/2.
         xs = np.linspace(extents[0]+xunit, extents[1]-xunit, xn)
         ys = np.linspace(extents[2]+yunit, extents[3]-yunit, yn)
-        return img.clone((xs, ys, *arrays), bounds=None, kdims=img.kdims,
+        return img.clone((xs, ys)+tuple(arrays), bounds=None, kdims=img.kdims,
                          vdims=img.vdims, crs=proj, xdensity=None,
                          ydensity=None)
 

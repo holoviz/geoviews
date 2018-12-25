@@ -82,7 +82,7 @@ class weighted_regrid(regrid):
                        for d in [x, y])
         arrays = self._get_xarrays(element, coords, xtype, ytype)
         ds = xr.Dataset(arrays)
-        ds.rename({x.name: 'lon', y.name: 'lat'}, inplace=True)
+        ds = ds.rename({x.name: 'lon', y.name: 'lat'})
 
         x_range = str(tuple('%.3f' % r for r in x_range)).replace("'", '')
         y_range = str(tuple('%.3f' % r for r in y_range)).replace("'", '')
@@ -100,7 +100,7 @@ class weighted_regrid(regrid):
         regridder, arrays = self._get_regridder(element)
         x, y = element.kdims
         ds = xr.Dataset({vd: regridder(arr) for vd, arr in arrays.items()})
-        ds.rename({'lon': x.name, 'lat': y.name}, inplace=True)
+        ds = ds.rename({'lon': x.name, 'lat': y.name})
         params = get_param_values(element)
         if is_geographic(element):
             try:

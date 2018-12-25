@@ -2,7 +2,7 @@ import param
 
 from holoviews import (extension, help, opts, output, renderer, Store, # noqa (API import)
                        Cycle, Palette, Overlay, Layout, NdOverlay, NdLayout,
-                       HoloMap, DynamicMap, GridSpace, Dimension)
+                       HoloMap, DynamicMap, GridSpace, Dimension, dim)
 
 try:
     # Only available in HoloViews >=1.11

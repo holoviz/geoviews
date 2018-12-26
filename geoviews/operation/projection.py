@@ -49,9 +49,7 @@ class project_path(_project_operation):
     supported_types = [Polygons, Path, Contours, EdgePaths]
 
     def _process_element(self, element):
-        if element.crs == self.p.projection:
-            return element
-        elif not len(element):
+        if not len(element):
             return element.clone(crs=self.p.projection)
 
         crs = element.crs

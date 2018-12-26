@@ -91,6 +91,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             shape = Shape(self.projection.boundary, crs=self.projection).options(fill_alpha=0)
             shapeplot = GeoShapePlot(shape, projection=self.projection,
                                      overlaid=True, renderer=self.renderer)
+            shapeplot.geographic = False
             shapeplot.initialize_plot(plot=fig)
         return fig
 

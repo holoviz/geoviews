@@ -53,13 +53,12 @@ jobs:
         - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
         - conda config --set always_yes True
         - conda install -c pyviz pyctdev && doit ecosystem_setup
+        - "echo 'backend : Agg' > $HOME/.matplotlib/matplotlibrc"
       install:
         - doit env_create $CHANS_DEV --python=$PYENV_VERSION
         - source activate test-environment
         - doit develop_install $CHANS_DEV -o recommended
         - doit env_capture
-      before-script:
-        - "echo 'backend : Agg' > $HOME/.matplotlib/matplotlibrc"
       script:
         - geoviews fetch-data --path=examples
         - bokeh sampledata

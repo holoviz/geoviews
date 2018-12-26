@@ -140,7 +140,7 @@ _recommended = [
     'gdal',
     'netcdf4',
     'jupyter',
-    'matplotlib>3.0',
+    'matplotlib>2.2',
     'pandas',
     'pyct',
     'scipy',

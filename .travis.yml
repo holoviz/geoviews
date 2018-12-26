@@ -58,6 +58,8 @@ jobs:
         - source activate test-environment
         - doit develop_install $CHANS_DEV -o recommended
         - doit env_capture
+      before-script:
+        - "echo 'backend : Agg' > $HOME/.matplotlib/matplotlibrc"
       script:
         - geoviews fetch-data --path=examples
         - bokeh sampledata

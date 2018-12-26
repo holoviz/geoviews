@@ -114,7 +114,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         return ret
 
     def get_data(self, element, ranges, style):
-        if self._project_operation and self.geographic and element.crs != self.projection:
+        if self._project_operation and self.geographic:
             element = self._project_operation(element, projection=self.projection)
         return super(GeoPlot, self).get_data(element, ranges, style)
 

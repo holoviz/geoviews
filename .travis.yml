@@ -21,6 +21,7 @@ env:
     - CHANS_REL="-c pyviz -c ioam"
     - LABELS_DEV="--label dev"
     - LABELS_REL="--label dev --label main"
+    - MPLBACKEND="module://agg"
 
 # quick hack to determine what tag means (improvements welcome)
 #     release: ^v(\d+|\.)*[^a-z]\d*$
@@ -53,8 +54,6 @@ jobs:
         - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
         - conda config --set always_yes True
         - conda install -c pyviz pyctdev && doit ecosystem_setup
-        - mkdir $HOME/.matplotlib/
-        - "echo 'backend : Agg' > $HOME/.matplotlib/matplotlibrc"
       install:
         - doit env_create $CHANS_DEV --python=$PYENV_VERSION
         - source activate test-environment

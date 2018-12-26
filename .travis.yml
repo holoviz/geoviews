@@ -21,7 +21,7 @@ env:
     - CHANS_REL="-c pyviz -c ioam"
     - LABELS_DEV="--label dev"
     - LABELS_REL="--label dev --label main"
-    - MPLBACKEND="module://agg"
+    - MPLBACKEND="Agg"
 
 # quick hack to determine what tag means (improvements welcome)
 #     release: ^v(\d+|\.)*[^a-z]\d*$
@@ -158,3 +158,4 @@ jobs:
     - <<: *pip_pkg
       stage: pip_package
       env: TRAVIS_NOCACHE=$TRAVIS_JOB_ID PYPI=pypi PYPIUSER=$PPU PYPIPASS=$PPP
+x

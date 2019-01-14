@@ -79,14 +79,6 @@ class project_path(_project_operation):
                 # Offset if lon and not centered on 0 longitude
                 # i.e. lon_min > 0 and lon_max > 270
                 geom = shapely.affinity.translate(geom, xoff=-xoffset)
-            geom_bounds = [round(b, 10) for b in geom.bounds]
-
-            if boundary and (geom_bounds[0] < bounds[0] or
-                             geom_bounds[2] > bounds[2]):
-                try:
-                    geom = boundary.intersection(geom)
-                except:
-                    pass
 
             # Ensure minimum area for polygons (precision issues cause errors)
             if isinstance(geom, Polygon) and geom.area < 1e-15:
@@ -112,6 +104,8 @@ class project_path(_project_operation):
                 continue
             finally:
                 logger.setLevel(prev)
+            if proj_geom.geom_type == 'GeometryCollection' and len(proj_geom) == 0:
+                continue
             data = dict(path, geometry=proj_geom)
             projected.append(data)
 

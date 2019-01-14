@@ -112,6 +112,8 @@ class project_path(_project_operation):
                 continue
             finally:
                 logger.setLevel(prev)
+            if proj_geom.geom_type == 'GeometryCollection' and len(proj_geom) == 0:
+                continue
             data = dict(path, geometry=proj_geom)
             projected.append(data)
 

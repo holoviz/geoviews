@@ -246,7 +246,7 @@ class Image(_Element, HvImage):
     some associated coordinates.
     """
 
-    vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
+    vdims = param.List(default=[Dimension('z')], bounds=(1, None))
 
     group = param.String(default='Image')
 
@@ -278,7 +278,7 @@ class QuadMesh(_Element, HvQuadMesh):
 
     datatype = param.List(default=['grid', 'xarray'])
 
-    vdims = param.List(default=[Dimension('z')], bounds=(1, 1))
+    vdims = param.List(default=[Dimension('z')], bounds=(1, None))
 
     group = param.String(default='QuadMesh')
 

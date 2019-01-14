@@ -81,13 +81,6 @@ class project_path(_project_operation):
                 geom = shapely.affinity.translate(geom, xoff=-xoffset)
             geom_bounds = [round(b, 10) for b in geom.bounds]
 
-            if boundary and (geom_bounds[0] < bounds[0] or
-                             geom_bounds[2] > bounds[2]):
-                try:
-                    geom = boundary.intersection(geom)
-                except:
-                    pass
-
             # Ensure minimum area for polygons (precision issues cause errors)
             if isinstance(geom, Polygon) and geom.area < 1e-15:
                 continue

@@ -26,6 +26,9 @@ from . import tile_sources                          # noqa (API import)
 __version__ = str(param.version.Version(fpath=__file__, archive_commit="$Format:%h$",
                                         reponame="geoviews"))
 
+# Ensure opts utility is initialized with GeoViews elements
+if extension._loaded:
+    Store.set_current_backend(Store.current_backend)
 
 # make pyct's example/data commands available if possible
 from functools import partial

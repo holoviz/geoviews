@@ -65,9 +65,11 @@ class GeoPandasInterface(MultiInterface):
                 data = data.reset_index()
                 break
 
-        if len(set([gt[5:] if 'Multi' in gt else gt for gt in data.geom_type])) > 1:
-            raise ValueError('The GeopandasInterface can only read dataframes which '
-                             'share a common geometry type')
+        shp_types = {gt[5:] if 'Multi' in gt else gt for gt in data.geom_type}
+        if len(shp_types) > 1:
+            raise DataError('The GeopandasInterface can only read dataframes which '
+                            'share a common geometry type, found %s types.' % shp_types,
+                            cls)
 
         return data, {'kdims': kdims, 'vdims': vdims}, {}
 

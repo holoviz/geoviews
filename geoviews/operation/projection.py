@@ -200,11 +200,12 @@ class project_graph(_project_operation):
     supported_types = [Graph]
 
     def _process_element(self, element):
-        nodes = project_points(element.nodes, projection=self.projection)
+        proj = self.p.projection
+        nodes = project_points(element.nodes, projection=proj)
         data = (element.data, nodes)
         if element._edgepaths:
-            data = data + (project_path(element.edgepaths, projection=self.projection),)
-        return element.clone(data, crs=self.projection)
+            data = data + (project_path(element.edgepaths, projection=proj),)
+        return element.clone(data, crs=proj)
 
 
 
@@ -268,7 +269,7 @@ class project_quadmesh(_project_operation):
                 zs[mask] = np.NaN
 
         params = get_param_values(element)
-        return QuadMesh((PX, PY, zs), crs=self.projection, **params)
+        return QuadMesh((PX, PY, zs), crs=self.p.projection, **params)
 
 
 class project_image(_project_operation):

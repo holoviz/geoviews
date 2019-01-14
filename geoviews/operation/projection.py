@@ -75,7 +75,8 @@ class project_path(_project_operation):
         for path in geoms:
             geom = path['geometry']
             if (cylindrical and total_bounds[0] >= (bounds[0]+xoffset) and
-                total_bounds[2] > (bounds[2]+xoffset//2)):
+                total_bounds[2] > (bounds[2]+xoffset//2) and
+                total_bounds[2] <= bounds[2]+xoffset):
                 # Offset if lon and not centered on 0 longitude
                 # i.e. lon_min > 0 and lon_max > 270
                 geom = shapely.affinity.translate(geom, xoff=-xoffset)
@@ -107,6 +108,8 @@ class project_path(_project_operation):
             if proj_geom.geom_type == 'GeometryCollection' and len(proj_geom) == 0:
                 continue
             data = dict(path, geometry=proj_geom)
+            if 'holes' in data:
+                data.pop('holes')
             projected.append(data)
 
         if len(geoms) and len(projected) == 0:

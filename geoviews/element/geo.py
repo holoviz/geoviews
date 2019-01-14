@@ -175,6 +175,9 @@ class WMTS(_GeoFeature):
                             % (type(self).__name__, type(data).__name__) )
         super(WMTS, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
+    def __call__(self, *args, **kwargs):
+        return self.opts(*args, **kwargs)
+
 
 class Tiles(WMTS):
     """

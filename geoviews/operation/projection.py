@@ -49,12 +49,15 @@ class project_path(_project_operation):
     supported_types = [Polygons, Path, Contours, EdgePaths]
 
     def _process_element(self, element):
-        if not len(element):
+        if not bool(element):
             return element.clone(crs=self.p.projection)
 
         crs = element.crs
-        cylindrical = isinstance(crs, ccrs._CylindricalProjection)
         proj = self.p.projection
+        if (isinstance(crs, ccrs.PlateCarree) and not isinstance(proj, ccrs.PlateCarree)
+            and crs.proj4_params['lon_0'] != 0):
+            element = self.instance(projection=ccrs.PlateCarree())(element)
+
         if isinstance(proj, ccrs.CRS) and not isinstance(proj, ccrs.Projection):
             raise ValueError('invalid transform:'
                              ' Spherical contouring is not supported - '
@@ -74,12 +77,6 @@ class project_path(_project_operation):
         projected = []
         for path in geoms:
             geom = path['geometry']
-            if (cylindrical and total_bounds[0] >= (bounds[0]+xoffset) and
-                total_bounds[2] > (bounds[2]+xoffset//2) and
-                total_bounds[2] <= bounds[2]+xoffset):
-                # Offset if lon and not centered on 0 longitude
-                # i.e. lon_min > 0 and lon_max > 270
-                geom = shapely.affinity.translate(geom, xoff=-xoffset)
 
             # Ensure minimum area for polygons (precision issues cause errors)
             if isinstance(geom, Polygon) and geom.area < 1e-15:

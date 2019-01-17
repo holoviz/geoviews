@@ -6,7 +6,7 @@ import numpy as np
 from cartopy import crs as ccrs
 from cartopy.img_transform import warp_array, _determine_bounds
 from holoviews.core.data import MultiInterface
-from holoviews.core.util import cartesian_product, get_param_values, max_extents, pd
+from holoviews.core.util import cartesian_product, get_param_values, pd
 from holoviews.operation import Operation
 from shapely.geometry import Polygon, MultiPolygon
 from shapely.geometry.collection import GeometryCollection
@@ -62,12 +62,10 @@ class project_path(_project_operation):
                              ' Spherical contouring is not supported - '
                              ' consider using PlateCarree/RotatedPole.')
 
-        boundary = Polygon(crs.boundary)
         if isinstance(element, Polygons):
             geoms = polygons_to_geom_dicts(element, skip_invalid=False)
         else:
             geoms = path_to_geom_dicts(element, skip_invalid=False)
-        data_bounds = max_extents([g['geometry'].bounds for g in geoms])
 
         projected = []
         for path in geoms:

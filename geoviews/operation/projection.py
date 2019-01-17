@@ -1,7 +1,6 @@
 import logging
 
 import param
-import shapely
 import numpy as np
 
 from cartopy import crs as ccrs
@@ -64,15 +63,11 @@ class project_path(_project_operation):
                              ' consider using PlateCarree/RotatedPole.')
 
         boundary = Polygon(crs.boundary)
-        bounds = [round(b, 10) for b in boundary.bounds]
-        xoffset = round((boundary.bounds[2]-boundary.bounds[0])/2.)
         if isinstance(element, Polygons):
             geoms = polygons_to_geom_dicts(element, skip_invalid=False)
         else:
             geoms = path_to_geom_dicts(element, skip_invalid=False)
-
         data_bounds = max_extents([g['geometry'].bounds for g in geoms])
-        total_bounds = tuple(round(b, 10) for b in data_bounds)
 
         projected = []
         for path in geoms:
@@ -310,6 +305,10 @@ class project_image(_project_operation):
             else:
                 projected, extents = arr, trgt_ext
             arrays.append(projected)
+
+        if xn == 0 or yn == 0:
+            return img.clone([], bounds=extents, crs=proj)
+
         xunit = ((extents[1]-extents[0])/float(xn))/2.
         yunit = ((extents[3]-extents[2])/float(yn))/2.
         xs = np.linspace(extents[0]+xunit, extents[1]-xunit, xn)

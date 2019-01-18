@@ -81,26 +81,27 @@ class resample_geometry(Operation):
     Once computed a simplified geometry is cached depending on the
     current zoom level. The number of valid zoom levels can be
     declared and are used to recursively subdivide the domain into
-    smaller subregions. 
+    smaller subregions.
+
+    If requested the geometries can also be clipped to the current
+    viewport which avoids having to render vertices that are not
+    visible.
     """
+
+    cache = param.Boolean(default=True, doc="""
+        Whether to cache simplified geometries depending on the zoom
+        level.""")
 
     clip = param.Boolean(default=False, doc="""
         Whether to disable the cache and clip polygons
         to current bounds.""")
 
-    zoom_levels = param.Integer(default=20, doc="""
-        The number of zoom levels to cache.""")
-
-    dynamic = param.Boolean(default=True, doc="""
-       Enables dynamic processing by default.""")
-
-    tolerance_factor = param.Number(default=0.005, doc="""
-        The tolerance distance for path simplification as a fraction
-        of the square root of the area of the current viewport.""")
-
     display_threshold = param.Number(default=0.0001, doc="""
         The fraction of the current viewport covered by a geometry
         before it is shown.""")
+
+    dynamic = param.Boolean(default=True, doc="""
+       Enables dynamic processing by default.""")
 
     preserve_topology = param.Boolean(default=False, doc="""
         Whether to preserve topology between geometries
@@ -110,6 +111,10 @@ class resample_geometry(Operation):
         List of streams that are applied if dynamic=True, allowing
         for dynamic interaction with the plot.""")
 
+    tolerance_factor = param.Number(default=0.005, doc="""
+        The tolerance distance for path simplification as a fraction
+        of the square root of the area of the current viewport.""")
+
     x_range  = param.NumericTuple(default=None, length=2, doc="""
        The x_range as a tuple of min and max x-value. Auto-ranges
        if set to None.""")
@@ -117,6 +122,9 @@ class resample_geometry(Operation):
     y_range  = param.NumericTuple(default=None, length=2, doc="""
        The x_range as a tuple of min and max y-value. Auto-ranges
        if set to None.""")
+
+    zoom_levels = param.Integer(default=20, doc="""
+        The number of zoom levels to cache.""")
 
     @param.parameterized.bothmethod
     def instance(self_or_cls,**params):
@@ -176,16 +184,14 @@ class resample_geometry(Operation):
                     gidx = find_geom(tree._geoms, g)
                     gdict = geom_dicts[gidx]
 
-                cache = True
-                if self.p.clip:
-                    cache = False # Do not cache when clipping
-                    g = g.intersection(bounds)
-
                 g = g.simplify(tol, self.p.preserve_topology)
                 if not g:
                     continue # Skip if geometry empty
+
                 geom_dict = dict(gdict, geometry=g)
-                if cache:
+                if self.p.cache:
                     geom_cache[cache_id] = geom_dict
+                if self.p.clip:
+                    geom_dict = dict(geom_dict, geometry=g.intersection(bounds))
             new_geoms.append(geom_dict)
         return element.clone(new_geoms)

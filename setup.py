@@ -129,7 +129,7 @@ def package_assets(example_path):
 _required = [
     'bokeh >=1.0.0',
     'cartopy >=0.16.0',  # prevents pip alone (requires external package manager)
-    'holoviews >=1.11.0',
+    'holoviews >=1.11.1',
     'numpy >=1.0',
     'param >=1.6.1'
 ]

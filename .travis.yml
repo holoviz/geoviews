@@ -77,9 +77,6 @@ jobs:
       env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c ioam -c conda-forge"
       script:
         - doit develop_install $CHANS_DEV -o doc
-        # Temporary hack
-        - conda uninstall nbsite --force
-        - pip install git+https://github.com/pyviz/nbsite.git
         - geoviews fetch-data --path=examples
         - bokeh sampledata
         # note: will vastly simplified in a future version of nbsite

@@ -139,6 +139,43 @@ class Feature(_GeoFeature):
     def __call__(self, *args, **kwargs):
         return self.opts(*args, **kwargs)
 
+    def geoms(self, scale=None, bounds=None, as_element=True):
+        """
+        Returns the geometries held by the Feature.
+
+        Parameters
+        ----------
+        scale: str
+           Scale of the geometry to return expressed as string, e.g.
+           '10m', '50m' or '110m'
+        bounds: tuple
+           Tuple of a bounding region to query for geometries in
+        as_element: boolean
+           Whether to wrap the geometries in an element
+
+        Returns
+        -------
+        geometries: Polygons/Path
+           Polgons or Path object wrapping around returned geometries
+        """
+        feature = self.data
+        if scale is not None:
+            feature = feature.with_scale(scale)
+
+        if bounds:
+            extent = (bounds[0], bounds[2], bounds[1], bounds[3])
+        else:
+            extent = None
+        geoms = [g for g in feature.intersecting_geometries(extent) if g is not None]
+        if not as_element:
+            return geoms
+        elif not geoms or 'Polygon' in geoms[0].geom_type:
+            return Polygons(geoms, crs=feature.crs)
+        elif 'Point' in geoms[0].geom_type:
+            return Points(geoms, crs=feature.crs)
+        else:
+            return Path(geoms, crs=feature.crs)
+
     def range(self, dim, data_range=True, dimension_range=True):
         didx = self.get_dimension_index(dim)
         if didx in [0, 1] and data_range:

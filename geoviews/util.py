@@ -219,7 +219,9 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
             if j != (len(arrays)-1):
                 arr = arr[:-1] # Drop nan
 
-            if len(arr) == 1:
+            if len(arr) == 0:
+                continue
+            elif len(arr) == 1:
                 if skip_invalid:
                     continue
                 poly = Point(arr[0])
@@ -273,8 +275,10 @@ def path_to_geom_dicts(path, skip_invalid=True):
         for j, arr in enumerate(arrays):
             if j != (len(arrays)-1):
                 arr = arr[:-1] # Drop nan
-            
-            if len(arr) == 1:
+
+            if len(arr) == 0:
+                continue
+            elif len(arr) == 1:
                 if skip_invalid:
                     continue
                 g = Point(arr[0])
@@ -341,8 +345,11 @@ def geom_to_array(geom):
     if geom.geom_type == 'Point':
         return np.array([[geom.x, geom.y]])
     if hasattr(geom, 'exterior'):
-        xs = np.array(geom.exterior.coords.xy[0])
-        ys = np.array(geom.exterior.coords.xy[1])
+        if geom.exterior is None:
+            xs, ys = np.array([]), np.array([])
+        else:
+            xs = np.array(geom.exterior.coords.xy[0])
+            ys = np.array(geom.exterior.coords.xy[1])
     elif geom.geom_type in ('LineString', 'LinearRing'):
         arr = geom_to_arr(geom)
         return arr
@@ -556,8 +563,8 @@ def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwa
     a cartopy projection otherwise it will default to a non-geographic
     HoloViews element.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     filename: string
        Filename pointing to geotiff file to load
     crs: Cartopy CRS or EPSG string (optional)
@@ -572,7 +579,6 @@ def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwa
     Returns
     -------
     element: Image/RGB/QuadMesh element
-
     """
     try:
         import xarray as xr
@@ -594,8 +600,8 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
     attempt to decode it into a cartopy projection otherwise it
     will default to a non-geographic HoloViews element.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     da: xarray.DataArray
        DataArray to convert to element
     crs: Cartopy CRS or EPSG string (optional)

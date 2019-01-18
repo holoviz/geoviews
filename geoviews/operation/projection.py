@@ -1,13 +1,12 @@
 import logging
 
 import param
-import shapely
 import numpy as np
 
 from cartopy import crs as ccrs
 from cartopy.img_transform import warp_array, _determine_bounds
 from holoviews.core.data import MultiInterface
-from holoviews.core.util import cartesian_product, get_param_values, max_extents, pd
+from holoviews.core.util import cartesian_product, get_param_values, pd
 from holoviews.operation import Operation
 from shapely.geometry import Polygon, MultiPolygon
 from shapely.geometry.collection import GeometryCollection
@@ -49,37 +48,28 @@ class project_path(_project_operation):
     supported_types = [Polygons, Path, Contours, EdgePaths]
 
     def _process_element(self, element):
-        if not len(element):
+        if not bool(element):
             return element.clone(crs=self.p.projection)
 
         crs = element.crs
-        cylindrical = isinstance(crs, ccrs._CylindricalProjection)
         proj = self.p.projection
+        if (isinstance(crs, ccrs.PlateCarree) and not isinstance(proj, ccrs.PlateCarree)
+            and crs.proj4_params['lon_0'] != 0):
+            element = self.instance(projection=ccrs.PlateCarree())(element)
+
         if isinstance(proj, ccrs.CRS) and not isinstance(proj, ccrs.Projection):
             raise ValueError('invalid transform:'
                              ' Spherical contouring is not supported - '
                              ' consider using PlateCarree/RotatedPole.')
 
-        boundary = Polygon(crs.boundary)
-        bounds = [round(b, 10) for b in boundary.bounds]
-        xoffset = round((boundary.bounds[2]-boundary.bounds[0])/2.)
         if isinstance(element, Polygons):
             geoms = polygons_to_geom_dicts(element, skip_invalid=False)
         else:
             geoms = path_to_geom_dicts(element, skip_invalid=False)
 
-        data_bounds = max_extents([g['geometry'].bounds for g in geoms])
-        total_bounds = tuple(round(b, 10) for b in data_bounds)
-
         projected = []
         for path in geoms:
             geom = path['geometry']
-            if (cylindrical and total_bounds[0] >= (bounds[0]+xoffset) and
-                total_bounds[2] > (bounds[2]+xoffset//2) and
-                total_bounds[2] <= bounds[2]+xoffset):
-                # Offset if lon and not centered on 0 longitude
-                # i.e. lon_min > 0 and lon_max > 270
-                geom = shapely.affinity.translate(geom, xoff=-xoffset)
 
             # Ensure minimum area for polygons (precision issues cause errors)
             if isinstance(geom, Polygon) and geom.area < 1e-15:
@@ -313,6 +303,10 @@ class project_image(_project_operation):
             else:
                 projected, extents = arr, trgt_ext
             arrays.append(projected)
+
+        if xn == 0 or yn == 0:
+            return img.clone([], bounds=extents, crs=proj)
+
         xunit = ((extents[1]-extents[0])/float(xn))/2.
         yunit = ((extents[3]-extents[2])/float(yn))/2.
         xs = np.linspace(extents[0]+xunit, extents[1]-xunit, xn)

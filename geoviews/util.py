@@ -28,6 +28,14 @@ def wrap_lons(lons, base, period):
 def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     x1, y1, x2, y2 = extents
 
+    if (isinstance(src_proj, ccrs.PlateCarree) and
+        not isinstance(dest_proj, ccrs.PlateCarree) and
+        src_proj.proj4_params['lon_0'] != 0):
+        xoffset = src_proj.proj4_params['lon_0']
+        x1 = x1 - xoffset
+        x2 = x2 - xoffset
+        src_proj = ccrs.PlateCarree()
+
     # Limit latitudes
     cy1, cy2 = src_proj.y_limits
     if y1 < cy1: y1 = cy1

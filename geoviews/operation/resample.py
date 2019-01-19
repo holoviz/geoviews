@@ -65,7 +65,7 @@ class resample_geometry(Operation):
     """
     This operation dynamically culls and resamples Path or Polygons
     elements based on the current zoom level. On first execution a
-    RTree created using the Sort-Tile-Recursive algorithm, which is
+    RTree is created using the Sort-Tile-Recursive algorithm, which is
     used to query for geometries within the current viewport (defined
     by the x_range and y_range).
 

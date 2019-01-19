@@ -146,17 +146,24 @@ class Feature(_GeoFeature):
         Parameters
         ----------
         scale: str
-           Scale of the geometry to return expressed as string, e.g.
-           '10m', '50m' or '110m'
+          Scale of the geometry to return expressed as string.
+          Available scales depends on the Feature type.
+
+          NaturalEarthFeature:
+           '10m', '50m', '110m'
+
+          GSHHSFeature:
+           'auto', 'coarse', 'low', 'intermediate', 'high', 'full'
+
         bounds: tuple
-           Tuple of a bounding region to query for geometries in
+          Tuple of a bounding region to query for geometries in
         as_element: boolean
-           Whether to wrap the geometries in an element
+          Whether to wrap the geometries in an element
 
         Returns
         -------
         geometries: Polygons/Path
-           Polgons or Path object wrapping around returned geometries
+          Polygons or Path object wrapping around returned geometries
         """
         feature = self.data
         if scale is not None:

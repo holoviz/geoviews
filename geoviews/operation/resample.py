@@ -104,14 +104,15 @@ class resample_geometry(Operation):
        Enables dynamic processing by default.""")
 
     preserve_topology = param.Boolean(default=False, doc="""
-        Whether to preserve topology between geometries
-        (much faster when disabled).""")
+        Whether to preserve topology between geometries. If disabled
+        simplification can produce self-intersecting or otherwise
+        invalid geometries but will be much faster.""")
 
     streams = param.List(default=[RangeXY], doc="""
         List of streams that are applied if dynamic=True, allowing
         for dynamic interaction with the plot.""")
 
-    tolerance_factor = param.Number(default=0.005, doc="""
+    tolerance_factor = param.Number(default=0.002, doc="""
         The tolerance distance for path simplification as a fraction
         of the square root of the area of the current viewport.""")
 

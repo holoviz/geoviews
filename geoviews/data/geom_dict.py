@@ -110,7 +110,9 @@ class GeomDictInterface(DictInterface):
         geom_dims = cls.geom_dims(dataset)
         if dim in geom_dims:
             bounds = dataset.data['geometry'].bounds
-            if geom_dims.index(dim) == 0:
+            if not bounds:
+                return np.nan, np.nan
+            elif geom_dims.index(dim) == 0:
                 return bounds[0], bounds[2]
             else:
                 return bounds[1], bounds[3]
@@ -131,7 +133,10 @@ class GeomDictInterface(DictInterface):
         d = dataset.get_dimension(dim)
         geom_dims = cls.geom_dims(dataset)
         if d in geom_dims:
-            array = geom_to_array(dataset.data['geometry'])
+            g = dataset.data['geometry']
+            if not g:
+                return np.array([])
+            array = geom_to_array(g)
             idx = geom_dims.index(d)
             return array[:, idx]
         return DictInterface.values(dataset, dim, expanded, flat)

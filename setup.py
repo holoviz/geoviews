@@ -171,6 +171,7 @@ extras_require={
         'nbsmoke >=0.2.0',
         'nose',
         'pytest',
+        'xarray'
     ],
 }
 

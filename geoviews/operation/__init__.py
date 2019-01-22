@@ -8,7 +8,6 @@ from .projection import ( # noqa (API import)
     project_image, project_path, project_shape, project_points,
     project_graph, project_quadmesh, project)
 from .resample import resample_geometry # noqa (API import)
-from .regrid import weighted_regrid # noqa (API import)
 
 geo_ops = [contours, bivariate_kde]
 try:

@@ -170,8 +170,7 @@ extras_require={
         'flake8',
         'nbsmoke >=0.2.0',
         'nose',
-        'pytest',
-        'xarray'
+        'pytest'
     ],
 }
 

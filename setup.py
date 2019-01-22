@@ -137,7 +137,7 @@ _required = [
 _recommended = [
     'datashader',
     'geopandas',
-    'gdal',
+    'gdal>2.2.4',
     'netcdf4',
     'jupyter',
     'matplotlib>2.2',

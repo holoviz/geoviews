@@ -27,7 +27,7 @@ __version__ = str(param.version.Version(fpath=__file__, archive_commit="$Format:
                                         reponame="geoviews"))
 
 # Ensure opts utility is initialized with GeoViews elements
-if extension._loaded:
+if Store._options:
     Store.set_current_backend(Store.current_backend)
 
 # make pyct's example/data commands available if possible

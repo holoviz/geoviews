@@ -392,11 +392,61 @@ class RGB(_Element, HvRGB):
     @classmethod
     def load_tiff(cls, filename, crs=None, apply_transform=False,
                   nan_nodata=False, **kwargs):
+        """
+        Returns an RGB or Image element loaded from a geotiff file.
+
+        The data is loaded using xarray and rasterio. If a crs attribute
+        is present on the loaded data it will attempt to decode it into
+        a cartopy projection otherwise it will default to a non-geographic
+        HoloViews element.
+
+        Parameters
+        ----------
+        filename: string
+          Filename pointing to geotiff file to load
+        crs: Cartopy CRS or EPSG string (optional)
+          Overrides CRS inferred from the data
+        apply_transform: boolean
+          Whether to apply affine transform if defined on the data
+        nan_nodata: boolean
+          If data contains nodata values convert them to NaNs
+        **kwargs:
+          Keyword arguments passed to the HoloViews/GeoViews element
+
+        Returns
+        -------
+        element: Image/RGB/QuadMesh element
+        """
         return load_tiff(filename, crs, apply_transform, **kwargs)
 
     @classmethod
     def from_xarray(cls, da, crs=None, apply_transform=False,
                     nan_nodata=False, **kwargs):
+        """
+        Returns an RGB or Image element given an xarray DataArray
+        loaded using xr.open_rasterio.
+
+        If a crs attribute is present on the loaded data it will
+        attempt to decode it into a cartopy projection otherwise it
+        will default to a non-geographic HoloViews element.
+
+        Parameters
+        ----------
+        da: xarray.DataArray
+          DataArray to convert to element
+        crs: Cartopy CRS or EPSG string (optional)
+          Overrides CRS inferred from the data
+        apply_transform: boolean
+          Whether to apply affine transform if defined on the data
+        nan_nodata: boolean
+          If data contains nodata values convert them to NaNs
+        **kwargs:
+          Keyword arguments passed to the HoloViews/GeoViews element
+
+        Returns
+        -------
+        element: Image/RGB/QuadMesh element
+        """
         return from_xarray(da, crs, apply_transform, **kwargs)
 
 
@@ -613,6 +663,30 @@ class Shape(Dataset):
         Loads a shapefile from disk and optionally merges
         it with a dataset. See ``from_records`` for full
         signature.
+
+        Parameters
+        ----------
+        records: list of cartopy.io.shapereader.Record
+           Iterator containing Records.
+        dataset: holoviews.Dataset
+           Any HoloViews Dataset type.
+        on: str or list or dict
+          A mapping between the attribute names in the records and the
+          dimensions in the dataset.
+        value: str
+          The value dimension in the dataset the values will be drawn
+          from.
+        index: str or list
+          One or more dimensions in the dataset the Shapes will be
+          indexed by.
+        drop_missing: boolean
+          Whether to drop shapes which are missing from the provides
+          dataset.
+
+        Returns
+        -------
+        shapes: Polygons or Path object
+          A Polygons or Path object containing the geometries
         """
         reader = Reader(shapefile)
         return cls.from_records(reader.records(), *args, **kwargs)
@@ -622,30 +696,40 @@ class Shape(Dataset):
     def from_records(cls, records, dataset=None, on=None, value=None,
                      index=[], drop_missing=False, element=None, **kwargs):
         """
-        Load data from a collection of
-        ``cartopy.io.shapereader.Record`` objects and optionally merge
-        it with a dataset to assign values to each polygon and form a
-        chloropleth. Supplying just records will return an NdOverlay
-        of Shape Elements with a numeric index. If a dataset is
-        supplied, a mapping between the attribute names in the records
-        and the dimension names in the dataset must be supplied. The
-        values assigned to each shape file can then be drawn from the
-        dataset by supplying a ``value`` and keys the Shapes are
-        indexed by specifying one or index dimensions.
+        Load data from a collection of `cartopy.io.shapereader.Record`
+        objects and optionally merge it with a dataset to assign
+        values to each polygon and form a chloropleth. Supplying just
+        records will return an NdOverlayof Shape Elements with a
+        numeric index. If a dataset is supplied, a mapping between the
+        attribute names in the records and the dimension names in the
+        dataset must be supplied. The values assigned to each shape
+        file can then be drawn from the dataset by supplying a
+        ``value`` and keys the Shapes are indexed by specifying one or
+        index dimensions.
 
-        * records - An iterator of cartopy.io.shapereader.Record
-                    objects.
-        * dataset - Any HoloViews Dataset type.
-        * on      - A mapping between the attribute names in
-                    the records and the dimensions in the dataset.
-        * value   - The value dimension in the dataset the
-                    values will be drawn from.
-        * index   - One or more dimensions in the dataset
-                    the Shapes will be indexed by.
-        * drop_missing - Whether to drop shapes which are missing from
-                         the provided dataset.
+        Parameters
+        ----------
+        records: list of cartopy.io.shapereader.Record
+           Iterator containing Records.
+        dataset: holoviews.Dataset
+           Any HoloViews Dataset type.
+        on: str or list or dict
+          A mapping between the attribute names in the records and the
+          dimensions in the dataset.
+        value: str
+          The value dimension in the dataset the values will be drawn
+          from.
+        index: str or list
+          One or more dimensions in the dataset the Shapes will be
+          indexed by.
+        drop_missing: boolean
+          Whether to drop shapes which are missing from the provides
+          dataset.
 
-        Returns an NdOverlay of Shapes.
+        Returns
+        -------
+        shapes: Polygons or Path object
+          A Polygons or Path object containing the geometries
         """
         if dataset is not None and not on:
             raise ValueError('To merge dataset with shapes mapping '
@@ -719,7 +803,7 @@ class Shape(Dataset):
         else:
             element = Polygons
 
-        return Polygons(data, vdims=kdims+vdims, **kwargs).options(color_index=value)
+        return element(data, vdims=kdims+vdims, **kwargs).opts(color=value)
 
 
     def geom(self):

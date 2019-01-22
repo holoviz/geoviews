@@ -566,15 +566,15 @@ def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwa
     Parameters
     ----------
     filename: string
-       Filename pointing to geotiff file to load
+      Filename pointing to geotiff file to load
     crs: Cartopy CRS or EPSG string (optional)
-       Overrides CRS inferred from the data
+      Overrides CRS inferred from the data
     apply_transform: boolean
-       Whether to apply affine transform if defined on the data
+      Whether to apply affine transform if defined on the data
     nan_nodata: boolean
-       If data contains nodata values convert them to NaNs
+      If data contains nodata values convert them to NaNs
     **kwargs:
-       Keyword arguments passed to the HoloViews/GeoViews element
+      Keyword arguments passed to the HoloViews/GeoViews element
 
     Returns
     -------
@@ -603,15 +603,15 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
     Parameters
     ----------
     da: xarray.DataArray
-       DataArray to convert to element
+      DataArray to convert to element
     crs: Cartopy CRS or EPSG string (optional)
-       Overrides CRS inferred from the data
+      Overrides CRS inferred from the data
     apply_transform: boolean
-       Whether to apply affine transform if defined on the data
+      Whether to apply affine transform if defined on the data
     nan_nodata: boolean
-       If data contains nodata values convert them to NaNs
+      If data contains nodata values convert them to NaNs
     **kwargs:
-       Keyword arguments passed to the HoloViews/GeoViews element
+      Keyword arguments passed to the HoloViews/GeoViews element
 
     Returns
     -------

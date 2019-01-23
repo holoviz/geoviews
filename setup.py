@@ -137,7 +137,7 @@ _required = [
 _recommended = [
     'datashader',
     'geopandas',
-    'gdal>2.2.4',
+    'gdal==2.3.3',
     'netcdf4',
     'jupyter',
     'matplotlib>2.2',
@@ -153,7 +153,6 @@ _examples_extra = _recommended + [
     'xesmf',
     ### below are for iris
     'iris',
-    'iris-sample-data',
     'filelock',
     'mock'
 ]

@@ -29,6 +29,8 @@ env:
 
 stages:
   - test
+  - name: docs
+    if: tag =~ ^v(\d+|\.).*$
   - name: conda_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: pip_dev_package
@@ -37,8 +39,6 @@ stages:
     if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
   - name: pip_package
     if: tag =~ ^v(\d+|\.)*[^a-z]\d*$    
-  - name: docs
-    if: tag =~ ^v(\d+|\.).*$
 
 jobs:
   include:
@@ -74,9 +74,10 @@ jobs:
     - <<: *default
       stage: docs
       # not possible to run all examples to build website using only defaults (see setup.py)
-      env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c ioam -c conda-forge"
+      env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c ioam"
       script:
         - doit develop_install $CHANS_DEV -o doc
+        - conda install -c conda-forge xesmf iris
         - geoviews fetch-data --path=examples
         - bokeh sampledata
         # note: will vastly simplified in a future version of nbsite

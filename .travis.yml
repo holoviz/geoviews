@@ -56,7 +56,6 @@ jobs:
         - doit env_create $CHANS_DEV --python=$PYENV_VERSION
         - source activate test-environment
         - doit develop_install $CHANS_DEV -o recommended
-        - travis_wait 30 conda install -c conda-forge xesmf iris pillow --force
         - doit env_capture
       script:
         - geoviews fetch-data --path=examples
@@ -75,7 +74,7 @@ jobs:
     - <<: *default
       stage: docs
       # not possible to run all examples to build website using only defaults (see setup.py)
-      env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c ioam"
+      env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c conda-forge"
       script:
         - doit develop_install $CHANS_DEV -o doc
         - geoviews fetch-data --path=examples

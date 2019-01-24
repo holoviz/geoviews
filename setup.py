@@ -160,6 +160,8 @@ extras_require={
     'examples_extra': _examples_extra,
     'doc': _examples_extra + [
         'nbsite',
+        'iris',
+        'xesmf',
         'sphinx_ioam_theme',
     ],
     'tests': [

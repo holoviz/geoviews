@@ -150,7 +150,8 @@ _recommended = [
 
 # can only currently run all examples with packages from conda-forge
 _examples_extra = _recommended + [
-    ### below are for iris
+    'iris',
+    'xesmf',
     'filelock',
     'mock'
 ]
@@ -160,8 +161,6 @@ extras_require={
     'examples_extra': _examples_extra,
     'doc': _examples_extra + [
         'nbsite',
-        'iris',
-        'xesmf',
         'sphinx_ioam_theme',
     ],
     'tests': [

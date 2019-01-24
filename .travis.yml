@@ -56,6 +56,7 @@ jobs:
         - doit env_create $CHANS_DEV --python=$PYENV_VERSION
         - source activate test-environment
         - doit develop_install $CHANS_DEV -o recommended
+        - conda install -c conda-forge xesmf iris pillow
         - doit env_capture
       script:
         - geoviews fetch-data --path=examples
@@ -77,7 +78,6 @@ jobs:
       env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c ioam"
       script:
         - doit develop_install $CHANS_DEV -o doc
-        - conda install -c conda-forge xesmf iris
         - geoviews fetch-data --path=examples
         - bokeh sampledata
         # note: will vastly simplified in a future version of nbsite

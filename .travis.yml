@@ -56,7 +56,7 @@ jobs:
         - doit env_create $CHANS_DEV --python=$PYENV_VERSION
         - source activate test-environment
         - doit develop_install $CHANS_DEV -o recommended
-        - conda install -c conda-forge xesmf iris pillow
+        - travis_wait 30 conda install -c conda-forge xesmf iris pillow --force
         - doit env_capture
       script:
         - geoviews fetch-data --path=examples

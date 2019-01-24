@@ -13,6 +13,7 @@ install:
   - "doit env_create %CHANS_DEV% --name=test --python=%PY%"
   - "activate test"
   - "doit develop_install %CHANS_DEV% -o recommended"
+  - "conda install -c conda-forge pillow"
   - "doit env_capture"
 
 build: off

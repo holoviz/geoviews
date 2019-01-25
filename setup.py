@@ -137,7 +137,7 @@ _required = [
 _recommended = [
     'datashader',
     'geopandas',
-    'gdal>2.2.4',
+    'gdal',
     'netcdf4',
     'jupyter',
     'matplotlib>2.2',
@@ -150,10 +150,8 @@ _recommended = [
 
 # can only currently run all examples with packages from conda-forge
 _examples_extra = _recommended + [
-    'xesmf',
-    ### below are for iris
     'iris',
-    'iris-sample-data',
+    'xesmf',
     'filelock',
     'mock'
 ]

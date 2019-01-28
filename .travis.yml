@@ -124,11 +124,12 @@ jobs:
       script:
         - doit package_upload --token=$CONDA_UPLOAD_TOKEN $LABELS --recipe=core
         - doit package_upload --token=$CONDA_UPLOAD_TOKEN $LABELS --recipe=recommended
+      after_failure:
+        - sleep 10
 
     - <<: *conda_pkg
       stage: conda_package
       env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID CHANS=$CHANS_REL LABELS=$LABELS_REL
-
 
     # Pip packages are awkward because we use conda for gv's
     # dependencies when making the pip package (something pyctdev does

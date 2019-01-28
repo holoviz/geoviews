@@ -19,6 +19,12 @@ You can install GeoViews and its dependencies using conda::
 
     conda install -c pyviz geoviews
 
+
+Alternatively you can also install the geoviews-core package, which
+only installs the minimal dependencies required to run geoviews::
+
+    conda install -c pyviz geoviews-core
+
 Once installed you can copy the examples into the current directory
 using the ``geoviews`` command and run them using the Jupyter
 notebook::
@@ -67,15 +73,15 @@ in how non-Python packages are built between conda-forge and defaults.
 -----
 
 GeoViews itself is also installable using `pip`, but to do that you
-will first need to have installed the `dependencies of cartopy <http://scitools.org.uk/cartopy/docs/v0.15/installing.html#requirements>`_,
+will first need to have installed the `dependencies of cartopy <http://scitools.org.uk/cartopy/docs/v0.17/installing.html#requirements>`_,
 or else have set up your system to be able to build them.
 
 
 Please feel free to report `issues
-<https://github.com/ioam/geoviews/issues>`_ or `contribute code
+<https://github.com/pyviz/geoviews/issues>`_ or `contribute code
 <https://help.github.com/articles/about-pull-requests>`_. You are also
 welcome to chat with the developers on `gitter
-<https://gitter.im/ioam/holoviews>`_.
+<https://gitter.im/pyviz/pyviz>`_.
 
 .. toctree::
    :hidden:

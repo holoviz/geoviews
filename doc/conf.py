@@ -30,13 +30,13 @@ html_context.update({
     'PROJECT': project,
     'DESCRIPTION': description,
     'AUTHOR': authors,
-    'WEBSITE_SERVER': 'https://ioam.github.io/geoviews',
+    'WEBSITE_SERVER': 'https://geoviews.org',
     'VERSION': version,
     'NAV': _NAV,
     'LINKS': _NAV,
     'SOCIAL': (
         ('Gitter', '//gitter.im/pyviz/pyviz'),
         ('Twitter', '//twitter.com/holoviews'),
-        ('Github', '//github.com/ioam/geoviews'),
+        ('Github', '//github.com/pyviz/geoviews'),
     )
 })

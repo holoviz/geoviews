@@ -294,6 +294,9 @@ class project_image(_project_operation):
         px0, py0, px1, py1 = project_extents((x0, y0, x1, y1),
                                              img.crs, proj)
         src_ext, trgt_ext = (x0, x1, y0, y1), (px0, px1, py0, py1)
+        if img.crs == proj and np.isclose(src_ext, trgt_ext).all():
+            return img
+
         arrays = []
         for vd in img.vdims:
             arr = img.dimension_values(vd, flat=False)

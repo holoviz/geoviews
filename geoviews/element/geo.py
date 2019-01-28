@@ -753,6 +753,8 @@ class Shape(Dataset):
                 dim = Dimension(ind)
             kdims.append(dim)
 
+        print(dataset, value)
+
         ddims = []
         if dataset:
             if value:

@@ -57,9 +57,9 @@ jobs:
         - source activate test-environment
         - doit develop_install $CHANS_DEV -o recommended
         - doit env_capture
+        - bokeh sampledata
       script:
         - geoviews fetch-data --path=examples
-        - bokeh sampledata
         - doit test_all_recommended
       after_success: coveralls
 

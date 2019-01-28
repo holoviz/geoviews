@@ -753,16 +753,17 @@ class Shape(Dataset):
                 dim = Dimension(ind)
             kdims.append(dim)
 
+
         ddims = []
         if dataset:
             if value:
                 vdims = [dataset.get_dimension(value)]
             else:
                 vdims = dataset.vdims
-            if None in vdims:
-                raise ValueError('Value dimension not found '
-                                 'in dataset: {}'.format(value))
             ddims = dataset.dimensions()
+            if None in vdims:
+                raise ValueError('Value dimension %s not found '
+                                 'in dataset dimensions %s' % (value, ddims) )
         else:
             vdims = []
 

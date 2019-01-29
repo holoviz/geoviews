@@ -17,8 +17,8 @@ env:
   global:
     - PYENV_VERSION=3.6
     - PKG_TEST_PYTHON="--test-python=py36 --test-python=py27"
-    - CHANS_DEV="-c pyviz/label/dev -c ioam"
-    - CHANS_REL="-c pyviz -c ioam"
+    - CHANS_DEV="-c pyviz/label/dev"
+    - CHANS_REL="-c pyviz"
     - LABELS_DEV="--label dev"
     - LABELS_REL="--label dev --label main"
     - MPLBACKEND="Agg"
@@ -38,7 +38,7 @@ stages:
   - name: conda_package
     if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
   - name: pip_package
-    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$    
+    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
 
 jobs:
   include:
@@ -57,9 +57,8 @@ jobs:
         - source activate test-environment
         - doit develop_install $CHANS_DEV -o recommended
         - doit env_capture
-        - bokeh sampledata
       script:
-        - geoviews fetch-data --path=examples
+        - doit data_setup
         - doit test_all_recommended
       after_success: coveralls
 
@@ -74,24 +73,22 @@ jobs:
     - <<: *default
       stage: docs
       # not possible to run all examples to build website using only defaults (see setup.py)
-      env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c conda-forge"
+      env:
+        - DESC="docs"
+        - CHANS_DEV="-c pyviz/label/dev -c conda-forge"
       script:
         - doit develop_install $CHANS_DEV -o doc
-        - geoviews fetch-data --path=examples
-        - bokeh sampledata
-        # note: will vastly simplified in a future version of nbsite
-        - cd doc
-        - nbsite_nbpagebuild.py ioam geoviews ../examples .
+        - doit data_setup
+        ### generate rst skeleton
+        - nbsite generate-rst --org pyviz --project-name geoviews --offset 0
         ### gallery
+        - cd doc
         - ln -s ../examples/assets assets
         - ln -s ../examples/data data
         - nbsite_gallery.py .. examples None '.' bokeh matplotlib None
-        ###
-        - sphinx-build -b html . ./_build/html
-        - nbsite_fix_links.py _build/html
-        - nbsite_cleandisthtml.py ./_build/html take_a_chance
-        - touch ./_build/html/.nojekyll
         - cd ..
+        ### build
+        - nbsite build --what=html --output=builtdocs
       deploy:
         - provider: pages
           skip_cleanup: true

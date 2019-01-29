@@ -15,3 +15,10 @@ def task_pip_on_conda():
         # this interferes with pip-installed nose
         'conda remove -y --force nose'
     ]}
+
+def task_data_setup():
+    """Experimental: Fetch all data for examples"""
+    return {'actions':[
+        'bokeh sampledata',
+        'geoviews fetch-data --path=examples'
+    ]}

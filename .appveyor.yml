@@ -23,6 +23,5 @@ install:
 build: off
 
 test_script:
-  - "geoviews fetch-data --path=examples"
-  - "bokeh sampledata"
+  - "doit data_setup"
   - "doit test_all_recommended"

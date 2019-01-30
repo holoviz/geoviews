@@ -93,7 +93,7 @@ jobs:
         - provider: pages
           skip_cleanup: true
           github_token: $GITHUB_TOKEN
-          local_dir: ./doc/_build/html
+          local_dir: ./builtdocs
           repo: ioam-docs/geoviews-dev
           on:
             tags: true
@@ -102,7 +102,7 @@ jobs:
         - provider: pages
           skip_cleanup: true
           github_token: $GITHUB_TOKEN
-          local_dir: ./doc/_build/html
+          local_dir: ./builtdocs
           repo: ioam-docs/geoviews-release
           on:
             tags: true

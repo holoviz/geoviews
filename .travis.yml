@@ -85,8 +85,8 @@ jobs:
         - cd doc
         - ln -s ../examples/assets assets
         - ln -s ../examples/data data
-         - nbsite_gallery.py .. examples None '.' bokeh matplotlib None
-         - rm gallery/**/*.ipynb
+        - nbsite_gallery.py .. examples None '.' bokeh matplotlib None
+        - rm gallery/**/*.ipynb
         - cd ..
         ### build
         - nbsite build --what=html --output=builtdocs

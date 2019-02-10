@@ -23,15 +23,17 @@ from holoviews.plotting.mpl import (
 from holoviews.plotting.mpl.util import get_raster_array
 
 
-from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
-                        LineContours, FilledContours, is_geographic,
-                        Path, Polygons, Shape, RGB, Contours, Nodes,
-                        EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
-                        HexTiles, Labels)
+from ...element import (
+    Image, Points, Feature, WMTS, Tiles, Text, LineContours,
+    FilledContours, is_geographic, Path, Polygons, Shape, RGB,
+    Contours, Nodes, EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
+    HexTiles, Labels)
 from ...util import geo_mesh
 from ..plot import ProjectionPlot
 
-from ...operation import project_points, project_path, project_graph, project_quadmesh
+from ...operation import (
+    project_points, project_path, project_graph, project_quadmesh,
+    project_vectorfield)
 
 
 
@@ -238,7 +240,7 @@ class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
 
     apply_ranges = param.Boolean(default=True)
 
-    _project_operation = project_points
+    _project_operation = project_vectorfield
 
 
 class GeometryPlot(GeoPlot):

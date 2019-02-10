@@ -20,7 +20,7 @@ from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
                         Graph, TriMesh, QuadMesh, VectorField, Labels,
                         HexTiles, LineContours, FilledContours)
 from ...operation import (project_image, project_points, project_path,
-                          project_graph, project_quadmesh)
+                          project_graph, project_quadmesh, project_vectorfield)
 from ...tile_sources import _ATTRIBUTIONS
 from ...util import poly_types, line_types
 from .plot import GeoPlot, GeoOverlayPlot
@@ -91,7 +91,7 @@ class GeoPointPlot(GeoPlot, PointPlot):
 
 class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
 
-    _project_operation = project_points
+    _project_operation = project_vectorfield
 
 
 class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):

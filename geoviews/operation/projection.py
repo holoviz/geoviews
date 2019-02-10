@@ -196,8 +196,8 @@ class project_vectorfield(_project_operation):
         new_data[xdim.name] = coordinates[mask, 0]
         new_data[ydim.name] = coordinates[mask, 1]
         datatype = [element.interface.datatype]+element.datatype
-        us = np.sin(ang) * ms
-        vs = np.cos(ang) * ms
+        us = np.cos(ang) * ms
+        vs = np.sin(ang) * ms
         ut, vt = self.p.projection.transform_vectors(element.crs, xs, ys, us, vs)
         with np.errstate(divide='ignore', invalid='ignore'):
             angle = np.arctan2(vt, ut)

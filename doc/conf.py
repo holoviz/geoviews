@@ -24,6 +24,16 @@ _NAV =  (
         ('About', 'about')
 )
 
+nbsite_gallery_conf = {
+    'galleries': {
+        'gallery': {'title': 'Gallery', 'backends': ['bokeh', 'matplotlib']}
+    },
+    'github_org': 'pyviz',
+    'github_project': 'geoviews'
+}
+
+extensions += ['nbsite.gallery']
+
 templates_path = ['_templates']
 
 html_context.update({

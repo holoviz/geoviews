@@ -74,29 +74,18 @@ jobs:
     - <<: *default
       stage: docs
       # not possible to run all examples to build website using only defaults (see setup.py)
-      env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c conda-forge"
+      env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c conda-forge" HV_DOC_HTML='true'
       script:
         - doit develop_install $CHANS_DEV -o doc
         - geoviews fetch-data --path=examples
         - bokeh sampledata
-        # note: will vastly simplified in a future version of nbsite
-        - cd doc
-        - nbsite_nbpagebuild.py ioam geoviews ../examples .
-        ### gallery
-        - ln -s ../examples/assets assets
-        - ln -s ../examples/data data
-        - nbsite_gallery.py .. examples None '.' bokeh matplotlib None
-        ###
-        - sphinx-build -b html . ./_build/html
-        - nbsite_fix_links.py _build/html
-        - nbsite_cleandisthtml.py ./_build/html take_a_chance
-        - touch ./_build/html/.nojekyll
-        - cd ..
+        - nbsite generate-rst --org pyviz --project-name geoviews --offset 0
+        - nbsite build --what=html --output=builtdocs
       deploy:
         - provider: pages
           skip_cleanup: true
           github_token: $GITHUB_TOKEN
-          local_dir: ./doc/_build/html
+          local_dir: ./builtdocs
           repo: ioam-docs/geoviews-dev
           on:
             tags: true
@@ -105,7 +94,7 @@ jobs:
         - provider: pages
           skip_cleanup: true
           github_token: $GITHUB_TOKEN
-          local_dir: ./doc/_build/html
+          local_dir: ./builtdocs
           repo: ioam-docs/geoviews-release
           on:
             tags: true

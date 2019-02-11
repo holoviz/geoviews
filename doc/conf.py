@@ -25,8 +25,9 @@ _NAV =  (
 )
 
 nbsite_gallery_conf = {
+    'backends': ['bokeh', 'matplotlib'],
     'galleries': {
-        'gallery': {'title': 'Gallery', 'backends': ['bokeh', 'matplotlib']}
+        'gallery': {'title': 'Gallery'}
     },
     'github_org': 'pyviz',
     'github_project': 'geoviews'

@@ -71,7 +71,7 @@ class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
         ret = super(GeoOverlayPlot, self)._finalize_axis(*args, **kwargs)
         axis = self.handles['axis']
         if self.show_grid:
-            axis.gridlines()
+            axis.grid()
         if self.global_extent:
             axis.set_global()
         return ret

@@ -77,9 +77,9 @@ EsriImagery = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/World_I
 EsriNatGeo = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{Z}/{Y}/{X}', name="EsriNatGeo")
 EsriUSATopo = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{Z}/{Y}/{X}', name="EsriUSATopo")
 EsriTerrain = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{Z}/{Y}/{X}', name="EsriTerrain")
-EsriReference = WMTS('http://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{Z}/{Y}/{X}', name="EsriReference")
-EsriOceanBase = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MOapServer/tile/{Z}/{Y}/{X}', name="EsriTerrain")
-EsriOceanReference = WMTS('http://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{Z}/{Y}/{X}', name="EsriReference")
+EsriReference = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{Z}/{Y}/{X}', name="EsriReference")
+EsriOceanBase = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{Z}/{Y}/{X}', name="EsriTerrain")
+EsriOceanReference = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{Z}/{Y}/{X}', name="EsriReference")
 ESRI = EsriImagery # For backwards compatibility with gv 1.5
 
 

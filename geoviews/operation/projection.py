@@ -7,6 +7,7 @@ from cartopy import crs as ccrs
 from cartopy.img_transform import warp_array, _determine_bounds
 from holoviews.core.data import MultiInterface
 from holoviews.core.util import cartesian_product, get_param_values, pd
+from holoviews.core.dimension import Dimension
 from holoviews.operation import Operation
 from shapely.geometry import Polygon, MultiPolygon
 from shapely.geometry.collection import GeometryCollection
@@ -290,6 +291,7 @@ class project_image(_project_operation):
         proj = self.p.projection
         x0, x1 = img.range(0)
         y0, y1 = img.range(1)
+
         xn, yn = img.interface.shape(img, gridded=True)[:2]
         px0, py0, px1, py1 = project_extents((x0, y0, x1, y1),
                                              img.crs, proj)
@@ -314,6 +316,17 @@ class project_image(_project_operation):
         yunit = ((extents[3]-extents[2])/float(yn))/2.
         xs = np.linspace(extents[0]+xunit, extents[1]-xunit, xn)
         ys = np.linspace(extents[2]+yunit, extents[3]-yunit, yn)
+
+        if proj not in [ccrs.GOOGLE_MERCATOR, ccrs.PlateCarree()]:
+            for i, xy in enumerate(['x', 'y']):
+                unproj_arr = img.dimension_values(img.kdims[i], flat=False)
+                unproj_values, _ = warp_array(unproj_arr, proj, img.crs, (xn, yn),
+                                              src_ext, trgt_ext)
+
+                unproj_name = 'unproj_{}'.format(xy)
+                img.vdims += [Dimension(unproj_name)]
+                arrays.append(unproj_values)
+
         return img.clone((xs, ys)+tuple(arrays), bounds=None, kdims=img.kdims,
                          vdims=img.vdims, crs=proj, xdensity=None,
                          ydensity=None)

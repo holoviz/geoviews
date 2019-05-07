@@ -28,6 +28,9 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                                         BoxZoomTool(match_aspect=True), 'reset'],
         doc="A list of plugin tools to use on the plot.")
 
+    fixed_bounds = param.Boolean(default=True, doc="""
+        Whether to prevent zooming beyond the projections defined bounds.""")
+
     global_extent = param.Boolean(default=False, doc="""
         Whether the plot should display the whole globe.""")
 
@@ -82,6 +85,26 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             axis_props['ticker'] = MercatorTicker(dimension=dimension)
             axis_props['formatter'] = MercatorTickFormatter(dimension=dimension)
         return axis_props
+
+    def _update_ranges(self, element, ranges):
+        super(GeoPlot, self)._update_ranges(element, ranges)
+        if not self.geographic:
+            return
+        if self.fixed_bounds:
+            self.handles['x_range'].bounds = self.projection.x_limits
+            self.handles['y_range'].bounds = self.projection.y_limits
+        if self.projection is GOOGLE_MERCATOR:
+            # Avoid zooming in beyond tile and axis resolution (causing JS errors) 
+            options = self._traverse_options(element, 'plot', ['default_span'], defaults=False)
+            min_interval = options['default_span'][0] if options.get('default_span') else 5
+            for r in ('x_range', 'y_range'):
+                ax_range = self.handles[r]
+                start, end = ax_range.start, ax_range.end
+                if (end-start) < min_interval:
+                    mid = (start+end)/2.
+                    ax_range.start = mid - min_interval/2.
+                    ax_range.start = mid + min_interval/2.
+                ax_range.min_interval = min_interval
 
     def initialize_plot(self, ranges=None, plot=None, plots=None, source=None):
         opts = {} if isinstance(self, HvOverlayPlot) else {'source': source}

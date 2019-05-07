@@ -28,7 +28,7 @@ from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
                         Path, Polygons, Shape, RGB, Contours, Nodes,
                         EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
                         HexTiles, Labels)
-from ...util import geo_mesh
+from ...util import geo_mesh, poly_types
 from ..plot import ProjectionPlot
 
 from ...operation import project_points, project_path, project_graph, project_quadmesh
@@ -308,6 +308,8 @@ class GeoShapePlot(GeometryPlot, PolygonPlot):
 
     def get_data(self, element, ranges, style):
         if self.geographic:
+            if not isinstance(element.data['geometry'], poly_types):
+                style['facecolor'] = 'none'
             vdim = element.vdims[0] if element.vdims else None
             value = element.level
             if vdim is not None and (value is not None and np.isfinite(value)):

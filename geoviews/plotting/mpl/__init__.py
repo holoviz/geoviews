@@ -108,7 +108,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         ret = super(GeoPlot, self)._finalize_axis(*args, **kwargs)
         axis = self.handles['axis']
         if self.show_grid:
-            axis.gridlines()
+            axis.grid()
         if self.global_extent:
             axis.set_global()
         return ret

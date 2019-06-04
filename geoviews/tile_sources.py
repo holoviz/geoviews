@@ -84,7 +84,7 @@ ESRI = EsriImagery # For backwards compatibility with gv 1.5
 
 
 # Miscellaneous
-OSM = WMTS('http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png', name="OSM")
+OSM = WMTS('https://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png', name="OSM")
 Wikipedia = WMTS('https://maps.wikimedia.org/osm-intl/{Z}/{X}/{Y}@2x.png', name="Wikipedia")
 
 

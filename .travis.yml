@@ -3,16 +3,6 @@ sudo: false
 os:
   - linux
 
-cache:
-  timeout: 300
-  directories:
-    - $HOME/miniconda
-
-before_cache:
-  - rm -rf $HOME/miniconda/pkgs
-  - rm -rf $HOME/miniconda/conda-bld
-  - rm -rf $HOME/miniconda/envs/*/conda-bld
-
 env:
   global:
     - PYENV_VERSION=3.7
@@ -107,7 +97,7 @@ jobs:
     - &conda_pkg
       <<: *default
       stage: conda_dev_package
-      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID CHANS=$CHANS_DEV LABELS=$LABELS_DEV
+      env: DESC="" CHANS=$CHANS_DEV LABELS=$LABELS_DEV
       install:
         - travis_wait 30 doit package_build --recipe=core $CHANS $PKG_TEST_PYTHON --test-group=unit
         - travis_wait 30 doit package_build --recipe=recommended $CHANS $PKG_TEST_PYTHON --test-group=examples
@@ -119,7 +109,7 @@ jobs:
 
     - <<: *conda_pkg
       stage: conda_package
-      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID CHANS=$CHANS_REL LABELS=$LABELS_REL
+      env: DESC="" CHANS=$CHANS_REL LABELS=$LABELS_REL
 
     # Pip packages are awkward because we use conda for gv's
     # dependencies when making the pip package (something pyctdev does
@@ -127,7 +117,7 @@ jobs:
     - &pip_pkg
       <<: *default
       stage: pip_dev_package
-      env: TRAVIS_NOCACHE=$TRAVIS_JOB_ID PYPI=testpypi PYPIUSER=$TPPU PYPIPASS=$TPPP
+      env: PYPI=testpypi PYPIUSER=$TPPU PYPIPASS=$TPPP
       install:
         - doit develop_install $CHANS_DEV -o tests && pip uninstall -y geoviews
         - doit pip_on_conda
@@ -136,4 +126,4 @@ jobs:
 
     - <<: *pip_pkg
       stage: pip_package
-      env: TRAVIS_NOCACHE=$TRAVIS_JOB_ID PYPI=pypi PYPIUSER=$PPU PYPIPASS=$PPP
+      env: PYPI=pypi PYPIUSER=$PPU PYPIPASS=$PPP

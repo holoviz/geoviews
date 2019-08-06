@@ -162,6 +162,7 @@ extras_require={
     'doc': _examples_extra + [
         'nbsite >=0.6.1',
         'sphinx_ioam_theme',
+        'selenium',
     ],
     'tests': [
         'coveralls',

@@ -15,10 +15,11 @@ before_cache:
 
 env:
   global:
-    - PYENV_VERSION=3.6
+    - PYENV_VERSION=3.7
+	- PYTHON_VERSION=3.6
     - PKG_TEST_PYTHON="--test-python=py36 --test-python=py27"
-    - CHANS_DEV="-c pyviz/label/dev -c ioam"
-    - CHANS_REL="-c pyviz -c ioam"
+    - CHANS_DEV="-c pyviz/label/dev"
+    - CHANS_REL="-c pyviz"
     - LABELS_DEV="--label dev"
     - LABELS_REL="--label dev --label main"
     - MPLBACKEND="Agg"
@@ -53,7 +54,7 @@ jobs:
         - conda config --set always_yes True
         - conda install -c pyviz "pyctdev>=0.5" && doit ecosystem_setup
       install:
-        - doit env_create $CHANS_DEV --python=$PYENV_VERSION
+        - doit env_create $CHANS_DEV --python=$PYTHON_VERSION
         - source activate test-environment
         - doit develop_install $CHANS_DEV -o recommended
         - doit env_capture
@@ -66,7 +67,7 @@ jobs:
     # python 2 flake checking typically catches python 2 syntax
     # errors where python 3's been assumed...
     - <<: *default
-      env: DESC="py2 flakes" PYENV_VERSION=2.7
+      env: DESC="py2 flakes" PYTHON_VERSION=2.7
       script: doit test_flakes
 
     ########## DOCS ##########

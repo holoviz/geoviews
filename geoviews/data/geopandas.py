@@ -96,8 +96,8 @@ class GeoPandasInterface(MultiInterface):
         name = dataset.get_dimension(dimension, strict=True).name
         if name not in dataset.data:
             return np.dtype('float') # Geometry dimension
-        return super(GeoPandasInterface, cls).dtype(dataset, dimension)
-        
+        return dataset.data[name].dtype
+
 
     @classmethod
     def has_holes(cls, dataset):

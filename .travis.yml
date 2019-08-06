@@ -65,10 +65,9 @@ jobs:
     - <<: *default
       stage: docs
       # not possible to run all examples to build website using only defaults (see setup.py)
-      env: DESC="docs" CHANS_DEV="-c pyviz/label/dev -c conda-forge" HV_DOC_HTML='true'
+      env: DESC="docs" HV_DOC_HTML='true'
       script:
-        - doit develop_install -c pyviz -o recommended
-        - doit develop_install $CHANS_DEV -o doc
+        - doit develop_install -c conda-forge -o doc
         - geoviews fetch-data --path=examples
         - bokeh sampledata
         - nbsite generate-rst --org pyviz --project-name geoviews --offset 0

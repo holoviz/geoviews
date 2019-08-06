@@ -204,7 +204,7 @@ class GeoPandasInterface(MultiInterface):
         return PandasInterface.select(dataset, selection_mask, **selection)
 
     @classmethod
-    def values(cls, dataset, dimension, expanded=True, flat=True):
+    def values(cls, dataset, dimension, expanded=True, flat=True, compute=True):
         dimension = dataset.get_dimension(dimension)
         geom_dims = dataset.interface.geom_dims(dataset)
         data = dataset.data

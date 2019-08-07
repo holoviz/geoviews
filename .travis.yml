@@ -67,7 +67,7 @@ jobs:
       # not possible to run all examples to build website using only defaults (see setup.py)
       env: DESC="docs" HV_DOC_HTML='true'
       script:
-        - doit develop_install -c conda-forge -o doc
+        - doit develop_install -c pyviz -c conda-forge -o doc
         - geoviews fetch-data --path=examples
         - bokeh sampledata
         - nbsite generate-rst --org pyviz --project-name geoviews --offset 0
@@ -77,7 +77,7 @@ jobs:
           skip_cleanup: true
           github_token: $GITHUB_TOKEN
           local_dir: ./builtdocs
-          repo: ioam-docs/geoviews-dev
+          repo: pyviz-dev/geoviews
           on:
             tags: true
             all_branches: true
@@ -86,7 +86,7 @@ jobs:
           skip_cleanup: true
           github_token: $GITHUB_TOKEN
           local_dir: ./builtdocs
-          repo: ioam-docs/geoviews-release
+          fqdn: geoviews.org
           on:
             tags: true
             all_branches: true

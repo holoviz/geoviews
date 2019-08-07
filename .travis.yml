@@ -121,7 +121,7 @@ jobs:
       install:
         - doit develop_install $CHANS_DEV -o tests && pip uninstall -y geoviews
         - doit pip_on_conda
-        - doit ecosystem=pip package_build --test-python=py36 --test-group=unit
+        - doit ecosystem=pip package_build --test-python=py37 --test-group=unit
       script: doit ecosystem=pip package_upload -u $PYPIUSER -p $PYPIPASS --pypi=$PYPI
 
     - <<: *pip_pkg

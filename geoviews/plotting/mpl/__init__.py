@@ -108,7 +108,11 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         ret = super(GeoPlot, self)._finalize_axis(*args, **kwargs)
         axis = self.handles['axis']
         if self.show_grid:
-            axis.gridlines()
+            try:
+                # Only PlateCarree and Mercator plots support grid labels.
+                axis.gridlines(draw_labels=True)
+            except TypeError:
+                axis.gridlines()
         if self.global_extent:
             axis.set_global()
         return ret

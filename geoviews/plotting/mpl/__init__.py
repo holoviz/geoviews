@@ -22,7 +22,7 @@ from holoviews.plotting.mpl import (
     PathPlot, PolygonPlot, RasterPlot, ContourPlot, GraphPlot,
     TriMeshPlot, QuadMeshPlot, VectorFieldPlot, HexTilesPlot
 )
-from holoviews.plotting.mpl.util import get_raster_array
+from holoviews.plotting.mpl.util import get_raster_array, wrap_formatter
 
 
 from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
@@ -122,7 +122,10 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             elif self.xaxis in ['top', 'bottom-bare']:
                 gl.xlabels_bottom = False
 
-            gl.xformatter = LONGITUDE_FORMATTER
+            if self.xformatter is None:
+                gl.xformatter = LONGITUDE_FORMATTER
+            else:
+                gl.xformatter = wrap_formatter(self.xformatter)
 
         if self.yaxis and self.yaxis != 'bare':
             if isinstance(self.yticks, list):
@@ -135,7 +138,10 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             elif self.yaxis in ['right', 'left-bare']:
                 gl.ylabels_left = False
 
-            gl.yformatter = LATITUDE_FORMATTER
+            if self.yformatter is None:
+                gl.yformatter = LATITUDE_FORMATTER
+            else:
+                gl.yformatter = wrap_formatter(self.yformatter)
 
     def _finalize_axis(self, *args, **kwargs):
         ret = super(GeoPlot, self)._finalize_axis(*args, **kwargs)

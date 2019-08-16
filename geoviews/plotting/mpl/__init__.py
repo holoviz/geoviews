@@ -2,8 +2,10 @@ import copy
 
 import numpy as np
 import param
+import matplotlib.ticker as mticker
 from cartopy import crs as ccrs
 from cartopy.io.img_tiles import GoogleTiles
+from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 
 try:
     from owslib.wmts import WebMapTileService
@@ -104,15 +106,47 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         if 'aspect' not in plot_opts:
             self.aspect = 'equal' if self.geographic else 'square'
 
+    def _process_grid(self, gl):
+        if not self.show_grid:
+            gl.xlines = False
+            gl.ylines = False
+
+        if self.xaxis and self.xaxis != 'bare':
+            if isinstance(self.xticks, list):
+                gl.xlocator = mticker.FixedLocator(self.xticks)
+            elif isinstance(self.xticks, int):
+                gl.xlocator = mticker.MaxNLocator(self.xticks)
+
+            if self.xaxis in ['bottom', 'top-bare']:
+                gl.xlabels_top = False
+            elif self.xaxis in ['top', 'bottom-bare']:
+                gl.xlabels_bottom = False
+
+            gl.xformatter = LONGITUDE_FORMATTER
+
+        if self.yaxis and self.yaxis != 'bare':
+            if isinstance(self.yticks, list):
+                gl.ylocator = mticker.FixedLocator(self.yticks)
+            elif isinstance(self.yticks, int):
+                gl.ylocator = mticker.MaxNLocator(self.yticks)
+
+            if self.yaxis in ['left', 'right-bare']:
+                gl.ylabels_right = False
+            elif self.yaxis in ['right', 'left-bare']:
+                gl.ylabels_left = False
+
+            gl.yformatter = LATITUDE_FORMATTER
+
     def _finalize_axis(self, *args, **kwargs):
         ret = super(GeoPlot, self)._finalize_axis(*args, **kwargs)
         axis = self.handles['axis']
-        if self.show_grid:
-            try:
-                # Only PlateCarree and Mercator plots support grid labels.
-                axis.gridlines(draw_labels=True)
-            except TypeError:
-                axis.gridlines()
+        try:
+            # Only PlateCarree and Mercator plots support grid labels.
+            gl = axis.gridlines(draw_labels=True)
+        except TypeError:
+            gl = axis.gridlines()
+        self._process_grid(gl)
+
         if self.global_extent:
             axis.set_global()
         return ret

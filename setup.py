@@ -160,8 +160,9 @@ extras_require={
     'recommended': _recommended,
     'examples_extra': _examples_extra,
     'doc': _examples_extra + [
-        'nbsite',
+        'nbsite >=0.6.1',
         'sphinx_ioam_theme',
+        'selenium',
     ],
     'tests': [
         'coveralls',

@@ -11,15 +11,15 @@ particularly powerful support for multidimensional meteorological
 and oceanographic datasets, such as those used in weather, climate,
 and remote sensing research, but is useful for almost anything
 that you would want to plot on a map!  You can see lots of example 
-notebooks at [geo.holoviews.org](http://geo.holoviews.org), and a good 
+notebooks at [geoviews.org](https://geoviews.org), and a good 
 overview is in our [blog post announcement](https://www.continuum.io/blog/developer-blog/introducing-geoviews).
 
-GeoViews is built on the [HoloViews](http://holoviews.org) library for
+GeoViews is built on the [HoloViews](https://holoviews.org) library for
 building flexible visualizations of multidimensional data.  GeoViews
 adds a family of geographic plot types based on the
 [Cartopy](http://scitools.org.uk/cartopy) library, plotted using
 either the [Matplotlib](http://matplotlib.org) or
-[Bokeh](http://bokeh.pydata.org) packages.
+[Bokeh](https://bokeh.pydata.org) packages.
 
 Each of the new GeoElement plot types is a new HoloViews Element that
 has an associated geographic projection based on ``cartopy.crs``. The

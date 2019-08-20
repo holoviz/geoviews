@@ -90,6 +90,15 @@ class GeoPandasInterface(MultiInterface):
                              "dimensions, the following dimensions were "
                              "not found: %s" % repr(not_found), cls)
 
+
+    @classmethod
+    def dtype(cls, dataset, dimension):
+        name = dataset.get_dimension(dimension, strict=True).name
+        if name not in dataset.data:
+            return np.dtype('float') # Geometry dimension
+        return dataset.data[name].dtype
+
+
     @classmethod
     def has_holes(cls, dataset):
         from shapely.geometry import Polygon, MultiPolygon
@@ -195,7 +204,7 @@ class GeoPandasInterface(MultiInterface):
         return PandasInterface.select(dataset, selection_mask, **selection)
 
     @classmethod
-    def values(cls, dataset, dimension, expanded=True, flat=True):
+    def values(cls, dataset, dimension, expanded=True, flat=True, compute=True):
         dimension = dataset.get_dimension(dimension)
         geom_dims = dataset.interface.geom_dims(dataset)
         data = dataset.data

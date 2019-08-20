@@ -75,6 +75,13 @@ class GeomDictInterface(DictInterface):
                     if d.name not in dataset.data]) == 2
 
     @classmethod
+    def dtype(cls, dataset, dimension):
+        name = dataset.get_dimension(dimension, strict=True).name
+        if name not in dataset.data:
+            return np.dtype('float') # Geometry dimension
+        return super(GeomDictInterface, cls).dtype(dataset, dimension)
+
+    @classmethod
     def has_holes(cls, dataset):
         from shapely.geometry import Polygon, MultiPolygon
         geom = dataset.data['geometry']
@@ -129,7 +136,7 @@ class GeomDictInterface(DictInterface):
                 if d.name not in dataset.data]
 
     @classmethod
-    def values(cls, dataset, dim, expanded=True, flat=True):
+    def values(cls, dataset, dim, expanded=True, flat=True, compute=True):
         d = dataset.get_dimension(dim)
         geom_dims = cls.geom_dims(dataset)
         if d in geom_dims:

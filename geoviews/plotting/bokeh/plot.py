@@ -94,7 +94,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             self.handles['x_range'].bounds = self.projection.x_limits
             self.handles['y_range'].bounds = self.projection.y_limits
         if self.projection is GOOGLE_MERCATOR:
-            # Avoid zooming in beyond tile and axis resolution (causing JS errors) 
+            # Avoid zooming in beyond tile and axis resolution (causing JS errors)
             options = self._traverse_options(element, 'plot', ['default_span'], defaults=False)
             min_interval = options['default_span'][0] if options.get('default_span') else 5
             for r in ('x_range', 'y_range'):
@@ -126,29 +126,36 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         except:
             CustomJSHover = None
         if (not self.geographic or None in (hover, CustomJSHover) or
-            isinstance(hover.tooltips, basestring) or self.projection is not GOOGLE_MERCATOR
-            or hover.tooltips is None):
+            isinstance(hover.tooltips, basestring) or hover.tooltips is None):
             return
         element = self.current_frame
         xdim, ydim = [dimension_sanitizer(kd.name) for kd in element.kdims]
-        formatters, tooltips = {}, []
-        xhover = CustomJSHover(code=self._hover_code % 0)
-        yhover = CustomJSHover(code=self._hover_code % 1)
-        for name, formatter in hover.tooltips:
-            customjs = None
-            if formatter in ('@{%s}' % xdim, '$x'):
-                dim = xdim
-                customjs = xhover
-            elif formatter in ('@{%s}' % ydim, '$y'):
-                dim = ydim
-                customjs = yhover
-            if customjs:
-                key = formatter if formatter in ('$x', '$y') else dim
-                formatters[key] = customjs
-                formatter += '{custom}'
-            tooltips.append((name, formatter))
-        hover.tooltips = tooltips
-        hover.formatters = formatters
+
+        unproj_x = element.get_dimension('unproj_x')
+        unproj_y = element.get_dimension('unproj_y')
+        if unproj_x is not None and unproj_y is not None:
+            x_tooltip = (str(xdim), '@unproj_x')
+            y_tooltip = (str(ydim), '@unproj_y')
+            hover.tooltips = [x_tooltip, y_tooltip] + hover.tooltips[2:]
+        else:
+            formatters, tooltips = {}, []
+            xhover = CustomJSHover(code=self._hover_code % 0)
+            yhover = CustomJSHover(code=self._hover_code % 1)
+            for name, formatter in hover.tooltips:
+                customjs = None
+                if formatter in ('@{%s}' % xdim, '$x'):
+                    dim = xdim
+                    customjs = xhover
+                elif formatter in ('@{%s}' % ydim, '$y'):
+                    dim = ydim
+                    customjs = yhover
+                if customjs:
+                    key = formatter if formatter in ('$x', '$y') else dim
+                    formatters[key] = customjs
+                    formatter += '{custom}'
+                tooltips.append((name, formatter))
+            hover.tooltips = tooltips
+            hover.formatters = formatters
 
     def get_data(self, element, ranges, style):
         proj = self.projection

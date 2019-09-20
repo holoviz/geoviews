@@ -9,9 +9,10 @@ import holoviews as hv
 from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator
 from bokeh.models.tools import BoxZoomTool, WheelZoomTool
 from bokeh.models import MercatorTickFormatter, MercatorTicker
+from holoviews.core.dimension import Dimension
+from holoviews.core.util import dimension_sanitizer, basestring
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 from holoviews.plotting.bokeh.util import bokeh_version
-from holoviews.core.util import dimension_sanitizer, basestring
 
 from ...element import is_geographic, _Element, Shape
 from ..plot import ProjectionPlot
@@ -150,10 +151,17 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         hover.tooltips = tooltips
         hover.formatters = formatters
 
+    def _update_hover(self, element):
+        tooltips, hover_opts = self._hover_opts(element)
+        hover = self.handles['hover']
+        tooltips = [(ttp.pprint_label, '@{%s}' % dimension_sanitizer(ttp.name))
+                    if isinstance(ttp, Dimension) else ttp for ttp in tooltips]
+        tooltips = [(l, t+'{custom}' if t in hover.formatters else t) for l, t in tooltips]
+        self.handles['hover'].tooltips = tooltips
+
     def get_data(self, element, ranges, style):
-        proj = self.projection
         if self._project_operation and self.geographic:
-            element = self._project_operation(element, projection=proj)
+            element = self._project_operation(element, projection=self.projection)
         return super(GeoPlot, self).get_data(element, ranges, style)
 
 

@@ -70,7 +70,18 @@ class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
             self.aspect = 'equal'
 
     def _finalize_axis(self, *args, **kwargs):
-        ret = super(GeoOverlayPlot, self)._finalize_axis(*args, **kwargs)
+        gridlabels = self.geographic and isinstance(self.projection, (ccrs.PlateCarree, ccrs.Mercator))
+        if gridlabels:
+            xaxis, yaxis = self.xaxis, self.yaxis
+            self.xaxis = self.yaxis = None
+        try:
+            ret = super(GeoOverlayPlot, self)._finalize_axis(*args, **kwargs)
+        except Exception as e:
+            raise e
+        finally:
+            if gridlabels:
+                self.xaxis, self.yaxis = xaxis, yaxis
+
         axis = self.handles['axis']
         if self.show_grid:
             axis.grid()
@@ -144,13 +155,25 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 gl.yformatter = wrap_formatter(self.yformatter)
 
     def _finalize_axis(self, *args, **kwargs):
-        ret = super(GeoPlot, self)._finalize_axis(*args, **kwargs)
-        axis = self.handles['axis']
+        gridlabels = self.geographic and isinstance(self.projection, (ccrs.PlateCarree, ccrs.Mercator))
+        if gridlabels:
+            xaxis, yaxis = self.xaxis, self.yaxis
+            self.xaxis = self.yaxis = None
         try:
-            # Only PlateCarree and Mercator plots support grid labels.
-            gl = axis.gridlines(draw_labels=True)
-        except TypeError:
-            gl = axis.gridlines()
+            ret = super(GeoPlot, self)._finalize_axis(*args, **kwargs)
+        except Exception as e:
+            raise e
+        finally:
+            if gridlabels:
+                self.xaxis, self.yaxis = xaxis, yaxis
+
+        axis = self.handles['axis']
+        # Only PlateCarree and Mercator plots support grid labels.
+        if 'gridlines' in self.handles:
+            gl = self.handles['gridlines']
+        else:
+            self.handles['gridlines'] = gl = axis.gridlines(
+                draw_labels=gridlabels and self.zorder == 0)
         self._process_grid(gl)
 
         if self.global_extent:

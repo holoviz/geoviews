@@ -136,7 +136,7 @@ class GeomDictInterface(DictInterface):
                 if d.name not in dataset.data]
 
     @classmethod
-    def values(cls, dataset, dim, expanded=True, flat=True, compute=True):
+    def values(cls, dataset, dim, expanded=True, flat=True, compute=True, keep_index=False):
         d = dataset.get_dimension(dim)
         geom_dims = cls.geom_dims(dataset)
         if d in geom_dims:

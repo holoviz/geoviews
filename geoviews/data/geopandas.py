@@ -204,12 +204,13 @@ class GeoPandasInterface(MultiInterface):
         return PandasInterface.select(dataset, selection_mask, **selection)
 
     @classmethod
-    def values(cls, dataset, dimension, expanded=True, flat=True, compute=True):
+    def values(cls, dataset, dimension, expanded=True, flat=True, compute=True, keep_index=False):
         dimension = dataset.get_dimension(dimension)
         geom_dims = dataset.interface.geom_dims(dataset)
         data = dataset.data
         if dimension not in geom_dims and not expanded:
-            return data[dimension.name].values
+            data = data[dimension.name]
+            return data if keep_index else data.values
         elif not len(data):
             return np.array([])
 

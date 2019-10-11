@@ -1,4 +1,5 @@
 import logging
+import sys
 
 import param
 import numpy as np
@@ -204,6 +205,7 @@ class project_quadmesh(_project_operation):
         proj = self.p.projection
         irregular = any(element.interface.irregular(element, kd)
                         for kd in element.kdims)
+
         zs = element.dimension_values(2, flat=False)
         if irregular:
             X, Y = [np.asarray(element.interface.coords(
@@ -287,33 +289,39 @@ class project_image(_project_operation):
     def _process(self, img, key=None):
         if self.p.fast:
             return self._fast_process(img, key)
+
         proj = self.p.projection
-        x0, x1 = img.range(0)
-        y0, y1 = img.range(1)
-        xn, yn = img.interface.shape(img, gridded=True)[:2]
-        px0, py0, px1, py1 = project_extents((x0, y0, x1, y1),
-                                             img.crs, proj)
-        src_ext, trgt_ext = (x0, x1, y0, y1), (px0, px1, py0, py1)
-        if img.crs == proj and np.isclose(src_ext, trgt_ext).all():
+        x0, x1 = img.range(0, dimension_range=False)
+        y0, y1 = img.range(1, dimension_range=False)
+        yn, xn = img.interface.shape(img, gridded=True)[:2]
+        (px0, py0, px1, py1) = project_extents((x0, y0, x1, y1), img.crs, proj)
+
+        # Some bug in cartopy is causing zero values
+        eps = sys.float_info.epsilon
+        src_extent = tuple(e+v if e == 0 else e for e, v in
+                           zip((x0, x1, y0, y1), (eps, -eps, eps, -eps)))
+        tgt_extent = (px0, px1, py0, py1)
+
+        if img.crs == proj and np.isclose(src_extent, tgt_extent).all():
             return img
 
         arrays = []
         for vd in img.vdims:
             arr = img.dimension_values(vd, flat=False)
             if arr.size:
-                projected, extents = warp_array(arr, proj, img.crs, (xn, yn),
-                                                src_ext, trgt_ext)
+                projected, _ = warp_array(arr, proj, img.crs, (xn, yn),
+                                          src_extent, tgt_extent)
             else:
-                projected, extents = arr, trgt_ext
+                projected = arr
             arrays.append(projected)
 
         if xn == 0 or yn == 0:
-            return img.clone([], bounds=extents, crs=proj)
+            return img.clone([], bounds=tgt_extent, crs=proj)
 
-        xunit = ((extents[1]-extents[0])/float(xn))/2.
-        yunit = ((extents[3]-extents[2])/float(yn))/2.
-        xs = np.linspace(extents[0]+xunit, extents[1]-xunit, xn)
-        ys = np.linspace(extents[2]+yunit, extents[3]-yunit, yn)
+        xunit = ((tgt_extent[1]-tgt_extent[0])/float(xn))/2.
+        yunit = ((tgt_extent[3]-tgt_extent[2])/float(yn))/2.
+        xs = np.linspace(tgt_extent[0]+xunit, tgt_extent[1]-xunit, xn)
+        ys = np.linspace(tgt_extent[2]+yunit, tgt_extent[3]-yunit, yn)
         return img.clone((xs, ys)+tuple(arrays), bounds=None, kdims=img.kdims,
                          vdims=img.vdims, crs=proj, xdensity=None,
                          ydensity=None)

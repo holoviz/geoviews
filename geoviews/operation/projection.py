@@ -182,7 +182,6 @@ class project_points(_project_operation):
                              crs=self.p.projection, datatype=datatype)
 
 
-
 class project_graph(_project_operation):
 
     supported_types = [Graph]
@@ -194,7 +193,6 @@ class project_graph(_project_operation):
         if element._edgepaths:
             data = data + (project_path(element.edgepaths, projection=proj),)
         return element.clone(data, crs=proj)
-
 
 
 class project_quadmesh(_project_operation):
@@ -234,6 +232,7 @@ class project_quadmesh(_project_operation):
                            ccrs._WarpedRectangularProjection,
                            ccrs.InterruptedGoodeHomolosine,
                            ccrs.Mercator)
+
         if isinstance(proj, wrap_proj_types):
             with np.errstate(invalid='ignore'):
                 edge_lengths = np.hypot(
@@ -258,7 +257,7 @@ class project_quadmesh(_project_operation):
                 zs[mask] = np.NaN
 
         params = get_param_values(element)
-        return QuadMesh((PX, PY, zs), crs=self.p.projection, **params)
+        return element.clone((PX, PY, zs), crs=self.p.projection, **params)
 
 
 class project_image(_project_operation):

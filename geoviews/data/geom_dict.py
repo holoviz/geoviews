@@ -13,16 +13,19 @@ class GeomDictInterface(DictInterface):
 
     datatype = 'geom_dictionary'
 
+    _geom_column = 'geometry'
+
     @classmethod
     def applies(cls, obj):
         if 'shapely' not in sys.modules:
             return False
-        return ((isinstance(obj, cls.types) and 'geometry' in obj
-                 and isinstance(obj['geometry'], geom_types)) or
+        return ((isinstance(obj, cls.types) and cls._geom_column in obj
+                 and isinstance(obj[cls._geom_column], geom_types)) or
                 isinstance(obj, geom_types))
 
     @classmethod
     def init(cls, eltype, data, kdims, vdims):
+        name = cls.__name__
         odict_types = (OrderedDict, cyODict)
         if kdims is None:
             kdims = eltype.kdims
@@ -34,9 +37,9 @@ class GeomDictInterface(DictInterface):
             data = {'geometry': data}
 
         if not cls.applies(data):
-            raise ValueError("GeomDictInterface only handles dictionary types "
-                             "containing a 'geometry' key and shapely geometry "
-                             "value.")
+            raise ValueError("%s only handles dictionary types "
+                             "containing a %s key and shapely geometry "
+                             "value." % (name, cls._geom_column))
 
         unpacked = []
         for d, vals in data.items():
@@ -57,11 +60,11 @@ class GeomDictInterface(DictInterface):
                 if not isscalar(vals):
                     vals = np.asarray(vals)
                     if not vals.ndim == 1 and d in dimensions:
-                        raise ValueError('DictInterface expects data for each column to be flat.')
+                        raise ValueError('%s expects data for each column to be flat.' % name)
                 unpacked.append((d, vals))
 
         if not cls.expanded([vs for d, vs in unpacked if d in dimensions and not isscalar(vs)]):
-            raise ValueError('DictInterface expects data to be of uniform shape.')
+            raise ValueError('%s expects data to be of uniform shape.' % name)
         if isinstance(data, odict_types):
             data.update(unpacked)
         else:
@@ -75,6 +78,10 @@ class GeomDictInterface(DictInterface):
                     if d.name not in dataset.data]) == 2
 
     @classmethod
+    def get_geom(cls, data):
+        return data[cls._geom_column]
+
+    @classmethod
     def dtype(cls, dataset, dimension):
         name = dataset.get_dimension(dimension, strict=True).name
         if name not in dataset.data:
@@ -84,7 +91,7 @@ class GeomDictInterface(DictInterface):
     @classmethod
     def has_holes(cls, dataset):
         from shapely.geometry import Polygon, MultiPolygon
-        geom = dataset.data['geometry']
+        geom = cls.get_geom(dataset.data)
         if isinstance(geom, Polygon) and geom.interiors:
             return True
         elif isinstance(geom, MultiPolygon):
@@ -96,7 +103,7 @@ class GeomDictInterface(DictInterface):
     @classmethod
     def holes(cls, dataset):
         from shapely.geometry import Polygon, MultiPolygon
-        geom = dataset.data['geometry']
+        geom = cls.get_geom(dataset.data)
         if isinstance(geom, Polygon):
             return [[[geom_to_array(h) for h in geom.interiors]]]
         elif isinstance(geom, MultiPolygon):
@@ -116,7 +123,7 @@ class GeomDictInterface(DictInterface):
         dim = dataset.get_dimension(dim)
         geom_dims = cls.geom_dims(dataset)
         if dim in geom_dims:
-            bounds = dataset.data['geometry'].bounds
+            bounds = cls.get_geom(dataset.data).bounds
             if not bounds:
                 return np.nan, np.nan
             elif geom_dims.index(dim) == 0:
@@ -128,7 +135,7 @@ class GeomDictInterface(DictInterface):
 
     @classmethod
     def length(cls, dataset):
-        return geom_length(dataset.data['geometry'])
+        return geom_length(cls.get_geom(dataset.data))
 
     @classmethod
     def geom_dims(cls, dataset):
@@ -140,7 +147,7 @@ class GeomDictInterface(DictInterface):
         d = dataset.get_dimension(dim)
         geom_dims = cls.geom_dims(dataset)
         if d in geom_dims:
-            g = dataset.data['geometry']
+            g = cls.get_geom(dataset.data)
             if not g:
                 return np.array([])
             array = geom_to_array(g)

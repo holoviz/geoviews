@@ -404,7 +404,7 @@ def check_crs(crs):
     --------
     >>> p = check_crs('+units=m +init=epsg:26915')
     >>> p.srs
-    '+units=m +init=epsg:26915 '
+    '+proj=utm +zone=15 +datum=NAD83 +units=m +no_defs'
     >>> p = check_crs('wrong')
     >>> p is None
     True
@@ -452,7 +452,10 @@ def proj_to_cartopy(proj):
 
     proj = check_crs(proj)
 
-    if proj.is_latlong():
+    if hasattr(proj, 'crs'):
+        if proj.crs.is_geographic:
+            return ccrs.PlateCarree()
+    elif proj.is_latlong(): # pyproj < 2.0
         return ccrs.PlateCarree()
 
     srs = proj.srs

@@ -1,7 +1,4 @@
-import os
-
 from bokeh.core.properties import Instance, List, Dict, String, Any
-from bokeh.core.enums import Dimensions
 from bokeh.models import Tool, ColumnDataSource, PolyEditTool, PolyDrawTool
 
 

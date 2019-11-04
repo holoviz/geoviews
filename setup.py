@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys,os
+import sys,os,json
 import shutil
 from collections import defaultdict
 
@@ -12,12 +12,12 @@ from setuptools.command.sdist import sdist
 ###############
 ### autover ###
 
+
 def get_setup_version(reponame):
     """
     Helper to get the current version from either git describe or the
     .version file (if available).
     """
-    import json
     basepath = os.path.split(__file__)[0]
     version_file_path = os.path.join(basepath, reponame, '.version')
     try:
@@ -29,6 +29,7 @@ def get_setup_version(reponame):
     else:
         print("WARNING: param>=1.6.0 unavailable. If you are installing a package, this warning can safely be ignored. If you are creating a package or otherwise operating in a git repository, you should install param>=1.6.0.")
         return json.load(open(version_file_path, 'r'))['version_string']
+
 
 #######################
 ### bokeh extension ###

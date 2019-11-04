@@ -60,7 +60,8 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
           x = point_ds.data[pxkey][index]
         if (pykey)
           y = point_ds.data[pykey][index]
-        this._split_path(x, y)
+        if (ev.type != 'mousemove')
+          this._split_path(x, y)
         point_ds.selection_manager.clear()
       }
     }

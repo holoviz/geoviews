@@ -1,6 +1,7 @@
 include LICENSE
 include README.md
 include geoviews/.version
+include geoviews/models/*.ts
 
 graft examples
 global-exclude *.py[co]

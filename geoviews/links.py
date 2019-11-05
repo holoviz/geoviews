@@ -5,6 +5,7 @@ from holoviews.plotting.links import Link
 from holoviews.plotting.bokeh.callbacks import LinkCallback
 from holoviews.core.util import dimension_sanitizer
 
+
 class PointTableLink(Link):
     """
     Defines a Link between a Points type and a Table which will
@@ -22,11 +23,6 @@ class PointTableLink(Link):
         super(PointTableLink, self).__init__(source, target, **params)
 
 
-class PointTableSelectionLink(Link):
-
-    _requires_target = True
-
-
 class VertexTableLink(Link):
     """
     Defines a Link between a Path type and a Table which will
@@ -42,23 +38,6 @@ class VertexTableLink(Link):
             dimensions = [dimension_sanitizer(d.name) for d in target.dimensions()[:2]]
             params['vertex_columns'] = dimensions
         super(VertexTableLink, self).__init__(source, target, **params)
-
-
-class PointTableSelectionLinkCallback(LinkCallback):
-
-    source_model = 'selected'
-    target_model = 'selected'
-
-    on_source_changes = ['indices']
-    on_target_changes = ['indices']
-
-    source_code = """
-    target_selected.indices = source_selected.indices
-    """
-
-    target_code = """
-    source_selected.indices = target_selected.indices
-    """
 
 
 class PointTableLinkCallback(LinkCallback):
@@ -209,7 +188,7 @@ class VertexTableLinkCallback(LinkCallback):
         source_cds.data[col] = empty
       }
       source_cds.data[col][index] = target_cds.data[col]
-      for (const p of points) {
+      for (const p of points) {a
         for (let pindex = 0; pindex < xpaths.length; pindex++) {
           if (pindex == index) { continue }
           const xs = xpaths[pindex]
@@ -240,4 +219,3 @@ class VertexTableLinkCallback(LinkCallback):
     
 VertexTableLink.register_callback('bokeh', VertexTableLinkCallback)
 PointTableLink.register_callback('bokeh', PointTableLinkCallback)
-PointTableSelectionLink.register_callback('bokeh', PointTableSelectionLinkCallback)

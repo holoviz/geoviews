@@ -16,9 +16,9 @@ html_theme_options = {
     'logo':'logo.png',
     'logo': 'logo_horizontal.png',
     'include_logo_text': False,
-    'primary_color': '#33b392',
-    'primary_color_dark': '#35845E',
-    'secondary_color': '#4054b4',
+    'primary_color': '#35835E',
+    'primary_color_dark': '#256647',
+    'secondary_color': '#5f9df0',
     'second_nav': True,
 }
 

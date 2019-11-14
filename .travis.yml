@@ -29,7 +29,7 @@ stages:
   - name: conda_package
     if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
   - name: pip_package
-    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$    
+    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
 
 jobs:
   include:
@@ -70,7 +70,7 @@ jobs:
         - doit develop_install -c pyviz -c conda-forge -o doc
         - geoviews fetch-data --path=examples
         - bokeh sampledata
-        - nbsite generate-rst --org pyviz --project-name geoviews --offset 0
+        - nbsite generate-rst --org holoviz --project-name geoviews --offset 0
         - nbsite build --what=html --output=builtdocs
       deploy:
         - provider: pages

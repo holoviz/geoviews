@@ -3,19 +3,23 @@
 from nbsite.shared_conf import *
 
 project = u'GeoViews'
-authors = u'PyViz Developers'
-copyright = u'2018 ' + authors
+authors = u'HoloViz Developers'
+copyright = u'2018-2019 ' + authors
 description = 'Geographic visualizations for HoloViews.'
 
 import geoviews
 version = release = str(geoviews.__version__)
 
 html_static_path += ['_static']
-html_theme = 'sphinx_ioam_theme'
+html_theme = 'sphinx_holoviz_theme'
 html_theme_options = {
-    'logo':'geoviews-logo.png',
-    'favicon':'favicon.ico',
-    'custom_css':'geoviews.css'
+    'logo':'logo.png',
+    'logo': 'logo_horizontal.png',
+    'include_logo_text': False,
+    'primary_color': '#33b392',
+    'primary_color_dark': '#35845E',
+    'secondary_color': '#4054b4',
+    'second_nav': True,
 }
 
 _NAV =  (
@@ -29,7 +33,7 @@ nbsite_gallery_conf = {
     'galleries': {
         'gallery': {'title': 'Gallery'}
     },
-    'github_org': 'pyviz',
+    'github_org': 'holoviz',
     'github_project': 'geoviews'
 }
 
@@ -47,7 +51,7 @@ html_context.update({
     'LINKS': _NAV,
     'SOCIAL': (
         ('Gitter', '//gitter.im/pyviz/pyviz'),
-        ('Twitter', '//twitter.com/holoviews'),
-        ('Github', '//github.com/pyviz/geoviews'),
+        ('Twitter', '//twitter.com/holoviz_org'),
+        ('Github', '//github.com/holoviz/geoviews'),
     )
 })

@@ -7,12 +7,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:export-ydpi="96"
+   inkscape:export-xdpi="96"
+   inkscape:export-filename="/Users/jsignell/Desktop/geoviews-unstacked.png"
    inkscape:version="1.0beta1 (32d4812, 2019-09-19)"
    height="100"
-   width="396.17285"
-   sodipodi:docname="geoviews-unstacked.svg"
+   width="444.17102"
+   sodipodi:docname="logo_horizontal.svg"
    xml:space="preserve"
-   viewBox="0 0 396.17286 100"
+   viewBox="0 0 444.17103 100"
    y="0px"
    x="0px"
    id="Layer_2"
@@ -37,10 +40,10 @@
    fit-margin-top="0"
    inkscape:current-layer="Layer_2"
    inkscape:window-maximized="0"
-   inkscape:window-y="75"
-   inkscape:window-x="145"
+   inkscape:window-y="227"
+   inkscape:window-x="289"
    inkscape:cy="196.64632"
-   inkscape:cx="289.18492"
+   inkscape:cx="6.875178"
    inkscape:zoom="0.68187517"
    showgrid="false"
    id="namedview2374"
@@ -150,11 +153,11 @@
 
 
 <g
-   transform="translate(-124.9,-46.8)"
-   id="g2447">
+   id="g3429">
   <g
+     style="opacity:1;stop-opacity:1"
      id="g2343"
-     transform="matrix(0.50530571,0,0,0.50530571,61.787317,23.151693)">
+     transform="matrix(0.50530571,0,0,0.50530571,-63.112683,-23.648307)">
 	<g
    id="g2311">
 		<linearGradient
@@ -243,7 +246,7 @@
 
 		<polygon
    class="st1"
-   points="321.5,104.8 235.3,70.7 235.3,156 "
+   points="235.3,70.7 235.3,156 321.5,104.8 "
    id="polygon2309"
    style="fill:url(#SVGID_2_)" />
 
@@ -274,7 +277,7 @@
 
 		<polygon
    class="st2"
-   points="235.3,178.7 153.3,130.1 235.3,244.7 "
+   points="153.3,130.1 235.3,244.7 235.3,178.7 "
    id="polygon2318"
    style="fill:url(#SVGID_3_)" />
 
@@ -355,7 +358,7 @@
 
 		<polygon
    class="st5"
-   points="317.4,130.1 235.3,178.7 235.3,244.7 "
+   points="235.3,178.7 235.3,244.7 317.4,130.1 "
    id="polygon2339"
    style="fill:url(#SVGID_6_)" />
 
@@ -363,8 +366,9 @@
 
 </g>
   <g
+     style="opacity:1;stop-opacity:1"
      id="g2371"
-     transform="matrix(0.80874144,0,0,0.84054629,178.57086,-145.96227)">
+     transform="matrix(0.86723163,0,0,0.90133669,76.898425,-229.93557)">
 	<g
    id="g2357">
 		<path
@@ -387,7 +391,7 @@
 
 		<polygon
    class="st6"
-   points="246.5,296.3 246.5,296.3 252.7,282.8 238.8,282.8 223.6,319.6 208.5,282.8 194.1,282.8 206.5,309.6 206.4,309.5 223.4,346.9 "
+   points="246.5,296.3 252.7,282.8 238.8,282.8 223.6,319.6 208.5,282.8 194.1,282.8 206.5,309.6 206.4,309.5 223.4,346.9 "
    id="polygon2351" />
 
 		<g

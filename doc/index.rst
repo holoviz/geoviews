@@ -1,6 +1,6 @@
 .. raw:: html
 
-  <h1><img src="_static/logo_horizontal.png" width="125"></h1>
+  <h1><img src="_static/logo_horizontal.png" width="30%"></h1>
 
 
 **Geographic visualizations for HoloViews**

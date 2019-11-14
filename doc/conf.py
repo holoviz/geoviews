@@ -13,13 +13,14 @@ version = release = str(geoviews.__version__)
 html_static_path += ['_static']
 html_theme = 'sphinx_holoviz_theme'
 html_theme_options = {
-    'logo':'logo.png',
+    'favicon': 'favicon.ico',
     'logo': 'logo_horizontal.png',
     'include_logo_text': False,
     'primary_color': '#35835E',
     'primary_color_dark': '#256647',
     'secondary_color': '#5f9df0',
     'second_nav': True,
+    'footer': False,
 }
 
 _NAV =  (
@@ -39,8 +40,6 @@ nbsite_gallery_conf = {
 }
 
 extensions += ['nbsite.gallery']
-
-templates_path = ['_templates']
 
 html_context.update({
     'PROJECT': project,

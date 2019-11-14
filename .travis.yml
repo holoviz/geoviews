@@ -21,7 +21,9 @@ env:
 stages:
   - test
   - name: docs
-    if: tag =~ ^v(\d+|\.).*$
+    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$ OR tag = website
+  - name: docs_dev
+    if: tag =~ ^v(\d+|\.)*[a-z]\d*$ OR tag = website_dev OR commit_message =~ /^.*(website_dev).*$/
   - name: conda_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: pip_dev_package
@@ -62,7 +64,8 @@ jobs:
 
     ########## DOCS ##########
 
-    - <<: *default
+    - &doc_build
+      <<: *default
       stage: docs
       # not possible to run all examples to build website using only defaults (see setup.py)
       env: DESC="docs" HV_DOC_HTML='true'
@@ -79,9 +82,11 @@ jobs:
           local_dir: ./builtdocs
           repo: pyviz-dev/geoviews
           on:
-            tags: true
             all_branches: true
-            condition: $TRAVIS_TAG =~ [0-9]+[a-z][0-9]*$
+
+    - <<: *doc_build
+      stage: docs_dev
+      deploy:
         - provider: pages
           skip_cleanup: true
           github_token: $GITHUB_TOKEN
@@ -90,7 +95,6 @@ jobs:
           on:
             tags: true
             all_branches: true
-            condition: $TRAVIS_TAG =~ [0-9]+[^a-z][0-9]*$
 
     ########## END-USER PACKAGES ##########
 

@@ -21,9 +21,9 @@ env:
 stages:
   - test
   - name: docs
-    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$ OR tag = website
+    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$ OR tag = website AND NOT type = pull_request
   - name: docs_dev
-    if: tag =~ ^v(\d+|\.)*[a-z]\d*$ OR tag = website_dev OR commit_message =~ /^.*(website_dev).*$/
+    if: tag =~ ^v(\d+|\.)*[a-z]\d*$ OR tag = website_dev OR commit_message =~ /^.*(website_dev).*$/ AND NOT type = pull_request
   - name: conda_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
   - name: pip_dev_package
@@ -80,8 +80,9 @@ jobs:
           skip_cleanup: true
           github_token: $GITHUB_TOKEN
           local_dir: ./builtdocs
-          repo: pyviz-dev/geoviews
+          fqdn: geoviews.org
           on:
+            tags: true
             all_branches: true
 
     - <<: *doc_build
@@ -91,9 +92,8 @@ jobs:
           skip_cleanup: true
           github_token: $GITHUB_TOKEN
           local_dir: ./builtdocs
-          fqdn: geoviews.org
+          repo: pyviz-dev/geoviews
           on:
-            tags: true
             all_branches: true
 
     ########## END-USER PACKAGES ##########

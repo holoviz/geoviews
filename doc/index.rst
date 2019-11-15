@@ -1,6 +1,6 @@
-********
-GeoViews
-********
+.. raw:: html
+
+  <h1><img src="_static/logo_horizontal.png" width="30%"></h1>
 
 
 **Geographic visualizations for HoloViews**
@@ -78,7 +78,7 @@ or else have set up your system to be able to build them.
 
 
 Please feel free to report `issues
-<https://github.com/pyviz/geoviews/issues>`_ or `contribute code
+<https://github.com/holoviz/geoviews/issues>`_ or `contribute code
 <https://help.github.com/articles/about-pull-requests>`_. You are also
 welcome to chat with the developers on `gitter
 <https://gitter.im/pyviz/pyviz>`_.
@@ -90,5 +90,6 @@ welcome to chat with the developers on `gitter
    Introduction <self>
    User Guide <user_guide/index>
    Gallery <gallery/index>
-   Roadmap <Roadmap>
+   Topics <topics>
+   Github Source <https://github.com/holoviz/geoviews>
    About <about>

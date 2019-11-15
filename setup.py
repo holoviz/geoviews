@@ -161,7 +161,7 @@ extras_require={
     'examples_extra': _examples_extra,
     'doc': _examples_extra + [
         'nbsite >=0.6.1',
-        'sphinx_ioam_theme',
+        'sphinx_holoviz_theme',
         'selenium',
     ],
     'tests': [

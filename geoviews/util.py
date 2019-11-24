@@ -1,5 +1,6 @@
 from __future__ import division
 
+import sys
 import warnings
 
 import param
@@ -442,7 +443,6 @@ def proj_to_cartopy(proj):
     -------
     a cartopy.crs.Projection object
     """
-    import pyproj
     import cartopy.crs as ccrs
     try:
         from osgeo import osr

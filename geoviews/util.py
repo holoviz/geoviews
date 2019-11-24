@@ -442,7 +442,7 @@ def proj_to_cartopy(proj):
     -------
     a cartopy.crs.Projection object
     """
-
+    import pyproj
     import cartopy.crs as ccrs
     try:
         from osgeo import osr
@@ -521,6 +521,13 @@ def proj_to_cartopy(proj):
     return cl(globe=globe, **kw_proj)
 
 
+def is_pyproj(crs):
+    if 'pyproj' not in sys.modules:
+        return False
+    import pyproj
+    return isinstance(crs, pyproj.Proj)
+
+
 def process_crs(crs):
     """
     Parses cartopy CRS definitions defined in one of a few formats:
@@ -533,7 +540,6 @@ def process_crs(crs):
     try:
         import cartopy.crs as ccrs
         import geoviews as gv # noqa
-        import pyproj
     except:
         raise ImportError('Geographic projection support requires GeoViews and cartopy.')
 
@@ -547,7 +553,7 @@ def process_crs(crs):
             raise ValueError("Could not parse EPSG code as CRS, must be of the format 'EPSG: {code}.'")
     elif isinstance(crs, int):
         crs = ccrs.epsg(crs)
-    elif isinstance(crs, (basestring, pyproj.Proj)):
+    elif isinstance(crs, basestring) or is_pyproj(crs):
         try:
             crs = proj_to_cartopy(crs)
         except:

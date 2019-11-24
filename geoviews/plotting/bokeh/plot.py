@@ -29,7 +29,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                                         BoxZoomTool(match_aspect=True), 'reset'],
         doc="A list of plugin tools to use on the plot.")
 
-    fixed_bounds = param.Boolean(default=True, doc="""
+    fixed_bounds = param.Boolean(default=False, doc="""
         Whether to prevent zooming beyond the projections defined bounds.""")
 
     global_extent = param.Boolean(default=False, doc="""

@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 import sys
+import warnings
 
 import numpy as np
 
@@ -32,12 +33,12 @@ class GeoPandasInterface(MultiInterface):
         return isinstance(obj, GeoDataFrame)
 
     @classmethod
-    def geo_column(cls, dataset):
+    def geo_column(cls, data):
         from geopandas import GeoSeries
         col = 'geometry'
-        if col in dataset.data and isinstance(dataset.data[col], GeoSeries):
+        if col in data and isinstance(data[col], GeoSeries):
             return col
-        cols = [col for col in dataset.data.columns if isinstance(dataset.data[col], GeoSeries)]
+        cols = [c for c in data.columns if isinstance(data[c], GeoSeries)]
         if not cols:
             raise ValueError('No geometry column found in geopandas.DataFrame, '
                              'use the PandasInterface instead.')
@@ -48,6 +49,8 @@ class GeoPandasInterface(MultiInterface):
         import pandas as pd
         from geopandas import GeoDataFrame, GeoSeries
 
+        if isinstance(data, GeoSeries):
+            data = data.to_frame()
         if isinstance(data, list):
             if all(isinstance(d, geom_types) for d in data):
                 data = [{'geometry': d} for d in data]
@@ -56,7 +59,7 @@ class GeoPandasInterface(MultiInterface):
         elif not isinstance(data, GeoDataFrame):
             raise ValueError("GeoPandasInterface only support geopandas DataFrames.")
         elif 'geometry' not in data:
-            cls.geo_column(dataset)
+            cls.geo_column(data)
         if kdims is None:
             kdims = eltype.kdims
 
@@ -113,7 +116,7 @@ class GeoPandasInterface(MultiInterface):
     @classmethod
     def has_holes(cls, dataset):
         from shapely.geometry import Polygon, MultiPolygon
-        col = cls.geo_column(dataset)
+        col = cls.geo_column(dataset.data)
         for geom in dataset.data[col]:
             if isinstance(geom, Polygon) and geom.interiors:
                 return True
@@ -127,7 +130,7 @@ class GeoPandasInterface(MultiInterface):
     def holes(cls, dataset):
         from shapely.geometry import Polygon, MultiPolygon
         holes = []
-        col = cls.geo_column(dataset)
+        col = cls.geo_column(dataset.data)
         for geom in dataset.data[col]:
             if isinstance(geom, Polygon) and geom.interiors:
                 holes.append([[geom_to_array(h) for h in geom.interiors]])
@@ -187,7 +190,7 @@ class GeoPandasInterface(MultiInterface):
                              % (ydim, type(ysel).__name__))
 
         bounds = box(x0, y0, x1, y1)
-        col = cls.geo_column(dataset)
+        col = cls.geo_column(dataset.data)
         df = dataset.data.copy()
         df[col] = df[col].intersection(bounds)
         return df[df[col].area > 0]
@@ -232,7 +235,7 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def dimension_type(cls, dataset, dim):
-        col = cls.geo_column(dataset)
+        col = cls.geo_column(dataset.data)
         arr = geom_to_array(dataset.data[col].iloc[0])
         ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
         return ds.interface.dimension_type(ds, dim)
@@ -250,7 +253,7 @@ class GeoPandasInterface(MultiInterface):
         dim = dataset.get_dimension(dim)
         geom_dims = cls.geom_dims(dataset)
         if dim in geom_dims:
-            col = cls.geo_column(dataset)
+            col = cls.geo_column(dataset.data)
             idx = geom_dims.index(dim)
             bounds = dataset.data[col].bounds
             if idx == 0:
@@ -286,7 +289,7 @@ class GeoPandasInterface(MultiInterface):
     @classmethod
     def length(cls, dataset):
         from holoviews.core.data import PandasInterface
-        col = cls.geo_column(dataset)
+        col = cls.geo_column(dataset.data)
         length = sum([geom_length(g) for g in dataset.data[col]])
         geom_type = dataset.data.geom_type.iloc[0]
         if geom_type != 'Point':
@@ -336,7 +339,7 @@ class GeoPandasInterface(MultiInterface):
         if not len(dataset.data):
             return []
         row = dataset.data.iloc[0]
-        col = cls.geo_column(dataset)
+        col = cls.geo_column(dataset.data)
         arr = geom_to_array(row[col])
         d = {(xdim.name, ydim.name): arr}
         d.update({vd.name: row[vd.name] for vd in dataset.vdims})

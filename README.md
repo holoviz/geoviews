@@ -1,6 +1,6 @@
-<h1>
-<img src="/doc/_static/geoviews_horizontal.png" width="50" height="50">
-</h1>
+<img src="/doc/_static/logo_stacked.png" width="200"/><br>
+
+-----------------
 
 **Geographic visualizations for HoloViews.**
 

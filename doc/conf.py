@@ -21,6 +21,7 @@ html_theme_options = {
     'secondary_color': '#5f9df0',
     'second_nav': True,
     'footer': False,
+    'custom_css': 'custom.css',
 }
 
 _NAV =  (

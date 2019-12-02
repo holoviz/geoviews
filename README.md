@@ -114,4 +114,4 @@ or else have set up your system to be able to build them.
 GeoViews is part of the HoloViz ecosystem, which strives to make browser-based data
 visualization in Python easier to use, easier to learn, and more powerful.
 See [holoviz.org](http://holoviz.org) for related packages that you can use with GeoViews and
-[status.pyviz.org](http://status.pyviz.org) for the current status of projects.
+[status.holoviz.org](http://status.holoviz.org) for the current status of projects.

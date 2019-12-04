@@ -10,7 +10,7 @@
 | Coverage | [![Coverage Status](https://coveralls.io/repos/github/holoviz/geoviews/badge.svg?branch=master)](https://coveralls.io/github/holoviz/geoviews?branch=master) |
 | Latest dev release | [![Github tag](https://img.shields.io/github/tag/holoviz/geoviews.svg?label=tag&colorB=11ccbb)](https://github.com/holoviz/geoviews/tags) |
 | Latest release | [![Github release](https://img.shields.io/github/release/holoviz/geoviews.svg?label=tag&colorB=11ccbb)](https://github.com/holoviz/geoviews/releases) [![PyPI version](https://img.shields.io/pypi/v/geoviews.svg?colorB=cc77dd)](https://pypi.python.org/pypi/geoviews) [![geoviews version](https://img.shields.io/conda/v/pyviz/geoviews.svg?colorB=4488ff&style=flat)](https://anaconda.org/pyviz/geoviews) [![conda-forge version](https://img.shields.io/conda/v/conda-forge/geoviews.svg?label=conda%7Cconda-forge&colorB=4488ff)](https://anaconda.org/conda-forge/geoviews) [![defaults version](https://img.shields.io/conda/v/anaconda/geoviews.svg?label=conda%7Cdefaults&style=flat&colorB=4488ff)](https://anaconda.org/anaconda/geoviews) |
-| Docs | [![gh-pages](https://img.shields.io/github/last-commit/holoviz/geoviews/gh-pages.svg)](https://github.com/holoviz/geoviews/tree/gh-pages) [![site](https://img.shields.io/website-up-down-green-red/http/geoviews.pyviz.org.svg)](http://geoviews.pyviz.org) |
+| Docs | [![gh-pages](https://img.shields.io/github/last-commit/holoviz/geoviews/gh-pages.svg)](https://github.com/holoviz/geoviews/tree/gh-pages) [![site](https://img.shields.io/website-up-down-green-red/http/geoviews.org.svg)](http://geoviews.org) |
 
 
 ## What is it?
@@ -114,4 +114,4 @@ or else have set up your system to be able to build them.
 GeoViews is part of the HoloViz ecosystem, which strives to make browser-based data
 visualization in Python easier to use, easier to learn, and more powerful.
 See [holoviz.org](http://holoviz.org) for related packages that you can use with GeoViews and
-[status.pyviz.org](http://status.pyviz.org) for the current status of projects.
+[status.holoviz.org](http://status.holoviz.org) for the current status of projects.

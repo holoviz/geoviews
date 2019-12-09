@@ -140,6 +140,10 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 gl.xformatter = LONGITUDE_FORMATTER
             else:
                 gl.xformatter = wrap_formatter(self.xformatter)
+        else:
+            gl.xlabels_top = False
+            gl.xlabels_bottom = False
+
 
         if self.yaxis and self.yaxis != 'bare':
             yticksize = self._fontsize('yticks', common=False).get('fontsize')
@@ -159,6 +163,10 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 gl.yformatter = LATITUDE_FORMATTER
             else:
                 gl.yformatter = wrap_formatter(self.yformatter)
+        else:
+            gl.ylabels_left = False
+            gl.ylabels_right = False
+
 
     def _finalize_axis(self, *args, **kwargs):
         gridlabels = self.geographic and isinstance(self.projection, (ccrs.PlateCarree, ccrs.Mercator))

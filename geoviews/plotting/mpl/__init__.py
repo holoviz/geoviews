@@ -123,6 +123,9 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             gl.ylines = False
 
         if self.xaxis and self.xaxis != 'bare':
+            xticksize = self._fontsize('xticks', common=False).get('fontsize')
+            gl.xlabel_style = {'size': xticksize}
+
             if isinstance(self.xticks, list):
                 gl.xlocator = mticker.FixedLocator(self.xticks)
             elif isinstance(self.xticks, int):
@@ -139,6 +142,9 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 gl.xformatter = wrap_formatter(self.xformatter)
 
         if self.yaxis and self.yaxis != 'bare':
+            yticksize = self._fontsize('yticks', common=False).get('fontsize')
+            gl.ylabel_style = {'size': yticksize}
+
             if isinstance(self.yticks, list):
                 gl.ylocator = mticker.FixedLocator(self.yticks)
             elif isinstance(self.yticks, int):

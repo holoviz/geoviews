@@ -22,7 +22,7 @@ def get_point_table_link(self, source, target):
     else:
         return DataLink(source, target)
 
-PointAnnotator._point_table_link = get_point_table_link
+PointAnnotator._link_type = get_point_table_link
 
 def get_vertex_table_link(self, source, target):
     if hasattr(source, 'crs'):
@@ -47,7 +47,7 @@ def initialize_tools(plot, element):
         restore[0].sources.append(cds)
     if clear:
         clear[0].sources.append(cds)
-        
+
 Annotator._extra_opts['hooks'] = [initialize_tools]
 
 
@@ -59,28 +59,16 @@ class PathBreakingAnnotator(PathAnnotator):
     node_style = param.Dict(default={'fill_color': 'indianred', 'size': 6}, doc="""
          Styling to apply to the node vertices.""")
 
-    def _init_table(self):
+    def _init_stream(self):
         name = param_name(self.name)
         style_kwargs = dict(node_style=self.node_style, feature_style=self.feature_style)
         self._stream = PolyVertexDraw(
-            source=self.element, data={}, num_objects=self.num_objects,
+            source=self.plot, data={}, num_objects=self.num_objects,
             show_vertices=self.show_vertices, tooltip='%s Tool' % name,
             **style_kwargs
         )
         if self.edit_vertices:
             self._vertex_stream = PolyVertexEdit(
-                source=self.element, tooltip='%s Edit Tool' % name,
+                source=self.plot, tooltip='%s Edit Tool' % name,
                 **style_kwargs
             )
-
-        table_data = self._table_data()
-        self._table = Table(table_data, list(self.annotations), []).opts(**self.table_opts)
-        self._link = DataLink(self.element, self._table)
-        self._vertex_table = Table(
-            [], self.element.kdims, list(self.vertex_annotations)
-        ).opts(**self.table_opts)
-        self._vertex_link = VertexTableLink(self.element, self._vertex_table)
-        self._tables = [
-            ('%s' % name, self._table),
-            ('%s Vertices' % name, self._vertex_table)
-        ]

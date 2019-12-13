@@ -69,6 +69,7 @@ class GeomDictInterface(DictInterface):
 
         return data, {'kdims':kdims, 'vdims':vdims}, {}
 
+
     @classmethod
     def validate(cls, dataset, validate_vdims):
         assert len([d for d in dataset.kdims + dataset.vdims
@@ -80,6 +81,20 @@ class GeomDictInterface(DictInterface):
         if name not in dataset.data:
             return np.dtype('float') # Geometry dimension
         return super(GeomDictInterface, cls).dtype(dataset, dimension)
+
+
+    @classmethod
+    def geom_type(cls, dataset):
+        from shapely.geometry import (
+            Polygon, MultiPolygon, LineString, MultiLineString, LinearRing
+        )
+        geom = dataset.data['geometry']
+        if isinstance(geom, (Polygon, MultiPolygon)):
+            return 'Polygon'
+        elif isinstance(geom, (LineString, MultiLineString, LinearRing)):
+            return 'Line'
+        else:
+            return 'Point'
 
     @classmethod
     def has_holes(cls, dataset):

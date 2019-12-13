@@ -314,6 +314,7 @@ def geom_to_arr(geom):
         xy = getattr(geom, 'xy', None)
     except NotImplementedError:
         xy = None
+
     if xy is not None:
         return np.column_stack(xy)
     if hasattr(geom, 'array_interface'):
@@ -354,6 +355,14 @@ def geom_to_array(geom):
     elif geom.geom_type in ('LineString', 'LinearRing'):
         arr = geom_to_arr(geom)
         return arr
+    elif geom.geom_type == 'MultiPoint':
+        xs, ys = [], []
+        for g in geom:
+            if g.geom_type == 'Point':
+                xs.append(np.array(g.xy[0]))
+                ys.append(np.array(g.xy[1]))
+        xs = np.concatenate(xs) if xs else np.array([])
+        ys = np.concatenate(ys) if ys else np.array([])
     else:
         xs, ys = [], []
         for g in geom:

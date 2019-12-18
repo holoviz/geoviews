@@ -1,8 +1,10 @@
 """
 Test for the GeoPandasInterface
 """
+from unittest import SkipTest
 
 import numpy as np
+
 from shapely import geometry as sgeom
 
 try:
@@ -11,14 +13,14 @@ try:
 except:
     geopandas = None
 
-from geoviews.data import GeoPandasInterface
-
 from holoviews.core.util import pd
 from holoviews.core.data import Dataset
 from holoviews.core.data.interface import DataError
 from holoviews.element import Polygons, Path, Points
 from holoviews.element.comparison import ComparisonTestCase
 from holoviews.tests.core.data.testmultiinterface import GeomTests
+
+from geoviews.data import GeoPandasInterface
 
 from .testmultigeominterface import GeomInterfaceTest
 

@@ -1,8 +1,7 @@
 """
 Test for the MultiInterface and GeomDictInterface
 """
-
-import logging
+from unittest import SkipTest
 
 import numpy as np
 
@@ -12,7 +11,6 @@ from holoviews.core.util import pd
 from holoviews.element import Polygons, Path
 from holoviews.element.comparison import ComparisonTestCase
 from holoviews.tests.core.data.testmultiinterface import MultiBaseInterfaceTest
-from param import get_logger
 
 try:
     from shapely import geometry as sgeom

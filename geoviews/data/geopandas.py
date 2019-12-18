@@ -7,9 +7,10 @@ from collections import defaultdict
 
 import numpy as np
 
-from holoviews.core.util import isscalar, unique_iterator, unique_array
-from holoviews.core.data import Dataset, Interface, MultiInterface, PandasInterface
+from holoviews.core.util import isscalar, unique_iterator, unique_array, pd
+from holoviews.core.data import Dataset, Interface, MultiInterface
 from holoviews.core.data.interface  import DataError
+from holoviews.core.data import PandasInterface
 from holoviews.core.data.spatialpandas import get_value_array
 from holoviews.core.dimension import dimension_name
 from holoviews.element import Path
@@ -35,7 +36,7 @@ class GeoPandasInterface(MultiInterface):
         if not cls.loaded():
             return False
         from geopandas import GeoDataFrame, GeoSeries
-        return isinstance(obj, GeoDataFrame)
+        return isinstance(obj, (GeoDataFrame, GeoSeries))
 
     @classmethod
     def geo_column(cls, data):
@@ -300,7 +301,7 @@ class GeoPandasInterface(MultiInterface):
     def groupby(cls, dataset, dimensions, container_type, group_type, **kwargs):
         geo_dims = cls.geom_dims(dataset)
         if any(d in geo_dims for d in dimensions):
-            raise DataError("SpatialPandasInterface does not allow grouping "
+            raise DataError("GeoPandasInterface does not allow grouping "
                             "by geometry dimension.", cls)
 
         return PandasInterface.groupby(dataset, dimensions, container_type, group_type, **kwargs)
@@ -328,7 +329,6 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def length(cls, dataset):
-        from holoviews.core.data import PandasInterface
         geom_type = cls.geom_type(dataset)
         if geom_type != 'Point':
             return len(dataset.data)
@@ -340,7 +340,6 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def redim(cls, dataset, dimensions):
-        from holoviews.core.data import PandasInterface
         return PandasInterface.redim(dataset, dimensions)
 
     @classmethod
@@ -496,6 +495,17 @@ class GeoPandasInterface(MultiInterface):
 
 
 def get_geom_type(geom):
+    """Returns the HoloViews geometry type.
+
+    Args:
+        geom: A shapely geometry
+
+    Returns:
+        A string representing type of the geometry.
+    """
+    from shapely.geometry import (
+        Point, LineString, Polygon, Ring, MultiPoint, MultiPolygon, MultiLineString
+    )
     if isinstance(geom, (Point, MultiPoint)):
         return 'Point'
     elif isinstance(geom, (LineString, MultiLineString)):
@@ -504,6 +514,7 @@ def get_geom_type(geom):
         return 'Ring'
     elif isinstance(geom, (Polygon, MultiPolygon)):
         return 'Polygon'
+
 
 def to_geopandas(data, xdim, ydim, columns=[], geom='point'):
     """Converts list of dictionary format geometries to spatialpandas line geometries.
@@ -540,8 +551,19 @@ def to_geopandas(data, xdim, ydim, columns=[], geom='point'):
     return GeoDataFrame(converted, columns=['geometry']+columns)
 
 
-
 def from_multi(eltype, data, kdims, vdims):
+    """Converts list formats into geopandas.GeoDataFrame.
+
+    Args:
+        eltype: Element type to convert
+        data: The original data
+        kdims: The declared key dimensions
+        vdims: The declared value dimensions
+
+    Returns:
+        A GeoDataFrame containing the data in the list based format.
+    """
+
     from geopandas import GeoDataFrame
 
     new_data = []

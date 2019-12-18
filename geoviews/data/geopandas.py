@@ -484,7 +484,7 @@ class GeoPandasInterface(MultiInterface):
                 obj = ds.array(**kwargs)
             elif datatype == 'dataframe':
                 obj = ds.dframe(**kwargs)
-            elif datatype == 'columns':
+            elif datatype in ('columns', 'dictionary'):
                 d['geom_type'] = gt
                 obj = d
             elif datatype is None:

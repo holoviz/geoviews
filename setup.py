@@ -163,6 +163,7 @@ extras_require={
         'nbsite >=0.6.1',
         'sphinx_holoviz_theme',
         'selenium',
+        'proj<6.2.1'
     ],
     'tests': [
         'coveralls',

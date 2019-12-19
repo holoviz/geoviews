@@ -200,6 +200,9 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
     if interface == 'geodataframe':
         return [row.to_dict() for _, row in polygons.data.iterrows()]
     elif interface == 'geom_dictionary':
+        return [polygons.data]
+    elif interface == 'multitabular' and all(isinstance(p, dict) and 'geometry' in p
+                                             for p in polygons.data):
         return polygons.data
 
     polys = []
@@ -263,6 +266,9 @@ def path_to_geom_dicts(path, skip_invalid=True):
     if interface == 'geodataframe':
         return [row.to_dict() for _, row in path.data.iterrows()]
     elif interface == 'geom_dictionary':
+        return [path.data]
+    elif interface == 'multitabular' and all(isinstance(p, dict) and 'geometry' in p
+                                             for p in path.data):
         return path.data
 
     geoms = []

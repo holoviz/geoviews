@@ -61,6 +61,7 @@ jobs:
     - <<: *default
       env: DESC="py2 flakes" PYTHON_VERSION=2.7
       script: doit test_flakes
+      after_success: true # don't upload coverage
 
     ########## DOCS ##########
 
@@ -68,7 +69,7 @@ jobs:
       <<: *default
       stage: docs
       # not possible to run all examples to build website using only defaults (see setup.py)
-      env: DESC="docs" HV_DOC_HTML='true' CHANS_DOC="-c pyviz -c conda-forge" "-c pyviz/label/dev -c conda-forge"
+      env: DESC="docs" HV_DOC_HTML='true' CHANS_DOC="-c pyviz -c conda-forge"
       script:
         - doit develop_install $CHANS_DOC -o doc
         - geoviews fetch-data --path=examples
@@ -84,6 +85,7 @@ jobs:
           on:
             tags: true
             all_branches: true
+      after_success: true # don't upload coverage
 
     - <<: *doc_build
       stage: docs_dev
@@ -111,6 +113,7 @@ jobs:
         - doit package_upload --token=$CONDA_UPLOAD_TOKEN $LABELS --recipe=recommended
       after_failure:
         - sleep 10
+      after_success: true # don't upload coverage
 
     - <<: *conda_pkg
       stage: conda_package
@@ -128,6 +131,7 @@ jobs:
         - doit pip_on_conda
         - doit ecosystem=pip package_build --test-python=py37 --test-group=unit
       script: doit ecosystem=pip package_upload -u $PYPIUSER -p $PYPIPASS --pypi=$PYPI
+      after_success: true # don't upload coverage
 
     - <<: *pip_pkg
       stage: pip_package

@@ -3,14 +3,20 @@ from __future__ import absolute_import
 import sys
 import warnings
 
+from collections import defaultdict
+
 import numpy as np
 
+from holoviews.core.util import isscalar, unique_iterator, unique_array, pd
 from holoviews.core.data import Dataset, Interface, MultiInterface
 from holoviews.core.data.interface  import DataError
+from holoviews.core.data import PandasInterface
+from holoviews.core.data.spatialpandas import get_value_array
 from holoviews.core.dimension import dimension_name
 from holoviews.element import Path
 
 from ..util import geom_to_array, geom_types, geom_length
+from .geom_dict import geom_from_dict
 
 
 class GeoPandasInterface(MultiInterface):
@@ -29,8 +35,8 @@ class GeoPandasInterface(MultiInterface):
     def applies(cls, obj):
         if not cls.loaded():
             return False
-        from geopandas import GeoDataFrame
-        return isinstance(obj, GeoDataFrame)
+        from geopandas import GeoDataFrame, GeoSeries
+        return isinstance(obj, (GeoDataFrame, GeoSeries))
 
     @classmethod
     def geo_column(cls, data):
@@ -39,32 +45,38 @@ class GeoPandasInterface(MultiInterface):
         if col in data and isinstance(data[col], GeoSeries):
             return col
         cols = [c for c in data.columns if isinstance(data[c], GeoSeries)]
-        if not cols:
+        if not cols and len(data):
             raise ValueError('No geometry column found in geopandas.DataFrame, '
                              'use the PandasInterface instead.')
-        return cols[0]
+        return cols[0] if cols else None
 
     @classmethod
     def init(cls, eltype, data, kdims, vdims):
         import pandas as pd
         from geopandas import GeoDataFrame, GeoSeries
 
-        if isinstance(data, GeoSeries):
-            data = data.to_frame()
-        if isinstance(data, list):
-            if all(isinstance(d, geom_types) for d in data):
-                data = [{'geometry': d} for d in data]
-            if all('geometry' in d and isinstance(d['geometry'], geom_types) for d in data):
-                data = GeoDataFrame(data)
-        elif not isinstance(data, GeoDataFrame):
-            raise ValueError("GeoPandasInterface only support geopandas DataFrames.")
-        elif 'geometry' not in data:
-            cls.geo_column(data)
         if kdims is None:
             kdims = eltype.kdims
 
         if vdims is None:
             vdims = eltype.vdims
+
+        if isinstance(data, GeoSeries):
+            data = data.to_frame()
+
+        if isinstance(data, list):
+            if all(isinstance(d, geom_types) for d in data):
+                data = [{'geometry': d} for d in data]
+            if all(isinstance(d, dict) and 'geometry' in d and isinstance(d['geometry'], geom_types)
+                   for d in data):
+                data = GeoDataFrame(data)
+            if not isinstance(data, GeoDataFrame):
+                data = from_multi(eltype, data, kdims, vdims)
+        elif not isinstance(data, GeoDataFrame):
+            raise ValueError("GeoPandasInterface only support geopandas "
+                             "DataFrames not %s." % type(data))
+        elif 'geometry' not in data:
+            cls.geo_column(data)
 
         index_names = data.index.names if isinstance(data, pd.DataFrame) else [data.index.name]
         if index_names == [None]:
@@ -79,7 +91,10 @@ class GeoPandasInterface(MultiInterface):
                 data = data.reset_index()
                 break
 
-        shp_types = {gt[5:] if 'Multi' in gt else gt for gt in data.geom_type}
+        try:
+            shp_types = {gt[5:] if 'Multi' in gt else gt for gt in data.geom_type}
+        except:
+            shp_types = []
         if len(shp_types) > 1:
             raise DataError('The GeopandasInterface can only read dataframes which '
                             'share a common geometry type, found %s types.' % shp_types,
@@ -104,14 +119,12 @@ class GeoPandasInterface(MultiInterface):
                              "dimensions, the following dimensions were "
                              "not found: %s" % repr(not_found), cls)
 
-
     @classmethod
     def dtype(cls, dataset, dimension):
         name = dataset.get_dimension(dimension, strict=True).name
         if name not in dataset.data:
             return np.dtype('float') # Geometry dimension
         return dataset.data[name].dtype
-
 
     @classmethod
     def has_holes(cls, dataset):
@@ -139,7 +152,6 @@ class GeoPandasInterface(MultiInterface):
             else:
                 holes.append([[]])
         return holes
-
 
     @classmethod
     def select(cls, dataset, selection_mask=None, **selection):
@@ -241,12 +253,19 @@ class GeoPandasInterface(MultiInterface):
         return ds.interface.dimension_type(ds, dim)
 
     @classmethod
-    def isscalar(cls, dataset, dim):
+    def isscalar(cls, dataset, dim, per_geom=False):
         """
         Tests if dimension is scalar in each subpath.
         """
-        idx = dataset.get_dimension_index(dim)
-        return idx not in [0, 1]
+        dim = dataset.get_dimension(dim)
+        geom_dims = cls.geom_dims(dataset)
+        if dim in geom_dims:
+            return False
+        elif per_geom:
+            return all(isscalar(v) or len(list(unique_array(v))) == 1
+                       for v in dataset.data[dim.name])
+        dim = dataset.get_dimension(dim)
+        return len(dataset.data[dim.name].unique()) == 1
 
     @classmethod
     def range(cls, dataset, dim):
@@ -269,9 +288,23 @@ class GeoPandasInterface(MultiInterface):
         raise NotImplementedError
 
     @classmethod
-    def groupby(cls, columns, dimensions, container_type, group_type, **kwargs):
-        from holoviews.core.data import PandasInterface
-        return PandasInterface.groupby(columns, dimensions, container_type, group_type, **kwargs)
+    def add_dimension(cls, dataset, dimension, dim_pos, values, vdim):
+        data = dataset.data.copy()
+        geom_col = cls.geo_column(dataset.data)
+        if dim_pos >= list(data.columns).index(geom_col):
+            dim_pos -= 1
+        if dimension.name not in data:
+            data.insert(dim_pos, dimension.name, values)
+        return data
+
+    @classmethod
+    def groupby(cls, dataset, dimensions, container_type, group_type, **kwargs):
+        geo_dims = cls.geom_dims(dataset)
+        if any(d in geo_dims for d in dimensions):
+            raise DataError("GeoPandasInterface does not allow grouping "
+                            "by geometry dimension.", cls)
+
+        return PandasInterface.groupby(dataset, dimensions, container_type, group_type, **kwargs)
 
     @classmethod
     def reindex(cls, dataset, kdims=None, vdims=None):
@@ -281,20 +314,25 @@ class GeoPandasInterface(MultiInterface):
     def sample(cls, columns, samples=[]):
         raise NotImplementedError
 
+
+    @classmethod
+    def sort(cls, dataset, by=[], reverse=False):
+        geo_dims = cls.geom_dims(dataset)
+        if any(d in geo_dims for d in by):
+            raise DataError("SpatialPandasInterface does not allow sorting "
+                            "by geometry dimension.", cls)
+        return PandasInterface.sort(dataset, by, reverse)
+
     @classmethod
     def shape(cls, dataset):
-        from holoviews.core.data import PandasInterface
-        return PandasInterface.shape(dataset)
+        return (cls.length(dataset), len(dataset.dimensions()))
 
     @classmethod
     def length(cls, dataset):
-        from holoviews.core.data import PandasInterface
-        col = cls.geo_column(dataset.data)
-        length = sum([geom_length(g) for g in dataset.data[col]])
-        geom_type = dataset.data.geom_type.iloc[0]
+        geom_type = cls.geom_type(dataset)
         if geom_type != 'Point':
-            length += (PandasInterface.length(dataset)-1)
-        return length
+            return len(dataset.data)
+        return sum([geom_length(g) for g in dataset.data.geometry])
 
     @classmethod
     def nonzero(cls, dataset):
@@ -302,7 +340,6 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def redim(cls, dataset, dimensions):
-        from holoviews.core.data import PandasInterface
         return PandasInterface.redim(dataset, dimensions)
 
     @classmethod
@@ -310,11 +347,28 @@ class GeoPandasInterface(MultiInterface):
         dimension = dataset.get_dimension(dimension)
         geom_dims = dataset.interface.geom_dims(dataset)
         data = dataset.data
-        if dimension not in geom_dims and not expanded:
-            data = data[dimension.name]
-            return data if keep_index else data.values
-        elif not len(data):
-            return np.array([])
+        isgeom = (dimension in geom_dims)
+        geom_col = cls.geo_column(dataset.data)
+        is_points = cls.geom_type(dataset) == 'Point'
+        if not len(data):
+            dtype = float if isgeom else dataset.data[dimension.name].dtype
+            return np.array([], dtype=dtype)
+
+        col = cls.geo_column(dataset.data)
+        if isgeom and keep_index:
+            return data[col]
+        elif not isgeom:
+            return get_value_array(data, dimension, expanded, keep_index,
+                                   geom_col, is_points, geom_length)
+            column = data[dimension.name]
+            if not expanded or keep_index or not len(data):
+                return column if keep_index else column.values
+            else:
+                arrays = []
+                for i, geom in enumerate(data[col]):
+                    length = geom_length(geom)
+                    arrays.append(np.full(length, column.iloc[i]))
+                return np.concatenate(arrays) if len(arrays) > 1 else arrays[0]
 
         values = []
         geom_type = data.geom_type.iloc[0]
@@ -322,15 +376,84 @@ class GeoPandasInterface(MultiInterface):
         for i, row in data.iterrows():
             ds.data = row.to_dict()
             values.append(ds.interface.values(ds, dimension))
-            if geom_type != 'Point':
+            if 'Point' not in geom_type and expanded:
                 values.append([np.NaN])
-        values = values if geom_type == 'Point' else values[:-1]
+        values = values if 'Point' in geom_type or not expanded else values[:-1]
         if len(values) == 1:
             return values[0]
         elif not values:
             return np.array([])
+        elif not expanded:
+            array = np.empty(len(values), dtype=object)
+            array[:] = values
+            return array
         else:
             return np.concatenate(values)
+
+    @classmethod
+    def iloc(cls, dataset, index):
+        from geopandas import GeoSeries
+        from shapely.geometry import MultiPoint
+        rows, cols = index
+        geom_dims = cls.geom_dims(dataset)
+        geom_col = cls.geo_column(dataset.data)
+        scalar = False
+        columns = list(dataset.data.columns)
+        if isinstance(cols, slice):
+            cols = [d.name for d in dataset.dimensions()][cols]
+        elif np.isscalar(cols):
+            scalar = np.isscalar(rows)
+            cols = [dataset.get_dimension(cols).name]
+        else:
+            cols = [dataset.get_dimension(d).name for d in index[1]]
+        if not all(d in cols for d in geom_dims):
+            raise DataError("Cannot index a dimension which is part of the "
+                            "geometry column of a spatialpandas DataFrame.", cls)
+        cols = list(unique_iterator([
+            columns.index(geom_col) if c in geom_dims else columns.index(c) for c in cols
+        ]))
+
+        geom_type = dataset.data[geom_col].geom_type.iloc[0]
+        if geom_type != 'MultiPoint':
+            if scalar:
+                return dataset.data.iloc[rows[0], cols[0]]
+            elif isscalar(rows):
+                rows = [rows]
+            return dataset.data.iloc[rows, cols]
+
+        geoms = dataset.data[geom_col]
+        count = 0
+        new_geoms, indexes = [], []
+        for i, geom in enumerate(geoms):
+            length = len(geom)
+            if np.isscalar(rows):
+                if count <= rows < (count+length):
+                    new_geoms.append(geom[rows-count])
+                    indexes.append(i)
+                    break
+            elif isinstance(rows, slice):
+                if rows.start is not None and rows.start > (count+length):
+                    continue
+                elif rows.stop is not None and rows.stop < count:
+                    break
+                start = None if rows.start is None else max(rows.start - count, 0)
+                stop = None if rows.stop is None else min(rows.stop - count, length)
+                if rows.step is not None:
+                    dataset.param.warning(".iloc step slicing currently not supported for"
+                                          "the multi-tabular data format.")
+                indexes.append(i)
+                new_geoms.append(geom[start:stop])
+            elif isinstance(rows, (list, set)):
+                sub_rows = [(r-count) for r in rows if count <= r < (count+length)]
+                if not sub_rows:
+                    continue
+                indexes.append(i)
+                new_geoms.append(MultiPoint([geom[r] for r in sub_rows]))
+            count += length
+
+        new = dataset.data.iloc[indexes].copy()
+        new[geom_col] = GeoSeries(new_geoms)
+        return new
 
     @classmethod
     def split(cls, dataset, start, end, datatype, **kwargs):
@@ -343,22 +466,26 @@ class GeoPandasInterface(MultiInterface):
         arr = geom_to_array(row[col])
         d = {(xdim.name, ydim.name): arr}
         d.update({vd.name: row[vd.name] for vd in dataset.vdims})
-        ds = dataset.clone(d, datatype=['dictionary'])
+        geom_type = cls.geom_type(dataset)
+        ds = dataset.clone([d], datatype=['multitabular'])
         for i, row in dataset.data.iterrows():
             if datatype == 'geom':
                 objs.append(row[col])
                 continue
             geom = row[col]
+            gt = geom_type or get_geom_type(geom)
+
             arr = geom_to_array(geom)
             d = {xdim.name: arr[:, 0], ydim.name: arr[:, 1]}
             d.update({vd.name: row[vd.name] for vd in dataset.vdims})
-            ds.data = d
+            ds.data = [d]
             if datatype == 'array':
                 obj = ds.array(**kwargs)
             elif datatype == 'dataframe':
                 obj = ds.dframe(**kwargs)
-            elif datatype == 'columns':
-                obj = ds.columns(**kwargs)
+            elif datatype in ('columns', 'dictionary'):
+                d['geom_type'] = gt
+                obj = d
             elif datatype is None:
                 obj = ds.clone()
             else:
@@ -367,6 +494,114 @@ class GeoPandasInterface(MultiInterface):
         return objs
 
 
+def get_geom_type(geom):
+    """Returns the HoloViews geometry type.
+
+    Args:
+        geom: A shapely geometry
+
+    Returns:
+        A string representing type of the geometry.
+    """
+    from shapely.geometry import (
+        Point, LineString, Polygon, Ring, MultiPoint, MultiPolygon, MultiLineString
+    )
+    if isinstance(geom, (Point, MultiPoint)):
+        return 'Point'
+    elif isinstance(geom, (LineString, MultiLineString)):
+        return 'Line'
+    elif isinstance(geom, Ring):
+        return 'Ring'
+    elif isinstance(geom, (Polygon, MultiPolygon)):
+        return 'Polygon'
+
+
+def to_geopandas(data, xdim, ydim, columns=[], geom='point'):
+    """Converts list of dictionary format geometries to spatialpandas line geometries.
+
+    Args:
+        data: List of dictionaries representing individual geometries
+        xdim: Name of x-coordinates column
+        ydim: Name of y-coordinates column
+        ring: Whether the data represents a closed ring
+
+    Returns:
+        A spatialpandas.GeoDataFrame version of the data
+    """
+    from geopandas import GeoDataFrame
+    from shapely.geometry import (
+        Point, LineString, Polygon, MultiPoint, MultiPolygon, MultiLineString
+    )
+    poly = any('holes' in d for d in data) or geom == 'Polygon'
+    if poly:
+        single_type, multi_type = Polygon, MultiPolygon
+    elif geom == 'Line':
+        single_type, multi_type = LineString, MultiLineString
+    else:
+        single_type, multi_type = Point, MultiPoint
+
+    converted = defaultdict(list)
+    for geom_dict in data:
+        geom_dict = dict(geom_dict)
+        geom = geom_from_dict(geom_dict, xdim, ydim, single_type, multi_type)
+        for c, v in geom_dict.items():
+            converted[c].append(v)
+        converted['geometry'].append(geom)
+
+    return GeoDataFrame(converted, columns=['geometry']+columns)
+
+
+def from_multi(eltype, data, kdims, vdims):
+    """Converts list formats into geopandas.GeoDataFrame.
+
+    Args:
+        eltype: Element type to convert
+        data: The original data
+        kdims: The declared key dimensions
+        vdims: The declared value dimensions
+
+    Returns:
+        A GeoDataFrame containing the data in the list based format.
+    """
+
+    from geopandas import GeoDataFrame
+
+    new_data = []
+    types = []
+    xname, yname = (kd.name for kd in kdims[:2])
+    for d in data:
+        types.append(type(d))
+        if isinstance(d, dict):
+            d = {k: v if isscalar(v) else np.asarray(v) for k, v in d.items()}
+            new_data.append(d)
+            continue
+        new_el = eltype(d, kdims, vdims)
+        if new_el.interface is GeoPandasInterface:
+            types[-1] = GeoDataFrame
+            new_data.append(new_el.data)
+            continue
+        new_dict = {}
+        for d in new_el.dimensions():
+            if d in (xname, yname):
+                scalar = False
+            else:
+                scalar = new_el.interface.isscalar(new_el, d)
+            vals = new_el.dimension_values(d, not scalar)
+            new_dict[d.name] = vals[0] if scalar else vals
+        new_data.append(new_dict)
+    if len(set(types)) > 1:
+        raise DataError('Mixed types not supported')
+    if new_data and types[0] is GeoDataFrame:
+        data = pd.concat(new_data)
+    else:
+        columns = [d.name for d in kdims+vdims if d not in (xname, yname)]
+        geom = GeoPandasInterface.geom_type(eltype)
+        if not len(data):
+            return GeoDataFrame([], columns=['geometry']+columns)
+        data = to_geopandas(new_data, xname, yname, columns, geom)
+    return data
+
+
 Interface.register(GeoPandasInterface)
-Dataset.datatype = ['geodataframe']+Dataset.datatype
-Path.datatype = ['geodataframe']+Path.datatype
+Dataset.datatype = Dataset.datatype+['geodataframe']
+Path.datatype = Path.datatype+['geodataframe']

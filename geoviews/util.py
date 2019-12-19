@@ -314,15 +314,17 @@ def geom_to_arr(geom):
         xy = getattr(geom, 'xy', None)
     except NotImplementedError:
         xy = None
+
     if xy is not None:
         return np.column_stack(xy)
     if hasattr(geom, 'array_interface'):
         data = geom.array_interface()
         return np.array(data['data']).reshape(data['shape'])[:, :2]
     arr = geom.array_interface_base['data']
+
     if (len(arr) % 2) != 0:
         arr = arr[:-1]
-    return np.array(arr).reshape(int(len(arr)/2), 2)
+    return np.array(arr).reshape(-1, 2)
 
 
 def geom_length(geom):
@@ -336,9 +338,13 @@ def geom_length(geom):
     if not geom.geom_type.startswith('Multi') and hasattr(geom, 'array_interface_base'):
         return len(geom.array_interface_base['data'])//2
     else:
+        glength = len(geom)
         length = 0
-        for g in geom:
+        for i, g in enumerate(geom):
             length += geom_length(g)
+            if 'Point' not in geom.geom_type and (i+1 != glength):
+                length += 1
+
         return length
 
 
@@ -352,18 +358,19 @@ def geom_to_array(geom):
             xs = np.array(geom.exterior.coords.xy[0])
             ys = np.array(geom.exterior.coords.xy[1])
     elif geom.geom_type in ('LineString', 'LinearRing'):
-        arr = geom_to_arr(geom)
-        return arr
-    else:
-        xs, ys = [], []
+        return geom_to_arr(geom)
+    elif geom.geom_type == 'MultiPoint':
+        arrays = []
         for g in geom:
-            arr = geom_to_arr(g)
-            xs.append(arr[:, 0])
-            ys.append(arr[:, 1])
-            xs.append([np.NaN])
-            ys.append([np.NaN])
-        xs = np.concatenate(xs[:-1]) if xs else np.array([])
-        ys = np.concatenate(ys[:-1]) if ys else np.array([])
+            if g.geom_type == 'Point':
+                arrays.append(np.array(g.xy).T)
+        return np.concatenate(arrays) if arrays else np.array([])
+    else:
+        arrays = []
+        for g in geom:
+            arrays.append(geom_to_arr(g))
+            arrays.append(np.array([[np.nan, np.nan]]))
+        return np.concatenate(arrays[:-1]) if arrays else np.array([])
     return np.column_stack([xs, ys])
 
 

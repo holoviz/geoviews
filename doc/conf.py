@@ -47,11 +47,13 @@ html_context.update({
     'DESCRIPTION': description,
     'AUTHOR': authors,
     'WEBSITE_SERVER': 'https://geoviews.org',
+    'GOOGLE_SEARCH_ID': '017396756996884923145:nekoxnd8jcz',
+    'GOOGLE_ANALYTICS_UA': 'UA-154795830-3',
     'VERSION': version,
     'NAV': _NAV,
     'LINKS': _NAV,
     'SOCIAL': (
-        ('Gitter', '//gitter.im/pyviz/pyviz'),
+        ('Discourse', '//discourse.holoviz.org'),
         ('Twitter', '//twitter.com/holoviz_org'),
         ('Github', '//github.com/holoviz/geoviews'),
     )

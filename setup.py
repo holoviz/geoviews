@@ -148,6 +148,9 @@ _recommended = [
     'xarray',
 ]
 
+if sys.version_info.major > 2:
+    _recommended.append('spatialpandas')
+
 # can only currently run all examples with packages from conda-forge
 _examples_extra = _recommended + [
     'iris',

@@ -17,6 +17,11 @@ try:
 except:
     sgeom = None
 
+try:
+    import spatialpandas
+except:
+    spatialpandas = None
+
 from geoviews.data.geom_dict import GeomDictInterface
 
 
@@ -129,6 +134,11 @@ class SpatialPandasGeomInterfaceTest(GeomInterfaceTest):
     datatype = 'spatialpandas'
 
     __test__ = True
+
+    def setUp(self):
+        if spatialpandas is None:
+            raise SkipTest('SpatialPandasInterface requires spatialpandas, skipping tests')
+        super(SpatialPandasGeomInterfaceTest, self).setUp()
 
 
 class MultiGeomDictInterfaceTest(MultiBaseInterfaceTest):

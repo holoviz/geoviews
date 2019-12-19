@@ -53,7 +53,9 @@ class project_path(_project_operation):
 
     def _process_element(self, element):
         if not bool(element):
-            return element.clone(crs=self.p.projection)
+            return element.clone(
+                crs=self.p.projection, dataset=None, pipeline=None
+            )
 
         crs = element.crs
         proj = self.p.projection
@@ -123,7 +125,9 @@ class project_path(_project_operation):
             x, y = element.kdims
             item = element.data[0] if element.data else None
             if item is None or (isinstance(item, dict) and 'geometry' in item):
-                return element.clone(projected, crs=self.p.projection)
+                return element.clone(
+                    projected, crs=self.p.projection, dataset=None, pipeline=None
+                )
             projected = [geom_dict_to_array_dict(p, [x.name, y.name]) for p in projected]
             if any('holes' in p for p in projected):
                 pass
@@ -132,7 +136,9 @@ class project_path(_project_operation):
             elif isinstance(item, np.ndarray):
                 projected = [np.column_stack([p[d.name] for d in element.dimensions()])
                              for p in projected]
-        return element.clone(projected, crs=self.p.projection)
+        return element.clone(
+            projected, crs=self.p.projection, dataset=None, pipeline=None
+        )
 
 
 class project_shape(_project_operation):
@@ -145,7 +151,7 @@ class project_shape(_project_operation):
 
     def _process_element(self, element):
         if not len(element):
-            return element.clone(crs=self.p.projection)
+            return element.clone(crs=self.p.projection, dataset=None, pipeline=None)
         geom = element.geom()
         vertices = geom_to_array(geom)
         if isinstance(geom, (MultiPolygon, Polygon)):
@@ -153,7 +159,7 @@ class project_shape(_project_operation):
         else:
             obj = Path([vertices])
         geom = project_path(obj, projection=self.p.projection).geom()
-        return element.clone(geom, crs=self.p.projection)
+        return element.clone(geom, crs=self.p.projection, dataset=None, pipeline=None)
 
 
 class project_points(_project_operation):
@@ -162,7 +168,7 @@ class project_points(_project_operation):
 
     def _process_element(self, element):
         if not len(element):
-            return element.clone(crs=self.p.projection)
+            return element.clone(crs=self.p.projection, dataset=None, pipeline=None)
         xdim, ydim = element.dimensions()[:2]
         xs, ys = (element.dimension_values(i) for i in range(2))
         coordinates = self.p.projection.transform_points(element.crs, xs, ys)
@@ -182,7 +188,8 @@ class project_points(_project_operation):
                           type(self.p.projection).__name__))
 
         return element.clone(tuple(new_data[d.name] for d in element.dimensions()),
-                             crs=self.p.projection, datatype=datatype)
+                             crs=self.p.projection, datatype=datatype,
+                             dataset=None, pipeline=None)
 
 
 class project_graph(_project_operation):
@@ -195,7 +202,7 @@ class project_graph(_project_operation):
         data = (element.data, nodes)
         if element._edgepaths:
             data = data + (project_path(element.edgepaths, projection=proj),)
-        return element.clone(data, crs=proj)
+        return element.clone(data, crs=proj, dataset=None, pipeline=None)
 
 
 class project_quadmesh(_project_operation):
@@ -260,7 +267,8 @@ class project_quadmesh(_project_operation):
                 zs[mask] = np.NaN
 
         params = get_param_values(element)
-        return element.clone((PX, PY, zs), crs=self.p.projection, **params)
+        return element.clone((PX, PY, zs), crs=self.p.projection,
+                             dataset=None, pipeline=None, **params)
 
 
 class project_image(_project_operation):
@@ -318,7 +326,9 @@ class project_image(_project_operation):
             arrays.append(projected)
 
         if xn == 0 or yn == 0:
-            return img.clone([], bounds=tgt_extent, crs=proj)
+            return img.clone(
+                [], bounds=tgt_extent, crs=proj, dataset=None, pipeline=None
+            )
 
         xunit = ((tgt_extent[1]-tgt_extent[0])/float(xn))/2.
         yunit = ((tgt_extent[3]-tgt_extent[2])/float(yn))/2.
@@ -326,7 +336,7 @@ class project_image(_project_operation):
         ys = np.linspace(tgt_extent[2]+yunit, tgt_extent[3]-yunit, yn)
         return img.clone((xs, ys)+tuple(arrays), bounds=None, kdims=img.kdims,
                          vdims=img.vdims, crs=proj, xdensity=None,
-                         ydensity=None)
+                         ydensity=None, dataset=None, pipeline=None)
 
     def _fast_process(self, element, key=None):
         # Project coordinates
@@ -388,7 +398,8 @@ class project_image(_project_operation):
                 data = data + (resampled[::-1, :, i],)
             else:
                 data = data + (resampled,)
-        return element.clone(data, crs=proj, bounds=None, datatype=datatypes)
+        return element.clone(data, crs=proj, bounds=None, datatype=datatypes,
+                             dataset=None, pipeline=None)
 
 
 class project(Operation):
@@ -403,6 +414,7 @@ class project(Operation):
 
     _operations = [project_path, project_image, project_shape,
                    project_graph, project_quadmesh, project_points]
+    _propagate_dataset = False
 
     def _process(self, element, key=None):
         for op in self._operations:

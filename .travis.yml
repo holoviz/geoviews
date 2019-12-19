@@ -61,6 +61,7 @@ jobs:
     - <<: *default
       env: DESC="py2 flakes" PYTHON_VERSION=2.7
       script: doit test_flakes
+      after_success: true # don't upload coverage
 
     ########## DOCS ##########
 
@@ -88,6 +89,7 @@ jobs:
           on:
             tags: true
             all_branches: true
+      after_success: true # don't upload coverage
 
     - <<: *doc_build
       stage: docs_dev
@@ -114,6 +116,7 @@ jobs:
         - doit package_upload --token=$CONDA_UPLOAD_TOKEN $LABELS --recipe=recommended
       after_failure:
         - sleep 10
+      after_success: true # don't upload coverage
 
     - <<: *conda_pkg
       stage: conda_package
@@ -131,6 +134,7 @@ jobs:
         - doit pip_on_conda
         - doit ecosystem=pip package_build --test-python=py37 --test-group=unit
       script: doit ecosystem=pip package_upload -u $PYPIUSER -p $PYPIPASS --pypi=$PYPI
+      after_success: true # don't upload coverage
 
     - <<: *pip_pkg
       stage: pip_package

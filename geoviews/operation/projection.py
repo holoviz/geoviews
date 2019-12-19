@@ -36,6 +36,9 @@ class _project_operation(Operation):
     # Defines the types of elements supported by the operation
     supported_types = []
 
+    # Projection operations should not propagate dataset property
+    _propagate_dataset = False
+
     def _process(self, element, key=None):
         return element.map(self._process_element, self.supported_types)
 

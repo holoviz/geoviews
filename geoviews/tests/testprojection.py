@@ -20,6 +20,10 @@ class TestProjection(ComparisonTestCase):
             [ 12960.,  17280.,  21600.,   4320.,   8640.]
         ]))
 
+        # Check dataset property did not propagate
+        self.assertNotEqual(proj.dataset, img.dataset)
+        self.assertEqual(proj.dataset.data, proj.data)
+
     def test_image_project_latlon_to_mercator(self):
         xs = np.linspace(72, 360, 5)
         ys = np.linspace(-60, 60, 3)
@@ -31,3 +35,7 @@ class TestProjection(ComparisonTestCase):
             [     0.,      0.,      0.,      0.,      0.],
             [ 12960.,  17280.,  21600.,   4320.,   8640.]
         ]))
+
+        # Check dataset property did not propagate
+        self.assertNotEqual(proj.dataset, img.dataset)
+        self.assertEqual(proj.dataset.data, proj.data)

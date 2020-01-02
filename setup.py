@@ -165,9 +165,9 @@ def package_assets(example_path):
 _required = [
     'bokeh >=1.0.0',
     'cartopy >=0.17.0',
-    'holoviews >=1.11.1',
+    'holoviews >=1.13.0a17',
     'numpy >=1.0',
-    'param >=1.6.1'
+    'param >=1.6.1',
 ]
 
 _recommended = [
@@ -198,6 +198,7 @@ extras_require={
         'nbsite >=0.6.1',
         'sphinx_holoviz_theme',
         'selenium',
+        'pyproj <=2.1.3'
     ],
     'tests': [
         'coveralls',

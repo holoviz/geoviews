@@ -48,7 +48,7 @@ jobs:
       install:
         - doit env_create $CHANS_DEV --python=$PYTHON_VERSION
         - source activate test-environment
-        - doit develop_install $CHANS_DEV -o recommended
+        - doit develop_install $CHANS_DEV -o recommended -o build
         - doit env_capture
         - bokeh sampledata
       script:

@@ -7,7 +7,7 @@ from .geo import (_Element, Feature, Tiles, is_geographic,     # noqa (API impor
                   WMTS, Points, Image, Text, LineContours, RGB,
                   FilledContours, Path, Polygons, Shape, Dataset,
                   Contours, TriMesh, Graph, Nodes, EdgePaths, QuadMesh,
-                  VectorField, Labels, HexTiles)
+                  VectorField, Labels, HexTiles, Rectangles, Segments)
 
 
 class GeoConversion(ElementConversion):

@@ -20,20 +20,25 @@ from holoviews.plotting.mpl import (
     ElementPlot, PointPlot, AnnotationPlot, TextPlot, LabelsPlot,
     LayoutPlot as HvLayoutPlot, OverlayPlot as HvOverlayPlot,
     PathPlot, PolygonPlot, RasterPlot, ContourPlot, GraphPlot,
-    TriMeshPlot, QuadMeshPlot, VectorFieldPlot, HexTilesPlot
+    TriMeshPlot, QuadMeshPlot, VectorFieldPlot, HexTilesPlot,
+    SegmentPlot, RectanglesPlot
 )
 from holoviews.plotting.mpl.util import get_raster_array, wrap_formatter
 
 
-from ...element import (Image, Points, Feature, WMTS, Tiles, Text,
-                        LineContours, FilledContours, is_geographic,
-                        Path, Polygons, Shape, RGB, Contours, Nodes,
-                        EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
-                        HexTiles, Labels)
+from ...element import (
+    Image, Points, Feature, WMTS, Tiles, Text, LineContours,
+    FilledContours, is_geographic, Path, Polygons, Shape, RGB,
+    Contours, Nodes, EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
+    HexTiles, Labels, Rectangles, Segments
+)
 from ...util import geo_mesh, poly_types
 from ..plot import ProjectionPlot
 
-from ...operation import project_points, project_path, project_graph, project_quadmesh
+from ...operation import (
+    project_points, project_path, project_graph, project_quadmesh,
+    project_geom
+)
 
 
 
@@ -362,6 +367,26 @@ class GeoPolygonPlot(GeoPlot, PolygonPlot):
     _project_operation = project_path
 
 
+class GeoSegmentPlot(GeoPlot, SegmentPlot):
+    """
+    Draws segments from the data in a the Segments Element.
+    """
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_geom
+
+
+class GeoRectanglesPlot(GeoPlot, RectanglesPlot):
+    """
+    Draws rectangles from the data in a Rectangles Element.
+    """
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_geom
+
+
 class LineContourPlot(GeoContourPlot):
     """
     Draws a contour plot.
@@ -534,6 +559,8 @@ Store.register({LineContours: LineContourPlot,
                 Feature: FeaturePlot,
                 WMTS: WMTSPlot,
                 Tiles: WMTSPlot,
+                Rectangles: GeoRectanglesPlot,
+                Segments: GeoSegmentPlot,
                 Points: GeoPointPlot,
                 Labels: GeoLabelsPlot,
                 VectorField: GeoVectorFieldPlot,

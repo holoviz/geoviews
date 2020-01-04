@@ -1,49 +1,29 @@
 #!/usr/bin/env python
 
-import sys,os
+import sys,os,json
 import shutil
 from collections import defaultdict
+
 from setuptools import setup, find_packages
+from setuptools.command.develop import develop
+from setuptools.command.install import install
+from setuptools.command.sdist import sdist
 
 ###############
 ### autover ###
 
-def embed_version(basepath, ref='v0.2.2'):
-    """
-    Autover is purely a build time dependency in all cases (conda and
-    pip) except for when you use pip's remote git support [git+url] as
-    1) you need a dynamically changing version and 2) the environment
-    starts off clean with zero dependencies installed.
-    This function acts as a fallback to make Version available until
-    PEP518 is commonly supported by pip to express build dependencies.
-    """
-    import io, zipfile, importlib
-    try:    from urllib.request import urlopen
-    except: from urllib import urlopen
-    try:
-        url = 'https://github.com/ioam/autover/archive/{ref}.zip'
-        response = urlopen(url.format(ref=ref))
-        zf = zipfile.ZipFile(io.BytesIO(response.read()))
-        ref = ref[1:] if ref.startswith('v') else ref
-        embed_version = zf.read('autover-{ref}/autover/version.py'.format(ref=ref))
-        with open(os.path.join(basepath, 'version.py'), 'wb') as f:
-            f.write(embed_version)
-        return importlib.import_module("version")
-    except:
-        return None
 
 def get_setup_version(reponame):
     """
     Helper to get the current version from either git describe or the
     .version file (if available).
     """
-    import json
     basepath = os.path.split(__file__)[0]
     version_file_path = os.path.join(basepath, reponame, '.version')
     try:
         from param import version
     except:
-        version = embed_version(basepath)
+        version = None
     if version is not None:
         return version.Version.setup_version(basepath, reponame, archive_commit="$Format:%h$")
     else:
@@ -51,6 +31,62 @@ def get_setup_version(reponame):
         return json.load(open(version_file_path, 'r'))['version_string']
 
 
+#######################
+### bokeh extension ###
+
+
+def _build_geoviewsjs():
+    from bokeh.ext import build
+    print("Building custom models:")
+    geoviews_dir = os.path.join(os.path.dirname(__file__), "geoviews")
+    build(geoviews_dir)
+
+
+class CustomDevelopCommand(develop):
+    """Custom installation for development mode."""
+
+    def run(self):
+        _build_geoviewsjs()
+        develop.run(self)
+
+
+class CustomInstallCommand(install):
+    """Custom installation for install mode."""
+
+    def run(self):
+        _build_geoviewsjs()
+        install.run(self)
+
+
+class CustomSdistCommand(sdist):
+    """Custom installation for sdist mode."""
+
+    def run(self):
+        _build_geoviewsjs()
+        sdist.run(self)
+
+
+_COMMANDS = {
+    'develop': CustomDevelopCommand,
+    'install': CustomInstallCommand,
+    'sdist':   CustomSdistCommand,
+}
+
+try:
+    from wheel.bdist_wheel import bdist_wheel
+
+    class CustomBdistWheelCommand(bdist_wheel):
+        """Custom bdist_wheel command to force cancelling qiskit-terra wheel
+        creation."""
+
+        def run(self):
+            """Do nothing so the command intentionally fails."""
+            _build_geoviewsjs()
+            bdist_wheel.run(self)
+
+    _COMMANDS['bdist_wheel'] = CustomBdistWheelCommand
+except:
+    pass
 
 ################
 ### examples ###
@@ -179,7 +215,9 @@ extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
 # until pyproject.toml/equivalent is widely supported; meanwhile
 # setup_requires doesn't work well with pip. Note: deliberately omitted from all.
 extras_require['build'] = [
-    'param >=1.6.1',
+    'param >=1.9.0',
+    'bokeh >=1.4.0',
+    'nodejs >=9.11.1',
     'setuptools' # should make this pip now
 ]
 
@@ -201,6 +239,7 @@ setup_args = dict(
     platforms=['Windows', 'Mac OS X', 'Linux'],
     license='BSD 3-Clause',
     url='http://geoviews.org',
+    cmdclass=_COMMANDS,
     packages = find_packages() + packages,
     package_data={'geoviews': ['.version']},
     entry_points={

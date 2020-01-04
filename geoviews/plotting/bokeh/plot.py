@@ -1,10 +1,7 @@
 """
 Module for geographic bokeh plot baseclasses.
 """
-from distutils.version import LooseVersion
-
 import param
-import holoviews as hv
 
 from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator
 from bokeh.models.tools import BoxZoomTool, WheelZoomTool
@@ -182,8 +179,3 @@ class GeoOverlayPlot(GeoPlot, HvOverlayPlot):
         self.geographic = any(element.traverse(is_geographic, [_Element]))
         if self.geographic:
             self.show_grid = False
-        if LooseVersion(hv.__version__) < '1.10.4':
-            projection = self._get_projection(element)
-            self.projection = projection
-            for p in self.subplots.values():
-                p.projection = projection

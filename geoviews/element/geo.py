@@ -12,7 +12,9 @@ from holoviews.element import (
     RGB as HvRGB, Text as HvText, TriMesh as HvTriMesh,
     QuadMesh as HvQuadMesh, Points as HvPoints,
     VectorField as HvVectorField, HexTiles as HvHexTiles,
-    Labels as HvLabels)
+    Labels as HvLabels, Rectangles as HvRectangles,
+    Segments as HvSegments
+)
 
 from shapely.geometry.base import BaseGeometry
 
@@ -50,7 +52,7 @@ def is_geographic(element, kdims=None):
     else:
         kdims = element.kdims
 
-    if len(kdims) != 2 and not isinstance(element, (Graph, Nodes)):
+    if len(kdims) != 2 and not isinstance(element, (Graph, Nodes, Rectangles, Segments)):
         return False
     if isinstance(element.data, geographic_types) or isinstance(element, (WMTS, Feature)):
         return True
@@ -586,7 +588,6 @@ class TriMesh(HvTriMesh, Graph):
         super(TriMesh, self).__init__(data, kdims, vdims, **params)
         self.nodes.crs = crs
 
-
     @property
     def edgepaths(self):
         """
@@ -628,6 +629,37 @@ class Polygons(_Element, HvPolygons):
         Returns Path as a shapely geometry.
         """
         return polygon_to_geom(self)
+
+
+class Rectangles(_Element, HvRectangles):
+    """
+    Rectangles represent a collection of axis-aligned rectangles in 2D space.
+    """
+
+    group = param.String(default='Rectangles', constant=True)
+
+    kdims = param.List(default=[Dimension('lon0'), Dimension('lat0'),
+                                Dimension('lon1'), Dimension('lat1')],
+                       bounds=(4, 4), constant=True, doc="""
+        The key dimensions of the Rectangles element represent the
+        bottom-left (lon0, lat0) and top right (lon1, lat1) coordinates
+        of each box.""")
+
+
+
+class Segments(_Element, HvSegments):
+    """
+    Segments represent a collection of lines in 2D space.
+    """
+
+    group = param.String(default='Segments', constant=True)
+
+    kdims = param.List(default=[Dimension('lon0'), Dimension('lat0'),
+                                Dimension('lon1'), Dimension('lat1')],
+                       bounds=(4, 4), constant=True, doc="""
+        The key dimensions of the Segments element represent the
+        bottom-left (lon0, lat0) and top-right (lon1, lat1) coordinates
+        of each segment.""")
 
 
 class Shape(Dataset):

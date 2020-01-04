@@ -10,11 +10,12 @@ try:
 except:
     pass
 
-from .element import (_Element, Feature, Tiles,     # noqa (API import)
-                      WMTS, LineContours, FilledContours, Text, Image,
-                      Points, Path, Polygons, Shape, Dataset, RGB,
-                      Contours, Graph, TriMesh, Nodes, EdgePaths,
-                      QuadMesh, VectorField, HexTiles, Labels)
+from .element import ( # noqa (API import)
+    _Element, Feature, Tiles, WMTS, LineContours, FilledContours,
+    Text, Image, Points, Path, Polygons, Shape, Dataset, RGB,
+    Contours, Graph, TriMesh, Nodes, EdgePaths, QuadMesh, VectorField,
+    HexTiles, Labels, Rectangles, Segments
+)
 from .util import load_tiff, from_xarray # noqa (API import)
 from .operation import project                      # noqa (API import)
 from . import data                                  # noqa (API import)

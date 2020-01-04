@@ -15,7 +15,7 @@ from shapely.geometry.collection import GeometryCollection
 from ..data import GeoPandasInterface
 from ..element import (Image, Shape, Polygons, Path, Points, Contours,
                        RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField,
-                       HexTiles, Labels)
+                       HexTiles, Labels, Rectangles, Segments)
 from ..util import (
     project_extents, geom_to_array, path_to_geom_dicts, polygons_to_geom_dicts,
     geom_dict_to_array_dict
@@ -144,11 +144,10 @@ class project_shape(_project_operation):
         if not len(element):
             return element.clone(crs=self.p.projection)
         geom = element.geom()
-        vertices = geom_to_array(geom)
         if isinstance(geom, (MultiPolygon, Polygon)):
-            obj = Polygons([vertices])
+            obj = Polygons([geom])
         else:
-            obj = Path([vertices])
+            obj = Path([geom])
         geom = project_path(obj, projection=self.p.projection).geom()
         return element.clone(geom, crs=self.p.projection)
 
@@ -164,10 +163,9 @@ class project_points(_project_operation):
         xs, ys = (element.dimension_values(i) for i in range(2))
         coordinates = self.p.projection.transform_points(element.crs, xs, ys)
         mask = np.isfinite(coordinates[:, 0])
-        new_data = {k: v[mask] for k, v in element.columns().items()}
+        new_data = {k: v[mask] for k, v in element.columns(element.kdims).items()}
         new_data[xdim.name] = coordinates[mask, 0]
         new_data[ydim.name] = coordinates[mask, 1]
-        datatype = [element.interface.datatype]+element.datatype
 
         if len(new_data[xdim.name]) == 0:
             self.warning('While projecting a %s element from a %s coordinate '
@@ -179,7 +177,38 @@ class project_points(_project_operation):
                           type(self.p.projection).__name__))
 
         return element.clone(tuple(new_data[d.name] for d in element.dimensions()),
-                             crs=self.p.projection, datatype=datatype)
+                             crs=self.p.projection)
+
+
+class project_geom(_project_operation):
+
+    supported_types = [Rectangles, Segments]
+
+    def _process_element(self, element):
+        if not len(element):
+            return element.clone(crs=self.p.projection)
+        x0d, y0d, x1d, y1d = element.kdims
+        x0, y0, x1, y1 = (element.dimension_values(i) for i in range(4))
+        p1 = self.p.projection.transform_points(element.crs, x0, y0)
+        p2 = self.p.projection.transform_points(element.crs, x1, y1)
+        mask = np.isfinite(p1[:, 0]) & np.isfinite(p2[:, 0])
+        new_data = {k: v[mask] for k, v in element.columns(element.vdims).items()}
+        new_data[x0d.name] = p1[mask, 0]
+        new_data[y0d.name] = p1[mask, 1]
+        new_data[x1d.name] = p2[mask, 0]
+        new_data[y1d.name] = p2[mask, 1]
+
+        if len(new_data[x0d.name]) == 0:
+            self.warning('While projecting a %s element from a %s coordinate '
+                         'reference system (crs) to a %s projection none of '
+                         'the projected paths were contained within the bounds '
+                         'specified by the projection. Ensure you have specified '
+                         'the correct coordinate system for your data.' %
+                         (type(element).__name__, type(element.crs).__name__,
+                          type(self.p.projection).__name__))
+
+        return element.clone(tuple(new_data[d.name] for d in element.dimensions()),
+                             crs=self.p.projection)
 
 
 class project_graph(_project_operation):
@@ -399,7 +428,8 @@ class project(Operation):
         Projection the image type is projected to.""")
 
     _operations = [project_path, project_image, project_shape,
-                   project_graph, project_quadmesh, project_points]
+                   project_graph, project_quadmesh, project_points,
+                   project_geom]
 
     def _process(self, element, key=None):
         for op in self._operations:

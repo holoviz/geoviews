@@ -10,17 +10,21 @@ from holoviews.core import util
 from holoviews.core.options import SkipRendering, Options, Compositor
 from holoviews.plotting.bokeh.annotation import TextPlot, LabelsPlot
 from holoviews.plotting.bokeh.chart import PointPlot, VectorFieldPlot
+from holoviews.plotting.bokeh.geometry import RectanglesPlot, SegmentPlot
 from holoviews.plotting.bokeh.graphs import TriMeshPlot, GraphPlot
 from holoviews.plotting.bokeh.hex_tiles import hex_binning, HexTilesPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
 from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot, QuadMeshPlot
 
-from ...element import (WMTS, Points, Polygons, Path, Contours, Shape,
-                        Image, Feature, Text, RGB, Nodes, EdgePaths,
-                        Graph, TriMesh, QuadMesh, VectorField, Labels,
-                        HexTiles, LineContours, FilledContours)
-from ...operation import (project_image, project_points, project_path,
-                          project_graph, project_quadmesh)
+from ...element import (
+    WMTS, Points, Polygons, Path, Contours, Shape, Image, Feature,
+    Text, RGB, Nodes, EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
+    Labels, HexTiles, LineContours, FilledContours, Rectangles, Segments
+)
+from ...operation import (
+    project_image, project_points, project_path, project_graph,
+    project_quadmesh, project_geom
+)
 from ...tile_sources import _ATTRIBUTIONS
 from ...util import poly_types, line_types
 from .plot import GeoPlot, GeoOverlayPlot
@@ -168,6 +172,16 @@ class GeoTriMeshPlot(GeoPlot, TriMeshPlot):
     _project_operation = project_graph
 
 
+class GeoRectanglesPlot(GeoPlot, RectanglesPlot):
+
+    _project_operation = project_geom
+
+
+class GeoSegmentsPlot(GeoPlot, SegmentPlot):
+
+    _project_operation = project_geom
+
+
 class GeoShapePlot(GeoPolygonPlot):
 
     def get_data(self, element, ranges, style):
@@ -263,6 +277,8 @@ Store.register({WMTS: TilePlot,
                 VectorField: GeoVectorFieldPlot,
                 Polygons: GeoPolygonPlot,
                 Contours: GeoContourPlot,
+                Rectangles: GeoRectanglesPlot,
+                Segments: GeoSegmentsPlot,
                 Path: GeoPathPlot,
                 Shape: GeoShapePlot,
                 Image: GeoRasterPlot,

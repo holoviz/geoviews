@@ -1,8 +1,10 @@
 import param
 
 from holoviews.element import Path, Table, Points
-from holoviews.plotting.links import Link
-from holoviews.plotting.bokeh.callbacks import LinkCallback
+from holoviews.plotting.links import Link, RectanglesTableLink as HvRectanglesTableLink
+from holoviews.plotting.bokeh.callbacks import (
+    LinkCallback, RectanglesTableLinkCallback as HvRectanglesTableLinkCallback
+)
 from holoviews.core.util import dimension_sanitizer
 
 
@@ -38,6 +40,12 @@ class VertexTableLink(Link):
             dimensions = [dimension_sanitizer(d.name) for d in target.dimensions()[:2]]
             params['vertex_columns'] = dimensions
         super(VertexTableLink, self).__init__(source, target, **params)
+
+
+class RectanglesTableLink(HvRectanglesTableLink):
+    """
+    Links a Rectangles element to a Table.
+    """
 
 
 class PointTableLinkCallback(LinkCallback):
@@ -216,6 +224,65 @@ class VertexTableLinkCallback(LinkCallback):
     source_cds.data = source_cds.data
     """
 
+
+class RectanglesTableLinkCallback(HvRectanglesTableLinkCallback):
+
+    source_code = """
+    var projections = require("core/util/projections");
+    var xs = source_cds.data[source_glyph.x.field]
+    var ys = source_cds.data[source_glyph.y.field]
+    var ws = source_cds.data[source_glyph.width.field]
+    var hs = source_cds.data[source_glyph.height.field]
+
+    var x0 = []
+    var x1 = []
+    var y0 = []
+    var y1 = []
+    for (i = 0; i < xs.length; i++) {
+      hw = ws[i]/2.
+      hh = hs[i]/2.
+      p1 = projections.wgs84_mercator.inverse([xs[i]-hw, ys[i]-hh])
+      p2 = projections.wgs84_mercator.inverse([xs[i]+hw, ys[i]+hh])
+      x0.push(p1[0])
+      x1.push(p2[0])
+      y0.push(p1[1])
+      y1.push(p2[1])
+    }
+    target_cds.data[columns[0]] = x0
+    target_cds.data[columns[1]] = y0
+    target_cds.data[columns[2]] = x1
+    target_cds.data[columns[3]] = y1
+    """
+
+    target_code = """
+    var projections = require("core/util/projections");
+    var x0s = target_cds.data[columns[0]]
+    var y0s = target_cds.data[columns[1]]
+    var x1s = target_cds.data[columns[2]]
+    var y1s = target_cds.data[columns[3]]
+
+    var xs = []
+    var ys = []
+    var ws = []
+    var hs = []
+    for (i = 0; i < x0s.length; i++) {
+      x0 = Math.min(x0s[i], x1s[i])
+      y0 = Math.min(y0s[i], y1s[i])
+      x1 = Math.max(x0s[i], x1s[i])
+      y1 = Math.max(y0s[i], y1s[i])
+      p1 = projections.wgs84_mercator.forward([x0, y0])
+      p2 = projections.wgs84_mercator.forward([x1, y1])
+      xs.push((p1[0]+p2[0])/2.)
+      ys.push((p1[1]+p2[1])/2.)
+      ws.push(p2[0]-p1[0])
+      hs.push(p2[1]-p1[1])
+    }
+    source_cds.data['x'] = xs
+    source_cds.data['y'] = ys
+    source_cds.data['width'] = ws
+    source_cds.data['height'] = hs
+    """
     
 VertexTableLink.register_callback('bokeh', VertexTableLinkCallback)
 PointTableLink.register_callback('bokeh', PointTableLinkCallback)
+RectanglesTableLink.register_callback('bokeh', RectanglesTableLinkCallback)

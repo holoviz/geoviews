@@ -3,13 +3,13 @@ import param
 import cartopy.crs as ccrs
 
 from holoviews.annotators import (
-    Annotator, AnnotationManager, PathAnnotator, PolyAnnotator, PointAnnotator # noqa
+    Annotator, PathAnnotator, PolyAnnotator, PointAnnotator, BoxAnnotator # noqa
 )
 from holoviews.plotting.links import DataLink, VertexTableLink as hvVertexTableLink
 from panel.util import param_name
 
 from .models.custom_tools import CheckpointTool, RestoreTool, ClearTool
-from .links import VertexTableLink, PointTableLink
+from .links import VertexTableLink, PointTableLink, HvRectanglesTableLink, RectanglesTableLink
 from .operation import project
 from .streams import PolyVertexDraw, PolyVertexEdit
 
@@ -17,15 +17,23 @@ Annotator._tools = [CheckpointTool, RestoreTool, ClearTool]
 Annotator.table_transforms.append(project.instance(projection=ccrs.PlateCarree()))
 
 def get_point_table_link(self, source, target):
-    if hasattr(source, 'crs'):
+    if hasattr(source.callback.inputs[0], 'crs'):
         return PointTableLink(source, target)
     else:
         return DataLink(source, target)
 
 PointAnnotator._link_type = get_point_table_link
 
+def get_rectangles_table_link(self, source, target):
+    if hasattr(source.callback.inputs[0], 'crs'):
+        return RectanglesTableLink(source, target)
+    else:
+        return HvRectanglesTableLink(source, target)
+
+BoxAnnotator._link_type = get_rectangles_table_link
+
 def get_vertex_table_link(self, source, target):
-    if hasattr(source, 'crs'):
+    if hasattr(source.callback.inputs[0], 'crs'):
         return VertexTableLink(source, target)
     else:
         return hvVertexTableLink(source, target)

@@ -17,7 +17,7 @@ from ..element import (Image, Shape, Polygons, Path, Points, Contours,
                        RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField,
                        HexTiles, Labels, Rectangles, Segments)
 from ..util import (
-    project_extents, geom_to_array, path_to_geom_dicts, polygons_to_geom_dicts,
+    project_extents, path_to_geom_dicts, polygons_to_geom_dicts,
     geom_dict_to_array_dict
 )
 

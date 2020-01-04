@@ -2,7 +2,6 @@
 Module for geographic bokeh plot baseclasses.
 """
 import param
-import holoviews as hv
 
 from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator
 from bokeh.models.tools import BoxZoomTool, WheelZoomTool

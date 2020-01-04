@@ -1,6 +1,5 @@
 import param
 
-from holoviews.element import Path, Table, Points
 from holoviews.plotting.links import Link, RectanglesTableLink as HvRectanglesTableLink
 from holoviews.plotting.bokeh.callbacks import (
     LinkCallback, RectanglesTableLinkCallback as HvRectanglesTableLinkCallback

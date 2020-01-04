@@ -163,7 +163,8 @@ class project_points(_project_operation):
         xs, ys = (element.dimension_values(i) for i in range(2))
         coordinates = self.p.projection.transform_points(element.crs, xs, ys)
         mask = np.isfinite(coordinates[:, 0])
-        new_data = {k: v[mask] for k, v in element.columns(element.kdims).items()}
+        dims = [d for d in element.dimensions() if d not in (xdim, ydim)]
+        new_data = {k: v[mask] for k, v in element.columns(dims).items()}
         new_data[xdim.name] = coordinates[mask, 0]
         new_data[ydim.name] = coordinates[mask, 1]
 

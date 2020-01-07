@@ -15,18 +15,20 @@ from geoviews.data.iris import coord_to_dimension
 from holoviews.core.spaces import HoloMap
 from holoviews.element import Image
 
-from holoviews.tests.core.data.testimageinterface import Image_ImageInterfaceTests
-from holoviews.tests.core.data.testgridinterface import GridInterfaceTests
+from holoviews.tests.core.data.testimageinterface import BaseImageElementInterfaceTests
+from holoviews.tests.core.data.testgridinterface import BaseGridInterfaceTests
 
 
 @attr(optional=1)
-class IrisInterfaceTests(GridInterfaceTests):
+class IrisInterfaceTests(BaseGridInterfaceTests):
     """
     Tests for Iris interface
     """
 
     datatype = 'cube'
     data_type = iris.cube.Cube
+
+    __test__ = True
 
     def init_data(self):
         self.cube = lat_lon_cube()
@@ -198,9 +200,11 @@ class IrisInterfaceTests(GridInterfaceTests):
 
 
 @attr(optional=1)
-class Image_IrisInterfaceTests(Image_ImageInterfaceTests):
+class ImageElement_IrisInterfaceTests(BaseImageElementInterfaceTests):
 
     datatype = 'cube'
+
+    __test__ = True
 
     def init_data(self):
         xs = np.linspace(-9, 9, 10)

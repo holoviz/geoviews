@@ -22,6 +22,9 @@ Contents:
 * `Resampling large grids <Resampling_Grids.html>`_
    Using the datashader and xESMF libraries to regrid large meshes.
 
+* `Annotating Geographic Elements <Annotators.html>`_
+   Demonstrates the use of the annotate operation to annotate geographic elements.
+
 
 .. toctree::
     :titlesonly:
@@ -34,3 +37,4 @@ Contents:
     Gridded Datasets II <Gridded_Datasets_II>
     Working with Bokeh <Working_with_Bokeh>
     Resampling Grids <Resampling_Grids>
+    Annotating Geographic Elements <Annotators>

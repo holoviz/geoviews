@@ -10,6 +10,7 @@ try:
 except:
     pass
 
+from .annotators import annotate # noqa (API import)
 from .element import ( # noqa (API import)
     _Element, Feature, Tiles, WMTS, LineContours, FilledContours,
     Text, Image, Points, Path, Polygons, Shape, Dataset, RGB,

@@ -3,11 +3,13 @@ import param
 import cartopy.crs as ccrs
 
 from holoviews.annotators import (
-    Annotator, PathAnnotator, PolyAnnotator, PointAnnotator, BoxAnnotator # noqa
+    annotate, Annotator, PathAnnotator, PolyAnnotator, PointAnnotator,
+    BoxAnnotator  # noqa
 )
 from holoviews.plotting.links import DataLink, VertexTableLink as hvVertexTableLink
 from panel.util import param_name
 
+from .element import Path
 from .models.custom_tools import CheckpointTool, RestoreTool, ClearTool
 from .links import VertexTableLink, PointTableLink, HvRectanglesTableLink, RectanglesTableLink
 from .operation import project
@@ -80,3 +82,5 @@ class PathBreakingAnnotator(PathAnnotator):
                 source=self.plot, tooltip='%s Edit Tool' % name,
                 **style_kwargs
             )
+
+annotate._annotator_types[Path] = PathBreakingAnnotator

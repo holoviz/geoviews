@@ -163,11 +163,11 @@ def package_assets(example_path):
 ### dependencies ###
 
 _required = [
-    'bokeh >=1.0.0',
+    'bokeh >=1.4.0',
     'cartopy >=0.17.0',
-    'holoviews >=1.13.0a17',
+    'holoviews >=1.13.0a19',
     'numpy >=1.0',
-    'param >=1.6.1',
+    'param >=1.9.2',
 ]
 
 _recommended = [
@@ -237,10 +237,10 @@ setup_args = dict(
     long_description_content_type="text/markdown",
     platforms=['Windows', 'Mac OS X', 'Linux'],
     license='BSD 3-Clause',
-    url='http://geoviews.org',
+    url='https://geoviews.org',
     cmdclass=_COMMANDS,
     packages = find_packages() + packages,
-    package_data={'geoviews': ['.version']},
+    include_package_data=True,
     entry_points={
         'console_scripts': [
             'geoviews = geoviews.__main__:main'

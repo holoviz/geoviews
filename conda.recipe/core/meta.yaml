@@ -27,6 +27,7 @@ requirements:
     {% endfor %}
   run:
     - python {{ sdata['python_requires'] }}
+    - proj4 <6
     {% for dep in sdata.get('install_requires',{}) %}
     - {{ dep }}
     {% endfor %}

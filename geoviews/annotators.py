@@ -4,7 +4,7 @@ import cartopy.crs as ccrs
 
 from holoviews.annotators import (
     annotate, Annotator, PathAnnotator, PolyAnnotator, PointAnnotator,
-    BoxAnnotator  # noqa
+    RectangleAnnotator  # noqa
 )
 from holoviews.plotting.links import DataLink, VertexTableLink as hvVertexTableLink
 from panel.util import param_name
@@ -32,7 +32,7 @@ def get_rectangles_table_link(self, source, target):
     else:
         return HvRectanglesTableLink(source, target)
 
-BoxAnnotator._link_type = get_rectangles_table_link
+RectangleAnnotator._link_type = get_rectangles_table_link
 
 def get_vertex_table_link(self, source, target):
     if hasattr(source.callback.inputs[0], 'crs'):

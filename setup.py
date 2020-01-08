@@ -237,10 +237,10 @@ setup_args = dict(
     long_description_content_type="text/markdown",
     platforms=['Windows', 'Mac OS X', 'Linux'],
     license='BSD 3-Clause',
-    url='http://geoviews.org',
+    url='https://geoviews.org',
     cmdclass=_COMMANDS,
     packages = find_packages() + packages,
-    package_data={'geoviews': ['.version']},
+    include_package_data=True,
     entry_points={
         'console_scripts': [
             'geoviews = geoviews.__main__:main'

@@ -165,7 +165,7 @@ def package_assets(example_path):
 _required = [
     'bokeh >=1.0.0',
     'cartopy >=0.17.0',
-    'holoviews >=1.13.0a17',
+    'holoviews >=1.13.0a19',
     'numpy >=1.0',
     'param >=1.6.1',
 ]

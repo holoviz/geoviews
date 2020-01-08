@@ -69,7 +69,7 @@ jobs:
       <<: *default
       stage: docs
       # not possible to run all examples to build website using only defaults (see setup.py)
-      env: DESC="docs" HV_DOC_HTML='true' CHANS_DEV="-c pyviz/label/dev -c conda-forge"
+      env: DESC="docs" HV_DOC_HTML='true' CHANS_DEV="-c pyviz/label/dev -c conda-forge" PYTHON_VERSION="3.6"
       install:
         - doit env_create $CHANS_DEV --python=$PYTHON_VERSION
         - source activate test-environment

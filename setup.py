@@ -2,7 +2,6 @@
 
 import sys,os,json
 import shutil
-from collections import defaultdict
 
 from setuptools import setup, find_packages
 from setuptools.command.develop import develop

@@ -163,11 +163,11 @@ def package_assets(example_path):
 ### dependencies ###
 
 _required = [
-    'bokeh >=1.0.0',
+    'bokeh >=1.4.0',
     'cartopy >=0.17.0',
     'holoviews >=1.13.0a19',
     'numpy >=1.0',
-    'param >=1.6.1',
+    'param >=1.9.2',
 ]
 
 _recommended = [

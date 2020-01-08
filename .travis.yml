@@ -73,6 +73,7 @@ jobs:
       install:
         - doit env_create $CHANS_DEV --python=$PYTHON_VERSION
         - source activate test-environment
+        - conda config --set channel_priority strict
         - doit develop_install $CHANS_DEV -o doc
         - conda install $CHANS_DEV "proj4<6"
         - doit env_capture

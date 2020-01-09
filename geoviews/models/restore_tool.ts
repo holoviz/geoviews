@@ -9,7 +9,7 @@ export class RestoreToolView extends ActionToolView {
   doit(): void {
     const sources: any = this.model.sources;
     for (const source of sources) {
-      if (source.buffer || (source.buffer.length == 0)) { continue; }
+      if (!source.buffer || (source.buffer.length == 0)) { continue; }
       source.data = source.buffer.pop();
       source.change.emit();
       source.properties.data.change.emit();

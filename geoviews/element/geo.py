@@ -664,7 +664,6 @@ class Rectangles(_Element, HvRectangles):
         of each box.""")
 
     def geom(self):
-
         """
         Converts the Rectangles to a shapely geometry.
         """
@@ -694,6 +693,9 @@ class Segments(_Element, HvSegments):
         of each segment.""")
 
     def geom(self):
+        """
+        Converts the Segments to a shapely geometry.
+        """
         lines = [LineString([(x0, y0), (x1, y1)]) for (x0, y0, x1, y1)
                  in self.array([0, 1, 2, 3])]
         nlines = len(lines)

@@ -8,9 +8,12 @@ import numpy as np
 import shapely.geometry as sgeom
 
 from cartopy import crs as ccrs
-from shapely.geometry import (MultiLineString, LineString, MultiPolygon,
-                              Polygon, LinearRing, Point, MultiPoint)
 from holoviews.core.util import basestring
+from shapely.geometry.base import BaseMultipartGeometry
+from shapely.geometry import (
+    MultiLineString, LineString, MultiPolygon, Polygon, LinearRing,
+    Point, MultiPoint
+)
 
 geom_types = (MultiLineString, LineString, MultiPolygon, Polygon,
               LinearRing, Point, MultiPoint)
@@ -24,6 +27,19 @@ def wrap_lons(lons, base, period):
     """
     lons = lons.astype(np.float64)
     return ((lons - base + period * 2) % period) + base
+
+
+def expand_geoms(geoms):
+    """
+    Expands multi-part geometries in a list of geometries.
+    """
+    expanded = []
+    for geom in geoms:
+        if isinstance(geom, BaseMultipartGeometry):
+            expanded.extend(list(geom))
+        else:
+            expanded.append(geom)
+    return expanded
 
 
 def project_extents(extents, src_proj, dest_proj, tol=1e-6):
@@ -118,65 +134,6 @@ def geom_dict_to_array_dict(geom_dict, coord_names=['Longitude', 'Latitude']):
         if any(hs for hs in outer_holes):
             new_dict['holes'] = outer_holes
     return new_dict
-
-
-def path_to_geom(path, multi=True, skip_invalid=True):
-    lines = []
-    datatype = 'geom' if path.interface.datatype == 'geodataframe' else 'array'
-    for path in path.split(datatype=datatype):
-        if datatype == 'array':
-            splits = np.where(np.isnan(path[:, :2].astype('float')).sum(axis=1))[0]
-            paths = np.split(path, splits+1) if len(splits) else [path]
-            for i, path in enumerate(paths):
-                if i != (len(paths)-1):
-                    path = path[:-1]
-                if len(path) < 2:
-                    continue
-                lines.append(LineString(path[:, :2]))
-            continue
-        elif path.geom_type == 'MultiPolygon':
-            for geom in path:
-                lines.append(geom.exterior)
-            continue
-        elif path.geom_type == 'Polygon':
-            path = path.exterior
-        else:
-            path = path
-        if path.geom_type == 'MultiLineString':
-            for geom in path:
-                lines.append(geom)
-        else:
-            lines.append(path)
-    return MultiLineString(lines) if multi else lines
-
-
-def polygon_to_geom(poly, multi=True, skip_invalid=True):
-    lines = []
-    datatype = 'geom' if poly.interface.datatype == 'geodataframe' else 'array'
-    for path in poly.split(datatype=datatype):
-        if datatype == 'array':
-            splits = np.where(np.isnan(path[:, :2].astype('float')).sum(axis=1))[0]
-            paths = np.split(path, splits+1) if len(splits) else [path]
-            for i, path in enumerate(paths):
-                if i != (len(paths)-1):
-                    path = path[:-1]
-                geom = Polygon
-                if len(path) < 3:
-                    if skip_invalid:
-                        continue
-                    geom = LineString
-                lines.append(geom(path[:, :2]))
-        elif path.geom_type == 'MultiLineString':
-            for geom in path:
-                lines.append(geom.convex_hull)
-        elif path.geom_type == 'MultiPolygon':
-            for geom in path:
-                lines.append(geom)
-        elif path.geom_type == 'LineString':
-            lines.append(path.convex_hull)
-        else:
-            lines.append(path)
-    return MultiPolygon(lines) if multi else lines
 
 
 def polygons_to_geom_dicts(polygons, skip_invalid=True):

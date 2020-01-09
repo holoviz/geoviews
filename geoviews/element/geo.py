@@ -1,5 +1,6 @@
 import param
 import numpy as np
+
 from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles
@@ -17,6 +18,11 @@ from holoviews.element import (
 )
 
 from shapely.geometry.base import BaseGeometry
+from shapely.geometry import (
+    box, GeometryCollection, MultiPolygon, LineString, MultiLineString,
+    Point, MultiPoint
+)
+from shapely.ops import unary_union
 
 try:
     from iris.cube import Cube
@@ -33,8 +39,10 @@ try:
 except:
     WebMapTileService = None
 
-from ..util import (path_to_geom, polygon_to_geom, load_tiff,
-                    from_xarray, poly_types)
+from ..util import (
+    path_to_geom_dicts, polygons_to_geom_dicts, load_tiff, from_xarray,
+    poly_types, expand_geoms
+)
 
 geographic_types = (GoogleTiles, cFeature, BaseGeometry)
 
@@ -252,6 +260,29 @@ class Points(_Element, HvPoints):
     """
 
     group = param.String(default='Points')
+
+    def geom(self, union=False):
+        """
+        Converts the Points to a shapely geometry.
+
+        Parameters
+        ----------
+        union: boolean (default=False)
+            Whether to compute a union between the geometries
+
+        Returns
+        -------
+        A shapely geometry
+        """
+        points = [Point(x, y) for (x, y) in self.array([0, 1])]
+        npoints = len(points)
+        if not npoints:
+            geom = GeometryCollection()
+        elif len(points) == 1:
+            geom = points[0]
+        else:
+            geom = MultiPoint(points)
+        return unary_union(geom) if union else geom
 
 
 class HexTiles(_Element, HvHexTiles):
@@ -482,11 +513,28 @@ class Path(_Element, HvPath):
 
     group = param.String(default='Path', constant=True)
 
-    def geom(self):
+    def geom(self, union=False):
         """
-        Returns Path as a shapely geometry.
+        Converts the Path to a shapely geometry.
+
+        Parameters
+        ----------
+        union: boolean (default=False)
+            Whether to compute a union between the geometries
+
+        Returns
+        -------
+        A shapely geometry
         """
-        return path_to_geom(self)
+        geoms = expand_geoms([g['geometry'] for g in path_to_geom_dicts(self)])
+        ngeoms = len(geoms)
+        if not ngeoms:
+            geom = GeometryCollection()
+        elif ngeoms == 1:
+            geom = geoms[0]
+        else:
+            geom = MultiLineString(geoms)
+        return unary_union(geom) if union else geom
 
 
 class EdgePaths(Path):
@@ -608,11 +656,28 @@ class Contours(_Element, HvContours):
 
     group = param.String(default='Contours', constant=True)
 
-    def geom(self):
+    def geom(self, union=False):
         """
-        Returns Path as a shapely geometry.
+        Converts the Contours to a shapely geometry.
+
+        Parameters
+        ----------
+        union: boolean (default=False)
+            Whether to compute a union between the geometries
+
+        Returns
+        -------
+        A shapely geometry
         """
-        return path_to_geom(self)
+        geoms = expand_geoms([g['geometry'] for g in path_to_geom_dicts(self)])
+        ngeoms = len(geoms)
+        if not ngeoms:
+            geom = GeometryCollection()
+        elif ngeoms == 1:
+            geom = geoms[0]
+        else:
+            geom = MultiLineString(geoms)
+        return unary_union(geom) if union else geom
 
 
 class Polygons(_Element, HvPolygons):
@@ -624,11 +689,28 @@ class Polygons(_Element, HvPolygons):
 
     group = param.String(default='Polygons', constant=True)
 
-    def geom(self):
+    def geom(self, union=False):
         """
-        Returns Path as a shapely geometry.
+        Converts the Path to a shapely geometry.
+
+        Parameters
+        ----------
+        union: boolean (default=False)
+            Whether to compute a union between the geometries
+
+        Returns
+        -------
+        A shapely geometry
         """
-        return polygon_to_geom(self)
+        geoms = expand_geoms([g['geometry'] for g in polygons_to_geom_dicts(self)])
+        ngeoms = len(geoms)
+        if not ngeoms:
+            geom = GeometryCollection()
+        elif ngeoms == 1:
+            geom = geoms[0]
+        else:
+            geom = MultiPolygon(geoms)
+        return unary_union(geom) if union else geom
 
 
 class Rectangles(_Element, HvRectangles):
@@ -645,6 +727,28 @@ class Rectangles(_Element, HvRectangles):
         bottom-left (lon0, lat0) and top right (lon1, lat1) coordinates
         of each box.""")
 
+    def geom(self, union=False):
+        """
+        Converts the Rectangles to a shapely geometry.
+
+        Parameters
+        ----------
+        union: boolean (default=False)
+            Whether to compute a union between the geometries
+
+        Returns
+        -------
+        A shapely geometry
+        """
+        boxes = [box(*g) for g in self.array([0, 1, 2, 3])]
+        nboxes = len(boxes)
+        if not nboxes:
+            geom = GeometryCollection()
+        elif nboxes == 1:
+            geom = boxes[0]
+        else:
+            geom = MultiPolygon(boxes)
+        return unary_union(geom) if union else geom
 
 
 class Segments(_Element, HvSegments):
@@ -661,6 +765,21 @@ class Segments(_Element, HvSegments):
         bottom-left (lon0, lat0) and top-right (lon1, lat1) coordinates
         of each segment.""")
 
+    def geom(self, union=False):
+        """
+        Converts the Segments to a shapely geometry.
+        """
+        lines = [LineString([(x0, y0), (x1, y1)]) for (x0, y0, x1, y1)
+                 in self.array([0, 1, 2, 3])]
+        nlines = len(lines)
+        if not nlines:
+            geom = GeometryCollection()
+        elif nlines == 1:
+            geom = lines[0]
+        else:
+            geom = MultiLineString(lines)
+        return unary_union(geom) if union else geom
+    
 
 class Shape(Dataset):
     """
@@ -839,8 +958,18 @@ class Shape(Dataset):
         return element(data, vdims=kdims+vdims, **kwargs).opts(color=value)
 
 
-    def geom(self):
+    def geom(self, union=False):
         """
-        Returns Shape as a shapely geometry
+        Returns the Shape as a shapely geometry
+
+        Parameters
+        ----------
+        union: boolean (default=False)
+            Whether to compute a union between the geometries
+
+        Returns
+        -------
+        A shapely geometry
         """
-        return self.data['geometry']
+        geom = self.data['geometry']
+        return unary_union(geom) if union else geom

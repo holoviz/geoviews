@@ -146,6 +146,7 @@ extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
 # setup_requires doesn't work well with pip. Note: deliberately omitted from all.
 extras_require['build'] = [
     'param >=1.9.0',
+    'pyct >=0.4.4',
     'bokeh >=1.4.0',
     'nodejs >=9.11.1',
     'setuptools' # should make this pip now

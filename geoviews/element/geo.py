@@ -1,5 +1,6 @@
 import param
 import numpy as np
+
 from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles
@@ -17,6 +18,10 @@ from holoviews.element import (
 )
 
 from shapely.geometry.base import BaseGeometry
+from shapely.geometry import (
+    box, GeometryCollection, MultiPolygon, LineString, MultiLineString,
+    Point, MultiPoint
+)
 
 try:
     from iris.cube import Cube
@@ -253,6 +258,19 @@ class Points(_Element, HvPoints):
 
     group = param.String(default='Points')
 
+    def geom(self):
+        """
+        Converts the Points to a shapely geometry.
+        """
+        points = [Point(x, y) for (x, y) in self.array([0, 1])]
+        npoints = len(points)
+        if not npoints:
+            return GeometryCollection()
+        elif len(points) == 1:
+            return points[0]
+        else:
+            return MultiPoint(points)
+
 
 class HexTiles(_Element, HvHexTiles):
     """
@@ -484,7 +502,7 @@ class Path(_Element, HvPath):
 
     def geom(self):
         """
-        Returns Path as a shapely geometry.
+        Converts the Path to a shapely geometry.
         """
         return path_to_geom(self)
 
@@ -610,7 +628,7 @@ class Contours(_Element, HvContours):
 
     def geom(self):
         """
-        Returns Path as a shapely geometry.
+        Converts the Contours to a shapely geometry.
         """
         return path_to_geom(self)
 
@@ -626,7 +644,7 @@ class Polygons(_Element, HvPolygons):
 
     def geom(self):
         """
-        Returns Path as a shapely geometry.
+        Converts the Path to a shapely geometry.
         """
         return polygon_to_geom(self)
 
@@ -645,6 +663,20 @@ class Rectangles(_Element, HvRectangles):
         bottom-left (lon0, lat0) and top right (lon1, lat1) coordinates
         of each box.""")
 
+    def geom(self):
+
+        """
+        Converts the Rectangles to a shapely geometry.
+        """
+        boxes = [box(*g) for g in self.array([0, 1, 2, 3])]
+        nboxes = len(boxes)
+        if not nboxes:
+            return GeometryCollection()
+        elif nboxes == 1:
+            return boxes[0]
+        else:
+            return MultiPolygon(boxes)
+
 
 
 class Segments(_Element, HvSegments):
@@ -661,6 +693,18 @@ class Segments(_Element, HvSegments):
         bottom-left (lon0, lat0) and top-right (lon1, lat1) coordinates
         of each segment.""")
 
+    def geom(self):
+        lines = [LineString([(x0, y0), (x1, y1)]) for (x0, y0, x1, y1)
+                 in self.array([0, 1, 2, 3])]
+        nlines = len(lines)
+        if not nlines:
+            return GeometryCollection()
+        elif nlines == 1:
+            return lines[0]
+        else:
+            return MultiLineString(lines)
+
+    
 
 class Shape(Dataset):
     """
@@ -841,6 +885,6 @@ class Shape(Dataset):
 
     def geom(self):
         """
-        Returns Shape as a shapely geometry
+        Returns the Shape as a shapely geometry
         """
         return self.data['geometry']

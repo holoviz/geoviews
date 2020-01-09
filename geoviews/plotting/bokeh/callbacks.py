@@ -252,7 +252,7 @@ class GeoBoxEditCallback(BoxEditCallback):
             return msg
 
         boxes = msg['data']
-        data = {'x0': [], 'y0': [], 'x1': [], 'y1': []}
+        data = dict(boxes, x0=[], y0=[], x1=[], y1=[])
         for extent in zip(boxes['x0'], boxes['y0'], boxes['x1'], boxes['y1']):
             x0, y0, x1, y1 = project_extents(extent, proj, element.crs)
             data['x0'].append(x0)

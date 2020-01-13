@@ -75,7 +75,6 @@ jobs:
         - source activate test-environment
         - conda config --set channel_priority strict
         - doit develop_install $CHANS_DEV -o doc
-        - conda install $CHANS_DEV "proj4<6"
         - doit env_capture
         - bokeh sampledata
         - geoviews fetch-data --path=examples

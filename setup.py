@@ -128,8 +128,7 @@ extras_require={
     'doc': _examples_extra + [
         'nbsite >=0.6.1',
         'sphinx_holoviz_theme',
-        'selenium',
-        'pyproj <=2.1.3'
+        'selenium'
     ],
     'tests': [
         'coveralls',

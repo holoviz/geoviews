@@ -65,7 +65,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             self.show_frame = False
             show_bounds = self._traverse_options(element, 'plot', ['show_bounds'],
                                                  defaults=False)
-            self.show_bounds = not any(not sb for sb in show_bounds['show_bounds'])
+            self.show_bounds = not any(not sb for sb in show_bounds.get('show_bounds', []))
             if self.show_grid:
                 param.main.warning(
                     'Grid lines do not reflect {0}; to do so '

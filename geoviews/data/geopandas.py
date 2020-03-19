@@ -248,7 +248,10 @@ class GeoPandasInterface(MultiInterface):
     @classmethod
     def dimension_type(cls, dataset, dim):
         col = cls.geo_column(dataset.data)
-        arr = geom_to_array(dataset.data[col].iloc[0])
+        if len(dataset.data):
+            arr = geom_to_array(dataset.data[col].iloc[0])
+        else:
+            return float
         ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
         return ds.interface.dimension_type(ds, dim)
 
@@ -379,14 +382,14 @@ class GeoPandasInterface(MultiInterface):
             if 'Point' not in geom_type and expanded:
                 values.append([np.NaN])
         values = values if 'Point' in geom_type or not expanded else values[:-1]
-        if len(values) == 1:
-            return values[0]
-        elif not values:
+        if not values:
             return np.array([])
         elif not expanded:
             array = np.empty(len(values), dtype=object)
             array[:] = values
             return array
+        elif len(values) == 1:
+            return values[0]
         else:
             return np.concatenate(values)
 

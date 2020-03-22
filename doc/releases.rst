@@ -12,6 +12,7 @@ Features:
 * Added geographic projection awareness to ``hv.annotate`` function (`#377 <https://github.com/holoviz/geoviews/pull/377>`_, `#419 <https://github.com/holoviz/geoviews/pull/419>`_)
 * Rewrote geometry interfaces such as geopandas to conform to new HoloViews geometry protocol (`#407 <https://github.com/holoviz/geoviews/pull/407>`_)
 * Implement consistent .geom method on geometry types (e.g. Path, Polygons, Points) (`#424 <https://github.com/holoviz/geoviews/pull/424>`_)
+* Add new `Rectangles` and `Segments` elements (`#377 <https://github.com/holoviz/geoviews/pull/377>`_)
 
 Bug fixes:
 
@@ -172,22 +173,22 @@ New components:
 
 
 * 
-  Added ```Graph`` element <http://holoviews.org/reference/elements/bokeh/Graph.html>`_ to plot networks of connected nodes (`#115 <https://github.com/holoviz/geoviews/pull/115>`_)
+  Added `Graph element <http://holoviews.org/reference/elements/bokeh/Graph.html>`_ to plot networks of connected nodes (`#115 <https://github.com/holoviz/geoviews/pull/115>`_)
 
 * 
-  Added ```TriMesh`` element <http://holoviews.org/reference/elements/bokeh/TriMesh.html>`_ and datashading operation to plot small and large irregular triangular meshes (`#115 <https://github.com/holoviz/geoviews/pull/115>`_)
+  Added `TriMesh element <http://holoviews.org/reference/elements/bokeh/TriMesh.html>`_ and datashading operation to plot small and large irregular triangular meshes (`#115 <https://github.com/holoviz/geoviews/pull/115>`_)
 
 * 
-  Added ```QuadMesh`` element <http://holoviews.org/reference/elements/bokeh/QuadMesh.html>`_ and datashading operation to plot small and large, irregular rectilinear and curvilinear meshes (`#116 <https://github.com/holoviz/geoviews/pull/116>`_)
+  Added `QuadMesh element <http://holoviews.org/reference/elements/bokeh/QuadMesh.html>`_ and datashading operation to plot small and large, irregular rectilinear and curvilinear meshes (`#116 <https://github.com/holoviz/geoviews/pull/116>`_)
 
 * 
-  Added ```VectorField`` element <http://holoviews.org/reference/elements/bokeh/VectorField.html>`_ and datashading operation to plot small and large quiver plots and other collections of vectors (`#122 <https://github.com/holoviz/geoviews/pull/122>`_)
+  Added `VectorField element <http://holoviews.org/reference/elements/bokeh/VectorField.html>`_ and datashading operation to plot small and large quiver plots and other collections of vectors (`#122 <https://github.com/holoviz/geoviews/pull/122>`_)
 
 * 
-  Added ```HexTiles`` element <http://holoviews.org/reference/elements/bokeh/HexTiles.html>`_ to plot data binned into a hexagonal grid (`#147 <https://github.com/holoviz/geoviews/pull/147>`_)
+  Added `HexTiles element <http://holoviews.org/reference/elements/bokeh/HexTiles.html>`_ to plot data binned into a hexagonal grid (`#147 <https://github.com/holoviz/geoviews/pull/147>`_)
 
 * 
-  Added ```Labels`` element <http://holoviews.org/reference/elements/bokeh/Labels.html>`_ to plot a large number of text labels at once (as data rather than as annotations) (`#147 <https://github.com/holoviz/geoviews/pull/147>`_)
+  Added `Labels element <http://holoviews.org/reference/elements/bokeh/Labels.html>`_ to plot a large number of text labels at once (as data rather than as annotations) (`#147 <https://github.com/holoviz/geoviews/pull/147>`_)
 
 New features:
 
@@ -215,11 +216,11 @@ Version 1.4.3
 Enhancements:
 
 
-* Ensured that HoloViews operations such as datashade, aggregate and regrid do not drop the coordinate reference system on the input element (https://github.com/holoviz/geoviews/pull/118)
-* Unified WMTS support across backends, bokeh and matplotlib now support rendering ``{X}_{Y}_{Z}`` based web tiles (https://github.com/holoviz/geoviews/pull/120)
-* Handle projecting of empty Elements (https://github.com/holoviz/geoviews/pull/131)
-* Set Image element NaN coloring to transparent (https://github.com/holoviz/geoviews/pull/136/commits/f1f29607079f1f86bce56187dd7a98ca2a1d9eff)
-* Overhauled website with new theme (https://github.com/holoviz/geoviews/pull/106)
+* Ensured that HoloViews operations such as datashade, aggregate and regrid do not drop the coordinate reference system on the input element (`#118 <https://github.com/holoviz/geoviews/pull/118>`_)
+* Unified WMTS support across backends, bokeh and matplotlib now support rendering ``{X}_{Y}_{Z}`` based web tiles (`#120 <https://github.com/holoviz/geoviews/pull/120>`_)
+* Handle projecting of empty Elements (`#131 <https://github.com/holoviz/geoviews/pull/131>`_)
+* Set Image element NaN coloring to transparent (`#136 <https://github.com/holoviz/geoviews/pull/136/commits/f1f29607079f1f86bce56187dd7a98ca2a1d9eff>`_)
+* Overhauled website with new theme (`#106 <https://github.com/holoviz/geoviews/pull/106>`_)
 
 Version 1.4.2
 -------------
@@ -258,10 +259,10 @@ Version 1.3.0
 This release is mostly a compatibility release for HoloViews 1.8. It includes a small number of significant fixes and changes:
 
 
-* Introduces a general ``project`` operation to project most Element types from one ``crs`` to another ( https://github.com/holoviz/geoviews/pull/69)
-* Added a ``gv.RGB`` Element type useful for representing datashader aggregates and particularly loading GeoTiffs with xarray (https://github.com/holoviz/geoviews/pull/75)
-* All geoviews geographic Elements declare a ``crs``, which defaults to ``PlateCarree()`` (https://github.com/holoviz/geoviews/pull/76)
-* Fix for compatibility with HoloViews 1.8 (https://github.com/holoviz/geoviews/pull/77)
+* Introduces a general ``project`` operation to project most Element types from one ``crs`` to another (`#69 <https://github.com/holoviz/geoviews/pull/69>`_)
+* Added a ``gv.RGB`` Element type useful for representing datashader aggregates and particularly loading GeoTiffs with xarray (`#75 <https://github.com/holoviz/geoviews/pull/75>`_)
+* All geoviews geographic Elements declare a ``crs``, which defaults to ``PlateCarree()`` (`#76 <https://github.com/holoviz/geoviews/pull/76>`_)
+* Fix for compatibility with HoloViews 1.8 (`#77 <https://github.com/holoviz/geoviews/pull/77>`_)
 
 Version 1.2.0
 -------------
@@ -271,16 +272,16 @@ This is a minor release mostly to maintain compatibility with the recently relea
 Features:
 
 
-* Added ``project_shape`` operations (https://github.com/holoviz/geoviews/commit/c6c5ce261aa725853e00094fbe59ff3650ad1e19)
+* Added ``project_shape`` operations (`c6c5ce <https://github.com/holoviz/geoviews/commit/c6c5ce261aa725853e00094fbe59ff3650ad1e19>`_)
 * The ``Shape.from_records`` function now supports ``drop_missing`` option.  #63
-* Compatibility with HoloViews (PR #59, #60)
-* Bokeh box_zoom tool now matches aspect on geographic plots (https://github.com/holoviz/geoviews/commit/c6c41a979dca928c83d74c3773df458840832907)
+* Compatibility with HoloViews (`#59 <https://github.com/holoviz/geoviews/pull/59>`_, `#60 <https://github.com/holoviz/geoviews/pull/60>`_)
+* Bokeh box_zoom tool now matches aspect on geographic plots (`c6c41a9 <https://github.com/holoviz/geoviews/commit/c6c41a979dca928c83d74c3773df458840832907>`_)
 
 Bug fixes:
 
 
-* Fix for ``Shape`` Element colormapping (PR #58)
-* Geographic objects did not inherit ``crs`` on clone (https://github.com/holoviz/geoviews/commit/df0ba893e273e8a143d78419f6491c27ed814fe5)
+* Fix for ``Shape`` Element colormapping (`#58 <https://github.com/holoviz/geoviews/pull/58>`_)
+* Geographic objects did not inherit ``crs`` on clone (`df0ba8 <https://github.com/holoviz/geoviews/commit/df0ba893e273e8a143d78419f6491c27ed814fe5>`_)
 
 Version 1.1.0
 -------------

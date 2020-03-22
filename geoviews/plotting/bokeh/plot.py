@@ -125,7 +125,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             CustomJSHover = None
         if (not self.geographic or None in (hover, CustomJSHover) or
             isinstance(hover.tooltips, basestring) or self.projection is not GOOGLE_MERCATOR
-            or hover.tooltips is None):
+            or hover.tooltips is None or 'hv_created' not in hover.tags):
             return
         element = self.current_frame
         xdim, ydim = [dimension_sanitizer(kd.name) for kd in element.kdims]
@@ -151,10 +151,13 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     def _update_hover(self, element):
         tooltips, hover_opts = self._hover_opts(element)
         hover = self.handles['hover']
-        tooltips = [(ttp.pprint_label, '@{%s}' % dimension_sanitizer(ttp.name))
-                    if isinstance(ttp, Dimension) else ttp for ttp in tooltips]
-        tooltips = [(l, t+'{custom}' if t in hover.formatters else t) for l, t in tooltips]
-        self.handles['hover'].tooltips = tooltips
+        if 'hv_created' in hover.tags:
+            tooltips = [(ttp.pprint_label, '@{%s}' % dimension_sanitizer(ttp.name))
+                        if isinstance(ttp, Dimension) else ttp for ttp in tooltips]
+            tooltips = [(l, t+'{custom}' if t in hover.formatters else t) for l, t in tooltips]
+            hover.tooltips = tooltips
+        else:
+            super(GeoPlot, self)._update_hover(element)
 
     def get_data(self, element, ranges, style):
         if self._project_operation and self.geographic:

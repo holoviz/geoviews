@@ -1,7 +1,7 @@
 Version 1.7.0
 =============
 
-This release adds some major features to HoloViews and adds compatibility for HoloViews 1.13.0. This is also the last release with support for Python 2. Many thanks for the many people who contributed by filing issues and our contributors including @ceball, @jsignell, @ahuang11, @jbednar and @philippjfr.
+This GeoViews release provides compatibility with HoloViews 1.13, including support for the major new features provided in that release. This is also the last release with support for Python 2. Many thanks for the many people who contributed by filing issues and our contributors including @ceball, @jsignell, @ahuang11, @jbednar, and @philippjfr.
 
 Features:
 
@@ -18,6 +18,7 @@ Bug fixes:
 Compatibility:
 
 - Compatibility with HoloViews 1.13.0 ([#429](https://github.com/holoviz/geoviews/pull/429), [#430](https://github.com/holoviz/geoviews/pull/430))
+
 
 Version 1.6.6
 =============

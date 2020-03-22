@@ -16,18 +16,18 @@ env:
 
 # quick hack to determine what tag means (improvements welcome)
 #     release: ^v(\d+|\.)*[^a-z]\d*$
-# dev release: ^v(\d+|\.)*[a-z]\d*$
+# dev release: ^v(\d+|\.)*[a-z]{1, 2}\d*$
 
 stages:
   - test
   - name: docs
     if: tag =~ ^v(\d+|\.)*[^a-z]\d*$ OR tag = website AND NOT type = pull_request
   - name: docs_dev
-    if: (tag =~ ^v(\d+|\.)*[a-z]\d*$) OR (tag = website_dev) OR ((commit_message =~ /\[doc-build\]/) and branch = master)
+    if: (tag =~ ^v(\d+|\.)*[a-z]{1,2}\d*$) OR (tag = website_dev) OR ((commit_message =~ /\[doc-build\]/) and branch = master)
   - name: conda_dev_package
-    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
+    if: tag =~ ^v(\d+|\.)*[a-z]{1,2}\d*$
   - name: pip_dev_package
-    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
+    if: tag =~ ^v(\d+|\.)*[a-z]{1,2}\d*$
   - name: conda_package
     if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
   - name: pip_package

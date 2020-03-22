@@ -28,6 +28,7 @@ _NAV =  (
         ('User Guide', 'user_guide/index'),
         ('Gallery', 'gallery/index'),
         ('Topics', 'topics'),
+        ('Releases', 'releases'),
         ('About', 'about')
 )
 

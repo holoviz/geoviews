@@ -1,14 +1,18 @@
 import param
 
-from holoviews import (extension, help, opts, output, renderer, Store, # noqa (API import)
-                       Cycle, Palette, Overlay, Layout, NdOverlay, NdLayout,
-                       HoloMap, DynamicMap, GridSpace, Dimension, dim)
+from holoviews import ( # noqa (API import)
+    dim, extension, help, opts, output, renderer, Store, Cycle, Palette,
+    Overlay, Layout, NdOverlay, NdLayout, HoloMap, DynamicMap, GridSpace,
+    Dimension
+)
 
 try:
     # Only available in HoloViews >=1.11
     from holoviews import render, save # noqa (API import)
 except:
     pass
+
+from . import models
 
 from .annotators import annotate # noqa (API import)
 from .element import ( # noqa (API import)

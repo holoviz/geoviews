@@ -3,7 +3,10 @@ import copy
 import param
 import numpy as np
 from cartopy.crs import GOOGLE_MERCATOR
-from bokeh.models import WMTSTileSource, BBoxTileSource, QUADKEYTileSource, SaveTool
+from bokeh.models import (
+    ColumnDataSource, WMTSTileSource, BBoxTileSource, QUADKEYTileSource,
+    SaveTool
+)
 
 from holoviews import Store, Overlay, NdOverlay
 from holoviews.core import util
@@ -21,6 +24,7 @@ from ...element import (
     Text, RGB, Nodes, EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
     Labels, HexTiles, LineContours, FilledContours, Rectangles, Segments
 )
+from ...models.graphs import TriMeshLayoutProvider
 from ...operation import (
     project_image, project_points, project_path, project_graph,
     project_quadmesh, project_geom
@@ -170,6 +174,30 @@ class GeoGraphPlot(GeoPlot, GraphPlot):
 class GeoTriMeshPlot(GeoPlot, TriMeshPlot):
 
     _project_operation = project_graph
+
+    def get_data(self, element, ranges, style):
+        data, mapping, style = super(GeoTriMeshPlot, self).get_data(element, ranges, style)
+        x, y, index = element.nodes.kdims
+        data['scatter_1']['_x_pos'] = element.nodes[x.name]
+        data['scatter_1']['_y_pos'] = element.nodes[y.name]
+        for vdim in element.nodes.vdims:
+            data['scatter_1'][vdim.name] = element.nodes[vdim.name]
+        return data, mapping, style
+
+    def _get_graph_properties(self, plot, element, data, mapping, ranges, style):
+        (node_cds, edge_cds, _), properties = super(GeoTriMeshPlot, self)._get_graph_properties(
+            plot, element, data, mapping, ranges, style
+        )
+        x, y, index = element.nodes.kdims
+        node_indices = list(map(int, element.nodes[index.name]))
+        graph_layout = dict(zip(node_indices, zip(element.nodes[x.name], element.nodes[y.name])))
+        self.handles['layout_source'] = layout = TriMeshLayoutProvider(graph_layout=graph_layout)
+        return (node_cds, edge_cds, layout), properties
+
+    def _get_edge_paths(self, element, ranges):
+        v1, v2, v3 = element.kdims
+        df = element.dframe().rename(columns={v1.name: 'v1', v2.name: 'v2', v3.name: 'v3'})
+        return ColumnDataSource.from_df(df), {}
 
 
 class GeoRectanglesPlot(GeoPlot, RectanglesPlot):

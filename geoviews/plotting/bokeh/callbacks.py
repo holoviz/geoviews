@@ -1,12 +1,15 @@
+import os
+
 import numpy as np
 
+from bokeh.models import GraphRenderer, PointDrawTool, CustomJS
 from holoviews.core.ndmapping import UniformNdMapping
 from holoviews.plotting.bokeh.callbacks import (
     RangeXYCallback, BoundsCallback, BoundsXCallback, BoundsYCallback,
     PointerXYCallback, PointerXCallback, PointerYCallback, TapCallback,
     SingleTapCallback, DoubleTapCallback, MouseEnterCallback,
     MouseLeaveCallback, RangeXCallback, RangeYCallback, PolyDrawCallback,
-    PointDrawCallback, BoxEditCallback, PolyEditCallback
+    PointDrawCallback, BoxEditCallback, PolyEditCallback, CDSCallback
 )
 from holoviews.streams import (
     Stream, PointerXY, RangeXY, RangeX, RangeY, PointerX, PointerY,
@@ -15,8 +18,10 @@ from holoviews.streams import (
 )
 
 from ...element.geo import _Element, Shape
-from ...util import project_extents
+from ...models.custom_tools import PolyVertexEditTool, PolyVertexDrawTool
 from ...operation import project
+from ...streams import PolyVertexEdit, PolyVertexDraw, TriMeshEdit
+from ...util import project_extents
 from .plot import GeoOverlayPlot
 
 
@@ -275,6 +280,164 @@ class GeoPointDrawCallback(PointDrawCallback):
         return msg
 
 
+
+
+class PolyVertexEditCallback(GeoPolyEditCallback):
+
+    split_code = """
+    var vcds = vertex.data_source
+    var vertices = vcds.selected.indices;
+    var pcds = poly.data_source;
+    var index = null;
+    for (i = 0; i < pcds.data.xs.length; i++) {
+        if (pcds.data.xs[i] === vcds.data.x) {
+            index = i;
+        }
+    }
+    if ((index == null) || !vertices.length) {return}
+    var vertex = vertices[0];
+    for (col of poly.data_source.columns()) {
+        var data = pcds.data[col][index];
+        var first = data.slice(0, vertex+1)
+        var second = data.slice(vertex)
+        pcds.data[col][index] = first
+        pcds.data[col].splice(index+1, 0, second)
+    }
+    for (c of vcds.columns()) {
+      vcds.data[c] = [];
+    }
+    pcds.change.emit()
+    pcds.properties.data.change.emit()
+    pcds.selection_manager.clear();
+    vcds.change.emit()
+    vcds.properties.data.change.emit()
+    vcds.selection_manager.clear();
+    """
+
+    icon = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__), '..', '..', 'icons', 'PolyBreak.png'
+        )
+    )
+
+    def _create_vertex_split_link(self, action, poly_renderer,
+                                  vertex_renderer, vertex_tool):
+        cb = CustomJS(code=self.split_code, args={
+            'poly': poly_renderer, 'vertex': vertex_renderer, 'tool': vertex_tool})
+        action.callback = cb
+
+    def initialize(self, plot_id=None):
+        plot = self.plot
+        stream = self.streams[0]
+        element = self.plot.current_frame
+        vertex_tool = None
+        if all(s.shared for s in self.streams):
+            tools = [tool for tool in plot.state.tools if isinstance(tool, PolyEditTool)]
+            vertex_tool = tools[0] if tools else None
+        renderer = plot.handles['glyph_renderer']
+        if vertex_tool is None:
+            vertex_style = dict({'size': 10, 'alpha': 0.8}, **stream.vertex_style)
+            r1 = plot.state.scatter([], [], **vertex_style)
+            tooltip = '%s Edit Tool' % type(element).__name__
+            vertex_tool = PolyVertexEditTool(
+                vertex_renderer=r1, custom_tooltip=tooltip, node_style=stream.node_style,
+                end_style=stream.feature_style)
+            action = CustomAction(action_tooltip='Split path', icon=self.icon)
+            plot.state.add_tools(vertex_tool, action)
+            self._create_vertex_split_link(action, renderer, r1, vertex_tool)
+        vertex_tool.renderers.append(renderer)
+        self._update_cds_vdims()
+        CDSCallback.initialize(self, plot_id)
+
+
+
+class PolyVertexDrawCallback(GeoPolyDrawCallback):
+
+    def initialize(self, plot_id=None):
+        plot = self.plot
+        stream = self.streams[0]
+        element = self.plot.current_frame
+        kwargs = {}
+        if stream.num_objects:
+            kwargs['num_objects'] = stream.num_objects
+        if stream.show_vertices:
+            vertex_style = dict({'size': 10}, **stream.vertex_style)
+            r1 = plot.state.scatter([], [], **vertex_style)
+            kwargs['vertex_renderer'] = r1
+        tooltip = '%s Draw Tool' % type(element).__name__
+        poly_tool = PolyVertexDrawTool(
+            drag=all(s.drag for s in self.streams),
+            empty_value=stream.empty_value,
+            renderers=[plot.handles['glyph_renderer']],
+            node_style=stream.node_style,
+            end_style=stream.feature_style,
+            custom_tooltip=tooltip,
+            **kwargs)
+        plot.state.tools.append(poly_tool)
+        self._update_cds_vdims()
+        CDSCallback.initialize(self, plot_id)
+
+
+
+class TriMeshEditCallback(CDSCallback):
+    
+    attributes = {'data': 'scatter_1_source.data'}
+    models = ['scatter_1_source']
+    
+    on_changes = ['data']
+
+    def initialize(self, plot_id=None):        
+        super(CDSCallback, self).initialize(plot_id)
+        plot = self.plot
+        data = self._process_msg({'data': plot.handles['scatter_1_source'].data})['data']
+        for stream in self.streams:
+            stream.update(data=data)
+
+        plot = self.plot
+        element = plot.current_frame
+        stream = self.streams[0]
+        
+        # Set up node renderer
+        graph = self.plot.handles['glyph_renderer']
+        graph.node_renderer.glyph.x = {'field': '_x_pos'}
+        graph.node_renderer.glyph.y = {'field': '_y_pos'}
+        graph.node_renderer.glyph.size = 10
+        plot.state.renderers.append(graph.node_renderer)
+
+        # Set up tool
+        tool = PointDrawTool(renderers=[graph.node_renderer], add=False)
+        plot.state.tools.append(tool)
+
+        print(len(element.nodes))
+        x, y, index = element.nodes.kdims
+        node_indices = list(map(int, element.nodes['index']))
+        cds = graph.node_renderer.data_source
+        cds.add(node_indices, 'index')
+        cds.add(element.nodes[y.name], '_x_pos')
+        cds.add(element.nodes[x.name], '_y_pos')
+        code = """
+        let layout = {}
+        for (let i = 0, endi = cds.data.index.length; i < endi; i++) {
+           layout[cds.data.index[i]] = [cds.data._x_pos[i], cds.data._y_pos[i]]
+        }
+        layout_provider.graph_layout = layout;
+        layout_provider.properties.graph_layout.change.emit()
+        """
+        js = CustomJS(args={'cds': graph.node_renderer.data_source, 'layout_provider': graph.layout_provider}, code=code)
+        cds.js_on_change('data', js)
+        
+    def _process_msg(self, msg):
+        msg = super(TriMeshEditCallback, self)._process_msg(msg)
+        data = msg['data']
+        plot = self.plot
+        element = plot.current_frame
+        x, y = element.nodes.kdims[:2]
+        data[x.name] = data.pop('_x_pos')
+        data[y.name] = data.pop('_y_pos')
+        return self._transform(msg)
+
+
+
 callbacks = Stream._callbacks['bokeh']
 
 try:
@@ -312,3 +475,6 @@ callbacks[PolyDraw]    = GeoPolyDrawCallback
 callbacks[PolyEdit]    = GeoPolyEditCallback
 callbacks[PointDraw]   = GeoPointDrawCallback
 callbacks[BoxEdit]     = GeoBoxEditCallback
+callbacks[PolyVertexEdit] = PolyVertexEditCallback
+callbacks[PolyVertexDraw] = PolyVertexDrawCallback
+callbacks[TriMeshEdit] = TriMeshEditCallback

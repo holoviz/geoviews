@@ -5,7 +5,7 @@
   "license": "BSD-3-Clause",
   "repository": {},
   "dependencies": {
-    "bokehjs": "^1.4.0"
+    "@bokeh/bokehjs": "^2.0.0"
   },
   "devDependencies": {}
 }

@@ -1,6 +1,13 @@
 Releases
 ========
 
+Version 1.8.0
+-------------
+
+This release makes introduces no actual changes on top of version 1.7.0, it simply adds a dependency on bokeh>=2.0, which also means that this is the first version that requires Python 3.
+
+- Compatibility with Bokeh 2.0 (`#449 <https://github.com/holoviz/geoviews/pull/449>`_)
+
 Version 1.7.0
 -------------
 

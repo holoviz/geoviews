@@ -52,6 +52,11 @@ You can install GeoViews and its dependencies using conda:
 conda install -c pyviz geoviews
 ```
 
+In certain circumstances proj6 issues may prevent installation or
+cause issues. If you encounter these issues ensure you also pin proj4::
+
+    conda install proj4<6
+
 Alternatively you can install the geoviews-core package, which
 only installs the minimal dependencies required to run geoviews:
 

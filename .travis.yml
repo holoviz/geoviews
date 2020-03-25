@@ -56,13 +56,6 @@ jobs:
         - doit test_all_recommended
       after_success: coveralls
 
-    # python 2 flake checking typically catches python 2 syntax
-    # errors where python 3's been assumed...
-    - <<: *default
-      env: DESC="py2 flakes" PYTHON_VERSION=2.7
-      script: doit test_flakes
-      after_success: true # don't upload coverage
-
     ########## DOCS ##########
 
     - &doc_build

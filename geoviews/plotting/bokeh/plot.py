@@ -129,7 +129,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             return
         element = self.current_frame
         xdim, ydim = [dimension_sanitizer(kd.name) for kd in element.kdims]
-        formatters, tooltips = {}, []
+        formatters, tooltips = dict(hover.formatters), []
         xhover = CustomJSHover(code=self._hover_code % 0)
         yhover = CustomJSHover(code=self._hover_code % 1)
         for name, formatter in hover.tooltips:

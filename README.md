@@ -49,6 +49,7 @@ objects.
 You can install GeoViews and its dependencies using conda:
 
 ```
+conda update --all
 conda install -c pyviz geoviews
 ```
 
@@ -56,6 +57,7 @@ Alternatively you can install the geoviews-core package, which
 only installs the minimal dependencies required to run geoviews:
 
 ```
+conda update --all
 conda install -c pyviz geoviews-core
 ```
 

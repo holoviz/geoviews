@@ -1,22 +1,27 @@
+import os
 import numpy as np
 
+from bokeh.models import CustomJS, CustomAction, PolyEditTool
 from holoviews.core.ndmapping import UniformNdMapping
 from holoviews.plotting.bokeh.callbacks import (
     RangeXYCallback, BoundsCallback, BoundsXCallback, BoundsYCallback,
     PointerXYCallback, PointerXCallback, PointerYCallback, TapCallback,
     SingleTapCallback, DoubleTapCallback, MouseEnterCallback,
     MouseLeaveCallback, RangeXCallback, RangeYCallback, PolyDrawCallback,
-    PointDrawCallback, BoxEditCallback, PolyEditCallback
+    PointDrawCallback, BoxEditCallback, PolyEditCallback, CDSCallback,
+    FreehandDrawCallback
 )
 from holoviews.streams import (
     Stream, PointerXY, RangeXY, RangeX, RangeY, PointerX, PointerY,
     BoundsX, BoundsY, Tap, SingleTap, DoubleTap, MouseEnter, MouseLeave,
-    BoundsXY, PolyDraw, PolyEdit, PointDraw, BoxEdit
+    BoundsXY, PolyDraw, PolyEdit, PointDraw, BoxEdit, FreehandDraw
 )
 
 from ...element.geo import _Element, Shape
 from ...util import project_extents
+from ...models import PolyVertexDrawTool, PolyVertexEditTool
 from ...operation import project
+from ...streams import PolyVertexEdit, PolyVertexDraw
 from .plot import GeoOverlayPlot
 
 
@@ -275,25 +280,118 @@ class GeoPointDrawCallback(PointDrawCallback):
         return msg
 
 
+class PolyVertexEditCallback(GeoPolyEditCallback):
+
+    split_code = """
+    var vcds = vertex.data_source
+    var vertices = vcds.selected.indices;
+    var pcds = poly.data_source;
+    var index = null;
+    for (i = 0; i < pcds.data.xs.length; i++) {
+        if (pcds.data.xs[i] === vcds.data.x) {
+            index = i;
+        }
+    }
+    if ((index == null) || !vertices.length) {return}
+    var vertex = vertices[0];
+    for (col of poly.data_source.columns()) {
+        var data = pcds.data[col][index];
+        var first = data.slice(0, vertex+1)
+        var second = data.slice(vertex)
+        pcds.data[col][index] = first
+        pcds.data[col].splice(index+1, 0, second)
+    }
+    for (c of vcds.columns()) {
+      vcds.data[c] = [];
+    }
+    pcds.change.emit()
+    pcds.properties.data.change.emit()
+    pcds.selection_manager.clear();
+    vcds.change.emit()
+    vcds.properties.data.change.emit()
+    vcds.selection_manager.clear();
+    """
+
+    icon = os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__), '..', '..', 'icons', 'PolyBreak.png'
+        )
+    )
+
+    def _create_vertex_split_link(self, action, poly_renderer,
+                                  vertex_renderer, vertex_tool):
+        cb = CustomJS(code=self.split_code, args={
+            'poly': poly_renderer, 'vertex': vertex_renderer, 'tool': vertex_tool})
+        action.callback = cb
+
+    def initialize(self, plot_id=None):
+        plot = self.plot
+        stream = self.streams[0]
+        element = self.plot.current_frame
+        vertex_tool = None
+        if all(s.shared for s in self.streams):
+            tools = [tool for tool in plot.state.tools if isinstance(tool, PolyEditTool)]
+            vertex_tool = tools[0] if tools else None
+        renderer = plot.handles['glyph_renderer']
+        if vertex_tool is None:
+            vertex_style = dict({'size': 10, 'alpha': 0.8}, **stream.vertex_style)
+            r1 = plot.state.scatter([], [], **vertex_style)
+            tooltip = '%s Edit Tool' % type(element).__name__
+            vertex_tool = PolyVertexEditTool(
+                vertex_renderer=r1, custom_tooltip=tooltip, node_style=stream.node_style,
+                end_style=stream.feature_style)
+            action = CustomAction(action_tooltip='Split path', icon=self.icon)
+            plot.state.add_tools(vertex_tool, action)
+            self._create_vertex_split_link(action, renderer, r1, vertex_tool)
+        vertex_tool.renderers.append(renderer)
+        self._update_cds_vdims()
+        CDSCallback.initialize(self, plot_id)
+
+
+
+class PolyVertexDrawCallback(GeoPolyDrawCallback):
+
+    def initialize(self, plot_id=None):
+        plot = self.plot
+        stream = self.streams[0]
+        element = self.plot.current_frame
+        kwargs = {}
+        if stream.num_objects:
+            kwargs['num_objects'] = stream.num_objects
+        if stream.show_vertices:
+            vertex_style = dict({'size': 10}, **stream.vertex_style)
+            r1 = plot.state.scatter([], [], **vertex_style)
+            kwargs['vertex_renderer'] = r1
+        tooltip = '%s Draw Tool' % type(element).__name__
+        poly_tool = PolyVertexDrawTool(
+            drag=all(s.drag for s in self.streams),
+            empty_value=stream.empty_value,
+            renderers=[plot.handles['glyph_renderer']],
+            node_style=stream.node_style,
+            end_style=stream.feature_style,
+            custom_tooltip=tooltip,
+            **kwargs)
+        plot.state.tools.append(poly_tool)
+        self._update_cds_vdims()
+        CDSCallback.initialize(self, plot_id)
+
+class GeoFreehandDrawCallback(FreehandDrawCallback):
+
+    def _process_msg(self, msg):
+        msg = super(GeoFreehandDrawCallback, self)._process_msg(msg)
+        return project_poly(self, msg)
+
+    def _update_cds_vdims(self):
+        if isinstance(self.source, Shape):
+            return
+        super(GeoFreehandDrawCallback, self)._update_cds_vdims()
+
+        
 callbacks = Stream._callbacks['bokeh']
 
-try:
-    # Handle FreehandDraw (available in HoloViews 1.11.0)
-    from holoviews.plotting.bokeh.callbacks import FreehandDrawCallback
-    from holoviews.streams import FreehandDraw
-    class GeoFreehandDrawCallback(FreehandDrawCallback):
-        def _process_msg(self, msg):
-            msg = super(GeoFreehandDrawCallback, self)._process_msg(msg)
-            return project_poly(self, msg)
-
-        def _update_cds_vdims(self):
-            if isinstance(self.source, Shape):
-                return
-            super(GeoFreehandDrawCallback, self)._update_cds_vdims()
-    callbacks[FreehandDraw] = GeoFreehandDrawCallback
-except:
-    pass
-
+callbacks[PolyVertexEdit] = PolyVertexEditCallback
+callbacks[PolyVertexDraw] = PolyVertexDrawCallback
+callbacks[FreehandDraw] = GeoFreehandDrawCallback
 callbacks[RangeXY]     = GeoRangeXYCallback
 callbacks[RangeX]      = GeoRangeXCallback
 callbacks[RangeY]      = GeoRangeYCallback

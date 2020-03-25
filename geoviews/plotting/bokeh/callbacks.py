@@ -287,21 +287,21 @@ class PolyVertexEditCallback(GeoPolyEditCallback):
     var vertices = vcds.selected.indices;
     var pcds = poly.data_source;
     var index = null;
-    for (i = 0; i < pcds.data.xs.length; i++) {
+    for (let i = 0; i < pcds.data.xs.length; i++) {
         if (pcds.data.xs[i] === vcds.data.x) {
             index = i;
         }
     }
     if ((index == null) || !vertices.length) {return}
     var vertex = vertices[0];
-    for (col of poly.data_source.columns()) {
+    for (const col of poly.data_source.columns()) {
         var data = pcds.data[col][index];
         var first = data.slice(0, vertex+1)
         var second = data.slice(vertex)
         pcds.data[col][index] = first
         pcds.data[col].splice(index+1, 0, second)
     }
-    for (c of vcds.columns()) {
+    for (const c of vcds.columns()) {
       vcds.data[c] = [];
     }
     pcds.change.emit()

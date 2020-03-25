@@ -56,22 +56,22 @@ class PointTableLinkCallback(LinkCallback):
     on_target_changes = ['data', 'patching']
 
     source_code = """
-    var projections = require("core/util/projections");
-    [x, y] = point_columns
-    var xs_column = source_cds.data[x];
-    var ys_column = source_cds.data[y];
-    var projected_xs = []
-    var projected_ys = []
-    for (i = 0; i < xs_column.length; i++) {
-      var xv = xs_column[i]
-      var yv = ys_column[i]
-      p = projections.wgs84_mercator.inverse([xv, yv])
+    const projections = Bokeh.require("core/util/projections");
+    const [x, y] = point_columns
+    const xs_column = source_cds.data[x];
+    const ys_column = source_cds.data[y];
+    const projected_xs = []
+    const projected_ys = []
+    for (let i = 0; i < xs_column.length; i++) {
+      const  xv = xs_column[i]
+      const yv = ys_column[i]
+      const p = projections.wgs84_mercator.inverse([xv, yv])
       projected_xs.push(p[0])
       projected_ys.push(p[1])
     }
     target_cds.data[x] = projected_xs;
     target_cds.data[y] = projected_ys;
-    for (col of source_cds.columns()) {
+    for (const col of source_cds.columns()) {
        if ((col != x) && (col != y)) {
          target_cds.data[col] = source_cds.data[col]
        }
@@ -81,23 +81,23 @@ class PointTableLinkCallback(LinkCallback):
     """
 
     target_code = """
-    var projections = require("core/util/projections");
-    [x, y] = point_columns
-    var xs_column = target_cds.data[x];
-    var ys_column = target_cds.data[y];
-    var projected_xs = []
-    var projected_ys = []
-    var empty = []
-    for (i = 0; i < xs_column.length; i++) {
-      var xv = xs_column[i]
-      var yv = ys_column[i]
-      p = projections.wgs84_mercator.forward([xv, yv])
+    var projections = Bokeh.require("core/util/projections");
+    const [x, y] = point_columns
+    const xs_column = target_cds.data[x];
+    const ys_column = target_cds.data[y];
+    const projected_xs = []
+    const projected_ys = []
+    const empty = []
+    for (let i = 0; i < xs_column.length; i++) {
+      const xv = xs_column[i]
+      const yv = ys_column[i]
+      const p = projections.wgs84_mercator.forward([xv, yv])
       projected_xs.push(p[0])
       projected_ys.push(p[1])
     }
     source_cds.data[x] = projected_xs;
     source_cds.data[y] = projected_ys;
-    for (col of target_cds.columns()) {
+    for (const col of target_cds.columns()) {
        if ((col != x) && (col != y)) {
          source_cds.data[col] = target_cds.data[col]
        }
@@ -117,38 +117,40 @@ class VertexTableLinkCallback(LinkCallback):
     on_target_changes = ['data', 'patching']
 
     source_code = """
-    var projections = require("core/util/projections");
-    var index = source_cds.selected.indices[0];
+    const projections = Bokeh.require("core/util/projections");
+    const index = source_cds.selected.indices[0];
+    let xs_column, ys_column
     if (index == undefined) {
-      var xs_column = [];
-      var ys_column = [];
+      xs_column = [];
+      ys_column = [];
     } else {
-      var xs_column = source_cds.data['xs'][index];
-      var ys_column = source_cds.data['ys'][index];
+      xs_column = source_cds.data['xs'][index];
+      ys_column = source_cds.data['ys'][index];
     }
     if (xs_column == undefined) {
-      var xs_column = [];
-      var ys_column = [];
+      xs_column = [];
+      ys_column = [];
     }
-    var projected_xs = []
-    var projected_ys = []
+    const projected_xs = []
+    const projected_ys = []
     var empty = []
-    for (i = 0; i < xs_column.length; i++) {
-      var x = xs_column[i]
-      var y = ys_column[i]
-      p = projections.wgs84_mercator.inverse([x, y])
+    for (let i = 0; i < xs_column.length; i++) {
+      const x = xs_column[i]
+      const y = ys_column[i]
+      const p = projections.wgs84_mercator.inverse([x, y])
       projected_xs.push(p[0])
       projected_ys.push(p[1])
       empty.push(null)
     }
-    [x, y] = vertex_columns
+    const [x, y] = vertex_columns
     target_cds.data[x] = projected_xs
     target_cds.data[y] = projected_ys
-    var length = projected_xs.length
-    for (var col in target_cds.data) {
+    const length = projected_xs.length
+    for (const col in target_cds.data) {
+      let data;
       if (vertex_columns.indexOf(col) != -1) { continue; }
       else if (col in source_cds.data) {
-        var path = source_cds.data[col][index];
+        const path = source_cds.data[col][index];
         if ((path == undefined)) {
           data = empty;
         } else if (path.length == length) {
@@ -166,30 +168,31 @@ class VertexTableLinkCallback(LinkCallback):
     """
 
     target_code = """
-    var projections = require("core/util/projections");
+    const projections = Bokeh.require("core/util/projections");
+    const types = Bokeh.require("core/util/types")
     if (!source_cds.selected.indices.length) { return }
-    [x, y] = vertex_columns
-    xs_column = target_cds.data[x]
-    ys_column = target_cds.data[y]
-    var projected_xs = []
-    var projected_ys = []
-    var points = []
-    for (i = 0; i < xs_column.length; i++) {
-      var xv = xs_column[i]
-      var yv = ys_column[i]
-      p = projections.wgs84_mercator.forward([xv, yv])
+    const [x, y] = vertex_columns
+    const xs_column = target_cds.data[x]
+    const ys_column = target_cds.data[y]
+    const projected_xs = []
+    const projected_ys = []
+    const points = []
+    for (let i = 0; i < xs_column.length; i++) {
+      const xv = xs_column[i]
+      const yv = ys_column[i]
+      const p = projections.wgs84_mercator.forward([xv, yv])
       projected_xs.push(p[0])
       projected_ys.push(p[1])
       points.push(i)
     }
-    index = source_cds.selected.indices[0]
+    const index = source_cds.selected.indices[0]
     const xpaths = source_cds.data['xs']
     const ypaths = source_cds.data['ys']
-    var length = source_cds.data['xs'].length
-    for (var col in target_cds.data) {
+    const length = source_cds.data['xs'].length
+    for (const col in target_cds.data) {
       if ((col == x) || (col == y)) { continue; }
       if (!(col in source_cds.data)) {
-        var empty = []
+        const empty = []
         for (i = 0; i < length; i++)
           empty.push([])
         source_cds.data[col] = empty
@@ -200,7 +203,9 @@ class VertexTableLinkCallback(LinkCallback):
           if (pindex == index) { continue }
           const xs = xpaths[pindex]
           const ys = ypaths[pindex]
-          const column = source_cds.data[col][pindex]
+          let column = source_cds.data[col][pindex]
+          if (!types.isTypedArray(column))
+            source_cds.data[col][pindex] = column = Array.from(column)
           if (column.length != xs.length) {
             for (let ind = 0; ind < xs.length; ind++) {
               column.push(null)
@@ -227,21 +232,21 @@ class VertexTableLinkCallback(LinkCallback):
 class RectanglesTableLinkCallback(HvRectanglesTableLinkCallback):
 
     source_code = """
-    var projections = require("core/util/projections");
-    var xs = source_cds.data[source_glyph.x.field]
-    var ys = source_cds.data[source_glyph.y.field]
-    var ws = source_cds.data[source_glyph.width.field]
-    var hs = source_cds.data[source_glyph.height.field]
+    const projections = Bokeh.require("core/util/projections");
+    const xs = source_cds.data[source_glyph.x.field]
+    const ys = source_cds.data[source_glyph.y.field]
+    const ws = source_cds.data[source_glyph.width.field]
+    const hs = source_cds.data[source_glyph.height.field]
 
-    var x0 = []
-    var x1 = []
-    var y0 = []
-    var y1 = []
-    for (i = 0; i < xs.length; i++) {
-      hw = ws[i]/2.
-      hh = hs[i]/2.
-      p1 = projections.wgs84_mercator.inverse([xs[i]-hw, ys[i]-hh])
-      p2 = projections.wgs84_mercator.inverse([xs[i]+hw, ys[i]+hh])
+    const x0 = []
+    const x1 = []
+    const y0 = []
+    const y1 = []
+    for (let i = 0; i < xs.length; i++) {
+      const hw = ws[i]/2.
+      const hh = hs[i]/2.
+      const p1 = projections.wgs84_mercator.inverse([xs[i]-hw, ys[i]-hh])
+      const p2 = projections.wgs84_mercator.inverse([xs[i]+hw, ys[i]+hh])
       x0.push(p1[0])
       x1.push(p2[0])
       y0.push(p1[1])
@@ -254,23 +259,23 @@ class RectanglesTableLinkCallback(HvRectanglesTableLinkCallback):
     """
 
     target_code = """
-    var projections = require("core/util/projections");
-    var x0s = target_cds.data[columns[0]]
-    var y0s = target_cds.data[columns[1]]
-    var x1s = target_cds.data[columns[2]]
-    var y1s = target_cds.data[columns[3]]
+    const projections = Bokeh.require("core/util/projections");
+    const x0s = target_cds.data[columns[0]]
+    const y0s = target_cds.data[columns[1]]
+    const x1s = target_cds.data[columns[2]]
+    const y1s = target_cds.data[columns[3]]
 
-    var xs = []
-    var ys = []
-    var ws = []
-    var hs = []
-    for (i = 0; i < x0s.length; i++) {
-      x0 = Math.min(x0s[i], x1s[i])
-      y0 = Math.min(y0s[i], y1s[i])
-      x1 = Math.max(x0s[i], x1s[i])
-      y1 = Math.max(y0s[i], y1s[i])
-      p1 = projections.wgs84_mercator.forward([x0, y0])
-      p2 = projections.wgs84_mercator.forward([x1, y1])
+    const xs = []
+    const ys = []
+    const ws = []
+    const hs = []
+    for (let i = 0; i < x0s.length; i++) {
+      const x0 = Math.min(x0s[i], x1s[i])
+      const y0 = Math.min(y0s[i], y1s[i])
+      const x1 = Math.max(x0s[i], x1s[i])
+      const y1 = Math.max(y0s[i], y1s[i])
+      const p1 = projections.wgs84_mercator.forward([x0, y0])
+      const p2 = projections.wgs84_mercator.forward([x1, y1])
       xs.push((p1[0]+p2[0])/2.)
       ys.push((p1[1]+p2[1])/2.)
       ws.push(p2[0]-p1[0])

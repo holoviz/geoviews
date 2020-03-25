@@ -127,6 +127,8 @@ class resample_geometry(Operation):
     zoom_levels = param.Integer(default=20, doc="""
         The number of zoom levels to cache.""")
 
+    _per_element = True
+
     @param.parameterized.bothmethod
     def instance(self_or_cls,**params):
         inst = super(resample_geometry, self_or_cls).instance(**params)

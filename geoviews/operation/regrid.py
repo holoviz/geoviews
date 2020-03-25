@@ -45,6 +45,8 @@ class weighted_regrid(regrid):
 
     _files = []
 
+    _per_element = True
+
     def _get_regridder(self, element):
         try:
             import xesmf as xe

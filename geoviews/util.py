@@ -258,6 +258,8 @@ def path_to_geom_dicts(path, skip_invalid=True):
             geom = subpaths[0]
         elif subpaths:
             geom = MultiLineString(subpaths)
+        else:
+            continue
         path['geometry'] = geom
         geoms.append(path)
     return geoms

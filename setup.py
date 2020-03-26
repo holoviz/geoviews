@@ -148,7 +148,7 @@ extras_require['build'] = [
     'param >=1.9.0',
     'pyct >=0.4.4',
     'bokeh >=2.0.0',
-    'nodejs >=9.11.1',
+    'nodejs >=10.13.0',
     'setuptools' # should make this pip now
 ]
 

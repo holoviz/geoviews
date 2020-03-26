@@ -19,11 +19,16 @@ You can install GeoViews and its dependencies using conda::
 
     conda install -c pyviz geoviews
 
-
 Alternatively you can install the geoviews-core package, which
 only installs the minimal dependencies required to run geoviews::
 
     conda install -c pyviz geoviews-core
+
+In certain circumstances proj6 issues may prevent installation or
+cause issues (particularly with cartopy<=0.17). If you encounter these
+issues ensure you also pin proj4::
+
+    conda install proj4<6
 
 Once installed you can copy the examples into the current directory
 using the ``geoviews`` command and run them using the Jupyter

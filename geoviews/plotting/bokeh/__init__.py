@@ -116,7 +116,7 @@ class GeoRasterPlot(GeoPlot, RasterPlot):
     _project_operation = project_image.instance(fast=False)
 
     _hover_code = """
-        var projections = require("core/util/projections");
+        var projections = Bokeh.require("core/util/projections");
         var x = special_vars.x
         var y = special_vars.y
         var coords = projections.wgs84_mercator.inverse([x, y])

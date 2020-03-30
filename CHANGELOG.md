@@ -1,9 +1,18 @@
+Version 1.8.1
+=============
+
+This fixes some minor incompatibilities between latest HoloViews and the Iris data interface in GeoViews.
+
+- Updated Iris interface for compatibility with HoloViews 1.13.x ([#453](https://github.com/holoviz/geoviews/pull/453))
+
+
 Version 1.8.0
 =============
 
 This release makes introduces no actual changes on top of version 1.7.0, it simply adds a dependency on bokeh>=2.0, which also means that this is the first version that requires Python 3.
 
 - Compatibility with Bokeh 2.0 ([#449](https://github.com/holoviz/geoviews/pull/449))
+
 
 Version 1.7.0
 =============

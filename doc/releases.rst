@@ -1,6 +1,13 @@
 Releases
 ========
 
+Version 1.8.1
+-------------
+
+This fixes some minor incompatibilities between latest HoloViews and the Iris data interface in GeoViews.
+
+- Updated Iris interface for compatibility with HoloViews 1.13.x (`#453 <https://github.com/holoviz/geoviews/pull/453>`_)
+
 Version 1.8.0
 -------------
 

@@ -170,16 +170,70 @@ class CubeInterface(GridInterface):
             data = data[::-1]
         return data
 
+    
+    @classmethod
+    def mask(cls, dataset, mask, mask_val=np.nan):
+        masked = dataset.data.copy()
+        orig_mask = mask
+        data_coords = [c.name() for c in dataset.data.coords()]
+        mask = cls.canonicalize(dataset, orig_mask, data_coords)
+        masked.data = masked.data.astype('float')
+        masked.data[mask] = mask_val
+        return masked
+
 
     @classmethod
-    def values(cls, dataset, dim, expanded=True, flat=True, compute=True):
+    def assign(cls, dataset, new_data):
+        import iris
+        value_dims = [
+            d for d, v in new_data.items() if d in dataset.vdims
+            and isinstance(v, iris.cube.Cube)
+        ]
+        if value_dims:
+            data = new_data.pop(value_dims[0]).copy()
+        else:
+            data = dataset.data.copy()
+        for dim, values in new_data.items():
+            dim = dataset.get_dimension(dim)
+            if dim in dataset.kdims:
+                coord_vals = cls.coords(dataset, dim)
+                if not coord_vals.ndim > 1 and np.all(coord_vals[1:] < coord_vals[:-1]):
+                    values = values[::-1]
+                coord = iris.coords.DimCoord(
+                    values, long_name=dim.name, units=dim.unit
+                )
+                data.replace_coord(coord)
+            elif dim in dataset.vdims:
+                data.data = values
+            else:
+                raise NotImplementedError("Cannot assign new value dimensions to an iris Cube.")
+        return data
+
+    @classmethod
+    def packed(cls, dataset):
+        return False
+
+    
+    @classmethod
+    def dtype(cls, dataset, dimension):
+        name = dataset.get_dimension(dimension, strict=True).name
+        if name in dataset.vdims:
+            return dataset.data.dtype
+        else:
+            return dataset.data.coord(name).dtype
+
+
+    @classmethod
+    def values(cls, dataset, dim, expanded=True, flat=True, compute=True, keep_index=False):
         """
         Returns an array of the values along the supplied dimension.
         """
         dim = dataset.get_dimension(dim, strict=True)
         if dim in dataset.vdims:
             coord_names = [c.name() for c in dataset.data.dim_coords]
-            data = dataset.data.copy().data
+            if keep_index:
+                return dataset.data
+            data = dataset.data.data
             data = cls.canonicalize(dataset, data, coord_names)
             return data.T.flatten() if flat else data
         elif expanded:

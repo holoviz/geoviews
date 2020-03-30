@@ -198,6 +198,10 @@ class IrisInterfaceTests(BaseGridInterfaceTests):
     def test_irregular_grid_data_values_inverted_y(self):
         raise SkipTest('Irregular mesh data not supported by IrisInterface')
 
+    def test_dataset_transform_add_hm(self):
+        raise SkipTest("Not supported")
+        
+
 
 @attr(optional=1)
 class ImageElement_IrisInterfaceTests(BaseImageElementInterfaceTests):
@@ -267,4 +271,7 @@ class ImageElement_IrisInterfaceTests(BaseImageElementInterfaceTests):
         raise SkipTest("Not supported")
 
     def test_sample_datetime_yaxis(self):
+        raise SkipTest("Not supported")
+
+    def test_sample_coords(self):
         raise SkipTest("Not supported")

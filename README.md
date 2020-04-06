@@ -113,11 +113,3 @@ conda activate env-name
 GeoViews itself is also installable using `pip`, but to do that you
 will first need to have installed the [dependencies of cartopy](http://scitools.org.uk/cartopy/docs/latest/installing.html#requirements),
 or else have set up your system to be able to build them.
-
-
-## About HoloViz
-
-GeoViews is part of the HoloViz ecosystem, which strives to make browser-based data
-visualization in Python easier to use, easier to learn, and more powerful.
-See [holoviz.org](http://holoviz.org) for related packages that you can use with GeoViews and
-[status.holoviz.org](http://status.holoviz.org) for the current status of projects.

@@ -5,7 +5,7 @@ import pandas as pd
 
 from holoviews.core import DynamicMap
 from holoviews.element import Segments
-from holoviews.streams import BoundsXY, Selection1D
+from holoviews.streams import BoundsXY, Selection1D, Stream
 
 from  .element import TriMesh
 from .streams import TriMeshEdit
@@ -63,15 +63,24 @@ class TriMeshEditor(param.Parameterized):
             self.subselect, bounds=self._bounds.param.bounds,
             vertices=self._vertex_selection.param.index
         )
-        self.selected_vertices = self.selected.apply(self._get_vertices, link_inputs=False)
         self._stream = TriMeshEdit(source=self.selected)
+        self._trigger = Stream.define('Trigger', active=False)(transient=True)
+        self.selected_vertices = self.selected.apply(
+            self._get_vertices, link_inputs=False, streams=[self._stream, self._trigger]
+        )
         self._vertex_selection.source = self.selected_vertices
         self._simplex_edits = []
         self._nodes = None
+        self._simplices = None
         self._temp = None
+        self._prev_bounds = None
         self.shaded = datashade(self._object, aggregator='any', interpolation=None, link_inputs=False)
 
-    def _get_vertices(self, trimesh):
+    def _get_vertices(self, trimesh, data, active):
+        if self._stream._triggering or active:
+            nodes, simplices = self._edit_nodes(self._nodes, self._simplices)
+            nodes = trimesh.nodes.clone(nodes, vdims=trimesh.nodes.vdims)
+            trimesh = trimesh.clone((simplices, nodes))
         if hasattr(trimesh, '_wireframe'):
             segments = element._wireframe.data
         else:
@@ -99,7 +108,7 @@ class TriMeshEditor(param.Parameterized):
         edited = self._stream.element.dframe().set_index(index)
         original = nodes.set_index(index)
         original.update(edited)
-        if len(edited) != len(self._nodes):
+        if len(edited) and len(edited) != len(self._nodes):
             deleted = set(self._nodes[index].values) - set(edited.index.values)
             deleted = list(deleted)
             original.drop(index=deleted, inplace=True)
@@ -161,14 +170,18 @@ class TriMeshEditor(param.Parameterized):
         x0, y0, x1, y1 = bounds
         simplices, nodes = self.spatial_select(tri, (x0, x1), (y0, y1))
         self._nodes = nodes
-        nodes, simplices = self._edit_nodes(nodes, simplices)
-        print(simplices, nodes)
+        self._simplices = simplices
+        if vertices:
+            self._trigger.event(active=True)
+        if bounds == self._prev_bounds:
+            nodes, simplices = self._edit_nodes(nodes, simplices)
+        self._prev_bounds = bounds
         return tri.clone((simplices, tri.nodes.clone(nodes, vdims=tri.nodes.vdims))).opts(**opts)
 
     def panel(self):
         return pn.Column(
             self.param.apply_edits,
-            (self.shaded * self.selected * self.selected_vertices).opts(
+            (self.shaded * self.selected_vertices * self.selected).opts(
                 responsive=True, min_height=1000, projection=self.object.crs
             ),
             sizing_mode='stretch_width'

@@ -106,7 +106,7 @@ class GeoPandasInterface(MultiInterface):
     def validate(cls, dataset, vdims=True):
         dim_types = 'key' if vdims else 'all'
         geom_dims = cls.geom_dims(dataset)
-        if len(geom_dims) != 2:
+        if len(geom_dims) > 0 and len(geom_dims) != 2:
             raise DataError('Expected %s instance to declare two key '
                             'dimensions corresponding to the geometry '
                             'coordinates but %d dimensions were found '
@@ -247,13 +247,13 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def dimension_type(cls, dataset, dim):
-        col = cls.geo_column(dataset.data)
-        if len(dataset.data):
-            arr = geom_to_array(dataset.data[col].iloc[0])
+        geom_dims = cls.geom_dims(dataset)
+        if dim in geom_dims:
+            return float
+        elif len(dataset.data):
+            return type(dataset.data[dim.name].iloc[0])
         else:
             return float
-        ds = dataset.clone(arr, datatype=cls.subtypes, vdims=[])
-        return ds.interface.dimension_type(ds, dim)
 
     @classmethod
     def isscalar(cls, dataset, dim, per_geom=False):

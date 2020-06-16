@@ -20,9 +20,9 @@ env:
 
 stages:
   - test
-  - name: docs
+  - name: website_release
     if: tag =~ ^v(\d+|\.)*[^a-z]\d*$ OR tag = website AND NOT type = pull_request
-  - name: docs_dev
+  - name: website_dev
     if: (tag =~ ^v(\d+|\.)*[a-z]{1,2}\d*$) OR (tag = website_dev) OR ((commit_message =~ /\[doc-build\]/) and branch = master)
   - name: conda_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]{1,2}\d*$
@@ -60,9 +60,9 @@ jobs:
 
     - &doc_build
       <<: *default
-      stage: docs
+      stage: website_release
       # not possible to run all examples to build website using only defaults (see setup.py)
-      env: DESC="docs" HV_DOC_HTML='true' CHANS_DEV="-c pyviz/label/dev -c conda-forge" PYTHON_VERSION="3.6"
+      env: DESC="website_release" HV_DOC_HTML='true' CHANS_DEV="-c pyviz/label/dev -c conda-forge" PYTHON_VERSION="3.6"
       install:
         - doit env_create $CHANS_DEV --python=$PYTHON_VERSION
         - source activate test-environment
@@ -87,7 +87,7 @@ jobs:
       after_success: true # don't upload coverage
 
     - <<: *doc_build
-      stage: docs_dev
+      stage: website_dev
       deploy:
         - provider: pages
           skip_cleanup: true

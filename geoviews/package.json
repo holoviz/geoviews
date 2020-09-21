@@ -1,11 +1,11 @@
 {
   "name": "geoviews",
-  "version": "0.0.1",
+  "version": "1.8.2",
   "description": "Simple, concise geographical visualization in Python",
   "license": "BSD-3-Clause",
   "repository": {},
   "dependencies": {
-    "@bokeh/bokehjs": "^2.0.0"
+    "@bokeh/bokehjs": "^2.1.0"
   },
   "devDependencies": {}
 }

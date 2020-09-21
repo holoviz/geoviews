@@ -7,5 +7,9 @@
   "dependencies": {
     "@bokeh/bokehjs": "^2.1.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "files": [
+    "dist/**/*.{js,js.map,d.ts,json}"
+  ],
+  "main": "dist/geoviews.min.js"
 }

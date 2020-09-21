@@ -169,15 +169,14 @@ export class PolyVertexEditToolView extends PolyEditToolView {
       this._emit_cds_changes(this._selected_renderer.data_source, true, false, true)
       return
 	}
-    const append = ev.shiftKey
-    this._select_event(ev, append, [renderer])
+    this._select_event(ev, this._select_mode(ev), [renderer])
   }
 
   _show_vertices(ev: UIEvent): void {
     if (!this.model.active)
       return
 
-    const renderers = this._select_event(ev, false, this.model.renderers)
+    const renderers = this._select_event(ev, "replace", this.model.renderers)
     if (!renderers.length) {
       this._hide_vertices()
       this._selected_renderer = null

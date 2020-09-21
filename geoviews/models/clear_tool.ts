@@ -36,7 +36,6 @@ export class ClearTool extends ActionTool {
   static __module__ = "geoviews.models.custom_tools"
 
   static init_ClearTool(): void {
-    this.prototype.type = "ClearTool"
     this.prototype.default_view = ClearToolView
 
     this.define<ClearTool.Props>({

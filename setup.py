@@ -95,7 +95,7 @@ except:
 
 _required = [
     'bokeh >=2.1.0',
-    'cartopy >=0.17.0',
+    'cartopy >=0.18.0',
     'holoviews >=1.13.0',
     'numpy >=1.0',
     'param >=1.9.2',

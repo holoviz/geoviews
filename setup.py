@@ -148,7 +148,7 @@ extras_require['build'] = [
     'pyct >=0.4.4',
     'bokeh >=2.3.0,<2.4.0',
     'setuptools >=30.3.0',
-    'holoviews >=1.14.2',
+    'pyviz_comms >=0.6.0'
 ]
 
 

@@ -46,7 +46,13 @@ objects.
 
 ## Installation
 
-You can install GeoViews and its dependencies using conda:
+If you want the latest GeoViews, you will need an up-to-date environment. Updating is never risk-free, but it is a good idea in general and the commands `conda list --revisions` and `conda install --revision N` can usually recover from updates gone awry.
+
+```
+conda update --all
+```
+
+You can then install GeoViews and all of its dependencies with the following:
 
 ```
 conda install -c pyviz geoviews

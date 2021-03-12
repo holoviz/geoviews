@@ -130,7 +130,8 @@ extras_require={
         'pyproj <=2.1.3'
     ],
     'tests': [
-        'coveralls',
+        'pytest-cov',
+        'codecov',
         'flake8',
         'nbsmoke >=0.2.0',
         'ipython >=7.0',

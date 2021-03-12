@@ -19,8 +19,8 @@ jobs:
         exclude:
           - os: windows-latest
             python-version: 3.6
-          - os: windows-latest
-            python-version: 3.8
+          - os: ubuntu-latest
+            python-version: 3.6
     timeout-minutes: 60
     defaults:
       run:

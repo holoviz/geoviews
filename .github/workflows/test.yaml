@@ -59,6 +59,7 @@ jobs:
           conda list
           doit develop_install ${{ env.CHANS_DEV}} -o examples -o recommended -o tests -o build
           bokeh sampledata
+          geoviews fetch-data --path=examples
           echo "-----"
           git describe
       - name: doit env_capture

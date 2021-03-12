@@ -2,10 +2,16 @@ import * as p from "@bokehjs/core/properties"
 import {GestureEvent, UIEvent, TapEvent} from "@bokehjs/core/ui_events"
 import {keys} from "@bokehjs/core/util/object"
 import {isArray} from "@bokehjs/core/util/types"
+import {MultiLine} from "@bokehjs/models/glyphs/multi_line"
+import {Patches} from "@bokehjs/models/glyphs/patches"
 import {GlyphRenderer} from "@bokehjs/models/renderers/glyph_renderer"
 import {HasXYGlyph} from "@bokehjs/models/tools/edit/edit_tool"
 import {PolyEditTool, PolyEditToolView} from "@bokehjs/models/tools/edit/poly_edit_tool"
 
+
+export interface HasPolyGlyph {
+  glyph: MultiLine | Patches
+}
 
 export class PolyVertexEditToolView extends PolyEditToolView {
   model: PolyVertexEditTool
@@ -231,11 +237,12 @@ export namespace PolyVertexEditTool {
   }
 }
 
-export interface PolyVertexEditTool extends PolyEditTool.Attrs {}
+export interface PolyVertexEditTool extends PolyVertexEditTool.Attrs {}
 
 export class PolyVertexEditTool extends PolyEditTool {
-
   properties: PolyVertexEditTool.Props
+
+  renderers: (GlyphRenderer & HasPolyGlyph)[]
 
   constructor(attrs?: Partial<PolyVertexEditTool.Attrs>) {
     super(attrs)

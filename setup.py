@@ -94,11 +94,9 @@ except:
 ### dependencies ###
 
 _required = [
-    'bokeh >=2.1.0',
+    'bokeh >=2.3.0,<2.4',
     'cartopy >=0.17.0',
-    'holoviews >=1.13.0',
-    'numpy >=1.0',
-    'param >=1.9.2',
+    'holoviews >=1.14.2'
 ]
 
 _recommended = [
@@ -129,12 +127,13 @@ extras_require={
         'nbsite >=0.6.1',
         'sphinx_holoviz_theme',
         'selenium',
-        'pyproj <=2.1.3'
     ],
     'tests': [
-        'coveralls',
+        'pytest-cov',
+        'codecov',
         'flake8',
         'nbsmoke >=0.2.0',
+        'ipython >=7.0',
         'nose',
         'pytest'
     ],
@@ -145,11 +144,10 @@ extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
 # until pyproject.toml/equivalent is widely supported; meanwhile
 # setup_requires doesn't work well with pip. Note: deliberately omitted from all.
 extras_require['build'] = [
-    'param >=1.9.0',
+    'param >=1.9.2',
     'pyct >=0.4.4',
-    'bokeh >=2.0.0',
-    'nodejs >=10.13.0',
-    'setuptools' # should make this pip now
+    'bokeh >=2.3.0,<2.4.0',
+    'pyviz_comms >=0.6.0'
 ]
 
 
@@ -181,16 +179,18 @@ setup_args = dict(
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 5 - Production/Stable",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Operating System :: OS Independent",
         "Intended Audience :: Science/Research",
         "Intended Audience :: Developers",
         "Natural Language :: English",
         "Framework :: Matplotlib",
         "Topic :: Scientific/Engineering",
-        "Topic :: Software Development :: Libraries"]
+        "Topic :: Software Development :: Libraries"
+    ]
 )
 
 if __name__=="__main__":

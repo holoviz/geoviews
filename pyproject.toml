@@ -4,5 +4,6 @@ requires = [
     "bokeh >=2.3.0,<2.4.0",
     "holoviews >=1.14.2",
     "pyct >=0.4.4",
+    "six",
     "setuptools >=30.3.0",
 ]

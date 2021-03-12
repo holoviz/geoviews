@@ -147,6 +147,7 @@ extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
 extras_require['build'] = [
     'param >=1.9.2',
     'pyct >=0.4.4',
+    'six',
     'bokeh >=2.3.0,<2.4.0',
     'setuptools >=30.3.0'
 ]

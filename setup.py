@@ -127,7 +127,6 @@ extras_require={
         'nbsite >=0.6.1',
         'sphinx_holoviz_theme',
         'selenium',
-        'pyproj <=2.1.3'
     ],
     'tests': [
         'pytest-cov',

@@ -61,7 +61,6 @@ jobs:
         run: |
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --recipe=core
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --recipe=recommended
-          python setup.py develop
           cd ./geoviews
           npm publish --tag dev
       - name: main deploy
@@ -69,7 +68,6 @@ jobs:
         run: |
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --label=main --recipe=core
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --label=main --recipe=recommended
-          python setup.py develop
           cd ./geoviews
           npm publish --tag latest
   pip_build:

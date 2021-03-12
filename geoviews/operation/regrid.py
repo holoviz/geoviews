@@ -32,9 +32,13 @@ class weighted_regrid(regrid):
         Interpolation method""")
 
     reuse_weights = param.Boolean(default=True, doc="""
-        Whether the sparse regridding weights should be cached as a local
-        NetCDF file in the path defined by the file_pattern parameter.
-        Can provide considerable speedups when exploring a larger dataset.""")
+        Whether to cache the sparse regridding weights in memory.
+        Can provide considerable speedups when exploring a larger
+        dataset.""")
+
+    save_weights = param.Boolean(default=False, doc="""
+        Whether to save weight file to speed up future regridding
+        operations.""")
 
     file_pattern = param.String(default='{method}_{x_range}_{y_range}_{width}x{height}.nc',
                                 doc="""
@@ -44,6 +48,8 @@ class weighted_regrid(regrid):
         files when you are done.""")
 
     _files = []
+    
+    _weights = {}
 
     _per_element = True
 
@@ -91,10 +97,16 @@ class weighted_regrid(regrid):
         filename = self.file_pattern.format(method=self.p.interpolation,
                                             width=width, height=height,
                                             x_range=x_range, y_range=y_range)
-        self._files.append(os.path.abspath(filename))
+        reuse_weights = os.path.isfile(os.path.abspath(filename))
+        save_filename = filename if self.p.save_weights or reuse_weights else None
         regridder = xe.Regridder(ds, ds_out, self.p.interpolation,
-                                 reuse_weights=self.p.reuse_weights,
-                                 filename=filename)
+                                 reuse_weights=reuse_weights,
+                                 weights=self._weights.get(filename),
+                                 filename=save_filename)
+        if save_filename:
+            self._files.append(os.path.abspath(filename))
+        if self.p.reuse_weights:
+            self._weights[filename] = regridder.weights
         return regridder, arrays
 
 

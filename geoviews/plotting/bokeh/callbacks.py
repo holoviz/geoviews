@@ -9,12 +9,13 @@ from holoviews.plotting.bokeh.callbacks import (
     SingleTapCallback, DoubleTapCallback, MouseEnterCallback,
     MouseLeaveCallback, RangeXCallback, RangeYCallback, PolyDrawCallback,
     PointDrawCallback, BoxEditCallback, PolyEditCallback, CDSCallback,
-    FreehandDrawCallback
+    FreehandDrawCallback, SelectionXYCallback
 )
 from holoviews.streams import (
     Stream, PointerXY, RangeXY, RangeX, RangeY, PointerX, PointerY,
     BoundsX, BoundsY, Tap, SingleTap, DoubleTap, MouseEnter, MouseLeave,
-    BoundsXY, PolyDraw, PolyEdit, PointDraw, BoxEdit, FreehandDraw
+    BoundsXY, PolyDraw, PolyEdit, PointDraw, BoxEdit, FreehandDraw,
+    SelectionXY
 )
 
 from ...element.geo import _Element, Shape
@@ -133,6 +134,22 @@ class GeoRangeYCallback(RangeYCallback):
         return project_ranges(self, msg, ('y_range',))
 
 
+class GeoSelectionXYCallback(SelectionXYCallback):
+
+    def _process_msg(self, msg):
+        msg = super(GeoSelectionXYCallback, self)._process_msg(msg)
+        if (skip(self, msg, ('x_selection', 'y_selection')) or
+            not all(isinstance(sel, tuple) for sel in msg.values())):
+            return msg
+        plot = get_cb_plot(self)
+        (x0, x1) = msg['x_selection']
+        (y0, y1) = msg['y_selection']
+        (l, b, r, t) = bounds = project_extents(
+            (x0, y0, x1, y1), plot.projection, plot.current_frame.crs
+        )
+        return {'x_selection': (l, r), 'y_selection': (b, t), 'bounds': bounds}
+
+
 class GeoBoundsXYCallback(BoundsCallback):
 
     def _process_msg(self, msg):
@@ -230,18 +247,18 @@ class GeoPolyDrawCallback(PolyDrawCallback):
         msg = super(GeoPolyDrawCallback, self)._process_msg(msg)
         return project_poly(self, msg)
 
-    def _update_cds_vdims(self):
+    def _update_cds_vdims(self, data):
         if isinstance(self.source, Shape):
             return
-        super(GeoPolyDrawCallback, self)._update_cds_vdims()
+        super(GeoPolyDrawCallback, self)._update_cds_vdims(data)
 
 
 class GeoPolyEditCallback(PolyEditCallback):
 
-    def _update_cds_vdims(self):
+    def _update_cds_vdims(self, data):
         if isinstance(self.source, Shape):
             return
-        super(GeoPolyEditCallback, self)._update_cds_vdims()
+        super(GeoPolyEditCallback, self)._update_cds_vdims(data)
 
 
 class GeoBoxEditCallback(BoxEditCallback):
@@ -273,6 +290,7 @@ class GeoPointDrawCallback(PointDrawCallback):
         msg = super(GeoPointDrawCallback, self)._process_msg(msg)
         if not msg['data']:
             return msg
+
         projected = project_drawn(self, msg)
         if projected is None:
             return msg
@@ -338,13 +356,15 @@ class PolyVertexEditCallback(GeoPolyEditCallback):
             r1 = plot.state.scatter([], [], **vertex_style)
             tooltip = '%s Edit Tool' % type(element).__name__
             vertex_tool = PolyVertexEditTool(
-                vertex_renderer=r1, custom_tooltip=tooltip, node_style=stream.node_style,
-                end_style=stream.feature_style)
-            action = CustomAction(action_tooltip='Split path', icon=self.icon)
+                vertex_renderer=r1, description=tooltip,
+                node_style=stream.node_style,
+                end_style=stream.feature_style
+            )
+            action = CustomAction(description='Split path', icon=self.icon)
             plot.state.add_tools(vertex_tool, action)
             self._create_vertex_split_link(action, renderer, r1, vertex_tool)
         vertex_tool.renderers.append(renderer)
-        self._update_cds_vdims()
+        self._update_cds_vdims(renderer.data_source.data)
         CDSCallback.initialize(self, plot_id)
 
 
@@ -362,17 +382,19 @@ class PolyVertexDrawCallback(GeoPolyDrawCallback):
             vertex_style = dict({'size': 10}, **stream.vertex_style)
             r1 = plot.state.scatter([], [], **vertex_style)
             kwargs['vertex_renderer'] = r1
+        renderer = plot.handles['glyph_renderer']
         tooltip = '%s Draw Tool' % type(element).__name__
+        if stream.empty_value is not None:
+            kwargs['empty_value'] = stream.empty_value
         poly_tool = PolyVertexDrawTool(
             drag=all(s.drag for s in self.streams),
-            empty_value=stream.empty_value,
-            renderers=[plot.handles['glyph_renderer']],
+            renderers=[renderer],
             node_style=stream.node_style,
             end_style=stream.feature_style,
-            custom_tooltip=tooltip,
+            description=tooltip,
             **kwargs)
         plot.state.tools.append(poly_tool)
-        self._update_cds_vdims()
+        self._update_cds_vdims(renderer.data_source.data)
         CDSCallback.initialize(self, plot_id)
 
 class GeoFreehandDrawCallback(FreehandDrawCallback):
@@ -381,12 +403,12 @@ class GeoFreehandDrawCallback(FreehandDrawCallback):
         msg = super(GeoFreehandDrawCallback, self)._process_msg(msg)
         return project_poly(self, msg)
 
-    def _update_cds_vdims(self):
+    def _update_cds_vdims(self, data):
         if isinstance(self.source, Shape):
             return
-        super(GeoFreehandDrawCallback, self)._update_cds_vdims()
+        super(GeoFreehandDrawCallback, self)._update_cds_vdims(data)
 
-        
+
 callbacks = Stream._callbacks['bokeh']
 
 callbacks[PolyVertexEdit] = PolyVertexEditCallback
@@ -396,6 +418,7 @@ callbacks[RangeXY]     = GeoRangeXYCallback
 callbacks[RangeX]      = GeoRangeXCallback
 callbacks[RangeY]      = GeoRangeYCallback
 callbacks[BoundsXY]    = GeoBoundsXYCallback
+callbacks[SelectionXY] = GeoSelectionXYCallback
 callbacks[BoundsX]     = GeoBoundsXCallback
 callbacks[BoundsY]     = GeoBoundsYCallback
 callbacks[PointerXY]   = GeoPointerXYCallback

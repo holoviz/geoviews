@@ -4,7 +4,7 @@ import numpy as np
 import param
 import matplotlib.ticker as mticker
 from cartopy import crs as ccrs
-from cartopy.io.img_tiles import GoogleTiles
+from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 
 try:
@@ -137,17 +137,17 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 gl.xlocator = mticker.MaxNLocator(self.xticks)
 
             if self.xaxis in ['bottom', 'top-bare']:
-                gl.xlabels_top = False
+                gl.top_labels = False
             elif self.xaxis in ['top', 'bottom-bare']:
-                gl.xlabels_bottom = False
+                gl.bottom_labels = False
 
             if self.xformatter is None:
                 gl.xformatter = LONGITUDE_FORMATTER
             else:
                 gl.xformatter = wrap_formatter(self.xformatter)
         else:
-            gl.xlabels_top = False
-            gl.xlabels_bottom = False
+            gl.top_labels = False
+            gl.bottom_labels = False
 
 
         if self.yaxis and self.yaxis != 'bare':
@@ -160,17 +160,17 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 gl.ylocator = mticker.MaxNLocator(self.yticks)
 
             if self.yaxis in ['left', 'right-bare']:
-                gl.ylabels_right = False
+                gl.right_labels = False
             elif self.yaxis in ['right', 'left-bare']:
-                gl.ylabels_left = False
+                gl.left_labels = False
 
             if self.yformatter is None:
                 gl.yformatter = LATITUDE_FORMATTER
             else:
                 gl.yformatter = wrap_formatter(self.yformatter)
         else:
-            gl.ylabels_left = False
-            gl.ylabels_right = False
+            gl.left_labels = False
+            gl.right_labels = False
 
 
     def _finalize_axis(self, *args, **kwargs):
@@ -484,7 +484,10 @@ class WMTSPlot(GeoPlot):
 
     def get_data(self, element, ranges, style):
         if isinstance(element.data, util.basestring):
-            tile_source = GoogleTiles(url=element.data)
+            if '{Q}' in element.data:
+                tile_source = QuadtreeTiles(url=element.data)
+            else:
+                tile_source = GoogleTiles(url=element.data)
             return (tile_source, self.zoom), style, {}
         else:
             tile_source = element.data

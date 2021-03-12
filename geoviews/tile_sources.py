@@ -85,7 +85,7 @@ ESRI = EsriImagery # For backwards compatibility with gv 1.5
 
 # Miscellaneous
 OSM = WMTS('https://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png', name="OSM")
-Wikipedia = WMTS('https://maps.wikimedia.org/osm-intl/{Z}/{X}/{Y}@2x.png', name="Wikipedia")
+Wikipedia = WMTS('https://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png', name="Wikipedia")
 
 
 tile_sources = {k: v for k, v in locals().items() if isinstance(v, WMTS) and k != 'ESRI'}

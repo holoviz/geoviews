@@ -27,18 +27,9 @@ requirements:
     {% endfor %}
   run:
     - python {{ sdata['python_requires'] }}
-    - proj4 <6
     {% for dep in sdata.get('install_requires',{}) %}
     - {{ dep }}
     {% endfor %}
-
-test:
-  imports:
-    - geoviews
-  requires:
-    {% for dep in sdata['extras_require']['tests'] %}
-    - {{ dep }}
-    {% endfor %}    
 
 about:
   home: {{ sdata['url'] }}

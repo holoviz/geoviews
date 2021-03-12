@@ -4,7 +4,7 @@ import numpy as np
 import param
 import matplotlib.ticker as mticker
 from cartopy import crs as ccrs
-from cartopy.io.img_tiles import GoogleTiles
+from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 
 try:

@@ -132,8 +132,8 @@ def zoom_level(bounds, width, height):
 
     latZoom = zoom(height, max_height, latFraction)
     lngZoom = zoom(width, max_width, lngFraction)
-
-    return int(np.min([latZoom, lngZoom, ZOOM_MAX]))
+    zoom = np.min([latZoom, lngZoom, ZOOM_MAX])
+    return int(zoom) if np.isfinite(zoom) else 0
 
 
 def geom_dict_to_array_dict(geom_dict, coord_names=['Longitude', 'Latitude']):
@@ -717,7 +717,8 @@ def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=ccrs.PlateCarree()):
     if isinstance(tile_source, (WMTS, Tiles)):
         tile_source = tile_source.data
 
-    bbox = project_extents(bbox, bbox_crs, ccrs.GOOGLE_MERCATOR)
+    if bbox_crs is not ccrs.GOOGLE_MERCATOR:
+        bbox = project_extents(bbox, bbox_crs, ccrs.GOOGLE_MERCATOR)
 
     if '{Q}' in tile_source:
         tile_source = QuadtreeTiles(url=tile_source.replace('{Q}', '{tile}'))

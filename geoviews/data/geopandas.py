@@ -57,9 +57,6 @@ class GeoPandasInterface(MultiInterface):
         if kdims is None:
             kdims = eltype.kdims
 
-        if vdims is None:
-            vdims = eltype.vdims
-
         if isinstance(data, GeoSeries):
             data = data.to_frame()
 
@@ -70,12 +67,16 @@ class GeoPandasInterface(MultiInterface):
                    for d in data):
                 data = GeoDataFrame(data)
             if not isinstance(data, GeoDataFrame):
+                vdims = vdims or eltype.vdims
                 data = from_multi(eltype, data, kdims, vdims)
         elif not isinstance(data, GeoDataFrame):
             raise ValueError("GeoPandasInterface only support geopandas "
                              "DataFrames not %s." % type(data))
         elif 'geometry' not in data:
             cls.geo_column(data)
+        
+        if vdims is None:
+            vdims = [col for col in data.columns if not isinstance(data[col], GeoSeries)]
 
         index_names = data.index.names if isinstance(data, pd.DataFrame) else [data.index.name]
         if index_names == [None]:

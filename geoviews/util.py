@@ -8,11 +8,13 @@ import numpy as np
 import shapely.geometry as sgeom
 
 from cartopy import crs as ccrs
+from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
+from holoviews.element import Tiles
 from holoviews.core.util import basestring
 from shapely.geometry.base import BaseMultipartGeometry
 from shapely.geometry import (
     MultiLineString, LineString, MultiPolygon, Polygon, LinearRing,
-    Point, MultiPoint
+    Point, MultiPoint, box
 )
 
 geom_types = (MultiLineString, LineString, MultiPolygon, Polygon,
@@ -104,6 +106,34 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     else:
         geom_in_crs = boundary_poly.intersection(domain_in_src_proj)
     return geom_in_crs.bounds
+
+
+def zoom_level(bounds, width, height):
+    """
+    Compute zoom level given bounds and the plot size.
+    """
+    w, s, e, n = bounds
+    max_width, max_height = 256, 256 
+    ZOOM_MAX = 21
+    ln2 = np.log(2)
+
+    def latRad(lat):
+        sin = np.sin(lat * np.pi / 180)
+        radX2 = np.log((1 + sin) / (1 - sin)) / 2
+        return np.max([np.min([radX2, np.pi]), -np.pi]) / 2
+
+    def zoom(mapPx, worldPx, fraction):
+        return np.floor(np.log(mapPx / worldPx / fraction) / ln2)
+
+    latFraction = (latRad(n) - latRad(s)) / np.pi
+
+    lngDiff = e - w
+    lngFraction = ((lngDiff + 360) if lngDiff < 0 else lngDiff) / 360
+
+    latZoom = zoom(height, max_height, latFraction)
+    lngZoom = zoom(width, max_width, lngFraction)
+    zoom = np.min([latZoom, lngZoom, ZOOM_MAX])
+    return int(zoom) if np.isfinite(zoom) else 0
 
 
 def geom_dict_to_array_dict(geom_dict, coord_names=['Longitude', 'Latitude']):
@@ -660,3 +690,47 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
     if hasattr(el.data, 'attrs'):
         el.data.attrs = da.attrs
     return el
+
+
+def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=ccrs.PlateCarree()):
+    """
+    Returns an RGB element given a tile_source, bounding box and zoom level.
+
+    Parameters
+    ----------
+    tile_source: WMTS element or string URL
+      The tile source to download the tiles from.
+    bbox: tuple
+      A four tuple specifying the (left, bottom, right, top) corners of the
+      domain to download the tiles for.
+    zoom_level: int
+      The zoom level at which to download the tiles
+    bbox_crs: ccrs.CRs
+      cartopy CRS defining the coordinate system of the supplied bbox
+
+    Returns
+    -------
+    RGB element containing the tile data in the specified bbox
+    """
+
+    from .element import RGB, WMTS
+    if isinstance(tile_source, (WMTS, Tiles)):
+        tile_source = tile_source.data
+
+    if bbox_crs is not ccrs.GOOGLE_MERCATOR:
+        bbox = project_extents(bbox, bbox_crs, ccrs.GOOGLE_MERCATOR)
+
+    if '{Q}' in tile_source:
+        tile_source = QuadtreeTiles(url=tile_source.replace('{Q}', '{tile}'))
+    else:
+        tile_source = GoogleTiles(url=tile_source)
+
+    bounds = box(*bbox)
+    rgb, extent, orient = tile_source.image_for_domain(bounds, zoom_level)
+    if orient == 'lower':
+        rgb = rgb[::-1]
+    x0, x1, y0, y1 = extent
+    l, b, r, t = bbox
+    return RGB(
+        rgb, bounds=(x0, y0, x1, y1), crs=ccrs.GOOGLE_MERCATOR, vdims=['R', 'G', 'B'],
+    ).clone(datatype=['grid', 'xarray', 'iris'])[l:r, b:t]

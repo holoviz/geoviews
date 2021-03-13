@@ -214,6 +214,11 @@ class WMTS(_GeoFeature):
     https://maps.wikimedia.org/osm-intl/{Z}/{X}/{Y}@2x.png
     """
 
+    crs = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR, class_=ccrs.CRS, doc="""
+        Cartopy coordinate-reference-system specifying the
+        coordinate system of the data. Inferred automatically
+        when _Element wraps cartopy Feature object.""")
+
     group = param.String(default='WMTS')
 
     layer = param.String(doc="The layer on the tile service")

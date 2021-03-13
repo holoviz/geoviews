@@ -6,8 +6,8 @@
 
 |    |    |
 | --- | --- |
-| Build Status | [![Linux/MacOS/Windows Build Status](https://github.com/holoviz/geoviews/workflows/pytest/badge.svg)](https://github.com/holoviz/geoviews/workflows/pytest) |
-| Coverage | [![Coverage Status](https://coveralls.io/repos/github/holoviz/geoviews/badge.svg?branch=master)](https://coveralls.io/github/holoviz/geoviews?branch=master) |
+| Build Status | [![Linux/MacOS/Windows Build Status](https://github.com/holoviz/geoviews/workflows/pytest/badge.svg)](https://github.com/holoviz/geoviews/actions/workflows/test.yaml) |
+| Coverage | [![codecov](https://codecov.io/gh/holoviz/geoviews/branch/master/graph/badge.svg)](https://codecov.io/gh/holoviz/geoviews) |
 | Latest dev release | [![Github tag](https://img.shields.io/github/tag/holoviz/geoviews.svg?label=tag&colorB=11ccbb)](https://github.com/holoviz/geoviews/tags) |
 | Latest release | [![Github release](https://img.shields.io/github/release/holoviz/geoviews.svg?label=tag&colorB=11ccbb)](https://github.com/holoviz/geoviews/releases) [![PyPI version](https://img.shields.io/pypi/v/geoviews.svg?colorB=cc77dd)](https://pypi.python.org/pypi/geoviews) [![geoviews version](https://img.shields.io/conda/v/pyviz/geoviews.svg?colorB=4488ff&style=flat)](https://anaconda.org/pyviz/geoviews) [![conda-forge version](https://img.shields.io/conda/v/conda-forge/geoviews.svg?label=conda%7Cconda-forge&colorB=4488ff)](https://anaconda.org/conda-forge/geoviews) [![defaults version](https://img.shields.io/conda/v/anaconda/geoviews.svg?label=conda%7Cdefaults&style=flat&colorB=4488ff)](https://anaconda.org/anaconda/geoviews) |
 | Docs | [![gh-pages](https://img.shields.io/github/last-commit/holoviz/geoviews/gh-pages.svg)](https://github.com/holoviz/geoviews/tree/gh-pages) [![site](https://img.shields.io/website-up-down-green-red/http/geoviews.org.svg)](http://geoviews.org) |
@@ -85,11 +85,9 @@ jupyter notebook
 --path geoviews-examples && geoviews fetch-data --path
 geoviews-examples`.)
 
-To work with JupyterLab you will also need the PyViz JupyterLab
-extension:
+In the classic Jupyter notebook environment and JupyterLab, first make sure to load the `gv.extension()`. GeoViews objects will then render themselves if they are the last item in a notebook cell. For versions of `jupyterlab>=3.0` the necessary extension is automatically bundled in the `pyviz_comms` package, which must be >=2.0. However note that for version of `jupyterlab<3.0` you must also manually install the JupyterLab extension with:
 
-```
-conda install -c conda-forge jupyterlab
+```bash
 jupyter labextension install @pyviz/jupyterlab_pyviz
 ```
 

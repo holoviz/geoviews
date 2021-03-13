@@ -108,6 +108,34 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     return geom_in_crs.bounds
 
 
+def zoom_level(bounds, width, height):
+    """
+    Compute zoom level given bounds and the plot size.
+    """
+    w, s, e, n = bounds
+    max_width, max_height = 256, 256 
+    ZOOM_MAX = 21
+    ln2 = np.log(2)
+
+    def latRad(lat):
+        sin = np.sin(lat * np.pi / 180)
+        radX2 = np.log((1 + sin) / (1 - sin)) / 2
+        return np.max([np.min([radX2, np.pi]), -np.pi]) / 2
+
+    def zoom(mapPx, worldPx, fraction):
+        return np.floor(np.log(mapPx / worldPx / fraction) / ln2)
+
+    latFraction = (latRad(n) - latRad(s)) / np.pi
+
+    lngDiff = e - w
+    lngFraction = ((lngDiff + 360) if lngDiff < 0 else lngDiff) / 360
+
+    latZoom = zoom(height, max_height, latFraction)
+    lngZoom = zoom(width, max_width, lngFraction)
+
+    return int(np.min([latZoom, lngZoom, ZOOM_MAX]))
+
+
 def geom_dict_to_array_dict(geom_dict, coord_names=['Longitude', 'Latitude']):
     """
     Converts a dictionary containing an geometry key to a dictionary
@@ -701,4 +729,7 @@ def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=ccrs.PlateCarree()):
     if orient == 'lower':
         rgb = rgb[::-1]
     x0, x1, y0, y1 = extent
-    return RGB(rgb, bounds=(x0, y0, x1, y1), crs=ccrs.GOOGLE_MERCATOR, vdims=['R', 'G', 'B'])
+    l, b, r, t = bbox
+    return RGB(
+        rgb, bounds=(x0, y0, x1, y1), crs=ccrs.GOOGLE_MERCATOR, vdims=['R', 'G', 'B'],
+    ).clone(datatype=['grid', 'xarray', 'iris'])[l:r, b:t]

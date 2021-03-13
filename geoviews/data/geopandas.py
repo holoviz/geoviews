@@ -40,15 +40,13 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def geo_column(cls, data):
-        from geopandas import GeoSeries
-        col = 'geometry'
-        if col in data and isinstance(data[col], GeoSeries):
-            return col
-        cols = [c for c in data.columns if isinstance(data[c], GeoSeries)]
-        if not cols and len(data):
-            raise ValueError('No geometry column found in geopandas.DataFrame, '
-                             'use the PandasInterface instead.')
-        return cols[0] if cols else None
+        try:
+            return data.geometry.name
+        except AttributeError:
+            if len(data):
+                raise ValueError('No geometry column found in geopandas.DataFrame, '
+                                 'use the PandasInterface instead.')
+            return None
 
     @classmethod
     def init(cls, eltype, data, kdims, vdims):
@@ -57,9 +55,6 @@ class GeoPandasInterface(MultiInterface):
 
         if kdims is None:
             kdims = eltype.kdims
-
-        if vdims is None:
-            vdims = eltype.vdims
 
         if isinstance(data, GeoSeries):
             data = data.to_frame()
@@ -71,12 +66,16 @@ class GeoPandasInterface(MultiInterface):
                    for d in data):
                 data = GeoDataFrame(data)
             if not isinstance(data, GeoDataFrame):
+                vdims = vdims or eltype.vdims
                 data = from_multi(eltype, data, kdims, vdims)
         elif not isinstance(data, GeoDataFrame):
             raise ValueError("GeoPandasInterface only support geopandas "
                              "DataFrames not %s." % type(data))
         elif 'geometry' not in data:
             cls.geo_column(data)
+        
+        if vdims is None:
+            vdims = [col for col in data.columns if not isinstance(data[col], GeoSeries)]
 
         index_names = data.index.names if isinstance(data, pd.DataFrame) else [data.index.name]
         if index_names == [None]:

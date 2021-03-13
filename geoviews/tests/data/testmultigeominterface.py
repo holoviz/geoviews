@@ -118,7 +118,7 @@ class GeomInterfaceTest(ComparisonTestCase):
         mds = Dataset(geoms, kdims=['x', 'y', 'z'], datatype=[self.datatype])
         for i, (k, ds) in enumerate(mds.groupby('z').items()):
             self.assertEqual(k, geoms[i]['z'])
-            self.assertEqual(ds, Dataset([geoms[i]], kdims=['x', 'y']))
+            self.assertEqual(ds.clone(vdims=[]), Dataset([geoms[i]], kdims=['x', 'y']))
 
 
 class MultiGeomInterfaceTest(GeomInterfaceTest):

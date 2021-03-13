@@ -166,6 +166,30 @@ def geom_dict_to_array_dict(geom_dict, coord_names=['Longitude', 'Latitude']):
     return new_dict
 
 
+def unpack_geoms(geom_el):
+    """
+    Unpacks the data in a geometry element if it is already in a
+    geometry format.
+    """
+    interface = geom_el.interface
+    if interface.datatype in  ('geodataframe', 'spatialpandas'):
+        geom_col = interface.geo_column(geom_el.data)
+        geoms = []
+        for _, row in geom_el.data.iterrows():
+            row = row.to_dict()
+            if interface.datatype  == 'spatialpandas':
+                row['geometry'] = row[geom_col].to_shapely()
+            else:
+                row['geometry'] = row[geom_col]
+            geoms.append(row)
+        return geoms
+    elif interface.datatype == 'geom_dictionary':
+        return [geom_el.data]
+    elif (interface.datatype == 'multitabular' and
+          all(isinstance(p, dict) and 'geometry' in p for p in geom_el.data)):
+        return geom_el.data
+
+
 def polygons_to_geom_dicts(polygons, skip_invalid=True):
     """
     Converts a Polygons element into a list of geometry dictionaries,
@@ -183,14 +207,9 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
     * If skip_invalid=False and an array has less than three
       coordinates it will be converted to a LineString
     """
-    interface = polygons.interface.datatype
-    if interface == 'geodataframe':
-        return [row.to_dict() for _, row in polygons.data.iterrows()]
-    elif interface == 'geom_dictionary':
-        return [polygons.data]
-    elif interface == 'multitabular' and all(isinstance(p, dict) and 'geometry' in p
-                                             for p in polygons.data):
-        return polygons.data
+    geoms = unpack_geoms(polygons)
+    if geoms is not None:
+        return geoms
 
     polys = []
     xdim, ydim = polygons.kdims
@@ -249,14 +268,9 @@ def path_to_geom_dicts(path, skip_invalid=True):
     Converts a Path element into a list of geometry dictionaries,
     preserving all value dimensions.
     """
-    interface = path.interface.datatype
-    if interface == 'geodataframe':
-        return [row.to_dict() for _, row in path.data.iterrows()]
-    elif interface == 'geom_dictionary':
-        return [path.data]
-    elif interface == 'multitabular' and all(isinstance(p, dict) and 'geometry' in p
-                                             for p in path.data):
-        return path.data
+    geoms = unpack_geoms(path)
+    if geoms is not None:
+        return geoms
 
     geoms = []
     invalid = False

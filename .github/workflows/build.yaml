@@ -66,10 +66,12 @@ jobs:
         run: |
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --label=main --recipe=core
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --label=main --recipe=recommended
+      - name: create env
+        run: |
+          doit env_create $CHANS_DEV --python=$PYTHON_VERSION
       - name: build js
         run: |
           eval "$(conda shell.bash hook)"
-          doit env_create $CHANS_DEV --python=$PYTHON_VERSION
           conda activate test-environment
           doit develop_install $CHANS_DEV -o build
           python setup.py develop

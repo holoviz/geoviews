@@ -94,9 +94,10 @@ class weighted_regrid(regrid):
 
         x_range = str(tuple('%.3f' % r for r in x_range)).replace("'", '')
         y_range = str(tuple('%.3f' % r for r in y_range)).replace("'", '')
-        filename = self.file_pattern.format(method=self.p.interpolation,
-                                            width=width, height=height,
-                                            x_range=x_range, y_range=y_range)
+        filename = self.p.file_pattern.format(
+            method=self.p.interpolation, width=width, height=height,
+            x_range=x_range, y_range=y_range
+        )
         reuse_weights = os.path.isfile(os.path.abspath(filename))
         save_filename = filename if self.p.save_weights or reuse_weights else None
         regridder = xe.Regridder(ds, ds_out, self.p.interpolation,

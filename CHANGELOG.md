@@ -1,3 +1,38 @@
+Version 1.9.0
+=============
+
+This GeoViews release primarily provides compatibility with the latest releases of Cartopy (0.18), Bokeh (2.3), HoloViews (1.14.x) and fixes a number of other issues.
+
+Features:
+
+- Add utility to download tile RGB ([#458](https://github.com/holoviz/geoviews/pull/458))
+
+Compatibility:
+
+- Compatibility with Bokeh 2.3 ([#487](https://github.com/holoviz/geoviews/pull/487))
+- Compatibility for regridding with latest xesmf ([#488](https://github.com/holoviz/geoviews/pull/488))
+- Compatibility with HoloViews 1.14.x for resampling operation and stream callback ([#488](https://github.com/holoviz/geoviews/pull/488))
+- Compatibility with latest Cartopy 0.18 ([#488](https://github.com/holoviz/geoviews/pull/488))
+
+Bug fixes:
+
+- Allow using geopandas interface without using geometry column ([#464](https://github.com/holoviz/geoviews/pull/464))
+- Fix Hover tooltip projection ([#490](https://github.com/holoviz/geoviews/pull/490))
+- Use the set geometry column on Geopandas DataFrames ([#489](https://github.com/holoviz/geoviews/pull/489))
+- Fix xesmf regridding file_pattern parameter ([#491](https://github.com/holoviz/geoviews/pull/491))
+
+
+Version 1.8.2
+=============
+
+Minor bugfix release. Includes contributions from: @philippjfr
+
+Bug fixes and minor improvements:
+
+- Bump geoviews.js version and bokeh requirements ([#473](https://github.com/holoviz/geoviews/pull/473))
+- Handle proj4.js API change in Hover formatter ([#472](https://github.com/holoviz/geoviews/pull/472))
+
+
 Version 1.8.1
 =============
 

@@ -154,10 +154,10 @@ def unpack_geoms(geom_el):
             geoms.append(row)
         return geoms
     elif interface.datatype == 'geom_dictionary':
-        return [path.data]
+        return [geom_el.data]
     elif (interface.datatype == 'multitabular' and
-          all(isinstance(p, dict) and 'geometry' in p for p in path.data)):
-        return path.data
+          all(isinstance(p, dict) and 'geometry' in p for p in geom_el.data)):
+        return geom_el.data
 
 
 def polygons_to_geom_dicts(polygons, skip_invalid=True):

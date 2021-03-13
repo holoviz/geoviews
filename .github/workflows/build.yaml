@@ -61,13 +61,25 @@ jobs:
         run: |
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --recipe=core
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --recipe=recommended
-          cd ./geoviews
-          npm publish --tag dev
       - name: main deploy
         if: (!(contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc')))
         run: |
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --label=main --recipe=core
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --label=main --recipe=recommended
+      - name: build js
+        run: |
+          eval "$(conda shell.bash hook)"
+          doit env_create $CHANS_DEV --python=$PYTHON_VERSION
+          conda activate test-environment
+          doit develop_install $CHANS_DEV -o build
+          python setup.py develop
+      - name: npm dev deploy
+        if: (contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc'))
+        run: |
+          cd ./geoviews
+          npm publish --tag dev
+      - name: npm main deploy
+        if: (!(contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc')))
           cd ./geoviews
           npm publish --tag latest
   pip_build:

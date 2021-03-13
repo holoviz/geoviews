@@ -41,7 +41,7 @@ class GeoPandasInterface(MultiInterface):
     @classmethod
     def geo_column(cls, data):
         from geopandas import GeoSeries
-        col = 'geometry'
+        col = getattr(data, '_geometry_column_name', 'geometry')
         if col in data and isinstance(data[col], GeoSeries):
             return col
         cols = [c for c in data.columns if isinstance(data[c], GeoSeries)]

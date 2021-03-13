@@ -155,7 +155,13 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
     """
     interface = polygons.interface.datatype
     if interface == 'geodataframe':
-        return [row.to_dict() for _, row in polygons.data.iterrows()]
+        geom_col = getattr(polygons.data, '_geometry_column_name', 'geometry')
+        geoms = []
+        for _, row in polygons.data.iterrows():
+            row = row.to_dict()
+            row['geometry'] = row[geom_col]
+            geoms.append(row)
+        return geoms
     elif interface == 'geom_dictionary':
         return [polygons.data]
     elif interface == 'multitabular' and all(isinstance(p, dict) and 'geometry' in p
@@ -221,7 +227,13 @@ def path_to_geom_dicts(path, skip_invalid=True):
     """
     interface = path.interface.datatype
     if interface == 'geodataframe':
-        return [row.to_dict() for _, row in path.data.iterrows()]
+        geom_col = getattr(path.data, '_geometry_column_name', 'geometry')
+        geoms = []
+        for _, row in path.data.iterrows():
+            row = row.to_dict()
+            row['geometry'] = row[geom_col]
+            geoms.append(row)
+        return geoms
     elif interface == 'geom_dictionary':
         return [path.data]
     elif interface == 'multitabular' and all(isinstance(p, dict) and 'geometry' in p

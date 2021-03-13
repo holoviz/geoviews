@@ -140,9 +140,11 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             customjs = None
             if formatter in ('@{%s}' % xdim, '$x'):
                 dim = xdim
+                formatter = '$x'
                 customjs = xhover
             elif formatter in ('@{%s}' % ydim, '$y'):
                 dim = ydim
+                formatter = '$y'
                 customjs = yhover
             if customjs:
                 key = formatter if formatter in ('$x', '$y') else dim
@@ -158,6 +160,8 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         if 'hv_created' in hover.tags:
             tooltips = [(ttp.pprint_label, '@{%s}' % dimension_sanitizer(ttp.name))
                         if isinstance(ttp, Dimension) else ttp for ttp in tooltips]
+            if self.geographic and tooltips[2:] == hover.tooltips[2:]:
+                return
             tooltips = [(l, t+'{custom}' if t in hover.formatters else t) for l, t in tooltips]
             hover.tooltips = tooltips
         else:

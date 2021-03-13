@@ -155,7 +155,7 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
     """
     interface = polygons.interface.datatype
     if interface == 'geodataframe':
-        geom_col = getattr(polygons.data, '_geometry_column_name', 'geometry')
+        geom_col = interface.geo_column(polygons.data)
         geoms = []
         for _, row in polygons.data.iterrows():
             row = row.to_dict()
@@ -227,7 +227,7 @@ def path_to_geom_dicts(path, skip_invalid=True):
     """
     interface = path.interface.datatype
     if interface == 'geodataframe':
-        geom_col = getattr(path.data, '_geometry_column_name', 'geometry')
+        geom_col = interface.geo_column(polygons.data)
         geoms = []
         for _, row in path.data.iterrows():
             row = row.to_dict()

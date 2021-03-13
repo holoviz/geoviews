@@ -41,14 +41,10 @@ class GeoPandasInterface(MultiInterface):
     @classmethod
     def geo_column(cls, data):
         from geopandas import GeoSeries
-        col = getattr(data, '_geometry_column_name', 'geometry')
-        if col in data and isinstance(data[col], GeoSeries):
-            return col
-        cols = [c for c in data.columns if isinstance(data[c], GeoSeries)]
-        if not cols and len(data):
-            raise ValueError('No geometry column found in geopandas.DataFrame, '
-                             'use the PandasInterface instead.')
-        return cols[0] if cols else None
+        try:
+            return data.geometry.name
+        except AttributeError:
+            return None
 
     @classmethod
     def init(cls, eltype, data, kdims, vdims):

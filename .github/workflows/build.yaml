@@ -80,6 +80,7 @@ jobs:
           npm publish --tag dev
       - name: npm main deploy
         if: (!(contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc')))
+        run: |
           cd ./geoviews
           npm publish --tag latest
   pip_build:

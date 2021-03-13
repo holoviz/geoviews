@@ -1,6 +1,12 @@
 Releases
 ========
 
+Version 1.9.1
+-------------
+
+This micro-release fixes the bundling and deployment of geoviews.js to NPM but otherwise has no contents.
+
+
 Version 1.9.0
 -------------
 

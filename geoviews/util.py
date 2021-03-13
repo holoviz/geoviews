@@ -238,7 +238,7 @@ def path_to_geom_dicts(path, skip_invalid=True):
     Converts a Path element into a list of geometry dictionaries,
     preserving all value dimensions.
     """
-    geoms = unpack_geoms(polygons)
+    geoms = unpack_geoms(path)
     if geoms is not None:
         return geoms
 

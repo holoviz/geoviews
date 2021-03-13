@@ -40,7 +40,6 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def geo_column(cls, data):
-        from geopandas import GeoSeries
         try:
             return data.geometry.name
         except AttributeError:

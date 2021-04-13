@@ -94,8 +94,8 @@ except:
 ### dependencies ###
 
 _required = [
-    'bokeh >=2.3.0,<2.4',
-    'cartopy >=0.17.0',
+    'bokeh >=2.3.0,<2.4.0',
+    'cartopy >=0.18.0',
     'holoviews >=1.14.2'
 ]
 

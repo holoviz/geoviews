@@ -223,6 +223,21 @@ class WMTS(_GeoFeature):
 
     layer = param.String(doc="The layer on the tile service")
 
+    extra_url_vars = param.Dict(doc="""
+        A dictionary that maps url variable template keys to values.
+        These variables are useful for parts of tile urls which do not
+        change from tile to tile (e.g. server host name, or layer name).""")
+
+    max_zoom = param.Integer("A maximum zoom level for the tile layer. This is the most zoomed-in level.")
+    
+    min_zoom = param.Integer("A minimum zoom level for the tile layer. This is the most zoomed-out level.")
+    
+    tile_size = param.Integer("Tile size in pixels (e.g. 256)")
+    
+    use_latlon = param.Boolean("Flag which indicates option to output {XMIN}, {YMIN}, {XMAX}, {YMAX} in meters or latitude and longitude.")
+    
+    wrap_around = param.Boolean("Enables continuous horizontal panning by wrapping the x-axis based on bounds of map.")
+
     def __init__(self, data, kdims=None, vdims=None, **params):
         if ((MercatorTileSource and isinstance(data, MercatorTileSource)) or
             (GoogleTiles and isinstance(data, GoogleTiles))):

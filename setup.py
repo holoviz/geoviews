@@ -94,7 +94,7 @@ except:
 ### dependencies ###
 
 _required = [
-    'bokeh >=2.3.0,<2.4.0',
+    'bokeh >=2.4.0,<2.5',
     'cartopy >=0.18.0',
     'holoviews >=1.14.2'
 ]
@@ -146,7 +146,7 @@ extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
 extras_require['build'] = [
     'param >=1.9.2',
     'pyct >=0.4.4',
-    'bokeh >=2.3.0,<2.4.0',
+    'bokeh >=2.4,<2.5',
     'pyviz_comms >=0.6.0'
 ]
 

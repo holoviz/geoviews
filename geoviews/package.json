@@ -8,7 +8,7 @@
     "url": "https://github.com/holoviz/geoviews.git"
   },
   "dependencies": {
-    "@bokeh/bokehjs": "^2.3.0"
+    "@bokeh/bokehjs": "^2.4.0"
   },
   "devDependencies": {},
   "files": [

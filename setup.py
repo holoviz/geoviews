@@ -104,12 +104,12 @@ _recommended = [
     'geopandas-base',
     'netcdf4',
     'jupyter',
-    'matplotlib>2.2',
+    'matplotlib >2.2',
     'pandas',
     'pyct',
     'scipy',
     'shapely',
-    'xarray',
+    'xarray'
 ]
 
 # can only currently run all examples with packages from conda-forge
@@ -125,6 +125,7 @@ extras_require={
     'examples_extra': _examples_extra,
     'doc': _examples_extra + [
         'nbsite >=0.7.0',
+        'cartopy >=0.20.0',
         'graphviz',
         'lxml',
         'selenium',

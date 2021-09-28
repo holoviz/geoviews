@@ -47,10 +47,14 @@ jobs:
           doit ecosystem_setup
           conda install -c conda-forge "nodejs=15.3.0"
           doit env_create ${{ env.CHANS_DEV}} --python=${{ matrix.python-version }}
-      - name: doit develop_install
+      - name: conda priority
+        if: (!contains(matrix.os, 'macos'))
         run: |
           eval "$(conda shell.bash hook)"
           conda config --set channel_priority strict
+      - name: doit develop_install
+        run: |
+          eval "$(conda shell.bash hook)"
           conda activate test-environment
           conda list
           doit develop_install ${{ env.CHANS_DEV}} -o examples -o recommended

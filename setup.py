@@ -102,7 +102,6 @@ _required = [
 _recommended = [
     'datashader',
     'geopandas-base',
-    'gdal',
     'netcdf4',
     'jupyter',
     'matplotlib>2.2',
@@ -135,9 +134,9 @@ extras_require={
         'flake8',
         'nbsmoke >=0.2.0',
         'ipython >=7.0',
-        'nose',
         'pytest',
-        'fiona'
+        'fiona',
+        'gdal'
     ],
 }
 

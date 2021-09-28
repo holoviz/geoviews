@@ -1,4 +1,3 @@
-from nose.plugins.attrib import attr
 from unittest import SkipTest
 
 import numpy as np
@@ -19,7 +18,6 @@ from holoviews.tests.core.data.testimageinterface import BaseImageElementInterfa
 from holoviews.tests.core.data.testgridinterface import BaseGridInterfaceTests
 
 
-@attr(optional=1)
 class IrisInterfaceTests(BaseGridInterfaceTests):
     """
     Tests for Iris interface
@@ -203,7 +201,6 @@ class IrisInterfaceTests(BaseGridInterfaceTests):
         
 
 
-@attr(optional=1)
 class ImageElement_IrisInterfaceTests(BaseImageElementInterfaceTests):
 
     datatype = 'cube'

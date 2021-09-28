@@ -425,6 +425,7 @@ def check_crs(crs):
     >>> p = check_crs('wrong')
     >>> p is None
     True
+
     Returns
     -------
     A valid crs if possible, otherwise None

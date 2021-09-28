@@ -22,7 +22,7 @@ from holoviews.tests.core.data.testmultiinterface import GeomTests
 
 from geoviews.data import GeoPandasInterface
 
-from .testmultigeominterface import GeomInterfaceTest
+from .test_multigeometry import GeomInterfaceTest
 
 
 class RoundTripTests(ComparisonTestCase):

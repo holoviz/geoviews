@@ -94,15 +94,14 @@ except:
 ### dependencies ###
 
 _required = [
-    'bokeh >=2.3.0,<2.4.0',
+    'bokeh >=2.4.0,<2.5',
     'cartopy >=0.18.0',
     'holoviews >=1.14.2'
 ]
 
 _recommended = [
     'datashader',
-    'geopandas',
-    'gdal',
+    'geopandas-base',
     'netcdf4',
     'jupyter',
     'matplotlib>2.2',
@@ -117,7 +116,8 @@ _recommended = [
 _examples_extra = _recommended + [
     'iris',
     'xesmf',
-    'mock'
+    'mock',
+    'fiona'
 ]
 
 extras_require={
@@ -133,9 +133,8 @@ extras_require={
         'codecov',
         'flake8',
         'nbsmoke >=0.2.0',
-        'ipython >=7.0',
-        'nose',
-        'pytest'
+        'pytest',
+        'fiona',
     ],
 }
 
@@ -146,7 +145,7 @@ extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
 extras_require['build'] = [
     'param >=1.9.2',
     'pyct >=0.4.4',
-    'bokeh >=2.3.0,<2.4.0',
+    'bokeh >=2.4,<2.5',
     'pyviz_comms >=0.6.0'
 ]
 
@@ -158,7 +157,7 @@ extras_require['build'] = [
 setup_args = dict(
     name='geoviews',
     version=get_setup_version("geoviews"),
-    python_requires = '>=3.6',
+    python_requires = '>=3.7',
     install_requires = _required,
     extras_require = extras_require,
     tests_require = extras_require['tests'],

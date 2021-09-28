@@ -24,8 +24,8 @@ jobs:
       DESC: "Python ${{ matrix.python-version }} tests"
       HV_REQUIREMENTS: "unit_tests"
       PYTHON_VERSION: ${{ matrix.python-version }}
-      CHANS_DEV: "-c pyviz/label/dev -c conda-forge"
-      CHANS: "-c pyviz -c conda-forge"
+      CHANS_DEV: "-c pyviz/label/dev -c conda-forge -c nodefaults"
+      CHANS: "-c pyviz -c conda-forge -c nodefaults"
       DISPLAY: ":99.0"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -50,7 +50,6 @@ jobs:
       - name: doit develop_install
         run: |
           eval "$(conda shell.bash hook)"
-          conda config --set channel_priority strict
           conda activate test-environment
           conda list
           doit develop_install ${{ env.CHANS_DEV}} -o examples

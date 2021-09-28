@@ -43,6 +43,7 @@ jobs:
       - name: conda setup
         run: |
           conda config --set always_yes True
+          conda config --set channel_priority strict
           conda install -c pyviz "pyctdev>=0.5"
           doit ecosystem_setup
           conda install -c conda-forge "nodejs=15.3.0"

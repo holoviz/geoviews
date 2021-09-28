@@ -52,7 +52,8 @@ jobs:
           eval "$(conda shell.bash hook)"
           conda activate test-environment
           conda list
-          doit develop_install ${{ env.CHANS_DEV}} -o examples -o recommended
+          doit develop_install ${{ env.CHANS_DEV}} -o test
+          doit develop_install ${{ env.CHANS_DEV}} -o recommended
           bokeh sampledata
           geoviews fetch-data --path=examples
           echo "-----"

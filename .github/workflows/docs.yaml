@@ -19,7 +19,7 @@ jobs:
         shell: bash -l {0}
     env:
       DESC: "Documentation build"
-      CHANS_DEV: "-c pyviz/label/dev -c bokeh -c conda-forge"
+      CHANS_DEV: "-c pyviz/label/dev -c conda-forge -c nodefaults"
       MPLBACKEND: "Agg"
       MOZ_HEADLESS: 1
       DISPLAY: ":99.0"
@@ -49,7 +49,8 @@ jobs:
           eval "$(conda shell.bash hook)"
           conda activate test-environment
           conda list
-          doit develop_install ${{ env.CHANS_DEV}} -o doc -o examples
+          doit develop_install ${{ env.CHANS_DEV}} -o doc
+          doit develop_install ${{ env.CHANS_DEV}} -o examples
           pip install sphinxcontrib-napoleon
           conda install -c conda-forge "nodejs=15.3.0"
       - name: sampledata

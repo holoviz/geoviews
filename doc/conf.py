@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import sys
+sys.setrecursionlimit(2000)
+
 from nbsite.shared_conf import *
 
 project = u'GeoViews'

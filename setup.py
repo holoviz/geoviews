@@ -133,10 +133,8 @@ extras_require={
         'codecov',
         'flake8',
         'nbsmoke >=0.2.0',
-        'ipython >=7.0',
         'pytest',
         'fiona',
-        'gdal'
     ],
 }
 

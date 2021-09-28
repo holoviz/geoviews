@@ -15,7 +15,7 @@ jobs:
       run:
         shell: bash -l {0}
     env:
-      CHANS_DEV: "-c pyviz/label/dev -c bokeh -c conda-forge"
+      CHANS_DEV: "-c pyviz/label/dev -c conda-forge"
       PKG_TEST_PYTHON: "--test-python=py38"
       PYTHON_VERSION: "3.8"
       MPLBACKEND: "Agg"
@@ -49,8 +49,8 @@ jobs:
           doit ecosystem_setup
       - name: conda build
         run: |
-          doit package_build --recipe=core $CHANS $PKG_TEST_PYTHON --test-group=unit
-          doit package_build --recipe=recommended $PKG_TEST_PYTHON --test-group=unit
+          doit package_build --recipe=core $CHANS_DEV $PKG_TEST_PYTHON --test-group=unit
+          doit package_build --recipe=recommended $CHANS_DEV $PKG_TEST_PYTHON --test-group=unit
       - name: npm setup
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_API_TOKEN }}" > $HOME/.npmrc

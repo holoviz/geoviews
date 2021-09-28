@@ -128,6 +128,7 @@ extras_require={
         'graphviz',
         'lxml',
         'selenium',
+        'pooch'
     ],
     'tests': [
         'pytest-cov',

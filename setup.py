@@ -101,7 +101,7 @@ _required = [
 
 _recommended = [
     'datashader',
-    'geopandas',
+    'geopandas-base',
     'gdal',
     'netcdf4',
     'jupyter',

@@ -117,7 +117,8 @@ _recommended = [
 _examples_extra = _recommended + [
     'iris',
     'xesmf',
-    'mock'
+    'mock',
+    'fiona'
 ]
 
 extras_require={

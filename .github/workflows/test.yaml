@@ -43,7 +43,6 @@ jobs:
       - name: conda setup
         run: |
           conda config --set always_yes True
-          conda config --set channel_priority strict
           conda install -c pyviz "pyctdev>=0.5"
           doit ecosystem_setup
           conda install -c conda-forge "nodejs=15.3.0"
@@ -51,6 +50,7 @@ jobs:
       - name: doit develop_install
         run: |
           eval "$(conda shell.bash hook)"
+          conda config --set channel_priority strict
           conda activate test-environment
           conda list
           doit develop_install ${{ env.CHANS_DEV}} -o examples -o recommended -o tests -o build

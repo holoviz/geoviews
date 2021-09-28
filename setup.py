@@ -124,8 +124,9 @@ extras_require={
     'recommended': _recommended,
     'examples_extra': _examples_extra,
     'doc': _examples_extra + [
-        'nbsite >=0.6.1',
-        'sphinx_holoviz_theme',
+        'nbsite >=0.7.0',
+        'graphviz',
+        'lxml',
         'selenium',
     ],
     'tests': [

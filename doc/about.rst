@@ -7,4 +7,4 @@ GeoViews is part of the `HoloViz <https://holoviz.org>`_ family of tools. The `h
 
 If you have any questions or usage issues visit the `GeoViews Discourse <https://discourse.holoviz.org/c/geoviews/>`_ site. 
 
-If you like GeoViews and have built something you want to share, tweet a link or screenshot of your latest creation at @HoloViews, along with any other library you used (@HoloViz_org, @Panel_org, @Datashader, @BokehPlots, @Matplotlib, etc.). Thanks!
+If you like GeoViews and have built something you want to share, tweet a link or screenshot of your latest creation at @HoloViews, along with any other library you used (@HoloViz_org, @Panel_org, @Datashader, @Bokeh, @Matplotlib, etc.). Thanks!

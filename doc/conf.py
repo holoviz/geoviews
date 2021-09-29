@@ -15,7 +15,14 @@ version = release = str(geoviews.__version__)
 
 html_static_path += ['_static']
 
+html_css_files = [
+    'nbsite.css',
+    'custom.css'
+]
+
 html_theme = 'pydata_sphinx_theme'
+html_logo = "_static/logo_horizontal.png"
+html_favicon = "_static/favicon.ico"
 
 html_theme_options = {
     "github_url": "https://github.com/holoviz/geoviews",
@@ -43,19 +50,20 @@ napoleon_numpy_docstring = True
 templates_path = ['_templates']
 
 nbsite_gallery_conf = {
+    'github_org': 'holoviz',
+    'github_project': 'geoviews',
     'backends': ['bokeh', 'matplotlib'],
     'galleries': {
-        'gallery': {'title': 'Gallery'}
+        'gallery': {
+            'title': 'Gallery'
+        }
     },
-    'github_org': 'holoviz',
-    'github_project': 'geoviews'
+    'thumbnail_url': 'https://assets.holoviews.org/geoviews/thumbnails',
 }
-
-extensions += ['nbsite.gallery']
 
 html_context.update({
     "last_release": f"v{'.'.join(geoviews.__version__.split('.')[:3])}",
     "github_user": "holoviz",
     "github_repo": "geoviews",
-    "google_analytics_id": "UA-154795830-2",
+    "google_analytics_id": "UA-154795830-3",
 })

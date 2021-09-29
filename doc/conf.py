@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import sys
-sys.setrecursionlimit(10000)
-
 from nbsite.shared_conf import *
 
 project = u'GeoViews'
 authors = u'HoloViz Developers'
-copyright = u'2018-2019 ' + authors
+copyright = u'2018-2021 ' + authors
 description = 'Geographic visualizations for HoloViews.'
 
 import geoviews

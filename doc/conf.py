@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import sys
+sys.setrecursionlimit(10000)
+
 from nbsite.shared_conf import *
 
 project = u'GeoViews'
@@ -11,51 +14,56 @@ import geoviews
 version = release = str(geoviews.__version__)
 
 html_static_path += ['_static']
-html_theme = 'sphinx_holoviz_theme'
+
+html_css_files = [
+    'nbsite.css',
+    'custom.css'
+]
+
+html_theme = 'pydata_sphinx_theme'
+html_logo = "_static/logo_horizontal.png"
+html_favicon = "_static/favicon.ico"
+
 html_theme_options = {
-    'favicon': 'favicon.ico',
-    'logo': 'logo_horizontal.png',
-    'include_logo_text': False,
-    'primary_color': '#35835E',
-    'primary_color_dark': '#256647',
-    'secondary_color': '#5f9df0',
-    'second_nav': True,
-    'footer': False,
-    'custom_css': 'custom.css',
+    "github_url": "https://github.com/holoviz/geoviews",
+    "icon_links": [
+        {
+            "name": "Twitter",
+            "url": "https://twitter.com/HoloViews",
+            "icon": "fab fa-twitter-square",
+        },
+        {
+            "name": "Discourse",
+            "url": "https://discourse.holoviz.org/",
+            "icon": "fab fa-discourse",
+        }
+    ]
 }
 
-_NAV =  (
-        ('User Guide', 'user_guide/index'),
-        ('Gallery', 'gallery/index'),
-        ('Topics', 'topics'),
-        ('Releases', 'releases'),
-        ('About', 'about')
-)
+extensions += [
+    'sphinx.ext.napoleon',
+    'nbsite.gallery',
+    'sphinx_copybutton',
+]
+napoleon_numpy_docstring = True
+
+templates_path = ['_templates']
 
 nbsite_gallery_conf = {
+    'github_org': 'holoviz',
+    'github_project': 'geoviews',
     'backends': ['bokeh', 'matplotlib'],
     'galleries': {
-        'gallery': {'title': 'Gallery'}
+        'gallery': {
+            'title': 'Gallery'
+        }
     },
-    'github_org': 'holoviz',
-    'github_project': 'geoviews'
+    'thumbnail_url': 'https://assets.holoviews.org/geoviews/thumbnails',
 }
 
-extensions += ['nbsite.gallery']
-
 html_context.update({
-    'PROJECT': project,
-    'DESCRIPTION': description,
-    'AUTHOR': authors,
-    'WEBSITE_SERVER': 'https://geoviews.org',
-    'GOOGLE_SEARCH_ID': '017396756996884923145:nekoxnd8jcz',
-    'GOOGLE_ANALYTICS_UA': 'UA-154795830-3',
-    'VERSION': version,
-    'NAV': _NAV,
-    'LINKS': _NAV,
-    'SOCIAL': (
-        ('Discourse', '//discourse.holoviz.org'),
-        ('Twitter', '//twitter.com/holoviz_org'),
-        ('Github', '//github.com/holoviz/geoviews'),
-    )
+    "last_release": f"v{'.'.join(geoviews.__version__.split('.')[:3])}",
+    "github_user": "holoviz",
+    "github_repo": "geoviews",
+    "google_analytics_id": "UA-154795830-3",
 })

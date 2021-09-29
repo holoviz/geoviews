@@ -24,12 +24,6 @@ only installs the minimal dependencies required to run geoviews::
 
     conda install -c pyviz geoviews-core
 
-In certain circumstances proj6 issues may prevent installation or
-cause issues (particularly with cartopy<=0.17). If you encounter these
-issues ensure you also pin proj4::
-
-    conda install proj4<6
-
 Once installed you can copy the examples into the current directory
 using the ``geoviews`` command and run them using the Jupyter
 notebook::
@@ -42,8 +36,12 @@ notebook::
 --path geoviews-examples && geoviews fetch-data --path
 geoviews-examples`.)
 
-To work with JupyterLab you will also need the HoloViews JupyterLab
-extension::
+In the classic Jupyter notebook environment and JupyterLab, first make
+sure to load the ``gv.extension()``. For versions of
+``jupyterlab>=3.0`` the necessary extension is automatically bundled
+in the ``pyviz_comms`` package, which must be >=2.0. However note that
+for version of ``jupyterlab<3.0`` you must also manually install the
+JupyterLab extension with::
 
   conda install -c conda-forge jupyterlab
   jupyter labextension install @pyviz/jupyterlab_pyviz
@@ -92,7 +90,6 @@ welcome to chat with the developers on `gitter
    :hidden:
    :maxdepth: 2
 
-   Introduction <self>
    User Guide <user_guide/index>
    Gallery <gallery/index>
    Topics <topics>

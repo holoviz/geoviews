@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-sys.setrecursionlimit(2000)
+sys.setrecursionlimit(10000)
 
 from nbsite.shared_conf import *
 

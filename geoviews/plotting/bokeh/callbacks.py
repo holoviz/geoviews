@@ -255,6 +255,10 @@ class GeoPolyDrawCallback(PolyDrawCallback):
 
 class GeoPolyEditCallback(PolyEditCallback):
 
+    def _process_msg(self, msg):
+        msg = super(GeoPolyEditCallback, self)._process_msg(msg)
+        return project_poly(self, msg)
+
     def _update_cds_vdims(self, data):
         if isinstance(self.source, Shape):
             return

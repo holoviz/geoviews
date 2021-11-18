@@ -48,11 +48,11 @@ class TilePlot(GeoPlot):
         if not isinstance(element.data, util.basestring):
             SkipRendering("WMTS element data must be a URL string, "
                           "bokeh cannot render %r" % element.data)
-        if '{Q}' in element.data:
+        if '{Q}' in element.data.upper():
             tile_source = QUADKEYTileSource
-        elif all(kw in element.data for kw in ('{XMIN}', '{XMAX}', '{YMIN}', '{YMAX}')):
+        elif all(kw in element.data.upper() for kw in ('{XMIN}', '{XMAX}', '{YMIN}', '{YMAX}')):
             tile_source = BBoxTileSource
-        elif all(kw in element.data for kw in ('{X}', '{Y}', '{Z}')):
+        elif all(kw in element.data.upper() for kw in ('{X}', '{Y}', '{Z}')):
             tile_source = WMTSTileSource
         else:
             raise ValueError('Tile source URL format not recognized. '
@@ -159,7 +159,7 @@ class FilledContourPlot(GeoPolygonPlot):
 
     levels = param.ClassSelector(default=10, class_=(list, int), doc="""
         A list of scalar values used to specify the contour levels.""")
-    
+
 
 class GeoPathPlot(GeoPlot, PathPlot):
 
@@ -235,7 +235,7 @@ class FeaturePlot(GeoPolygonPlot):
             el_type = Polygons
         polys = el_type(geoms, crs=element.crs, **util.get_param_values(element))
         return super(FeaturePlot, self).get_data(polys, ranges, style)
-        
+
 
 
 class GeoTextPlot(GeoPlot, TextPlot):

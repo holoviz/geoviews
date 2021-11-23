@@ -1,10 +1,12 @@
 from __future__ import division
 
+from distutils.version import LooseVersion
 import sys
 import warnings
 
 import param
 import numpy as np
+import shapely
 import shapely.geometry as sgeom
 
 from cartopy import crs as ccrs
@@ -21,6 +23,9 @@ geom_types = (MultiLineString, LineString, MultiPolygon, Polygon,
               LinearRing, Point, MultiPoint)
 line_types = (MultiLineString, LineString)
 poly_types = (MultiPolygon, Polygon, LinearRing)
+
+
+shapely_version = LooseVersion(shapely.__version__)
 
 
 def wrap_lons(lons, base, period):
@@ -156,7 +161,7 @@ def geom_dict_to_array_dict(geom_dict, coord_names=['Longitude', 'Latitude']):
             new_dict['holes'] = [holes]
     elif geom.geom_type == 'MultiPolygon':
         outer_holes = []
-        for g in geom:
+        for g in geom.geoms:
             holes = []
             for interior in g.interiors:
                 holes.append(geom_to_array(interior))
@@ -319,17 +324,28 @@ def to_ccw(geom):
 
 
 def geom_to_arr(geom):
+    """
+    LineString, LinearRing and Polygon (exterior only?)
+    """
+    # LineString and LinearRing geoms have an xy attribute
     try:
         xy = getattr(geom, 'xy', None)
     except NotImplementedError:
         xy = None
-
     if xy is not None:
         return np.column_stack(xy)
-    if hasattr(geom, 'array_interface'):
-        data = geom.array_interface()
-        return np.array(data['data']).reshape(data['shape'])[:, :2]
-    arr = geom.array_interface_base['data']
+    
+    # Polygon
+    # shapely 1.8.0 deprecated `array_interface` and 
+    # unfortunately also introduced a bug in the `array_interface_base`
+    # property which raised an error as soon as it was called.
+    if shapely_version < '1.8.0':
+        if hasattr(geom, 'array_interface'):
+            data = geom.array_interface()
+            return np.array(data['data']).reshape(data['shape'])[:, :2]
+        arr = geom.array_interface_base['data']
+    else:
+        arr = np.asarray(geom.exterior.coords)
 
     if (len(arr) % 2) != 0:
         arr = arr[:-1]
@@ -342,24 +358,34 @@ def geom_length(geom):
     """
     if geom.geom_type == 'Point':
         return 1
+    # Polygon
     if hasattr(geom, 'exterior'):
         geom = geom.exterior
-    if not geom.geom_type.startswith('Multi') and hasattr(geom, 'array_interface_base'):
-        return len(geom.array_interface_base['data'])//2
+    # As of shapely 1.8.0: LineString, LinearRing (and GeometryCollection?)
+    if shapely_version < '1.8.0':
+        if not geom.geom_type.startswith('Multi') and hasattr(geom, 'array_interface_base'):
+            return len(geom.array_interface_base['data'])//2
     else:
-        glength = len(geom)
-        length = 0
-        for i, g in enumerate(geom):
-            length += geom_length(g)
-            if 'Point' not in geom.geom_type and (i+1 != glength):
-                length += 1
+        if not geom.geom_type.startswith('Multi'):
+            return len(geom.coords)
+    # MultiPolygon, MultiPoint, MultiLineString (recursively)
+    glength = len(geom.geoms)
+    length = 0
+    for i, g in enumerate(geom.geoms):
+        length += geom_length(g)
+        if 'Point' not in geom.geom_type and (i+1 != glength):
+            length += 1
 
-        return length
+    return length
 
 
 def geom_to_array(geom):
+    """
+    Convert the coords of a shapely Geometry to a numpy array.
+    """
     if geom.geom_type == 'Point':
         return np.array([[geom.x, geom.y]])
+    # Only Polygon as of shapely 1.8.0
     if hasattr(geom, 'exterior'):
         if geom.exterior is None:
             xs, ys = np.array([]), np.array([])
@@ -370,13 +396,15 @@ def geom_to_array(geom):
         return geom_to_arr(geom)
     elif geom.geom_type == 'MultiPoint':
         arrays = []
-        for g in geom:
+        for g in geom.geoms:
             if g.geom_type == 'Point':
                 arrays.append(np.array(g.xy).T)
         return np.concatenate(arrays) if arrays else np.array([])
     else:
+        # As of shapely 1.8.0, that would leave:
+        # MultiLineString, MultiPolygon (and GeometryCollection?)
         arrays = []
-        for g in geom:
+        for g in geom.geoms:
             arrays.append(geom_to_arr(g))
             arrays.append(np.array([[np.nan, np.nan]]))
         return np.concatenate(arrays[:-1]) if arrays else np.array([])

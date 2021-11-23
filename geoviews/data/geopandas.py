@@ -233,7 +233,7 @@ class GeoPandasInterface(MultiInterface):
                 index_mask = arr == k
                 if dataset.ndims == 1 and np.sum(index_mask) == 0:
                     data_index = np.argmin(np.abs(arr - k))
-                    mask = np.zeros(len(dataset), dtype=np.bool)
+                    mask = np.zeros(len(dataset), dtype=np.bool_)
                     mask[data_index] = True
                 else:
                     mask &= index_mask

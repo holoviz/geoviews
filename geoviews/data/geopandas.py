@@ -133,7 +133,7 @@ class GeoPandasInterface(MultiInterface):
             if isinstance(geom, Polygon) and geom.interiors:
                 return True
             elif isinstance(geom, MultiPolygon):
-                for g in geom:
+                for g in geom.geoms:
                     if isinstance(g, Polygon) and g.interiors:
                         return True
         return False
@@ -147,7 +147,7 @@ class GeoPandasInterface(MultiInterface):
             if isinstance(geom, Polygon) and geom.interiors:
                 holes.append([[geom_to_array(h) for h in geom.interiors]])
             elif isinstance(geom, MultiPolygon):
-                holes += [[[geom_to_array(h) for h in g.interiors] for g in geom]]
+                holes += [[[geom_to_array(h) for h in g.interiors] for g in geom.geoms]]
             else:
                 holes.append([[]])
         return holes
@@ -208,7 +208,7 @@ class GeoPandasInterface(MultiInterface):
 
     @classmethod
     def select_mask(cls, dataset, selection):
-        mask = np.ones(len(dataset.data), dtype=np.bool)
+        mask = np.ones(len(dataset.data), dtype=np.bool_)
         for dim, k in selection.items():
             if isinstance(k, tuple):
                 k = slice(*k)
@@ -233,7 +233,7 @@ class GeoPandasInterface(MultiInterface):
                 index_mask = arr == k
                 if dataset.ndims == 1 and np.sum(index_mask) == 0:
                     data_index = np.argmin(np.abs(arr - k))
-                    mask = np.zeros(len(dataset), dtype=np.bool)
+                    mask = np.zeros(len(dataset), dtype=np.bool_)
                     mask[data_index] = True
                 else:
                     mask &= index_mask
@@ -427,10 +427,10 @@ class GeoPandasInterface(MultiInterface):
         count = 0
         new_geoms, indexes = [], []
         for i, geom in enumerate(geoms):
-            length = len(geom)
+            length = len(geom.geoms)
             if np.isscalar(rows):
                 if count <= rows < (count+length):
-                    new_geoms.append(geom[rows-count])
+                    new_geoms.append(geom.geoms[rows-count])
                     indexes.append(i)
                     break
             elif isinstance(rows, slice):
@@ -444,13 +444,13 @@ class GeoPandasInterface(MultiInterface):
                     dataset.param.warning(".iloc step slicing currently not supported for"
                                           "the multi-tabular data format.")
                 indexes.append(i)
-                new_geoms.append(geom[start:stop])
+                new_geoms.append(geom.geoms[start:stop])
             elif isinstance(rows, (list, set)):
                 sub_rows = [(r-count) for r in rows if count <= r < (count+length)]
                 if not sub_rows:
                     continue
                 indexes.append(i)
-                new_geoms.append(MultiPoint([geom[r] for r in sub_rows]))
+                new_geoms.append(MultiPoint([geom.geoms[r] for r in sub_rows]))
             count += length
 
         new = dataset.data.iloc[indexes].copy()

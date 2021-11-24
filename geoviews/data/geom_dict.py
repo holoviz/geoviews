@@ -136,7 +136,7 @@ class GeomDictInterface(DictInterface):
         if isinstance(geom, Polygon) and geom.interiors:
             return True
         elif isinstance(geom, MultiPolygon):
-            for g in geom:
+            for g in geom.geoms:
                 if isinstance(g, Polygon) and g.interiors:
                     return True
         return False
@@ -148,7 +148,7 @@ class GeomDictInterface(DictInterface):
         if isinstance(geom, Polygon):
             return [[[geom_to_array(h) for h in geom.interiors]]]
         elif isinstance(geom, MultiPolygon):
-            return [[[geom_to_array(h) for h in g.interiors] for g in geom]]
+            return [[[geom_to_array(h) for h in g.interiors] for g in geom.geoms]]
         return []
 
     @classmethod
@@ -276,9 +276,9 @@ class GeomDictInterface(DictInterface):
 
         if isinstance(geom, MultiPoint):
             if isscalar(rows) or isinstance(rows, slice):
-                geom = geom[rows]
+                geom = geom.geoms[rows]
             elif isinstance(rows, (set, list)):
-                geom = MultiPoint([geom[r] for r in rows])
+                geom = MultiPoint([geom.geoms[r] for r in rows])
         data['geometry'] = geom
         return data
 

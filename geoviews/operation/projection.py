@@ -275,7 +275,7 @@ class project_quadmesh(_project_operation):
                     np.isnan(edge_lengths)
                 )
             if np.any(to_mask):
-                mask = np.zeros(zs.shape, dtype=np.bool)
+                mask = np.zeros(zs.shape, dtype=np.bool_)
                 mask[:, 1:][to_mask] = True
                 mask[:, 2:][to_mask[:, :-1]] = True
                 mask[:, :-1][to_mask] = True

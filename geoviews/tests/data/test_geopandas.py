@@ -175,3 +175,30 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
         self.assertIs(poly.interface, self.interface)
         self.assertEqual(poly.interface.dtype(poly, 'x'),
                          'float64')
+
+    def test_geometry_column_not_named_geometry(self):
+        # The geodataframe has its geometry column not named 'geometry'
+        gdf = geopandas.GeoDataFrame(
+            {
+                'v': [1, 2],
+                'not geometry': [sgeom.Point(0, 1), sgeom.Point(1, 2)],
+            },
+            geometry='not geometry',
+        )
+        ds = Dataset(gdf, kdims=['Longitude', 'Latitude'], datatype=[self.datatype])
+        self.assertEqual(ds.dimension_values('Longitude'), np.array([0, 1]))
+        self.assertEqual(ds.dimension_values('Latitude'), np.array([1, 2]))
+
+    def test_geometry_column_not_named_geometry_and_additional_geometry_column(self):
+        gdf = geopandas.GeoDataFrame(
+            {
+                'v': [1, 2],
+                'not geometry': [sgeom.Point(0, 1), sgeom.Point(1, 2)],
+            },
+            geometry='not geometry',
+        )
+        # The geodataframe contains a column called 'geometry' that doesn't contain geometry data.
+        gdf = gdf.rename(columns={'v': 'geometry'})
+        ds = Dataset(gdf, kdims=['Longitude', 'Latitude'], datatype=[self.datatype])
+        self.assertEqual(ds.dimension_values('Longitude'), np.array([0, 1]))
+        self.assertEqual(ds.dimension_values('Latitude'), np.array([1, 2]))

@@ -3,8 +3,9 @@
 }
 
 :root {
-    --pst-color-primary: #35835E;
-    --pst-color-link: #5f9df0;
+    --pst-color-primary: 47,47,47;
+    --pst-color-link: 56,123,178;
+    --pst-color-link-hover: 43,175,137;
 }
 
 .nav-link {

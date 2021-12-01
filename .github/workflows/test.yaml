@@ -84,12 +84,6 @@ jobs:
       - name: git describe
         run: |
           git describe
-      - name: Pin matplotlib on python 3.8 because of issues with fiona
-        if: matrix.os == 'macos-latest' && matrix.python-version == '3.8'
-        run: |
-          eval "$(conda shell.bash hook)"
-          conda activate test-environment
-          conda install ${{ env.CHANS_DEV }} "matplotlib==3.4.3" "fiona==1.8.20"
       - name: doit env_capture
         run: |
           eval "$(conda shell.bash hook)"

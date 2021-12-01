@@ -65,6 +65,12 @@ jobs:
           geoviews fetch-data --path=examples
           echo "-----"
           git describe
+      - name: Patch fiona on python 3.8 and macos
+        if: matrix.os == 'macos-latest' && matrix.python-version == '3.8'
+        run: |
+          eval "$(conda shell.bash hook)"
+          conda activate test-environment
+          conda ${{ env.CHANS_DEV}} install 'fiona!=1.8.20'
       - name: doit env_capture
         run: |
           eval "$(conda shell.bash hook)"

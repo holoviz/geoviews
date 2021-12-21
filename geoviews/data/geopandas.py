@@ -372,11 +372,36 @@ class GeoPandasInterface(MultiInterface):
                     arrays.append(np.full(length, column.iloc[i]))
                 return np.concatenate(arrays) if len(arrays) > 1 else arrays[0]
 
+        # There's special handling of the geometry column in the event
+        # that it's not name `geometry` in the geodataframe. Since we
+        # serialize each row to a geom_dictionary that requires a
+        # `geometry` key.
+        dict_data = data.iloc[0].to_dict()
+        default_geo_name = new_geo_col_name= 'geometry'
+        geom_col = data.geometry.name
+        if geom_col != default_geo_name:
+            if default_geo_name in dict_data:
+                # When there's a 'geometry' column that is not THE geometry column,
+                # we create a temporary name that will be used to 1) create a new
+                # dimension in the dataset and 2) add the data of this dimension
+                # in the dict used to serialize each row of the geodataframe.
+                while new_geo_col_name in dict_data:
+                    new_geo_col_name += '_'
+
+        if new_geo_col_name != default_geo_name:
+            dict_data[new_geo_col_name] = dict_data.pop(default_geo_name)
+            dataset = dataset.redim(**{default_geo_name: new_geo_col_name})
+
+        dict_data['geometry'] = dict_data.pop(data.geometry.name)
+
+        ds = dataset.clone(dict_data, datatype=['geom_dictionary'])
         values = []
         geom_type = data.geom_type.iloc[0]
-        ds = dataset.clone(data.iloc[0].to_dict(), datatype=['geom_dictionary'])
         for i, row in data.iterrows():
             ds.data = row.to_dict()
+            if new_geo_col_name != default_geo_name:
+                ds.data[new_geo_col_name] = ds.data.pop(default_geo_name)
+            ds.data['geometry'] = ds.data.pop(data.geometry.name)
             values.append(ds.interface.values(ds, dimension))
             if 'Point' not in geom_type and expanded:
                 values.append([np.NaN])

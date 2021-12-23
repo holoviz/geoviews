@@ -94,5 +94,4 @@ welcome to chat with the developers on `gitter
    Gallery <gallery/index>
    Topics <topics>
    Releases <releases>
-   Github Source <https://github.com/holoviz/geoviews>
    About <about>

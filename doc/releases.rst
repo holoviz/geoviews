@@ -1,6 +1,26 @@
 Releases
 ========
 
+Version 1.9.3
+-------------
+
+This release contains a few bug fixes and improvements, and adds compatibility to Shapely 1.8 and the upcoming version 2.0. Thanks to @philippjfr, @maximlt and @ahuang11 for contributing to this release.
+
+Bug fixes and minor improvements:
+
+- Add missing _process_msg method to GeoPolyEditCallback (`#539 <https://github.com/holoviz/geoviews/pull/539>`_)
+- Support GeoDataframe with a geometry column not named geometry (`#545 <https://github.com/holoviz/geoviews/pull/545>`_)
+- Add opentopomap as a tile source (`#514 <https://github.com/holoviz/geoviews/pull/514>`_)
+
+Compatibility:
+
+- Adapt to shapely 1.8.0 and 2.0 (`#543 <https://github.com/holoviz/geoviews/pull/543>`_)
+
+Docs improvements:
+
+- Update the CSS of links (`#544 <https://github.com/holoviz/geoviews/pull/544>`_)
+
+
 Version 1.9.2
 -------------
 

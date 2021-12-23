@@ -80,11 +80,10 @@ will first need to have installed the `dependencies of cartopy <http://scitools.
 or else have set up your system to be able to build them.
 
 
-Please feel free to report `issues
-<https://github.com/holoviz/geoviews/issues>`_ or `contribute code
-<https://help.github.com/articles/about-pull-requests>`_. You are also
-welcome to chat with the developers on `gitter
-<https://gitter.im/pyviz/pyviz>`_.
+If you have any `issues <https://github.com/holoviz/geoviews/issues>`_ or wish 
+to `contribute code <https://help.github.com/articles/about-pull-requests>`_., you can visit 
+our `GitHub site <https://github.com/holoviz/geoviews>_` or file a topic on 
+the `HoloViz Discourse <https://discourse.holoviz.org/>_`.
 
 .. toctree::
    :hidden:

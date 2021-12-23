@@ -1,6 +1,17 @@
 Releases
 ========
 
+Version 1.9.2
+-------------
+
+Minor release by @philippjfr for Bokeh 2.4 compatibility:
+
+- Rebuild extensions for Bokeh >=2.4 (`#525 <https://github.com/holoviz/geoviews/pull/525>`_)
+- Require cartopy>=0.18 to match conda-forge recipe
+- Fix compatibility with upcoming HoloViews 2.0
+- Switch website to pydata_sphinx_theme (`#528 <https://github.com/holoviz/geoviews/pull/528>`_)
+
+
 Version 1.9.1
 -------------
 

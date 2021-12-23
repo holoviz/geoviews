@@ -9,6 +9,7 @@ This release contains a few bug fixes and improvements, and adds compatibility t
 Bug fixes and minor improvements:
 
 - Add missing _process_msg method to GeoPolyEditCallback (`#539 <https://github.com/holoviz/geoviews/pull/539>`_)
+- Accept lowercase xmin/ymin/xmax/ymax in WMTS URL templates (`#542 <https://github.com/holoviz/geoviews/pull/542>`_)
 - Support GeoDataframe with a geometry column not named geometry (`#545 <https://github.com/holoviz/geoviews/pull/545>`_)
 - Add opentopomap as a tile source (`#514 <https://github.com/holoviz/geoviews/pull/514>`_)
 

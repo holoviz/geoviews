@@ -4,7 +4,7 @@ Releases
 Version 1.9.3
 -------------
 
-This release contains a few bug fixes and improvements, and adds compatibility to Shapely 1.8 and the upcoming version 2.0. Thanks to @philippjfr, @maximlt and @ahuang11 for contributing to this release.
+This release contains a few bug fixes and improvements, and adds compatibility with Shapely 1.8 and the upcoming version 2.0. Thanks to @philippjfr, @maximlt and @ahuang11 for contributing to this release.
 
 Bug fixes and minor improvements:
 

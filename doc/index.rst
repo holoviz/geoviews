@@ -89,6 +89,7 @@ the `HoloViz Discourse <https://discourse.holoviz.org/>`_.
    :hidden:
    :maxdepth: 2
 
+   Home <self>
    User Guide <user_guide/index>
    Gallery <gallery/index>
    Topics <topics>

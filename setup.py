@@ -101,7 +101,8 @@ _required = [
 
 _recommended = [
     'datashader',
-    'geopandas-base',
+    # geopandas-base installed with conda, see setup.cfg
+    'geopandas',
     'netcdf4',
     'jupyter',
     'matplotlib >2.2',
@@ -109,7 +110,7 @@ _recommended = [
     'pyct',
     'scipy',
     'shapely',
-    'xarray'
+    'xarray',
 ]
 
 # can only currently run all examples with packages from conda-forge

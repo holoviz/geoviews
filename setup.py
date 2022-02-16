@@ -96,7 +96,8 @@ except:
 _required = [
     'bokeh >=2.4.0,<2.5',
     'cartopy >=0.18.0',
-    'holoviews >=1.14.2'
+    'holoviews >=1.14.2',
+    'packaging',
 ]
 
 _recommended = [

@@ -1,6 +1,6 @@
 {
   "name": "geoviews",
-  "version": "1.9.3",
+  "version": "1.9.4-rc.1",
   "description": "Simple, concise geographical visualization in Python",
   "license": "BSD-3-Clause",
   "repository": {

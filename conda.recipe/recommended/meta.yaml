@@ -20,7 +20,7 @@ requirements:
     - python {{ sdata['python_requires'] }}
     - geoviews-core ={{ sdata['version'] }}
     {% for dep in sdata['extras_require']['recommended'] %}
-    - {{ dep }}
+    - {{ dep if dep != 'geopandas' else 'geopandas-base'}}
     {% endfor %}
 
 about:

@@ -20,7 +20,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     """
 
     default_tools = param.List(default=['save', 'pan',
-                                        WheelZoomTool(zoom_on_axis=False}),
+                                        WheelZoomTool(zoom_on_axis=False),
                                         BoxZoomTool(match_aspect=True), 'reset'],
         doc="A list of plugin tools to use on the plot.")
 

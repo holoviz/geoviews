@@ -25,7 +25,6 @@ jobs:
         shell: bash -l {0} 
     env:
       DESC: "Python ${{ matrix.python-version }} tests"
-      HV_REQUIREMENTS: "unit_tests"
       PYTHON_VERSION: ${{ matrix.python-version }}
       CHANS_DEV: "-c pyviz/label/dev -c conda-forge -c nodefaults"
       CHANS: "-c pyviz -c conda-forge -c nodefaults"
@@ -61,7 +60,7 @@ jobs:
           eval "$(conda shell.bash hook)"
           conda activate test-environment
           conda list
-          doit develop_install ${{ env.CHANS_DEV}} -o examples -o recommended
+          doit develop_install ${{ env.CHANS_DEV}} -o tests -o examples -o recommended
 
       # Temporary step for Mac only due to develop_install failing (reason not yet found)
       - name: doit develop_install
@@ -70,7 +69,7 @@ jobs:
           eval "$(conda shell.bash hook)"
           conda activate test-environment
           conda list
-          doit develop_install ${{ env.CHANS_DEV}} -o examples -o recommended || echo "Keep going"
+          doit develop_install ${{ env.CHANS_DEV}} -o tests -o examples -o recommended || echo "Keep going"
           pip install --no-deps --no-build-isolation -e .
 
       - name: download test data

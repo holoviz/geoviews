@@ -161,7 +161,9 @@ class project_points(_project_operation):
             return element.clone(crs=self.p.projection)
         xdim, ydim = element.dimensions()[:2]
         xs, ys = (element.dimension_values(i) for i in range(2))
-        coordinates = self.p.projection.transform_points(element.crs, xs, ys)
+        coordinates = self.p.projection.transform_points(
+            element.crs, np.asarray(xs), np.asarray(ys)
+        )
         mask = np.isfinite(coordinates[:, 0])
         dims = [d for d in element.dimensions() if d not in (xdim, ydim)]
         new_data = {k: v[mask] for k, v in element.columns(dims).items()}

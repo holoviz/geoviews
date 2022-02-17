@@ -1,6 +1,24 @@
 Releases
 ========
 
+Version 1.9.4
+-------------
+
+Date: Feb 17, 2022
+
+This is a micro release with a small number of bug fixes and compatibility fixes with HoloViews 1.14.8 and support for Python 3.10.
+
+Bug fixes:
+
+- Fix handling of 3-channel RGB element (`#558 <https://github.com/holoviz/geoviews/pull/558>`_)
+- Add support for pandas Float64Array (`#559 <https://github.com/holoviz/geoviews/pull/559>`_)
+
+Compatibility:
+
+- Compatibility with HoloViews 1.14.8 (`#556 <https://github.com/holoviz/geoviews/pull/556>`_)
+- Compatibility with Python 3.10 by replacing LooseVersion with packaging.Version (`#555 <https://github.com/holoviz/geoviews/pull/555>`_) 
+
+
 Version 1.9.3
 -------------
 

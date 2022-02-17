@@ -1,6 +1,5 @@
 from __future__ import division
 
-from distutils.version import LooseVersion
 import sys
 import warnings
 
@@ -13,6 +12,7 @@ from cartopy import crs as ccrs
 from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
 from holoviews.element import Tiles
 from holoviews.core.util import basestring
+from packaging.version import Version
 from shapely.geometry.base import BaseMultipartGeometry
 from shapely.geometry import (
     MultiLineString, LineString, MultiPolygon, Polygon, LinearRing,
@@ -25,7 +25,7 @@ line_types = (MultiLineString, LineString)
 poly_types = (MultiPolygon, Polygon, LinearRing)
 
 
-shapely_version = LooseVersion(shapely.__version__)
+shapely_version = Version(shapely.__version__)
 
 
 def wrap_lons(lons, base, period):
@@ -339,7 +339,7 @@ def geom_to_arr(geom):
     # shapely 1.8.0 deprecated `array_interface` and 
     # unfortunately also introduced a bug in the `array_interface_base`
     # property which raised an error as soon as it was called.
-    if shapely_version < '1.8.0':
+    if shapely_version < Version('1.8.0'):
         if hasattr(geom, 'array_interface'):
             data = geom.array_interface()
             return np.array(data['data']).reshape(data['shape'])[:, :2]
@@ -362,7 +362,7 @@ def geom_length(geom):
     if hasattr(geom, 'exterior'):
         geom = geom.exterior
     # As of shapely 1.8.0: LineString, LinearRing (and GeometryCollection?)
-    if shapely_version < '1.8.0':
+    if shapely_version < Version('1.8.0'):
         if not geom.geom_type.startswith('Multi') and hasattr(geom, 'array_interface_base'):
             return len(geom.array_interface_base['data'])//2
     else:

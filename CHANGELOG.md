@@ -1,5 +1,58 @@
+Version 1.9.4
+=============
+
+Date: Feb 17, 2022
+
+This is a micro release with a small number of bug fixes and compatibility fixes with HoloViews 1.14.8 and support for Python 3.10.
+
+Bug fixes:
+
+- Fix handling of 3-channel RGB element ([#558](https://github.com/holoviz/geoviews/pull/558))
+- Add support for pandas Float64Array ([#559](https://github.com/holoviz/geoviews/pull/559))
+
+Compatibility:
+
+- Compatibility with HoloViews 1.14.8 ([#556](https://github.com/holoviz/geoviews/pull/556))
+- Compatibility with Python 3.10 by replacing LooseVersion with packaging.Version ([#555](https://github.com/holoviz/geoviews/pull/555)) 
+
+Version 1.9.3
+=============
+
+Date: Dec 25, 2021
+
+This release contains a few bug fixes and improvements, and adds compatibility with Shapely 1.8 and the upcoming version 2.0. Thanks to @philippjfr, @maximlt and @ahuang11 for contributing to this release.
+
+Bug fixes and minor improvements:
+
+- Add missing `_process_msg` method to GeoPolyEditCallback ([#539](https://github.com/holoviz/geoviews/pull/539))
+- Accept lowercase xmin/ymin/xmax/ymax in WMTS URL templates ([#542](https://github.com/holoviz/geoviews/pull/542))
+- Support GeoDataframe with a geometry column not named geometry ([#545](https://github.com/holoviz/geoviews/pull/545))
+- Add opentopomap as a tile source ([#514](https://github.com/holoviz/geoviews/pull/514))
+
+Compatibility:
+
+- Adapt to shapely 1.8.0 and 2.0 ([#543](https://github.com/holoviz/geoviews/pull/543))
+
+Docs improvements:
+
+- Update the CSS of links ([#544](https://github.com/holoviz/geoviews/pull/544))
+
+Version 1.9.2
+=============
+
+Date: Sep 30, 2021
+
+Minor release by Philipp Rudiger for Bokeh 2.4 compatibility:
+
+- Rebuild extensions for Bokeh >=2.4 ([#525](https://github.com/holoviz/geoviews/pull/525))
+- Require cartopy>=0.18 to match conda-forge recipe
+- Fix compatibility with upcoming HoloViews 2.0
+- Switch website to pydata_sphinx_theme ([#528](https://github.com/holoviz/geoviews/pull/528))
+
 Version 1.9.1
 =============
+
+Date: Mar 13, 2021
 
 This micro-release fixes the bundling and deployment of geoviews.js to NPM but otherwise has no contents.
 

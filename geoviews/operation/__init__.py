@@ -25,7 +25,7 @@ def convert_to_geotype(element, crs=None):
     geotype = getattr(gv_element, type(element).__name__, None)
     if crs is None or geotype is None or isinstance(element, _Element):
         return element
-    return geotype(element, crs=crs)
+    return element.clone(new_type=geotype, crs=crs)
 
 
 def find_crs(op, element):

@@ -1,6 +1,17 @@
 Releases
 ========
 
+Version 1.9.5
+-------------
+
+Date: Mar 8, 2022
+
+This is a micro release fixes a regression introdued in the 1.9.4 release.
+
+Bug fixes:
+
+- Fix regression related to RGB(A) element conversion: (`#562 <https://github.com/holoviz/geoviews/pull/562>`_)
+
 Version 1.9.4
 -------------
 

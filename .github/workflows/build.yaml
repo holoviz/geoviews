@@ -6,6 +6,10 @@ on:
     - 'v[0-9]+.[0-9]+.[0-9]+a[0-9]+'
     - 'v[0-9]+.[0-9]+.[0-9]+b[0-9]+'
     - 'v[0-9]+.[0-9]+.[0-9]+rc[0-9]+'
+  # Dry-run only
+  workflow_dispatch:
+  schedule:
+    - cron: '0 18 * * SUN'
 
 jobs:
   conda_build:
@@ -57,12 +61,12 @@ jobs:
           npm whoami
           npm -v
       - name: dev deploy
-        if: (contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc'))
+        if: (github.event_name == 'push' && (contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc')))
         run: |
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --recipe=core
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --recipe=recommended
       - name: main deploy
-        if: (!(contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc')))
+        if: (github.event_name == 'push' && !(contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc')))
         run: |
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --label=main --recipe=core
           doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --label=main --recipe=recommended
@@ -76,12 +80,12 @@ jobs:
           doit develop_install $CHANS_DEV -o build
           python setup.py develop
       - name: npm dev deploy
-        if: (contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc'))
+        if: (github.event_name == 'push' && (contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc')))
         run: |
           cd ./geoviews
           npm publish --tag dev
       - name: npm main deploy
-        if: (!(contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc')))
+        if: (github.event_name == 'push' && !(contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc')))
         run: |
           cd ./geoviews
           npm publish --tag latest
@@ -141,6 +145,7 @@ jobs:
           git status
           git diff
       - name: pip upload
+        if: github.event_name == 'push'
         run: |
           eval "$(conda shell.bash hook)"
           conda activate test-environment

@@ -41,7 +41,7 @@ jobs:
         run: git fetch --prune --tags --unshallow
       - name: conda setup
         run: |
-          conda update -n base -c defaults "conda>=4.12"
+          conda install -n base -c defaults "conda>=4.12"
           conda install -n base -c conda-forge mamba --no-update-deps
           conda install -c conda-forge "nodejs=15.3.0" --no-update-deps
           conda config --prepend channels nodefaults

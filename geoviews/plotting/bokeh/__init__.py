@@ -45,7 +45,7 @@ class TilePlot(GeoPlot):
         return extents
 
     def get_data(self, element, ranges, style):
-        if not isinstance(element.data, util.basestring):
+        if not isinstance(element.data, str):
             SkipRendering("WMTS element data must be a URL string, "
                           "bokeh cannot render %r" % element.data)
         if '{Q}' in element.data.upper():

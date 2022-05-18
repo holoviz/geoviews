@@ -229,7 +229,7 @@ class WMTS(_GeoFeature):
             data = data.url
         elif WebMapTileService and isinstance(data, WebMapTileService):
             pass
-        elif not isinstance(data, util.basestring):
+        elif not isinstance(data, str):
             raise TypeError('%s data should be a tile service URL not a %s type.'
                             % (type(self).__name__, type(data).__name__) )
         super(WMTS, self).__init__(data, kdims=kdims, vdims=vdims, **params)

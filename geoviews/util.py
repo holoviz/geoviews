@@ -11,7 +11,6 @@ import shapely.geometry as sgeom
 from cartopy import crs as ccrs
 from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
 from holoviews.element import Tiles
-from holoviews.core.util import basestring
 from packaging.version import Version
 from shapely.geometry.base import BaseMultipartGeometry
 from shapely.geometry import (
@@ -461,7 +460,7 @@ def check_crs(crs):
     import pyproj
     if isinstance(crs, pyproj.Proj):
         out = crs
-    elif isinstance(crs, dict) or isinstance(crs, basestring):
+    elif isinstance(crs, dict) or isinstance(crs, str):
         try:
             out = pyproj.Proj(crs)
         except RuntimeError:
@@ -591,14 +590,14 @@ def process_crs(crs):
     if crs is None:
         return ccrs.PlateCarree()
 
-    if isinstance(crs, basestring) and crs.lower().startswith('epsg'):
+    if isinstance(crs, str) and crs.lower().startswith('epsg'):
         try:
             crs = ccrs.epsg(crs[5:].lstrip().rstrip())
         except:
             raise ValueError("Could not parse EPSG code as CRS, must be of the format 'EPSG: {code}.'")
     elif isinstance(crs, int):
         crs = ccrs.epsg(crs)
-    elif isinstance(crs, basestring) or is_pyproj(crs):
+    elif isinstance(crs, str) or is_pyproj(crs):
         try:
             crs = proj_to_cartopy(crs)
         except:

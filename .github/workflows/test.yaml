@@ -18,21 +18,15 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: [3.7, 3.8, 3.9]
-        exclude:
-          - os: macos-latest
-            python-version: 3.7
+        python-version: ['3.7', '3.8', '3.9', '3.10']
     timeout-minutes: 60
     defaults:
       run:
         shell: bash -l {0} 
     env:
-      DESC: "Python ${{ matrix.python-version }} tests"
-      PYTHON_VERSION: ${{ matrix.python-version }}
-      CHANS_DEV: "-c pyviz/label/dev -c conda-forge -c nodefaults"
-      CHANS: "-c pyviz -c conda-forge -c nodefaults"
       DISPLAY: ":99.0"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      MAMBA_NO_BANNER: 1
     steps:
       - uses: actions/checkout@v2
         with:
@@ -47,34 +41,30 @@ jobs:
         run: git fetch --prune --tags --unshallow
       - name: conda setup
         run: |
-          conda config --set always_yes True
-          conda install -c pyviz "pyctdev>=0.5"
-          doit ecosystem_setup
-          conda install -c conda-forge "nodejs=15.3.0"
-          doit env_create ${{ env.CHANS_DEV}} --python=${{ matrix.python-version }}
-      - name: conda priority
-        if: (!contains(matrix.os, 'macos'))
-        run: |
-          eval "$(conda shell.bash hook)"
-          conda config --set channel_priority strict
+          conda install -n base -c defaults "conda>=4.12"
+          conda install -n base -c conda-forge mamba --no-update-deps
+          conda install -c conda-forge "nodejs=15.3.0" --no-update-deps
+          conda config --prepend channels nodefaults
+          conda config --prepend channels conda-forge
+          conda config --prepend channels pyviz/label/dev
+          conda config --remove channels defaults
+          conda create -n test-environment python=${{ matrix.python-version }} pyctdev
       - name: doit develop_install
-        if: matrix.os != 'macos-latest'
         run: |
           eval "$(conda shell.bash hook)"
           conda activate test-environment
-          conda list
-          doit develop_install ${{ env.CHANS_DEV}} -o tests -o examples -o recommended
-
-      # Temporary step for Mac only due to develop_install failing (reason not yet found)
-      - name: doit develop_install
-        if: matrix.os == 'macos-latest'
+          doit develop_install -o tests -o examples -o recommended --conda-mode=mamba
+      - name: patch fiona/geostack on Python 3.7 / Macos
+        if: contains(matrix.os, 'macos') && matrix.python-version == '3.7'
         run: |
           eval "$(conda shell.bash hook)"
           conda activate test-environment
-          conda list
-          doit develop_install ${{ env.CHANS_DEV}} -o tests -o examples -o recommended || echo "Keep going"
-          pip install --no-deps --no-build-isolation -e .
-
+          mamba install "fiona=1.8" "gdal=3.3"
+      - name: doit env_capture
+        run: |
+          eval "$(conda shell.bash hook)"
+          conda activate test-environment
+          doit env_capture
       - name: download test data
         run: |
           eval "$(conda shell.bash hook)"
@@ -84,17 +74,6 @@ jobs:
       - name: git describe
         run: |
           git describe
-      - name: Pin matplotlib on python 3.8 because of issues with fiona
-        if: matrix.os == 'macos-latest' && matrix.python-version == '3.8'
-        run: |
-          eval "$(conda shell.bash hook)"
-          conda activate test-environment
-          conda install ${{ env.CHANS_DEV }} "matplotlib==3.4.3" "fiona==1.8.20"
-      - name: doit env_capture
-        run: |
-          eval "$(conda shell.bash hook)"
-          conda activate test-environment
-          doit env_capture
       - name: doit test_flakes
         run: |
           eval "$(conda shell.bash hook)"

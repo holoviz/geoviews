@@ -76,7 +76,7 @@ class project_path(_project_operation):
             if isinstance(geom, Polygon) and geom.area < 1e-15:
                 continue
             elif isinstance(geom, MultiPolygon):
-                polys = [g for g in geom if g.area > 1e-15]
+                polys = [g for g in geom.geoms if g.area > 1e-15]
                 if not polys:
                     continue
                 geom = MultiPolygon(polys)

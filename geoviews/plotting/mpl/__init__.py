@@ -483,7 +483,7 @@ class WMTSPlot(GeoPlot):
                   'filterrad', 'clims', 'norm']
 
     def get_data(self, element, ranges, style):
-        if isinstance(element.data, util.basestring):
+        if isinstance(element.data, str):
             if '{Q}' in element.data:
                 tile_source = QuadtreeTiles(url=element.data)
             else:

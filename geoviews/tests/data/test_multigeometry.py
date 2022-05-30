@@ -10,7 +10,7 @@ from holoviews.core.data.interface import DataError
 from holoviews.core.util import pd
 from holoviews.element import Polygons, Path
 from holoviews.element.comparison import ComparisonTestCase
-from holoviews.tests.core.data.testmultiinterface import MultiBaseInterfaceTest
+from holoviews.tests.core.data.test_multiinterface import MultiBaseInterfaceTest
 
 try:
     from shapely import geometry as sgeom

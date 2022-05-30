@@ -14,8 +14,8 @@ from geoviews.data.iris import coord_to_dimension
 from holoviews.core.spaces import HoloMap
 from holoviews.element import Image
 
-from holoviews.tests.core.data.testimageinterface import BaseImageElementInterfaceTests
-from holoviews.tests.core.data.testgridinterface import BaseGridInterfaceTests
+from holoviews.tests.core.data.test_imageinterface import BaseImageElementInterfaceTests
+from holoviews.tests.core.data.test_gridinterface import BaseGridInterfaceTests
 
 
 class IrisInterfaceTests(BaseGridInterfaceTests):

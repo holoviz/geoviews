@@ -18,7 +18,7 @@ from holoviews.core.data import Dataset
 from holoviews.core.data.interface import DataError
 from holoviews.element import Polygons, Path, Points
 from holoviews.element.comparison import ComparisonTestCase
-from holoviews.tests.core.data.testmultiinterface import GeomTests
+from holoviews.tests.core.data.test_multiinterface import GeomTests
 
 from geoviews.data import GeoPandasInterface
 

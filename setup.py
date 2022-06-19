@@ -98,6 +98,10 @@ _required = [
     'cartopy >=0.18.0',
     'holoviews >=1.14.2',
     'packaging',
+    'numpy',
+    'shapely',
+    'param',
+    'panel',
 ]
 
 _recommended = [

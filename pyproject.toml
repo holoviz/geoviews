@@ -6,3 +6,4 @@ requires = [
     "pyviz_comms >=0.6.0",
     "setuptools",
 ]
+build-backend = "setuptools.build_meta"

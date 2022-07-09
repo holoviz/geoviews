@@ -145,15 +145,6 @@ extras_require={
 
 extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
 
-# until pyproject.toml/equivalent is widely supported; meanwhile
-# setup_requires doesn't work well with pip. Note: deliberately omitted from all.
-extras_require['build'] = [
-    'param >=1.9.2',
-    'pyct >=0.4.4',
-    'bokeh >=2.4,<2.5',
-    'pyviz_comms >=0.6.0'
-]
-
 
 ########################
 ### package metadata ###

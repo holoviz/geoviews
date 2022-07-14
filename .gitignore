@@ -78,3 +78,5 @@ geoviews/.version
 .doit.db
 .pytest_cache
 
+node_modules/
+.bokeh

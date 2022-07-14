@@ -98,6 +98,10 @@ _required = [
     'cartopy >=0.18.0',
     'holoviews >=1.14.2',
     'packaging',
+    'numpy',
+    'shapely',
+    'param',
+    'panel',
 ]
 
 _recommended = [
@@ -131,7 +135,8 @@ extras_require={
         'graphviz',
         'lxml',
         'selenium',
-        'pooch'
+        'pooch',
+        'pydata-sphinx-theme <0.9.0',
     ],
     'tests': [
         'pytest-cov',

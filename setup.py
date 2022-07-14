@@ -131,7 +131,8 @@ extras_require={
         'graphviz',
         'lxml',
         'selenium',
-        'pooch'
+        'pooch',
+        'pydata-sphinx-theme <0.9.0',
     ],
     'tests': [
         'pytest-cov',

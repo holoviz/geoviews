@@ -100,13 +100,14 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
         try:
             geom_in_crs = dest_proj.project_geometry(geom_in_src_proj, src_proj)
         except (ValueError, IndexError):
-            src_name =type(src_proj).__name__
-            dest_name =type(dest_proj).__name__
-            raise ValueError('Could not project data from %s projection '
-                             'to %s projection. Ensure the coordinate '
-                             'reference system (crs) matches your data '
-                             'and the kdims.' %
-                             (src_name, dest_name)) from None
+            src_name = type(src_proj).__name__
+            dest_name = type(dest_proj).__name__
+            raise ValueError(
+                f'Could not project data from {src_name} projection '
+                f'to {dest_name} projection. Ensure the coordinate '
+                'reference system (CRS) matches your data and the kdims, '
+                'and the data is not ouside the bounds of the CRS.'
+            ) from None
     else:
         geom_in_crs = boundary_poly.intersection(domain_in_src_proj)
     return geom_in_crs.bounds

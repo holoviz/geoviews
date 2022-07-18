@@ -13,7 +13,8 @@ def test_outside_extents():
 
     msg = (
         "Could not project data from .+? projection to .+? projection\. "
-        "Ensure the coordinate reference system \(crs\) matches your data and the kdims\."
+        "Ensure the coordinate reference system \(CRS\) matches your data and the kdims, "
+        "and the data is not ouside the bounds of the CRS."
     )
     with pytest.raises(ValueError, match=msg):
         project_extents(extents, src_proj, dest_proj)

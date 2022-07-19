@@ -147,7 +147,7 @@ class Feature(_GeoFeature):
         super(Feature, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
     def __call__(self, *args, **kwargs):
-        return self.opts(*args, **kwargs)
+        return self.options(*args, **kwargs)
 
     def geoms(self, scale=None, bounds=None, as_element=True):
         """
@@ -235,7 +235,7 @@ class WMTS(_GeoFeature):
         super(WMTS, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
     def __call__(self, *args, **kwargs):
-        return self.opts(*args, **kwargs)
+        return self.options(*args, **kwargs)
 
 
 class Tiles(WMTS):

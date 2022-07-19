@@ -1,5 +1,5 @@
-import os
 import numpy as np
+from pathlib import Path
 
 from bokeh.models import CustomJS, CustomAction, PolyEditTool
 from holoviews.core.ndmapping import UniformNdMapping
@@ -334,11 +334,9 @@ class PolyVertexEditCallback(GeoPolyEditCallback):
     vcds.selection_manager.clear();
     """
 
-    icon = os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__), '..', '..', 'icons', 'PolyBreak.png'
-        )
-    )
+    icon = (
+        Path(__file__).parents[2] / "icons" / "PolyBreak.png"
+    ).resolve()
 
     def _create_vertex_split_link(self, action, poly_renderer,
                                   vertex_renderer, vertex_tool):

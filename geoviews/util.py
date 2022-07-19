@@ -3,20 +3,21 @@ from __future__ import division
 import sys
 import warnings
 
-import param
 import numpy as np
+import param
 import shapely
 import shapely.geometry as sgeom
-
 from cartopy import crs as ccrs
 from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
 from holoviews.element import Tiles
 from packaging.version import Version
-from shapely.geometry.base import BaseMultipartGeometry
+from pyproj import CRS, Transformer
 from shapely.geometry import (
-    MultiLineString, LineString, MultiPolygon, Polygon, LinearRing,
-    Point, MultiPoint, box
+    LinearRing, LineString, MultiLineString, MultiPoint,
+    MultiPolygon, Point, Polygon, box
 )
+from shapely.geometry.base import BaseMultipartGeometry
+from shapely.ops import transform
 
 geom_types = (MultiLineString, LineString, MultiPolygon, Polygon,
               LinearRing, Point, MultiPoint)
@@ -776,3 +777,10 @@ def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=ccrs.PlateCarree()):
     return RGB(
         rgb, bounds=(x0, y0, x1, y1), crs=ccrs.GOOGLE_MERCATOR, vdims=['R', 'G', 'B'],
     ).clone(datatype=['grid', 'xarray', 'iris'])[l:r, b:t]
+
+
+def transform_shapely_to_wsg84(geom, crs_from):
+    crs_to = CRS('WGS84')
+    project = Transformer.from_crs(crs_from, crs_to).transform
+    flip = lambda x, y: (y, x)
+    return transform(flip, transform(project, geom))

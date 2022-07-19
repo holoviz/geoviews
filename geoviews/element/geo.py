@@ -41,7 +41,7 @@ except:
 
 from ..util import (
     path_to_geom_dicts, polygons_to_geom_dicts, load_tiff, from_xarray,
-    poly_types, expand_geoms
+    poly_types, expand_geoms, transform_shapely_to_wsg84
 )
 
 geographic_types = (GoogleTiles, cFeature, BaseGeometry)
@@ -287,6 +287,7 @@ class Points(_Element, HvPoints):
             geom = points[0]
         else:
             geom = MultiPoint(points)
+        geom = transform_shapely_to_wsg84(geom, self.crs)
         return unary_union(geom) if union else geom
 
 
@@ -539,6 +540,7 @@ class Path(_Element, HvPath):
             geom = geoms[0]
         else:
             geom = MultiLineString(geoms)
+        geom = transform_shapely_to_wsg84(geom, self.crs)
         return unary_union(geom) if union else geom
 
 
@@ -682,6 +684,7 @@ class Contours(_Element, HvContours):
             geom = geoms[0]
         else:
             geom = MultiLineString(geoms)
+        geom = transform_shapely_to_wsg84(geom, self.crs)
         return unary_union(geom) if union else geom
 
 
@@ -715,6 +718,7 @@ class Polygons(_Element, HvPolygons):
             geom = geoms[0]
         else:
             geom = MultiPolygon(geoms)
+        geom = transform_shapely_to_wsg84(geom, self.crs)
         return unary_union(geom) if union else geom
 
 
@@ -753,6 +757,7 @@ class Rectangles(_Element, HvRectangles):
             geom = boxes[0]
         else:
             geom = MultiPolygon(boxes)
+        geom = transform_shapely_to_wsg84(geom, self.crs)
         return unary_union(geom) if union else geom
 
 
@@ -783,8 +788,9 @@ class Segments(_Element, HvSegments):
             geom = lines[0]
         else:
             geom = MultiLineString(lines)
+        geom = transform_shapely_to_wsg84(geom, self.crs)
         return unary_union(geom) if union else geom
-    
+
 
 class Shape(Dataset):
     """
@@ -977,4 +983,5 @@ class Shape(Dataset):
         A shapely geometry
         """
         geom = self.data['geometry']
+        geom = transform_shapely_to_wsg84(geom, self.crs)
         return unary_union(geom) if union else geom

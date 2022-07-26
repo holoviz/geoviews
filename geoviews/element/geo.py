@@ -41,7 +41,7 @@ except:
 
 from ..util import (
     path_to_geom_dicts, polygons_to_geom_dicts, load_tiff, from_xarray,
-    poly_types, expand_geoms, transform_shapely_to_wsg84
+    poly_types, expand_geoms, transform_shapely
 )
 
 geographic_types = (GoogleTiles, cFeature, BaseGeometry)
@@ -266,7 +266,7 @@ class Points(_Element, HvPoints):
 
     group = param.String(default='Points')
 
-    def geom(self, union=False):
+    def geom(self, union=False, projection=None):
         """
         Converts the Points to a shapely geometry.
 
@@ -274,6 +274,8 @@ class Points(_Element, HvPoints):
         ----------
         union: boolean (default=False)
             Whether to compute a union between the geometries
+        projection : EPSG string | Cartopy CRS | None
+            Whether to project the geometry to other coordinate system
 
         Returns
         -------
@@ -287,7 +289,8 @@ class Points(_Element, HvPoints):
             geom = points[0]
         else:
             geom = MultiPoint(points)
-        geom = transform_shapely_to_wsg84(geom, self.crs)
+        if projection:
+            geom = transform_shapely(geom, self.crs, projection)
         return unary_union(geom) if union else geom
 
 
@@ -519,7 +522,7 @@ class Path(_Element, HvPath):
 
     group = param.String(default='Path', constant=True)
 
-    def geom(self, union=False):
+    def geom(self, union=False, projection=None):
         """
         Converts the Path to a shapely geometry.
 
@@ -527,6 +530,8 @@ class Path(_Element, HvPath):
         ----------
         union: boolean (default=False)
             Whether to compute a union between the geometries
+        projection : EPSG string | Cartopy CRS | None
+            Whether to project the geometry to other coordinate system
 
         Returns
         -------
@@ -540,7 +545,8 @@ class Path(_Element, HvPath):
             geom = geoms[0]
         else:
             geom = MultiLineString(geoms)
-        geom = transform_shapely_to_wsg84(geom, self.crs)
+        if projection:
+            geom = transform_shapely(geom, self.crs, projection)
         return unary_union(geom) if union else geom
 
 
@@ -663,7 +669,7 @@ class Contours(_Element, HvContours):
 
     group = param.String(default='Contours', constant=True)
 
-    def geom(self, union=False):
+    def geom(self, union=False, projection=None):
         """
         Converts the Contours to a shapely geometry.
 
@@ -671,6 +677,8 @@ class Contours(_Element, HvContours):
         ----------
         union: boolean (default=False)
             Whether to compute a union between the geometries
+        projection : EPSG string | Cartopy CRS | None
+            Whether to project the geometry to other coordinate system
 
         Returns
         -------
@@ -684,7 +692,8 @@ class Contours(_Element, HvContours):
             geom = geoms[0]
         else:
             geom = MultiLineString(geoms)
-        geom = transform_shapely_to_wsg84(geom, self.crs)
+        if projection:
+            geom = transform_shapely(geom, self.crs, projection)
         return unary_union(geom) if union else geom
 
 
@@ -697,7 +706,7 @@ class Polygons(_Element, HvPolygons):
 
     group = param.String(default='Polygons', constant=True)
 
-    def geom(self, union=False):
+    def geom(self, union=False, projection=None):
         """
         Converts the Path to a shapely geometry.
 
@@ -705,6 +714,8 @@ class Polygons(_Element, HvPolygons):
         ----------
         union: boolean (default=False)
             Whether to compute a union between the geometries
+        projection : EPSG string | Cartopy CRS | None
+            Whether to project the geometry to other coordinate system
 
         Returns
         -------
@@ -718,7 +729,8 @@ class Polygons(_Element, HvPolygons):
             geom = geoms[0]
         else:
             geom = MultiPolygon(geoms)
-        geom = transform_shapely_to_wsg84(geom, self.crs)
+        if projection:
+            geom = transform_shapely(geom, self.crs, projection)
         return unary_union(geom) if union else geom
 
 
@@ -736,7 +748,7 @@ class Rectangles(_Element, HvRectangles):
         bottom-left (lon0, lat0) and top right (lon1, lat1) coordinates
         of each box.""")
 
-    def geom(self, union=False):
+    def geom(self, union=False, projection=None):
         """
         Converts the Rectangles to a shapely geometry.
 
@@ -744,6 +756,8 @@ class Rectangles(_Element, HvRectangles):
         ----------
         union: boolean (default=False)
             Whether to compute a union between the geometries
+        projection : EPSG string | Cartopy CRS | None
+            Whether to project the geometry to other coordinate system
 
         Returns
         -------
@@ -757,7 +771,8 @@ class Rectangles(_Element, HvRectangles):
             geom = boxes[0]
         else:
             geom = MultiPolygon(boxes)
-        geom = transform_shapely_to_wsg84(geom, self.crs)
+        if projection:
+            geom = transform_shapely(geom, self.crs, projection)
         return unary_union(geom) if union else geom
 
 
@@ -775,7 +790,7 @@ class Segments(_Element, HvSegments):
         bottom-left (lon0, lat0) and top-right (lon1, lat1) coordinates
         of each segment.""")
 
-    def geom(self, union=False):
+    def geom(self, union=False, projection=None):
         """
         Converts the Segments to a shapely geometry.
         """
@@ -788,7 +803,8 @@ class Segments(_Element, HvSegments):
             geom = lines[0]
         else:
             geom = MultiLineString(lines)
-        geom = transform_shapely_to_wsg84(geom, self.crs)
+        if projection:
+            geom = transform_shapely(geom, self.crs, projection)
         return unary_union(geom) if union else geom
 
 
@@ -969,7 +985,7 @@ class Shape(Dataset):
         return element(data, vdims=kdims+vdims, **kwargs).opts(color=value)
 
 
-    def geom(self, union=False):
+    def geom(self, union=False, projection=None):
         """
         Returns the Shape as a shapely geometry
 
@@ -977,11 +993,14 @@ class Shape(Dataset):
         ----------
         union: boolean (default=False)
             Whether to compute a union between the geometries
+        projection : EPSG string | Cartopy CRS | None
+            Whether to project the geometry to other coordinate system
 
         Returns
         -------
         A shapely geometry
         """
         geom = self.data['geometry']
-        geom = transform_shapely_to_wsg84(geom, self.crs)
+        if projection:
+            geom = transform_shapely(geom, self.crs, projection)
         return unary_union(geom) if union else geom

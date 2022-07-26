@@ -11,7 +11,7 @@ from cartopy import crs as ccrs
 from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
 from holoviews.element import Tiles
 from packaging.version import Version
-from pyproj import CRS, Transformer
+from pyproj import Transformer
 from shapely.geometry import (
     LinearRing, LineString, MultiLineString, MultiPoint,
     MultiPolygon, Point, Polygon, box
@@ -779,8 +779,10 @@ def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=ccrs.PlateCarree()):
     ).clone(datatype=['grid', 'xarray', 'iris'])[l:r, b:t]
 
 
-def transform_shapely_to_wsg84(geom, crs_from):
-    crs_to = CRS('WGS84')
+def transform_shapely(geom, crs_from, crs_to):
+    if isinstance(crs_to, str):
+        crs_to = ccrs.CRS(crs_to)
+    if isinstance(crs_from, str):
+        crs_from = ccrs.CRS(crs_from)
     project = Transformer.from_crs(crs_from, crs_to).transform
-    flip = lambda x, y: (y, x)
-    return transform(flip, transform(project, geom))
+    return transform(project, geom)

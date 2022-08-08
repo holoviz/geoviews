@@ -12,9 +12,9 @@ def test_outside_extents():
     src_proj = ccrs.epsg(32635)
 
     msg = (
-        "Could not project data from .+? projection to .+? projection\. "
-        "Ensure the coordinate reference system \(CRS\) matches your data and the kdims, "
-        "and the data is not ouside the bounds of the CRS."
+        "Could not project data from '.+?' projection to '.+?' projection\. "
+        "Ensure some data is inside the bounds \+\/\- the threshold of the CRS\. "
+        "For '.+?' this is \(xmin, xmax, ymin, ymax\) = \(.+?\)\."
     )
     with pytest.raises(ValueError, match=msg):
         project_extents(extents, src_proj, dest_proj)

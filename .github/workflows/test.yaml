@@ -91,6 +91,7 @@ jobs:
           conda activate test-environment
           doit test_examples
       - name: codecov
+        if: github.event_name == 'push'
         run: |
           eval "$(conda shell.bash hook)"
           conda activate test-environment

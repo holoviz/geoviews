@@ -62,8 +62,6 @@ jobs:
           conda activate test-environment
           conda list
           doit develop_install ${{ env.CHANS_DEV}} -o doc -o examples
-          pip install sphinxcontrib-napoleon sphinx-copybutton pydata_sphinx_theme
-          conda install -c conda-forge "nodejs=15.3.0"
       - name: sampledata
         run: |
           eval "$(conda shell.bash hook)"

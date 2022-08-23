@@ -137,6 +137,7 @@ extras_require={
         'selenium',
         'pooch',
         'pydata-sphinx-theme <0.9.0',
+        'sphinx-copybutton',
     ],
     'tests': [
         'pytest-cov',

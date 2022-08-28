@@ -27,6 +27,7 @@ jobs:
       DISPLAY: ":99.0"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MAMBA_NO_BANNER: 1
+      SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -90,6 +91,7 @@ jobs:
           conda activate test-environment
           doit test_examples
       - name: codecov
+        if: github.event_name == 'push'
         run: |
           eval "$(conda shell.bash hook)"
           conda activate test-environment

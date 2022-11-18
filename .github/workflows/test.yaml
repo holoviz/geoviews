@@ -50,24 +50,28 @@ jobs:
           conda config --env --remove channels defaults
           conda install python=${{ matrix.python-version }} pyctdev
       - name: doit develop_install
+        if: matrix.os != 'macos-latest'
         run: |
-          eval "$(conda shell.bash hook)"
           conda activate test-environment
           doit develop_install -o tests -o examples -o recommended --conda-mode=mamba
+      # Temporary hacked step as on MacOS doit develop_install updated CPython leading to a pyctdev failure
+      - name: doit develop_install
+        if: matrix.os == 'macos-latest'
+        run: |
+          conda activate test-environment
+          doit develop_install -o tests -o examples -o recommended --conda-mode=mamba || echo "Keep going"
+          pip install --no-deps --no-build-isolation -e .
       - name: patch fiona/geostack on Python 3.7 / Macos
         if: contains(matrix.os, 'macos') && matrix.python-version == '3.7'
         run: |
-          eval "$(conda shell.bash hook)"
           conda activate test-environment
           mamba install "fiona=1.8" "gdal=3.3"
       - name: doit env_capture
         run: |
-          eval "$(conda shell.bash hook)"
           conda activate test-environment
           doit env_capture
       - name: download test data
         run: |
-          eval "$(conda shell.bash hook)"
           conda activate test-environment
           bokeh sampledata
           geoviews fetch-data --path=examples
@@ -76,22 +80,18 @@ jobs:
           git describe
       - name: doit test_flakes
         run: |
-          eval "$(conda shell.bash hook)"
           conda activate test-environment
           doit test_flakes
       - name: doit test_unit
         run: |
-          eval "$(conda shell.bash hook)"
           conda activate test-environment
           doit test_unit
       - name: test examples
         run: |
-          eval "$(conda shell.bash hook)"
           conda activate test-environment
           doit test_examples
       - name: codecov
         if: github.event_name == 'push'
         run: |
-          eval "$(conda shell.bash hook)"
           conda activate test-environment
           codecov

@@ -1,12 +1,7 @@
-name: tests
+name: weekly_tests
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-    - '*'
-  workflow_dispatch:
+  schedule:
+    - cron: '0 18 * * SUN'
 
 jobs:
   test_suite:
@@ -14,7 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ['3.7', '3.9', '3.11']
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
     uses: ./.github/workflows/_test.yaml
     with:
       os: "${{ matrix.os }}"

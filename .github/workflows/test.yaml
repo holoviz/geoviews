@@ -50,17 +50,10 @@ jobs:
           conda config --env --remove channels defaults
           conda install python=${{ matrix.python-version }} pyctdev
       - name: doit develop_install
-        if: matrix.os != 'macos-latest'
         run: |
           conda activate test-environment
+          echo $(python --version | tr ' [:upper:]' '=[:lower:]') > $CONDA_PREFIX/conda-meta/pinned
           doit develop_install -o tests -o examples -o recommended --conda-mode=mamba
-      # Temporary hacked step as on MacOS doit develop_install updated CPython leading to a pyctdev failure
-      - name: doit develop_install
-        if: matrix.os == 'macos-latest'
-        run: |
-          conda activate test-environment
-          doit develop_install -o tests -o examples -o recommended --conda-mode=mamba || echo "Keep going"
-          pip install --no-deps --no-build-isolation -e .
       - name: patch fiona/geostack on Python 3.7 / Macos
         if: contains(matrix.os, 'macos') && matrix.python-version == '3.7'
         run: |

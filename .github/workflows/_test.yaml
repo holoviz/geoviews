@@ -1,0 +1,86 @@
+name: test
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+      python-version:
+        required: true
+        type: string
+    # secrets: inherit
+
+jobs:
+  test:
+    name: Pytest on ${{ inputs.os }} with Python ${{ inputs.python-version }}
+    runs-on: ${{ inputs.os }}
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash -l {0}
+    env:
+      DISPLAY: ":99.0"
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      MAMBA_NO_BANNER: 1
+      SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: "100"
+    - uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        miniconda-version: "latest"
+    - name: Fetch unshallow
+      run: git fetch --prune --tags --unshallow
+    - name: conda setup
+      run: |
+        conda install -n base -c conda-forge mamba --no-update-deps
+        conda install -c conda-forge "nodejs=15.3.0" --no-update-deps
+        conda create -n test-environment
+        conda activate test-environment
+        conda config --env --append channels pyviz/label/dev --append channels conda-forge
+        conda config --env --remove channels defaults
+        conda install python=${{ inputs.python-version }} pyctdev
+        echo $(python --version | tr ' [:upper:]' '=[:lower:]') > $CONDA_PREFIX/conda-meta/pinned
+    - name: doit develop_install
+      run: |
+        conda activate test-environment
+        doit develop_install -o tests -o examples -o recommended --conda-mode=mamba
+    - name: patch fiona/geostack on Python 3.7 / Macos
+      if: contains(inputs.os, 'macos') && inputs.python-version == '3.7'
+      run: |
+        conda activate test-environment
+        mamba install "fiona=1.8" "gdal=3.3"
+    - name: doit env_capture
+      run: |
+        conda activate test-environment
+        doit env_capture
+    - name: download test data
+      run: |
+        conda activate test-environment
+        bokeh sampledata
+        geoviews fetch-data --path=examples
+    - name: git describe
+      run: |
+        git describe
+    - name: doit test_flakes
+      run: |
+        conda activate test-environment
+        doit test_flakes
+    - name: doit test_unit
+      run: |
+        conda activate test-environment
+        doit test_unit
+    - name: test examples
+      run: |
+        conda activate test-environment
+        doit test_examples
+    - name: codecov
+      if: github.event_name == 'push'
+      run: |
+        conda activate test-environment
+        codecov

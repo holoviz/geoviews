@@ -105,7 +105,6 @@ _required = [
 ]
 
 _recommended = [
-    'datashader',
     # geopandas-base installed with conda, see setup.cfg
     'geopandas',
     'netcdf4',
@@ -117,6 +116,10 @@ _recommended = [
     'shapely',
     'xarray',
 ]
+
+# Packages not working on python 3.11 becauase of numba
+if sys.version_info < (3, 11):
+    _recommended.append('datashader')
 
 # can only currently run all examples with packages from conda-forge
 _examples_extra = _recommended + [

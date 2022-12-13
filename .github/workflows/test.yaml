@@ -68,12 +68,6 @@ jobs:
         run: |
           conda activate test-environment
           mamba install "fiona=1.8" "gdal=3.3"
-      - name: add shapely2 packages
-        run: |
-          conda activate test-environment
-          conda uninstall shapely cartopy --force --offline -y
-          pip install git+https://github.com/SciTools/cartopy.git@v0.21.x # https://github.com/SciTools/cartopy/pull/2080
-          pip install shapely==2.0rc3 --pre
       - name: doit env_capture
         run: |
           conda activate test-environment

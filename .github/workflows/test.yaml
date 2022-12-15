@@ -30,6 +30,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MAMBA_NO_BANNER: 1
       SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
+      USE_PYGEOS: '0'
     steps:
       - uses: actions/checkout@v3
         with:

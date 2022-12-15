@@ -27,7 +27,7 @@ Bug fixes:
 Compatibility:
 
 - Compatibility with HoloViews 1.14.8 (`#556 <https://github.com/holoviz/geoviews/pull/556>`_)
-- Compatibility with Python 3.10 by replacing LooseVersion with packaging.Version (`#555 <https://github.com/holoviz/geoviews/pull/555>`_) 
+- Compatibility with Python 3.10 by replacing LooseVersion with packaging.Version (`#555 <https://github.com/holoviz/geoviews/pull/555>`_)
 
 
 Version 1.9.3
@@ -167,7 +167,7 @@ Bug fixes and minor improvements:
 Version 1.6.4
 -------------
 
-Minor bugfix release. Includes contributions from @philippjfr, @ahuang11, @zassa, and @ceball 
+Minor bugfix release. Includes contributions from @philippjfr, @ahuang11, @zassa, and @ceball
 
 Bug fixes and minor improvements:
 
@@ -254,7 +254,7 @@ Enhancements:
 Bug fixes:
 
 
-* Improved handling of Point geometries in geopandas dataframe (`#204 <https://github.com/holoviz/geoviews/pull/204>`_) 
+* Improved handling of Point geometries in geopandas dataframe (`#204 <https://github.com/holoviz/geoviews/pull/204>`_)
 * Fixes for projecting draw tool data (`#205 <https://github.com/holoviz/geoviews/pull/205>`_)
 * Improvements and fixes for handling of QuadMesh projections (`#250 <https://github.com/holoviz/geoviews/pull/250>`_)
 * Fixes for Image longitude wrapping (`#260 <https://github.com/holoviz/geoviews/pull/260>`_)
@@ -288,37 +288,37 @@ Major feature:
 New components:
 
 
-* 
+*
   Added `Graph element <http://holoviews.org/reference/elements/bokeh/Graph.html>`_ to plot networks of connected nodes (`#115 <https://github.com/holoviz/geoviews/pull/115>`_)
 
-* 
+*
   Added `TriMesh element <http://holoviews.org/reference/elements/bokeh/TriMesh.html>`_ and datashading operation to plot small and large irregular triangular meshes (`#115 <https://github.com/holoviz/geoviews/pull/115>`_)
 
-* 
+*
   Added `QuadMesh element <http://holoviews.org/reference/elements/bokeh/QuadMesh.html>`_ and datashading operation to plot small and large, irregular rectilinear and curvilinear meshes (`#116 <https://github.com/holoviz/geoviews/pull/116>`_)
 
-* 
+*
   Added `VectorField element <http://holoviews.org/reference/elements/bokeh/VectorField.html>`_ and datashading operation to plot small and large quiver plots and other collections of vectors (`#122 <https://github.com/holoviz/geoviews/pull/122>`_)
 
-* 
+*
   Added `HexTiles element <http://holoviews.org/reference/elements/bokeh/HexTiles.html>`_ to plot data binned into a hexagonal grid (`#147 <https://github.com/holoviz/geoviews/pull/147>`_)
 
-* 
+*
   Added `Labels element <http://holoviews.org/reference/elements/bokeh/Labels.html>`_ to plot a large number of text labels at once (as data rather than as annotations) (`#147 <https://github.com/holoviz/geoviews/pull/147>`_)
 
 New features:
 
 
-* 
-  Hover tool now supports displaying geographic coordinates as longitude and latitude (`#158 <https://github.com/holoviz/geoviews/pull/158>`_) 
+*
+  Hover tool now supports displaying geographic coordinates as longitude and latitude (`#158 <https://github.com/holoviz/geoviews/pull/158>`_)
 
-* 
+*
   Added a new ``geoviews.tile_sources`` module with a predefined set of tile sources (`#165 <https://github.com/holoviz/geoviews/pull/165>`_)
 
-* 
+*
   Wrapped the xESMF library as a regridding and interpolation operation for rectilinear and curvilinear grids (`#127 <https://github.com/holoviz/geoviews/pull/127>`_)
 
-* 
+*
   HoloViews operations including ``datashade`` and ``rasterize`` now retain geographic ``crs`` coordinate system (`#118 <https://github.com/holoviz/geoviews/pull/118>`_)
 
 Enhancements:
@@ -351,7 +351,7 @@ Version 1.4.0
 * Allow specifying WMTS element with just the URL (`#89 <https://github.com/holoviz/geoviews/pull/89>`_)
 * Added GeoPandas interface to plot geometries more easily (`#88 <https://github.com/holoviz/geoviews/pull/88>`_)
 * Added further projection operations allowing most geographic element types to be explicitly projected (`#88 <https://github.com/holoviz/geoviews/pull/88>`_)
-* Enabled MercatorTicker on geographic bokeh plots ensuring axes are labelled with latitudes and longitudes (`#64 <https://github.com/holoviz/geoviews/pull/64>`_) 
+* Enabled MercatorTicker on geographic bokeh plots ensuring axes are labelled with latitudes and longitudes (`#64 <https://github.com/holoviz/geoviews/pull/64>`_)
 
 Version 1.3.2
 -------------

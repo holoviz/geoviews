@@ -117,7 +117,7 @@ def zoom_level(bounds, width, height):
     Compute zoom level given bounds and the plot size.
     """
     w, s, e, n = bounds
-    max_width, max_height = 256, 256 
+    max_width, max_height = 256, 256
     ZOOM_MAX = 21
     ln2 = np.log(2)
 
@@ -333,9 +333,9 @@ def geom_to_arr(geom):
         xy = None
     if xy is not None:
         return np.column_stack(xy)
-    
+
     # Polygon
-    # shapely 1.8.0 deprecated `array_interface` and 
+    # shapely 1.8.0 deprecated `array_interface` and
     # unfortunately also introduced a bug in the `array_interface_base`
     # property which raised an error as soon as it was called.
     if shapely_version < Version('1.8.0'):
@@ -522,9 +522,9 @@ def proj_to_cartopy(proj):
     km_std = {'lat_1': 'lat_1',
               'lat_2': 'lat_2',
               }
-    kw_proj = dict()
-    kw_globe = dict()
-    kw_std = dict()
+    kw_proj = {}
+    kw_globe = {}
+    kw_std = {}
     for s in srs.split('+'):
         s = s.split('=')
         if len(s) != 2:

@@ -94,7 +94,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             self.handles['x_range'].bounds = self.projection.x_limits
             self.handles['y_range'].bounds = self.projection.y_limits
         if self.projection is GOOGLE_MERCATOR:
-            # Avoid zooming in beyond tile and axis resolution (causing JS errors) 
+            # Avoid zooming in beyond tile and axis resolution (causing JS errors)
             options = self._traverse_options(element, 'plot', ['default_span'], defaults=False)
             min_interval = options['default_span'][0] if options.get('default_span') else 5
             for r in ('x_range', 'y_range'):

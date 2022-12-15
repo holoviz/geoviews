@@ -784,7 +784,7 @@ class Segments(_Element, HvSegments):
         else:
             geom = MultiLineString(lines)
         return unary_union(geom) if union else geom
-    
+
 
 class Shape(Dataset):
     """

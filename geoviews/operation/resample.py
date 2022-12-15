@@ -141,7 +141,7 @@ class resample_geometry(Operation):
         y0, y1 = self.p.y_range or element.range(1)
         bounds = bounds_to_poly((x0, y0, x1, y1))
 
-        # Initialize or lookup cache with STRTree 
+        # Initialize or lookup cache with STRTree
         if element._plot_id in self._cache:
             cache = self._cache[element._plot_id]
             domain, tree, geom_dicts, geom_cache, area_cache = cache

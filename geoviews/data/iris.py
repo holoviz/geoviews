@@ -309,7 +309,10 @@ class CubeInterface(GridInterface):
         Concatenates datasets along one dimension
         """
         import iris
-        from iris.experimental.equalise_cubes import equalise_attributes
+        try:
+            from iris.util import equalise_attributes
+        except ImportError:
+            from iris.experimental.equalise_cubes import equalise_attributes
 
         cubes = []
         for c, cube in datasets.items():

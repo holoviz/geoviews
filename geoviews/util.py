@@ -25,6 +25,7 @@ poly_types = (MultiPolygon, Polygon, LinearRing)
 
 
 shapely_version = Version(shapely.__version__)
+shapely_v2 = shapely_version >= Version("2")
 
 
 def wrap_lons(lons, base, period):

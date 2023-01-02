@@ -73,7 +73,7 @@ class GeoPandasInterface(MultiInterface):
                              "DataFrames not %s." % type(data))
         elif 'geometry' not in data:
             cls.geo_column(data)
-        
+
         if vdims is None:
             vdims = [col for col in data.columns if not isinstance(data[col], GeoSeries)]
 

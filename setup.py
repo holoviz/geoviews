@@ -115,6 +115,7 @@ _recommended = [
     'scipy',
     'shapely',
     'xarray',
+    'numpy <1.24'  # Temporary pin because of inhomogeneous shape error.
 ]
 
 # Packages not working on python 3.11 becauase of numba

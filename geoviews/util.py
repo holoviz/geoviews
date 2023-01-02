@@ -776,3 +776,19 @@ def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=ccrs.PlateCarree()):
     return RGB(
         rgb, bounds=(x0, y0, x1, y1), crs=ccrs.GOOGLE_MERCATOR, vdims=['R', 'G', 'B'],
     ).clone(datatype=['grid', 'xarray', 'iris'])[l:r, b:t]
+
+
+def asarray(v):
+    """Convert input to array
+
+    First it tries with a normal `np.asarray(v)` if this does not work
+    it tries with `np.asarray(v, dtype=object)`.
+
+    The ValueError raised is because of an inhomogeneous shape of the input,
+    which raises an error in numpy v1.24 and above.
+
+    """
+    try:
+        return np.asarray(v)
+    except ValueError:
+        return np.asarray(v, dtype=object)

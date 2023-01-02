@@ -15,7 +15,7 @@ from holoviews.core.data.spatialpandas import get_value_array
 from holoviews.core.dimension import dimension_name
 from holoviews.element import Path
 
-from ..util import geom_to_array, geom_types, geom_length
+from ..util import asarray, geom_to_array, geom_types, geom_length
 from .geom_dict import geom_from_dict
 
 
@@ -599,7 +599,7 @@ def from_multi(eltype, data, kdims, vdims):
     for d in data:
         types.append(type(d))
         if isinstance(d, dict):
-            d = {k: v if isscalar(v) else np.asarray(v) for k, v in d.items()}
+            d = {k: v if isscalar(v) else asarray(v) for k, v in d.items()}
             new_data.append(d)
             continue
         new_el = eltype(d, kdims, vdims)

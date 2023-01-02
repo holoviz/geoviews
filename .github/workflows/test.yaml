@@ -43,43 +43,21 @@ jobs:
     env:
       DISPLAY: ":99.0"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      MAMBA_NO_BANNER: 1
       SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
     steps:
-      - uses: actions/checkout@v3
+      - uses: pyviz-dev/holoviz_tasks/install@v0.1a9
         with:
-          fetch-depth: "100"
-      - uses: actions/setup-python@v4
-        with:
+          name: unit_test_suite
           python-version: ${{ matrix.python-version }}
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          miniconda-version: "latest"
-      - name: Fetch unshallow
-        run: git fetch --prune --tags --unshallow
-      - name: conda setup
-        run: |
-          conda install -n base -c conda-forge mamba --no-update-deps
-          conda install -c conda-forge "nodejs=15.3.0" --no-update-deps
-          conda create -n test-environment
-          conda activate test-environment
-          conda config --env --append channels pyviz/label/dev --append channels conda-forge
-          conda config --env --remove channels defaults
-          conda install python=${{ matrix.python-version }} pyctdev
-      - name: doit develop_install
-        if: matrix.os != 'macos-latest'
-        run: |
-          conda activate test-environment
-          doit develop_install -o tests -o examples -o recommended --conda-mode=mamba
-      # Temporary hacked step as on MacOS doit develop_install updated CPython leading to a pyctdev failure
-      - name: doit develop_install
-        if: matrix.os == 'macos-latest'
-        run: |
-          conda activate test-environment
-          doit develop_install -o tests -o examples -o recommended --conda-mode=mamba || echo "Keep going"
-          pip install --no-deps --no-build-isolation -e .
+          channel-priority: strict
+          channels: pyviz/label/dev,conda-forge,nodefaults
+          envs: "-o tests -o examples -o recommended"
+          cache: true
+          conda-update: true
+          conda-mamba: mamba
+        id: install
       - name: patch fiona/geostack on Python 3.7 / Macos
-        if: contains(matrix.os, 'macos') && matrix.python-version == '3.7'
+        if: steps.install.outputs.cache-hit != 'true' && contains(matrix.os, 'macos') && matrix.python-version == '3.7'
         run: |
           conda activate test-environment
           mamba install "fiona=1.8" "gdal=3.3"

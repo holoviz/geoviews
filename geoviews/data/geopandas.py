@@ -6,8 +6,9 @@ import warnings
 from collections import defaultdict
 
 import numpy as np
+import pandas as pd
 
-from holoviews.core.util import isscalar, unique_iterator, unique_array, pd
+from holoviews.core.util import isscalar, unique_iterator, unique_array
 from holoviews.core.data import Dataset, Interface, MultiInterface
 from holoviews.core.data.interface  import DataError
 from holoviews.core.data import PandasInterface

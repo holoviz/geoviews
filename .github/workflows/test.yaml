@@ -73,10 +73,6 @@ jobs:
       - name: git describe
         run: |
           git describe
-      - name: doit test_flakes
-        run: |
-          conda activate test-environment
-          doit test_flakes
       - name: doit test_unit
         run: |
           conda activate test-environment

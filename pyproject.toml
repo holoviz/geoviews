@@ -7,10 +7,3 @@ requires = [
     "setuptools",
 ]
 build-backend = "setuptools.build_meta"
-
-[tool.pytest.ini_options]
-filterwarnings = [
-    # 2023-01-02: Numpy 1.24 warnings
-    "ignore:`.+?` is a deprecated alias for `.+?`.:DeprecationWarning:bokeh",  # https://github.com/bokeh/bokeh/pull/12690
-    "ignore:`.+?` is a deprecated alias for `.+?`.:DeprecationWarning:cupy",  # https://github.com/cupy/cupy/pull/7245
-]

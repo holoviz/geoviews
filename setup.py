@@ -115,6 +115,7 @@ _recommended = [
     'scipy',
     'shapely',
     'xarray',
+    'pooch',
 ]
 
 # Packages not working on python 3.11 becauase of numba

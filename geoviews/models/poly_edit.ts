@@ -217,7 +217,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     for (const key of keys((this.model as any).end_style))
       styles[key] = [(this.model as any).end_style[key]]
     for (const key of keys((this.model as any).node_style)) {
-      for (let index = 0; index < (xs.length-2); index++) { 
+      for (let index = 0; index < (xs.length-2); index++) {
         styles[key].push((this.model as any).node_style[key])
       }
     }

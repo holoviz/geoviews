@@ -24,7 +24,7 @@ Bug fixes:
 Compatibility:
 
 - Compatibility with HoloViews 1.14.8 ([#556](https://github.com/holoviz/geoviews/pull/556))
-- Compatibility with Python 3.10 by replacing LooseVersion with packaging.Version ([#555](https://github.com/holoviz/geoviews/pull/555)) 
+- Compatibility with Python 3.10 by replacing LooseVersion with packaging.Version ([#555](https://github.com/holoviz/geoviews/pull/555))
 
 Version 1.9.3
 =============
@@ -164,7 +164,7 @@ Bug fixes and minor improvements:
 Version 1.6.4
 =============
 
-Minor bugfix release. Includes contributions from @philippjfr, @ahuang11, @zassa, and @ceball 
+Minor bugfix release. Includes contributions from @philippjfr, @ahuang11, @zassa, and @ceball
 
 Bug fixes and minor improvements:
 
@@ -241,7 +241,7 @@ Enhancements:
 
 Bug fixes:
 
-- Improved handling of Point geometries in geopandas dataframe ([#204](https://github.com/holoviz/geoviews/pull/204)) 
+- Improved handling of Point geometries in geopandas dataframe ([#204](https://github.com/holoviz/geoviews/pull/204))
 - Fixes for projecting draw tool data ([#205](https://github.com/holoviz/geoviews/pull/205))
 - Improvements and fixes for handling of QuadMesh projections ([#250](https://github.com/holoviz/geoviews/pull/250))
 - Fixes for Image longitude wrapping ([#260](https://github.com/holoviz/geoviews/pull/260))
@@ -287,8 +287,8 @@ New components:
 
 New features:
 
-- Hover tool now supports displaying geographic coordinates as longitude and latitude ([#158](https://github.com/holoviz/geoviews/pull/158)) 
-    
+- Hover tool now supports displaying geographic coordinates as longitude and latitude ([#158](https://github.com/holoviz/geoviews/pull/158))
+
 - Added a new ``geoviews.tile_sources`` module with a predefined set of tile sources ([#165](https://github.com/holoviz/geoviews/pull/165))
 
 - Wrapped the xESMF library as a regridding and interpolation operation for rectilinear and curvilinear grids ([#127](https://github.com/holoviz/geoviews/pull/127))
@@ -325,7 +325,7 @@ Version 1.4.0
 - Allow specifying WMTS element with just the URL ([#89](https://github.com/holoviz/geoviews/pull/89))
 - Added GeoPandas interface to plot geometries more easily ([#88](https://github.com/holoviz/geoviews/pull/88))
 - Added further projection operations allowing most geographic element types to be explicitly projected ([#88](https://github.com/holoviz/geoviews/pull/88))
-- Enabled MercatorTicker on geographic bokeh plots ensuring axes are labelled with latitudes and longitudes ([#64](https://github.com/holoviz/geoviews/pull/64)) 
+- Enabled MercatorTicker on geographic bokeh plots ensuring axes are labelled with latitudes and longitudes ([#64](https://github.com/holoviz/geoviews/pull/64))
 
 
 

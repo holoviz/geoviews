@@ -111,7 +111,7 @@ class PointTableLinkCallback(LinkCallback):
     source_cds.properties.data.change.emit()
     source_cds.data = source_cds.data
     """
-    
+
 
 class VertexTableLinkCallback(LinkCallback):
 
@@ -291,7 +291,7 @@ class RectanglesTableLinkCallback(HvRectanglesTableLinkCallback):
     source_cds.data['width'] = ws
     source_cds.data['height'] = hs
     """
-    
+
 VertexTableLink.register_callback('bokeh', VertexTableLinkCallback)
 PointTableLink.register_callback('bokeh', PointTableLinkCallback)
 RectanglesTableLink.register_callback('bokeh', RectanglesTableLinkCallback)

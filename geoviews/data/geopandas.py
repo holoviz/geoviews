@@ -6,8 +6,9 @@ import warnings
 from collections import defaultdict
 
 import numpy as np
+import pandas as pd
 
-from holoviews.core.util import isscalar, unique_iterator, unique_array, pd
+from holoviews.core.util import isscalar, unique_iterator, unique_array
 from holoviews.core.data import Dataset, Interface, MultiInterface
 from holoviews.core.data.interface  import DataError
 from holoviews.core.data import PandasInterface
@@ -15,7 +16,7 @@ from holoviews.core.data.spatialpandas import get_value_array
 from holoviews.core.dimension import dimension_name
 from holoviews.element import Path
 
-from ..util import geom_to_array, geom_types, geom_length
+from ..util import asarray, geom_to_array, geom_types, geom_length
 from .geom_dict import geom_from_dict
 
 
@@ -73,7 +74,7 @@ class GeoPandasInterface(MultiInterface):
                              "DataFrames not %s." % type(data))
         elif 'geometry' not in data:
             cls.geo_column(data)
-        
+
         if vdims is None:
             vdims = [col for col in data.columns if not isinstance(data[col], GeoSeries)]
 
@@ -599,7 +600,7 @@ def from_multi(eltype, data, kdims, vdims):
     for d in data:
         types.append(type(d))
         if isinstance(d, dict):
-            d = {k: v if isscalar(v) else np.asarray(v) for k, v in d.items()}
+            d = {k: v if isscalar(v) else asarray(v) for k, v in d.items()}
             new_data.append(d)
             continue
         new_el = eltype(d, kdims, vdims)

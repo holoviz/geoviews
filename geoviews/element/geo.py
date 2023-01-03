@@ -147,7 +147,7 @@ class Feature(_GeoFeature):
         super(Feature, self).__init__(data, kdims=kdims, vdims=vdims, **params)
 
     def __call__(self, *args, **kwargs):
-        return self.opts(*args, **kwargs)
+        return self.clone().opts(*args, **kwargs)
 
     def geoms(self, scale=None, bounds=None, as_element=True):
         """

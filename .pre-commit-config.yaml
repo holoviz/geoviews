@@ -20,8 +20,8 @@ repos:
     rev: 4.0.1
     hooks:
       - id: flake8 # See 'setup.cfg' for args
-        args: [holoviews]
-        files: holoviews/
+        args: [geoviews]
+        files: geoviews/
   - repo: https://github.com/hoxbro/clean_notebook
     rev: 0.1.5
     hooks:

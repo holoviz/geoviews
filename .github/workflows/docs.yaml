@@ -30,6 +30,7 @@ jobs:
         shell: bash -l {0}
     env:
       DESC: "Documentation build"
+      SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
       MPLBACKEND: "Agg"
       MOZ_HEADLESS: 1
       DISPLAY: ":99.0"

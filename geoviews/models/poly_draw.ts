@@ -91,7 +91,7 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
 
     if (styles != null) {
       for (const key of keys(styles)) {
-        point_cds.data[key] = styles[key] 
+        point_cds.data[key] = styles[key]
         point_glyph[key] = {field: key}
       }
     } else {

@@ -48,7 +48,7 @@ class weighted_regrid(regrid):
         files when you are done.""")
 
     _files = []
-    
+
     _weights = {}
 
     _per_element = True

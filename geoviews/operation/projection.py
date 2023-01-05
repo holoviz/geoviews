@@ -96,7 +96,7 @@ class project_path(_project_operation):
                 continue
             finally:
                 logger.setLevel(prev)
-            if proj_geom.geom_type == 'GeometryCollection' and len(proj_geom) == 0:
+            if proj_geom.geom_type in ['GeometryCollection', 'MultiPolygon'] and len(proj_geom.geoms) == 0:
                 continue
             data = dict(path, geometry=proj_geom)
             if 'holes' in data:

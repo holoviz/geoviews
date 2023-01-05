@@ -8,7 +8,7 @@ from holoviews.core.data.spatialpandas import to_geom_dict
 from holoviews.core.dimension import OrderedDict as cyODict, dimension_name
 from holoviews.core.util import isscalar
 
-from ..util import geom_types, geom_to_array, geom_length
+from ..util import asarray, geom_types, geom_to_array, geom_length
 
 
 class GeomDictInterface(DictInterface):
@@ -61,7 +61,7 @@ class GeomDictInterface(DictInterface):
         unpacked = []
         for d, vals in data.items():
             if isinstance(d, tuple):
-                vals = np.asarray(vals)
+                vals = asarray(vals)
                 if vals.shape == (0,):
                     for sd in d:
                         unpacked.append((sd, np.array([], dtype=vals.dtype)))
@@ -75,7 +75,7 @@ class GeomDictInterface(DictInterface):
                 unpacked.append((d, vals))
             else:
                 if not isscalar(vals):
-                    vals = np.asarray(vals)
+                    vals = asarray(vals)
                     if not vals.ndim == 1 and d in dimensions:
                         raise ValueError('DictInterface expects data for each column to be flat.')
                 unpacked.append((d, vals))
@@ -300,7 +300,7 @@ def geom_from_dict(geom, xdim, ydim, single_type, multi_type):
         Point, LineString, Polygon, MultiPoint, MultiPolygon, MultiLineString
     )
     if (xdim, ydim) in geom:
-        xs, ys = np.asarray(geom.pop((xdim, ydim))).T
+        xs, ys = asarray(geom.pop((xdim, ydim))).T
     elif xdim in geom and ydim in geom:
         xs, ys = geom.pop(xdim), geom.pop(ydim)
     else:

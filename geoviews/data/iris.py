@@ -81,7 +81,7 @@ class CubeInterface(GridInterface):
     @classmethod
     def init(cls, eltype, data, kdims, vdims):
         import iris
-        
+
         if kdims:
             kdims = [asdim(kd) for kd in kdims]
             kdim_names = [kd.name for kd in kdims]
@@ -170,7 +170,7 @@ class CubeInterface(GridInterface):
             data = data[::-1]
         return data
 
-    
+
     @classmethod
     def mask(cls, dataset, mask, mask_val=np.nan):
         masked = dataset.data.copy()
@@ -213,7 +213,7 @@ class CubeInterface(GridInterface):
     def packed(cls, dataset):
         return False
 
-    
+
     @classmethod
     def dtype(cls, dataset, dimension):
         name = dataset.get_dimension(dimension, strict=True).name
@@ -246,7 +246,7 @@ class CubeInterface(GridInterface):
     @classmethod
     def reindex(cls, dataset, kdims=None, vdims=None):
         import iris
-        
+
         dropped_kdims = [kd for kd in dataset.kdims if kd not in kdims]
         constant = {}
         for kd in dropped_kdims:
@@ -309,7 +309,10 @@ class CubeInterface(GridInterface):
         Concatenates datasets along one dimension
         """
         import iris
-        from iris.experimental.equalise_cubes import equalise_attributes
+        try:
+            from iris.util import equalise_attributes
+        except ImportError:
+            from iris.experimental.equalise_cubes import equalise_attributes
 
         cubes = []
         for c, cube in datasets.items():

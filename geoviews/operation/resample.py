@@ -7,7 +7,8 @@ from holoviews import Operation
 from shapely.geometry import Polygon
 from shapely.strtree import STRtree
 
-from ..util import polygons_to_geom_dicts, path_to_geom_dicts
+from ..util import polygons_to_geom_dicts, path_to_geom_dicts, shapely_v2
+
 
 
 def find_geom(geom, geoms):
@@ -141,7 +142,7 @@ class resample_geometry(Operation):
         y0, y1 = self.p.y_range or element.range(1)
         bounds = bounds_to_poly((x0, y0, x1, y1))
 
-        # Initialize or lookup cache with STRTree 
+        # Initialize or lookup cache with STRTree
         if element._plot_id in self._cache:
             cache = self._cache[element._plot_id]
             domain, tree, geom_dicts, geom_cache, area_cache = cache
@@ -165,6 +166,7 @@ class resample_geometry(Operation):
         # Query RTree, then cull and simplify polygons
         new_geoms, gdict = [], {}
         for g in tree.query(bounds):
+            g = tree.geometries[g] if shapely_v2 else g
             garea = area_cache.get(id(g))
             if garea is None:
                 is_poly = 'Polygon' in g.geom_type

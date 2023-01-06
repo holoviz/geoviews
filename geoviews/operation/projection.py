@@ -104,7 +104,7 @@ class project_path(_project_operation):
             projected.append(data)
 
         if len(geoms) and len(projected) == 0:
-            self.warning('While projecting a %s element from a %s coordinate '
+            self.param.warning('While projecting a %s element from a %s coordinate '
                          'reference system (crs) to a %s projection none of '
                          'the projected paths were contained within the bounds '
                          'specified by the projection. Ensure you have specified '
@@ -171,7 +171,7 @@ class project_points(_project_operation):
         new_data[ydim.name] = coordinates[mask, 1]
 
         if len(new_data[xdim.name]) == 0:
-            self.warning('While projecting a %s element from a %s coordinate '
+            self.param.warning('While projecting a %s element from a %s coordinate '
                          'reference system (crs) to a %s projection none of '
                          'the projected paths were contained within the bounds '
                          'specified by the projection. Ensure you have specified '
@@ -202,7 +202,7 @@ class project_geom(_project_operation):
         new_data[y1d.name] = p2[mask, 1]
 
         if len(new_data[x0d.name]) == 0:
-            self.warning('While projecting a %s element from a %s coordinate '
+            self.param.warning('While projecting a %s element from a %s coordinate '
                          'reference system (crs) to a %s projection none of '
                          'the projected paths were contained within the bounds '
                          'specified by the projection. Ensure you have specified '

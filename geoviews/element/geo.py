@@ -828,7 +828,7 @@ class Shape(Dataset):
         if params.get('level') is not None:
             if vdims is None:
                 vdims = [Dimension('Level')]
-            self.warning('Supplying a level to a Shape is deprecated '
+            self.param.warning('Supplying a level to a Shape is deprecated '
                          'provide the value as part of a dictionary of '
                          'the form {\'geometry\': <shapely.Geometry>, '
                          '\'level\': %s} instead' % params['level'])

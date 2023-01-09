@@ -47,10 +47,10 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     _project_operation = None
 
     _hover_code = """
-        const projections = Bokeh.require("core/util/projections");
-        const x = special_vars.data_x
-        const y = special_vars.data_y
-        const coords = projections.wgs84_mercator.invert(x, y)
+        var projections = Bokeh.require("core/util/projections");
+        var x = special_vars.data_x
+        var y = special_vars.data_y
+        var coords = projections.wgs84_mercator.invert(x, y)
         return "" + (coords[%d]).toFixed(4)
     """
 

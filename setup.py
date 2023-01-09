@@ -140,7 +140,7 @@ extras_require={
         'lxml',
         'selenium',
         'pooch',
-        'pydata-sphinx-theme <=0.9.0',
+        'pydata-sphinx-theme ==0.9.0',
         'sphinx-copybutton',
     ],
     'tests': [

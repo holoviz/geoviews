@@ -6,7 +6,7 @@
 
 |    |    |
 | --- | --- |
-| Build Status | [![Linux/MacOS/Windows Build Status](https://github.com/holoviz/geoviews/workflows/pytest/badge.svg)](https://github.com/holoviz/geoviews/actions/workflows/test.yaml) |
+| Build Status | [![Linux/MacOS/Windows Build Status](https://github.com/holoviz/geoviews/workflows/tests/badge.svg?query=branch:main)](https://github.com/holoviz/geoviews/actions/workflows/test.yaml?query=branch%3Amain) |
 | Coverage | [![codecov](https://codecov.io/gh/holoviz/geoviews/branch/main/graph/badge.svg)](https://codecov.io/gh/holoviz/geoviews) |
 | Latest dev release | [![Github tag](https://img.shields.io/github/tag/holoviz/geoviews.svg?label=tag&colorB=11ccbb)](https://github.com/holoviz/geoviews/tags) [![dev-site](https://img.shields.io/website-up-down-green-red/https/pyviz-dev.github.io/geoviews.svg?label=dev%20website)](https://pyviz-dev.github.io/geoviews/) |
 | Latest release | [![Github release](https://img.shields.io/github/release/holoviz/geoviews.svg?label=tag&colorB=11ccbb)](https://github.com/holoviz/geoviews/releases) [![PyPI version](https://img.shields.io/pypi/v/geoviews.svg?colorB=cc77dd)](https://pypi.python.org/pypi/geoviews) [![geoviews version](https://img.shields.io/conda/v/pyviz/geoviews.svg?colorB=4488ff&style=flat)](https://anaconda.org/pyviz/geoviews) [![conda-forge version](https://img.shields.io/conda/v/conda-forge/geoviews.svg?label=conda%7Cconda-forge&colorB=4488ff)](https://anaconda.org/conda-forge/geoviews) [![defaults version](https://img.shields.io/conda/v/anaconda/geoviews.svg?label=conda%7Cdefaults&style=flat&colorB=4488ff)](https://anaconda.org/anaconda/geoviews) |

@@ -1,3 +1,41 @@
+Version 1.9.6
+=============
+
+Date: Jan 11, 2023
+
+This release contains a small number of bug fixes and compatibility for the latest releases of Numpy and Shapely. Many thanks to @pmav99, @philippjfr, @maximlt, and @Hoxbro.
+
+Bug fixes:
+- Fix regression and removing deprecation of annotators ([#583](https://github.com/holoviz/geoviews/pull/583))
+
+Compatibility:
+- Compatibility with Shapely 2.0 ([#570](https://github.com/holoviz/geoviews/pull/570), [#603](https://github.com/holoviz/geoviews/pull/603))
+- Compatibility with Numpy 1.24 ([#608](https://github.com/holoviz/geoviews/pull/608))
+- Compatibility with HoloViews 1.15 ([#572](https://github.com/holoviz/geoviews/pull/572), [#574](https://github.com/holoviz/geoviews/pull/574))
+- Compatibility with Python 3.11 ([#601](https://github.com/holoviz/geoviews/pull/601))
+
+Packaging:
+- Fix annotators not being packaging and therefore gave uncaught error in the console ([#610](https://github.com/holoviz/geoviews/pull/610))
+
+- Fix building with `pip install .` and update of packacges ([#575](https://github.com/holoviz/geoviews/pull/575), [#579](https://github.com/holoviz/geoviews/pull/579))
+
+- Setting NPM access to public and update `package.json` ([#585](https://github.com/holoviz/geoviews/pull/585), [#586](https://github.com/holoviz/geoviews/pull/586))
+
+Documentation:
+- Fix docs build ([#580](https://github.com/holoviz/geoviews/pull/580), [#588](https://github.com/holoviz/geoviews/pull/588))
+
+CI:
+- Various fixes and general maintenance of the CI ([#566](https://github.com/holoviz/geoviews/pull/566), [#567](https://github.com/holoviz/geoviews/pull/567), [#569](https://github.com/holoviz/geoviews/pull/569), [#573](https://github.com/holoviz/geoviews/pull/573), [#587](https://github.com/holoviz/geoviews/pull/587), [#591](https://github.com/holoviz/geoviews/pull/591), [#594](https://github.com/holoviz/geoviews/pull/594), [#595](https://github.com/holoviz/geoviews/pull/595), [#596](https://github.com/holoviz/geoviews/pull/596), [#600](https://github.com/holoviz/geoviews/pull/600), [#607](https://github.com/holoviz/geoviews/pull/607))
+
+- Adding pre-commit to CI ([#604](https://github.com/holoviz/geoviews/pull/604))
+
+Misc:
+- Rename master to main
+([#606](https://github.com/holoviz/geoviews/pull/606))
+- Remove Trove Classifier for Python 3.6
+([#565](https://github.com/holoviz/geoviews/pull/565))
+
+
 Version 1.9.5
 =============
 

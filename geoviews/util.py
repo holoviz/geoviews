@@ -3,20 +3,21 @@ from __future__ import division
 import sys
 import warnings
 
-import param
 import numpy as np
+import param
 import shapely
 import shapely.geometry as sgeom
-
 from cartopy import crs as ccrs
 from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
 from holoviews.element import Tiles
 from packaging.version import Version
-from shapely.geometry.base import BaseMultipartGeometry
+from pyproj import Transformer
 from shapely.geometry import (
-    MultiLineString, LineString, MultiPolygon, Polygon, LinearRing,
-    Point, MultiPoint, box
+    LinearRing, LineString, MultiLineString, MultiPoint,
+    MultiPolygon, Point, Polygon, box
 )
+from shapely.geometry.base import BaseMultipartGeometry
+from shapely.ops import transform
 
 geom_types = (MultiLineString, LineString, MultiPolygon, Polygon,
               LinearRing, Point, MultiPoint)
@@ -793,3 +794,12 @@ def asarray(v):
         return np.asarray(v)
     except ValueError:
         return np.asarray(v, dtype=object)
+
+
+def transform_shapely(geom, crs_from, crs_to):
+    if isinstance(crs_to, str):
+        crs_to = ccrs.CRS(crs_to)
+    if isinstance(crs_from, str):
+        crs_from = ccrs.CRS(crs_from)
+    project = Transformer.from_crs(crs_from, crs_to).transform
+    return transform(project, geom)

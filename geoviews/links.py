@@ -68,9 +68,9 @@ class PointTableLinkCallback(LinkCallback):
     const projected_xs = []
     const projected_ys = []
     for (let i = 0; i < xs_column.length; i++) {
-      const  xv = xs_column[i]
+      const xv = xs_column[i]
       const yv = ys_column[i]
-      const p = projections.wgs84_mercator.inverse([xv, yv])
+      const p = projections.wgs84_mercator.invert(xv, yv)
       projected_xs.push(p[0])
       projected_ys.push(p[1])
     }
@@ -96,7 +96,7 @@ class PointTableLinkCallback(LinkCallback):
     for (let i = 0; i < xs_column.length; i++) {
       const xv = xs_column[i]
       const yv = ys_column[i]
-      const p = projections.wgs84_mercator.forward([xv, yv])
+      const p = projections.wgs84_mercator.compute(xv, yv)
       projected_xs.push(p[0])
       projected_ys.push(p[1])
     }
@@ -142,7 +142,7 @@ class VertexTableLinkCallback(LinkCallback):
     for (let i = 0; i < xs_column.length; i++) {
       const x = xs_column[i]
       const y = ys_column[i]
-      const p = projections.wgs84_mercator.inverse([x, y])
+      const p = projections.wgs84_mercator.invert(x, y)
       projected_xs.push(p[0])
       projected_ys.push(p[1])
       empty.push(null)
@@ -185,7 +185,7 @@ class VertexTableLinkCallback(LinkCallback):
     for (let i = 0; i < xs_column.length; i++) {
       const xv = xs_column[i]
       const yv = ys_column[i]
-      const p = projections.wgs84_mercator.forward([xv, yv])
+      const p = projections.wgs84_mercator.compute(xv, yv)
       projected_xs.push(p[0])
       projected_ys.push(p[1])
       points.push(i)
@@ -250,8 +250,8 @@ class RectanglesTableLinkCallback(HvRectanglesTableLinkCallback):
     for (let i = 0; i < xs.length; i++) {
       const hw = ws[i]/2.
       const hh = hs[i]/2.
-      const p1 = projections.wgs84_mercator.inverse([xs[i]-hw, ys[i]-hh])
-      const p2 = projections.wgs84_mercator.inverse([xs[i]+hw, ys[i]+hh])
+      const p1 = projections.wgs84_mercator.invert(xs[i]-hw, ys[i]-hh)
+      const p2 = projections.wgs84_mercator.invert(xs[i]+hw, ys[i]+hh)
       x0.push(p1[0])
       x1.push(p2[0])
       y0.push(p1[1])
@@ -279,8 +279,8 @@ class RectanglesTableLinkCallback(HvRectanglesTableLinkCallback):
       const y0 = Math.min(y0s[i], y1s[i])
       const x1 = Math.max(x0s[i], x1s[i])
       const y1 = Math.max(y0s[i], y1s[i])
-      const p1 = projections.wgs84_mercator.forward([x0, y0])
-      const p2 = projections.wgs84_mercator.forward([x1, y1])
+      const p1 = projections.wgs84_mercator.compute(x0, y0)
+      const p2 = projections.wgs84_mercator.compute(x1, y1)
       xs.push((p1[0]+p2[0])/2.)
       ys.push((p1[1]+p2[1])/2.)
       ws.push(p2[0]-p1[0])

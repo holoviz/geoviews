@@ -119,11 +119,7 @@ class GeoRasterPlot(GeoPlot, RasterPlot):
         var projections = Bokeh.require("core/util/projections");
         var x = special_vars.x
         var y = special_vars.y
-        if (projections.wgs84_mercator.invert == null) {
-          var coords = projections.wgs84_mercator.inverse([x, y])
-        } else {
-          var coords = projections.wgs84_mercator.invert(x, y)
-        }
+        var coords = projections.wgs84_mercator.invert(x, y)
         return "" + (coords[%d]).toFixed(4)
     """
 

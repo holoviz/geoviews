@@ -20,12 +20,12 @@ from ..util import asarray, geom_to_array, geom_types, geom_length
 from .geom_dict import geom_from_dict
 
 try:
-    from holoviews.core.data import PandasApi
+    from holoviews.core.data import PandasAPI
 except ImportError:
-    class PandasApi: pass
+    class PandasAPI: pass
 
 
-class GeoPandasInterface(PandasApi, MultiInterface):
+class GeoPandasInterface(PandasAPI, MultiInterface):
 
     types = ()
 

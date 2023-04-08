@@ -133,13 +133,13 @@ jobs:
         run: |
           eval "$(conda shell.bash hook)"
           conda activate test-environment
-          doit develop_install $CHANS_DEV -o tests -o build
+          doit develop_install $CHANS_DEV -o build
           doit pip_on_conda
       - name: pip build
         run: |
           eval "$(conda shell.bash hook)"
           conda activate test-environment
-          doit ecosystem=pip package_build $PKG_TEST_PYTHON --test-group=flakes
+          doit ecosystem=pip package_build $PKG_TEST_PYTHON --test-group=simple
       - name: git status
         run: |
           git status

@@ -577,9 +577,9 @@ class Graph(_Element, HvGraph):
         if 'crs' in params:
             crs = params['crs']
             mismatch = None
-            if nodes is not None and type(crs) != type(nodes.crs):
+            if nodes is not None and type(crs) != type(nodes.crs):  # noqa: E721
                 mismatch = 'nodes'
-            elif edges is not None and type(crs) != type(edges.crs):
+            elif edges is not None and type(crs) != type(edges.crs):  # noqa: E721
                 mismatch = 'edges'
             if mismatch:
                 raise ValueError("Coordinate reference system supplied "
@@ -629,9 +629,9 @@ class TriMesh(HvTriMesh, Graph):
         if 'crs' in params:
             crs = params['crs']
             mismatch = None
-            if nodes is not None and type(crs) != type(nodes.crs):
+            if nodes is not None and type(crs) != type(nodes.crs):  # noqa: E721
                 mismatch = 'nodes'
-            elif edges is not None and type(crs) != type(edges.crs):
+            elif edges is not None and type(crs) != type(edges.crs):  # noqa: E721
                 mismatch = 'edges'
             if mismatch:
                 raise ValueError("Coordinate reference system supplied "

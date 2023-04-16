@@ -172,7 +172,7 @@ extras_require['build'] = [
 setup_args = dict(
     name='geoviews',
     version=get_setup_version("geoviews"),
-    python_requires = '>=3.7',
+    python_requires = '>=3.8',
     install_requires = _required,
     extras_require = extras_require,
     tests_require = extras_require['tests'],

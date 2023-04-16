@@ -4,7 +4,7 @@ import cartopy.crs as ccrs
 
 from holoviews.annotators import (
     annotate, Annotator, PathAnnotator, PolyAnnotator, PointAnnotator,
-    RectangleAnnotator  # noqa
+    RectangleAnnotator
 )
 from holoviews.plotting.links import DataLink, VertexTableLink as hvVertexTableLink
 from panel.util import param_name

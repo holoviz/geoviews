@@ -14,14 +14,14 @@ target-version = "py38"
 select = [
     "E",
     "F",
-    # "ICN",
+    "ICN",
     # "PLC",
     # "PLE",
     # "PLR",
     # "PLW",
-    # "RUF",
+    "RUF",
     # "UP",
-    # "W",
+    "W",
 ]
 
 ignore = [

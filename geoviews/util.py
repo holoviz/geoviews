@@ -11,7 +11,6 @@ from cartopy import crs as ccrs
 from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
 from holoviews.element import Tiles
 from packaging.version import Version
-from pyproj import Transformer
 from shapely.geometry import (
     LinearRing, LineString, MultiLineString, MultiPoint,
     MultiPolygon, Point, Polygon, box
@@ -797,6 +796,8 @@ def asarray(v):
 
 
 def transform_shapely(geom, crs_from, crs_to):
+    from pyproj import Transformer
+
     if isinstance(crs_to, str):
         crs_to = ccrs.CRS(crs_to)
     if isinstance(crs_from, str):

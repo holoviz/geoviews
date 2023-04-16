@@ -567,8 +567,6 @@ def proj_to_cartopy(proj):
 
 
 def is_pyproj(crs):
-    if 'pyproj' not in sys.modules:
-        return False
     import pyproj
     return isinstance(crs, pyproj.Proj)
 

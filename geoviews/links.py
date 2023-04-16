@@ -1,13 +1,8 @@
 import param
 
 from holoviews.plotting.links import Link, RectanglesTableLink as HvRectanglesTableLink
-try:
-    from holoviews.plotting.bokeh.links import (
-        LinkCallback, RectanglesTableLinkCallback as HvRectanglesTableLinkCallback
-    )
-except:
-    from holoviews.plotting.bokeh.callbacks import (
-        LinkCallback, RectanglesTableLinkCallback as HvRectanglesTableLinkCallback
+from holoviews.plotting.bokeh.links import (
+    LinkCallback, RectanglesTableLinkCallback as HvRectanglesTableLinkCallback
 )
 from holoviews.core.util import dimension_sanitizer
 

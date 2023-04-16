@@ -5,7 +5,7 @@ import param
 
 from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator
 from bokeh.models.tools import BoxZoomTool, WheelZoomTool
-from bokeh.models import MercatorTickFormatter, MercatorTicker
+from bokeh.models import MercatorTickFormatter, MercatorTicker, CustomJSHover
 from holoviews.core.dimension import Dimension
 from holoviews.core.util import dimension_sanitizer
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
@@ -117,11 +117,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     def _postprocess_hover(self, renderer, source):
         super(GeoPlot, self)._postprocess_hover(renderer, source)
         hover = self.handles.get('hover')
-        try:
-            from bokeh.models import CustomJSHover
-        except:
-            CustomJSHover = None
-        if (not self.geographic or None in (hover, CustomJSHover) or
+        if (not self.geographic or hover is None or
             isinstance(hover.tooltips, str) or self.projection is not GOOGLE_MERCATOR
             or hover.tooltips is None or 'hv_created' not in hover.tags):
             return

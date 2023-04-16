@@ -14,12 +14,12 @@ from holoviews.tests.core.data.test_multiinterface import MultiBaseInterfaceTest
 
 try:
     from shapely import geometry as sgeom
-except:
+except ImportError:
     sgeom = None
 
 try:
     import spatialpandas
-except:
+except ImportError:
     spatialpandas = None
 
 from geoviews.data.geom_dict import GeomDictInterface

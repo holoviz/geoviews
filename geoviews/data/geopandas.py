@@ -98,7 +98,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
 
         try:
             shp_types = {gt[5:] if 'Multi' in gt else gt for gt in data.geom_type}
-        except:
+        except Exception:
             shp_types = []
         if len(shp_types) > 1:
             raise DataError('The GeopandasInterface can only read dataframes which '

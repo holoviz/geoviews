@@ -1,6 +1,7 @@
 import param
 import numpy as np
 
+from bokeh.models import MercatorTileSource
 from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles
@@ -29,14 +30,11 @@ try:
 except ImportError:
     Cube = None
 
-try:
-    from bokeh.models import MercatorTileSource
-except:
-    MercatorTileSource = None
+
 
 try:
     from owslib.wmts import WebMapTileService
-except:
+except ImportError:
     WebMapTileService = None
 
 from ..util import (

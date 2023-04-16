@@ -92,7 +92,7 @@ class project_path(_project_operation):
                 logger.setLevel(logging.ERROR)
                 if not proj_geom.is_valid:
                     proj_geom = proj.project_geometry(geom.buffer(0), element.crs)
-            except:
+            except Exception:
                 continue
             finally:
                 logger.setLevel(prev)

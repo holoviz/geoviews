@@ -9,7 +9,7 @@ from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 
 try:
     from owslib.wmts import WebMapTileService
-except:
+except ImportError:
     WebMapTileService = None
 
 from holoviews.core import Store, HoloMap, Layout, Overlay, Element, NdLayout

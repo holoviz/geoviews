@@ -10,7 +10,7 @@ from shapely import geometry as sgeom
 try:
     import geopandas
     from geopandas.array import GeometryDtype
-except:
+except ImportError:
     geopandas = None
 
 from holoviews.core.util import pd

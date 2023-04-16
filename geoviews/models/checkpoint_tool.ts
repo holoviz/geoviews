@@ -51,7 +51,7 @@ export class CheckpointTool extends ActionTool {
   static {
     this.prototype.default_view = CheckpointToolView
 
-  this.define<CheckpointTool.Props>(({Array, Ref}) => ({
+    this.define<CheckpointTool.Props>(({Array, Ref}) => ({
       sources: [ Array(Ref(ColumnDataSource)), [] ],
     }))
   }

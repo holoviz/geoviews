@@ -2,6 +2,7 @@ import * as p from "@bokehjs/core/properties"
 import {copy} from "@bokehjs/core/util/array"
 import {ActionTool, ActionToolView} from "@bokehjs/models/tools/actions/action_tool"
 import {ColumnDataSource} from "@bokehjs/models/sources/column_data_source"
+import {tool_icon_save} from "@bokehjs/styles/icons.css"
 
 
 export class CheckpointToolView extends ActionToolView {
@@ -56,5 +57,5 @@ export class CheckpointTool extends ActionTool {
   }
 
   tool_name = "Checkpoint"
-  icon = "bk-tool-icon-save"
+  tool_icon = tool_icon_save
 }

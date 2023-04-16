@@ -1,6 +1,7 @@
 import * as p from "@bokehjs/core/properties"
 import {ActionTool, ActionToolView} from "@bokehjs/models/tools/actions/action_tool"
 import {ColumnDataSource} from "@bokehjs/models/sources/column_data_source"
+import {tool_icon_reset} from "@bokehjs/styles/icons.css"
 
 
 export class ClearToolView extends ActionToolView {
@@ -44,5 +45,5 @@ export class ClearTool extends ActionTool {
   }
 
   tool_name = "Clear data"
-  icon = "bk-tool-icon-reset"
+  tool_icon = tool_icon_reset
 }

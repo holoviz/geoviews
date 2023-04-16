@@ -20,7 +20,7 @@ select = [
     "PLR",
     "PLW",
     "RUF",
-    # "UP",
+    "UP",
     "W",
 ]
 

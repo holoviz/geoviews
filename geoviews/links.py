@@ -21,7 +21,7 @@ class PointTableLink(Link):
         if 'point_columns' not in params:
             dimensions = [dimension_sanitizer(d.name) for d in target.dimensions()[:2]]
             params['point_columns'] = dimensions
-        super(PointTableLink, self).__init__(source, target, **params)
+        super().__init__(source, target, **params)
 
 
 class VertexTableLink(Link):
@@ -38,7 +38,7 @@ class VertexTableLink(Link):
         if 'vertex_columns' not in params:
             dimensions = [dimension_sanitizer(d.name) for d in target.dimensions()[:2]]
             params['vertex_columns'] = dimensions
-        super(VertexTableLink, self).__init__(source, target, **params)
+        super().__init__(source, target, **params)
 
 
 class RectanglesTableLink(HvRectanglesTableLink):

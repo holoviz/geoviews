@@ -238,9 +238,9 @@ class project_quadmesh(_project_operation):
 
         zs = element.dimension_values(2, flat=False)
         if irregular:
-            X, Y = [np.asarray(element.interface.coords(
+            X, Y = (np.asarray(element.interface.coords(
                 element, kd, expanded=True, edges=False))
-                    for kd in element.kdims]
+                    for kd in element.kdims)
         else:
             X = element.interface.coords(element, 0, True, True, False)
             if np.all(X[0, 1:] < X[0, :-1]):

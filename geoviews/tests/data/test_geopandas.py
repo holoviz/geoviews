@@ -136,7 +136,7 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
     def setUp(self):
         if geopandas is None:
             raise SkipTest('GeoPandasInterface requires geopandas, skipping tests')
-        super(GeoPandasInterfaceTest, self).setUp()
+        super().setUp()
 
     def test_df_dataset(self):
         if not pd:

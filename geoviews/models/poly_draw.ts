@@ -73,6 +73,8 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
   }
 
   _set_vertices(xs: number[] | number, ys: number[] | number, styles?: any): void {
+    if (this.model.vertex_renderer == null)
+      return
     const point_glyph: any = this.model.vertex_renderer.glyph
     const point_cds = this.model.vertex_renderer.data_source
     const [pxkey, pykey] = [point_glyph.x.field, point_glyph.y.field]

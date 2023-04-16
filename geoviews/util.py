@@ -102,13 +102,33 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
         try:
             geom_in_crs = dest_proj.project_geometry(geom_in_src_proj, src_proj)
         except ValueError:
-            src_name =type(src_proj).__name__
-            dest_name =type(dest_proj).__name__
-            raise ValueError('Could not project data from %s projection '
-                             'to %s projection. Ensure the coordinate '
-                             'reference system (crs) matches your data '
-                             'and the kdims.' %
-                             (src_name, dest_name))
+            src_name = type(src_proj).__name__
+            dest_name = type(dest_proj).__name__
+            raise ValueError(
+                f'Could not project data from {src_name} projection '
+                f'to {dest_name} projection. Ensure the coordinate '
+                'reference system (CRS) matches your data and the kdims.'
+                ) from None
+        except IndexError:
+            # 'unknown' is returned when crs has no name.
+            src_type_name = type(src_proj).__name__
+            src_name = getattr(src_proj, "name", src_type_name)
+            src_name = src_type_name if src_name == "unknown" else src_name
+
+            dest_type_name = type(dest_proj).__name__
+            dest_name = getattr(dest_proj, "name", dest_type_name)
+            dest_name = dest_type_name if dest_name == "unknown" else dest_name
+
+            # Calculate the limit of the src_proj
+            b = np.array(src_proj.bounds)
+            t = src_proj.threshold * np.array([1, -1, 1, -1])
+            limit = np.round(b + t).astype(int)
+            raise ValueError(
+                f"Could not project data from '{src_name}' projection "
+                f"to '{dest_name}' projection. Ensure some data "
+                f"is inside the bounds +/- the threshold of the CRS. "
+                f"For '{src_name}' this is (xmin, xmax, ymin, ymax) = {tuple(limit)}."
+            ) from None
     else:
         geom_in_crs = boundary_poly.intersection(domain_in_src_proj)
     return geom_in_crs.bounds

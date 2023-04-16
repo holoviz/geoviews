@@ -366,9 +366,8 @@ def geom_length(geom):
     if shapely_version < Version('1.8.0'):
         if not geom.geom_type.startswith('Multi') and hasattr(geom, 'array_interface_base'):
             return len(geom.array_interface_base['data'])//2
-    else:
-        if not geom.geom_type.startswith('Multi'):
-            return len(geom.coords)
+    elif not geom.geom_type.startswith('Multi'):
+        return len(geom.coords)
     # MultiPolygon, MultiPoint, MultiLineString (recursively)
     glength = len(geom.geoms)
     length = 0
@@ -462,7 +461,7 @@ def check_crs(crs):
     import pyproj
     if isinstance(crs, pyproj.Proj):
         out = crs
-    elif isinstance(crs, dict) or isinstance(crs, str):
+    elif isinstance(crs, (str, dict)):
         try:
             out = pyproj.Proj(crs)
         except RuntimeError:

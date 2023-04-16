@@ -15,10 +15,10 @@ select = [
     "E",
     "F",
     "ICN",
-    # "PLC",
-    # "PLE",
-    # "PLR",
-    # "PLW",
+    "PLC",
+    "PLE",
+    "PLR",
+    "PLW",
     "RUF",
     # "UP",
     "W",
@@ -36,6 +36,7 @@ ignore = [
     "PLR091",   # Too many arguments/branches/statements
     "PLE0604",  # Invalid object in `__all__`, must contain only strings
     "PLE0605",  # Invalid format for __all__
+    "PLW2901",  # For loop variable overwritten
     "E701",     # Multiple statements on one line
 ]
 

@@ -1,10 +1,11 @@
 # This is the configuration for pre-commit, a local framework for managing pre-commit hooks
 #   Check out the docs at: https://pre-commit.com/
 
+exclude: (\.min\.js$|\.svg$|\.html$)
 default_stages: [commit]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.2.0
+    rev: v4.4.0
     hooks:
       - id: check-builtin-literals
       - id: check-case-conflict
@@ -13,16 +14,15 @@ repos:
       - id: check-toml
       - id: detect-private-key
       - id: end-of-file-fixer
-        exclude: (\.min\.js$|\.svg$)
       - id: trailing-whitespace
         exclude: \.svg$
-  - repo: https://github.com/PyCQA/flake8
-    rev: 4.0.1
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.261
     hooks:
-      - id: flake8 # See 'setup.cfg' for args
+      - id: ruff
         args: [geoviews]
         files: geoviews/
   - repo: https://github.com/hoxbro/clean_notebook
-    rev: 0.1.5
+    rev: v0.1.9
     hooks:
       - id: clean-notebook

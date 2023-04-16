@@ -5,7 +5,7 @@ import numpy as np
 from holoviews.core.data import Interface, DictInterface, MultiInterface
 from holoviews.core.data.interface import DataError
 from holoviews.core.data.spatialpandas import to_geom_dict
-from holoviews.core.dimension import OrderedDict as cyODict, dimension_name
+from holoviews.core.dimension import dimension_name
 from holoviews.core.util import isscalar
 
 from ..util import asarray, geom_types, geom_to_array, geom_length
@@ -25,7 +25,7 @@ class GeomDictInterface(DictInterface):
 
     @classmethod
     def init(cls, eltype, data, kdims, vdims):
-        odict_types = (OrderedDict, cyODict)
+        odict_types = (OrderedDict,)
         if kdims is None:
             kdims = eltype.kdims
         if vdims is None:

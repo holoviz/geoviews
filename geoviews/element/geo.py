@@ -253,6 +253,7 @@ class Dataset(_Element, HvDataset):
     """
 
     kdims = param.List(default=[Dimension('Longitude'), Dimension('Latitude')],
+                       bounds=(0, None),
                        constant=True)
 
     group = param.String(default='Dataset')

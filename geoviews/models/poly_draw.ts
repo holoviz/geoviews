@@ -189,12 +189,12 @@ export class PolyVertexDrawTool extends PolyDrawTool {
 
   static __module__ = "geoviews.models.custom_tools"
 
-  static init_PolyVertexDrawTool(): void {
+  static {
     this.prototype.default_view = PolyVertexDrawToolView
 
-    this.define<PolyVertexDrawTool.Props>({
-      end_style:  [ p.Any, {} ],
-      node_style: [ p.Any, {} ],
-    })
+    this.define<PolyVertexDrawTool.Props>(({Any}) => ({
+      end_style:  [ Any, {} ],
+      node_style: [ Any, {} ],
+    }))
   }
 }

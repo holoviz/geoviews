@@ -35,12 +35,12 @@ export class ClearTool extends ActionTool {
 
   static __module__ = "geoviews.models.custom_tools"
 
-  static init_ClearTool(): void {
+  static {
     this.prototype.default_view = ClearToolView
 
-    this.define<ClearTool.Props>({
-      sources: [ p.Array, [] ],
-    })
+    this.define<ClearTool.Props>(({Array, Ref}) => ({
+      sources: [ Array(Ref(ColumnDataSource)), [] ],
+    }))
   }
 
   tool_name = "Clear data"

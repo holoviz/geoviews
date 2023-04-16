@@ -250,12 +250,13 @@ export class PolyVertexEditTool extends PolyEditTool {
 
   static __module__ = "geoviews.models.custom_tools"
 
-  static init_PolyVertexEditTool(): void {
+  static {
     this.prototype.default_view = PolyVertexEditToolView
 
-    this.define<PolyVertexEditTool.Props>({
-      node_style: [ p.Any, {} ],
-      end_style:  [ p.Any, {} ],
-    })
+    this.define<PolyVertexEditTool.Props>(({Any}) => ({
+      end_style:  [ Any, {} ],
+      node_style: [ Any, {} ],
+    }))
+
   }
 }

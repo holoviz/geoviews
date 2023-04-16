@@ -47,12 +47,12 @@ export class CheckpointTool extends ActionTool {
 
   static __module__ = "geoviews.models.custom_tools"
 
-  static init_CheckpointTool(): void {
+  static {
     this.prototype.default_view = CheckpointToolView
 
-    this.define<CheckpointTool.Props>({
-      sources: [ p.Array, [] ],
-    })
+  this.define<CheckpointTool.Props>(({Array, Ref}) => ({
+      sources: [ Array(Ref(ColumnDataSource)), [] ],
+    }))
   }
 
   tool_name = "Checkpoint"

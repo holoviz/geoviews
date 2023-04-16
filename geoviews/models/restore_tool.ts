@@ -35,12 +35,12 @@ export class RestoreTool extends ActionTool {
 
   static __module__ = "geoviews.models.custom_tools"
 
-  static init_RestoreTool(): void {
+  static {
     this.prototype.default_view = RestoreToolView
 
-    this.define<RestoreTool.Props>({
-      sources: [ p.Array, [] ]
-    })
+    this.define<RestoreTool.Props>(({Array, Ref}) => ({
+      sources: [ Array(Ref(ColumnDataSource)), [] ],
+    }))
   }
 
   tool_name = "Restore"

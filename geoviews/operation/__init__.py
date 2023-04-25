@@ -12,8 +12,8 @@ from .resample import resample_geometry # noqa (API import)
 geo_ops = [contours, bivariate_kde]
 try:
     from holoviews.operation.datashader import (
-        ResamplingOperation, shade, stack, dynspread)
-    geo_ops += [ResamplingOperation, shade, stack, dynspread]
+        ResamplingOperation2D, shade, stack, dynspread)
+    geo_ops += [ResamplingOperation2D, shade, stack, dynspread]
 except:
     pass
 

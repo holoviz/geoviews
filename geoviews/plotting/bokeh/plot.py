@@ -116,7 +116,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
     def _postprocess_hover(self, renderer, source):
         super()._postprocess_hover(renderer, source)
-        hover = self.handles.get('hover')
+        hover = getattr(self.handles["plot"], "hover", [None])[0]
         if (not self.geographic or hover is None or
             isinstance(hover.tooltips, str) or self.projection is not GOOGLE_MERCATOR
             or hover.tooltips is None or 'hv_created' not in hover.tags):

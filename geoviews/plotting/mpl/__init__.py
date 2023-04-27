@@ -9,7 +9,7 @@ from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 
 try:
     from owslib.wmts import WebMapTileService
-except:
+except ImportError:
     WebMapTileService = None
 
 from holoviews.core import Store, HoloMap, Layout, Overlay, Element, NdLayout
@@ -68,7 +68,7 @@ class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
     _propagate_options = HvOverlayPlot._propagate_options + ['global_extent']
 
     def __init__(self, element, **params):
-        super(GeoOverlayPlot, self).__init__(element, **params)
+        super().__init__(element, **params)
         plot_opts = self.lookup_options(self.hmap.last, 'plot').options
         self.geographic = any(self.hmap.traverse(is_geographic, [Element]))
         if 'aspect' not in plot_opts and self.geographic:
@@ -80,7 +80,7 @@ class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
             xaxis, yaxis = self.xaxis, self.yaxis
             self.xaxis = self.yaxis = None
         try:
-            ret = super(GeoOverlayPlot, self)._finalize_axis(*args, **kwargs)
+            ret = super()._finalize_axis(*args, **kwargs)
         except Exception as e:
             raise e
         finally:
@@ -116,7 +116,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         if 'projection' not in params:
             el = element.last if isinstance(element, HoloMap) else element
             params['projection'] = el.crs
-        super(GeoPlot, self).__init__(element, **params)
+        super().__init__(element, **params)
         plot_opts = self.lookup_options(self.hmap.last, 'plot').options
         self.geographic = is_geographic(self.hmap.last)
         if 'aspect' not in plot_opts:
@@ -179,7 +179,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             xaxis, yaxis = self.xaxis, self.yaxis
             self.xaxis = self.yaxis = None
         try:
-            ret = super(GeoPlot, self)._finalize_axis(*args, **kwargs)
+            ret = super()._finalize_axis(*args, **kwargs)
         except Exception as e:
             raise e
         finally:
@@ -202,7 +202,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     def get_data(self, element, ranges, style):
         if self._project_operation and self.geographic:
             element = self._project_operation(element, projection=self.projection)
-        return super(GeoPlot, self).get_data(element, ranges, style)
+        return super().get_data(element, ranges, style)
 
     def teardown_handles(self):
         """
@@ -334,7 +334,7 @@ class GeometryPlot(GeoPlot):
             artist = ax.add_geometries(*plot_args, **plot_kwargs)
             return {'artist': artist}
         else:
-            return super(GeometryPlot, self).init_artist(ax, plot_args, plot_kwargs)
+            return super().init_artist(ax, plot_args, plot_kwargs)
 
 
 class GeoPathPlot(GeoPlot, PathPlot):

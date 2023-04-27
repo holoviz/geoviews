@@ -36,7 +36,7 @@ class GeoConversion(ElementConversion):
             else:
                 args = (Dataset,)
                 kwargs['kdims'] = []
-        converted = super(GeoConversion, self).__call__(*args, **kwargs)
+        converted = super().__call__(*args, **kwargs)
         if is_gpd:
             if kdims is None: kdims = group_type.kdims
             converted = converted.map(lambda x: x.clone(kdims=kdims, new_type=group_type), Dataset)

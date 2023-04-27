@@ -64,7 +64,7 @@ class ProjectionPlot(param.Parameterized):
         if self.global_extent and range_type in ('combined', 'data'):
             (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
             return (x0, y0, x1, y1)
-        extents = super(ProjectionPlot, self).get_extents(element, ranges, range_type)
+        extents = super().get_extents(element, ranges, range_type)
         if not getattr(element, 'crs', None) or not self.geographic:
             return extents
         elif any(e is None or not np.isfinite(e) for e in extents):

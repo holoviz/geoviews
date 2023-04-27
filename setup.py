@@ -102,6 +102,7 @@ _required = [
     'shapely',
     'param',
     'panel',
+    'pyproj',
 ]
 
 _recommended = [

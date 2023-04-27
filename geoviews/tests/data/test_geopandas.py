@@ -10,7 +10,7 @@ from shapely import geometry as sgeom
 try:
     import geopandas
     from geopandas.array import GeometryDtype
-except:
+except ImportError:
     geopandas = None
 
 from holoviews.core.util import pd
@@ -136,7 +136,7 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
     def setUp(self):
         if geopandas is None:
             raise SkipTest('GeoPandasInterface requires geopandas, skipping tests')
-        super(GeoPandasInterfaceTest, self).setUp()
+        super().setUp()
 
     def test_df_dataset(self):
         if not pd:

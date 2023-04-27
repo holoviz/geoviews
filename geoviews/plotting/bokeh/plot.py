@@ -5,7 +5,7 @@ import param
 
 from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator
 from bokeh.models.tools import BoxZoomTool, WheelZoomTool
-from bokeh.models import MercatorTickFormatter, MercatorTicker
+from bokeh.models import MercatorTickFormatter, MercatorTicker, CustomJSHover
 from holoviews.core.dimension import Dimension
 from holoviews.core.util import dimension_sanitizer
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
@@ -55,7 +55,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     """
 
     def __init__(self, element, **params):
-        super(GeoPlot, self).__init__(element, **params)
+        super().__init__(element, **params)
         self.geographic = is_geographic(self.hmap.last)
         if self.geographic and not isinstance(self.projection, (PlateCarree, Mercator)):
             self.xaxis = None
@@ -66,14 +66,14 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             self.show_bounds = not any(not sb for sb in show_bounds.get('show_bounds', []))
             if self.show_grid:
                 param.main.warning(
-                    'Grid lines do not reflect {0}; to do so '
+                    f'Grid lines do not reflect {self.projection}; to do so '
                     'multiply the current element by gv.feature.grid() '
-                    'and disable the show_grid option.'.format(self.projection)
+                    'and disable the show_grid option.'
                 )
 
     def _axis_properties(self, axis, key, plot, dimension=None,
                          ax_mapping={'x': 0, 'y': 1}):
-        axis_props = super(GeoPlot, self)._axis_properties(axis, key, plot,
+        axis_props = super()._axis_properties(axis, key, plot,
                                                            dimension, ax_mapping)
         proj = self.projection
         if self.geographic and proj is GOOGLE_MERCATOR:
@@ -83,7 +83,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         return axis_props
 
     def _update_ranges(self, element, ranges):
-        super(GeoPlot, self)._update_ranges(element, ranges)
+        super()._update_ranges(element, ranges)
         if not self.geographic:
             return
         if self.fixed_bounds:
@@ -104,7 +104,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
     def initialize_plot(self, ranges=None, plot=None, plots=None, source=None):
         opts = {} if isinstance(self, HvOverlayPlot) else {'source': source}
-        fig = super(GeoPlot, self).initialize_plot(ranges, plot, plots, **opts)
+        fig = super().initialize_plot(ranges, plot, plots, **opts)
         if self.geographic and self.show_bounds and not self.overlaid:
             from . import GeoShapePlot
             shape = Shape(self.projection.boundary, crs=self.projection).options(fill_alpha=0)
@@ -115,18 +115,14 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         return fig
 
     def _postprocess_hover(self, renderer, source):
-        super(GeoPlot, self)._postprocess_hover(renderer, source)
+        super()._postprocess_hover(renderer, source)
         hover = self.handles.get('hover')
-        try:
-            from bokeh.models import CustomJSHover
-        except:
-            CustomJSHover = None
-        if (not self.geographic or None in (hover, CustomJSHover) or
+        if (not self.geographic or hover is None or
             isinstance(hover.tooltips, str) or self.projection is not GOOGLE_MERCATOR
             or hover.tooltips is None or 'hv_created' not in hover.tags):
             return
         element = self.current_frame
-        xdim, ydim = [dimension_sanitizer(kd.name) for kd in element.kdims]
+        xdim, ydim = (dimension_sanitizer(kd.name) for kd in element.kdims)
         formatters, tooltips = dict(hover.formatters), []
         xhover = CustomJSHover(code=self._hover_code % 0)
         yhover = CustomJSHover(code=self._hover_code % 1)
@@ -159,12 +155,12 @@ class GeoPlot(ProjectionPlot, ElementPlot):
             tooltips = [(l, t+'{custom}' if t in hover.formatters else t) for l, t in tooltips]
             hover.tooltips = tooltips
         else:
-            super(GeoPlot, self)._update_hover(element)
+            super()._update_hover(element)
 
     def get_data(self, element, ranges, style):
         if self._project_operation and self.geographic:
             element = self._project_operation(element, projection=self.projection)
-        return super(GeoPlot, self).get_data(element, ranges, style)
+        return super().get_data(element, ranges, style)
 
 
 class GeoOverlayPlot(GeoPlot, HvOverlayPlot):
@@ -180,7 +176,7 @@ class GeoOverlayPlot(GeoPlot, HvOverlayPlot):
                           ['global_extent', 'show_bounds', 'infer_projection'])
 
     def __init__(self, element, **params):
-        super(GeoOverlayPlot, self).__init__(element, **params)
+        super().__init__(element, **params)
         self.geographic = any(element.traverse(is_geographic, [_Element]))
         if self.geographic:
             self.show_grid = False

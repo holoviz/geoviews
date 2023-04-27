@@ -4,11 +4,7 @@ from holoviews import (extension, help, opts, output, renderer, Store, # noqa (A
                        Cycle, Palette, Overlay, Layout, NdOverlay, NdLayout,
                        HoloMap, DynamicMap, GridSpace, Dimension, dim)
 
-try:
-    # Only available in HoloViews >=1.11
-    from holoviews import render, save # noqa (API import)
-except:
-    pass
+from holoviews import render, save # noqa (API import)
 
 from .annotators import annotate # noqa (API import)
 from .element import ( # noqa (API import)

@@ -14,7 +14,7 @@ try:
     from holoviews.operation.datashader import (
         ResamplingOperation, shade, stack, dynspread)
     geo_ops += [ResamplingOperation, shade, stack, dynspread]
-except:
+except ImportError:
     pass
 
 def convert_to_geotype(element, crs=None):

@@ -5,7 +5,7 @@ import numpy as np
 from holoviews.core.data import Interface, DictInterface, MultiInterface
 from holoviews.core.data.interface import DataError
 from holoviews.core.data.spatialpandas import to_geom_dict
-from holoviews.core.dimension import OrderedDict as cyODict, dimension_name
+from holoviews.core.dimension import dimension_name
 from holoviews.core.util import isscalar
 
 from ..util import asarray, geom_types, geom_to_array, geom_length
@@ -25,7 +25,7 @@ class GeomDictInterface(DictInterface):
 
     @classmethod
     def init(cls, eltype, data, kdims, vdims):
-        odict_types = (OrderedDict, cyODict)
+        odict_types = (OrderedDict,)
         if kdims is None:
             kdims = eltype.kdims
         if vdims is None:
@@ -245,9 +245,10 @@ class GeomDictInterface(DictInterface):
         elif isinstance(xsel, tuple):
             x0, x1 = xsel
         else:
-            raise ValueError("Only slicing is supported on geometries, %s "
-                             "selection is of type %s."
-                             % (xdim, type(xsel).__name__))
+            raise ValueError(
+                f"Only slicing is supported on geometries, {xdim} "
+                f"selection is of type {type(xsel).__name__}."
+            )
 
         if ysel is None:
             y0, y1 = cls.range(dataset, ydim)
@@ -256,9 +257,10 @@ class GeomDictInterface(DictInterface):
         elif isinstance(ysel, tuple):
             y0, y1 = ysel
         else:
-            raise ValueError("Only slicing is supported on geometries, %s "
-                             "selection is of type %s."
-                             % (ydim, type(ysel).__name__))
+            raise ValueError(
+                f"Only slicing is supported on geometries, {ydim} "
+                f"selection is of type {type(ysel).__name__}."
+            )
 
         bounds = box(x0, y0, x1, y1)
         geom = dataset.data['geometry']

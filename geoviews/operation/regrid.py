@@ -1,8 +1,4 @@
 import os
-try:
-    FileNotFoundError
-except NameError:
-    FileNotFoundError = IOError
 
 import param
 import numpy as np
@@ -56,7 +52,7 @@ class weighted_regrid(regrid):
     def _get_regridder(self, element):
         try:
             import xesmf as xe
-        except:
+        except ImportError:
             raise ImportError("xESMF library required for weighted regridding.")
         x, y = element.kdims
         if self.p.target:
@@ -120,11 +116,11 @@ class weighted_regrid(regrid):
         if is_geographic(element):
             try:
                 return Image(ds, crs=element.crs, **params)
-            except:
+            except Exception:
                 return QuadMesh(ds, crs=element.crs, **params)
         try:
             return HvImage(ds, **params)
-        except:
+        except Exception:
             return HvQuadMesh(ds, **params)
 
 

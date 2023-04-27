@@ -104,13 +104,16 @@ class project_path(_project_operation):
             projected.append(data)
 
         if len(geoms) and len(projected) == 0:
-            self.param.warning('While projecting a %s element from a %s coordinate '
-                         'reference system (crs) to a %s projection none of '
-                         'the projected paths were contained within the bounds '
-                         'specified by the projection. Ensure you have specified '
-                         'the correct coordinate system for your data.' %
-                         (type(element).__name__, type(element.crs).__name__,
-                          type(self.p.projection).__name__))
+            element_name = type(element).__name__
+            crs_name = type(element.crs).__name__
+            proj_name = type(self.p.projection).__name__
+            self.param.warning(
+                f'While projecting a {element_name} element from a {crs_name} coordinate '
+                f'reference system (crs) to a {proj_name} projection none of '
+                'the projected paths were contained within the bounds '
+                'specified by the projection. Ensure you have specified '
+                'the correct coordinate system for your data.'
+            )
 
         # Try casting back to original types
         if element.interface is GeoPandasInterface:
@@ -171,13 +174,16 @@ class project_points(_project_operation):
         new_data[ydim.name] = coordinates[mask, 1]
 
         if len(new_data[xdim.name]) == 0:
-            self.param.warning('While projecting a %s element from a %s coordinate '
-                         'reference system (crs) to a %s projection none of '
-                         'the projected paths were contained within the bounds '
-                         'specified by the projection. Ensure you have specified '
-                         'the correct coordinate system for your data.' %
-                         (type(element).__name__, type(element.crs).__name__,
-                          type(self.p.projection).__name__))
+            element_name = type(element).__name__
+            crs_name = type(element.crs).__name__
+            proj_name = type(self.p.projection).__name__
+            self.param.warning(
+                f'While projecting a {element_name} element from a {crs_name} coordinate '
+                f'reference system (crs) to a {proj_name} projection none of '
+                'the projected paths were contained within the bounds '
+                'specified by the projection. Ensure you have specified '
+                'the correct coordinate system for your data.'
+            )
 
         return element.clone(tuple(new_data[d.name] for d in element.dimensions()),
                              crs=self.p.projection)
@@ -202,13 +208,16 @@ class project_geom(_project_operation):
         new_data[y1d.name] = p2[mask, 1]
 
         if len(new_data[x0d.name]) == 0:
-            self.param.warning('While projecting a %s element from a %s coordinate '
-                         'reference system (crs) to a %s projection none of '
-                         'the projected paths were contained within the bounds '
-                         'specified by the projection. Ensure you have specified '
-                         'the correct coordinate system for your data.' %
-                         (type(element).__name__, type(element.crs).__name__,
-                          type(self.p.projection).__name__))
+            element_name = type(element).__name__
+            crs_name = type(element.crs).__name__
+            proj_name = type(self.p.projection).__name__
+            self.param.warning(
+                f'While projecting a {element_name} element from a {crs_name} coordinate '
+                f'reference system (crs) to a {proj_name} projection none of '
+                'the projected paths were contained within the bounds '
+                'specified by the projection. Ensure you have specified '
+                'the correct coordinate system for your data.'
+            )
 
         return element.clone(tuple(new_data[d.name] for d in element.dimensions()),
                              crs=self.p.projection)

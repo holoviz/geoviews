@@ -228,8 +228,10 @@ class WMTS(_GeoFeature):
         elif WebMapTileService and isinstance(data, WebMapTileService):
             pass
         elif not isinstance(data, str):
-            raise TypeError('%s data should be a tile service URL not a %s type.'
-                            % (type(self).__name__, type(data).__name__) )
+            raise TypeError(
+                f'{type(self).__name__} data should be a tile service '
+                f'URL not a {type(data).__name__} type.'
+            )
         super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
     def __call__(self, *args, **kwargs):
@@ -583,10 +585,11 @@ class Graph(_Element, HvGraph):
             elif edges is not None and type(crs) != type(edges.crs):  # noqa: E721
                 mismatch = 'edges'
             if mismatch:
-                raise ValueError("Coordinate reference system supplied "
-                                 "to %s element must match the crs of "
-                                 "the %s. Expected %s found %s." %
-                                 (mismatch, type(self).__name__, nodes.crs, crs))
+                raise ValueError(
+                    "Coordinate reference system supplied "
+                    f"to {mismatch} element must match the crs of "
+                    f"the {type(self).__name__}. Expected {nodes.crs} found {crs}."
+                )
         elif nodes is not None:
             crs = nodes.crs
             params['crs'] = crs
@@ -635,10 +638,11 @@ class TriMesh(HvTriMesh, Graph):
             elif edges is not None and type(crs) != type(edges.crs):  # noqa: E721
                 mismatch = 'edges'
             if mismatch:
-                raise ValueError("Coordinate reference system supplied "
-                                 "to %s element must match the crs of "
-                                 "the %s. Expected %s found %s." %
-                                 (mismatch, type(self).__name__, nodes.crs, crs))
+                raise ValueError(
+                    "Coordinate reference system supplied "
+                    f"to {mismatch} element must match the crs of "
+                    f"the {type(self).__name__}. Expected {nodes.crs} found {crs}."
+                )
         elif nodes is not None:
             crs = nodes.crs
             params['crs'] = crs

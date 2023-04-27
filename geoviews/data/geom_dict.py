@@ -245,9 +245,10 @@ class GeomDictInterface(DictInterface):
         elif isinstance(xsel, tuple):
             x0, x1 = xsel
         else:
-            raise ValueError("Only slicing is supported on geometries, %s "
-                             "selection is of type %s."
-                             % (xdim, type(xsel).__name__))
+            raise ValueError(
+                f"Only slicing is supported on geometries, {xdim} "
+                f"selection is of type {type(xsel).__name__}."
+            )
 
         if ysel is None:
             y0, y1 = cls.range(dataset, ydim)
@@ -256,9 +257,10 @@ class GeomDictInterface(DictInterface):
         elif isinstance(ysel, tuple):
             y0, y1 = ysel
         else:
-            raise ValueError("Only slicing is supported on geometries, %s "
-                             "selection is of type %s."
-                             % (ydim, type(ysel).__name__))
+            raise ValueError(
+                f"Only slicing is supported on geometries, {ydim} "
+                f"selection is of type {type(ysel).__name__}."
+            )
 
         bounds = box(x0, y0, x1, y1)
         geom = dataset.data['geometry']

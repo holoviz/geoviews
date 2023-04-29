@@ -5,7 +5,6 @@ import param
 import numpy as np
 
 from cartopy import crs as ccrs
-from cartopy.img_transform import warp_array, _determine_bounds
 from holoviews.core.data import MultiInterface
 from holoviews.core.util import cartesian_product, get_param_values, pd
 from holoviews.operation import Operation
@@ -327,6 +326,8 @@ class project_image(_project_operation):
     supported_types = [Image, RGB]
 
     def _process(self, img, key=None):
+        from cartopy.img_transform import warp_array
+
         if self.p.fast:
             return self._fast_process(img, key)
 
@@ -367,6 +368,8 @@ class project_image(_project_operation):
                          ydensity=None)
 
     def _fast_process(self, element, key=None):
+        from cartopy.img_transform import _determine_bounds
+
         # Project coordinates
         proj = self.p.projection
         if proj == element.crs:

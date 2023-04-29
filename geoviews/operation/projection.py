@@ -3,10 +3,11 @@ import sys
 
 import param
 import numpy as np
+import pandas as pd
 
 from cartopy import crs as ccrs
 from holoviews.core.data import MultiInterface
-from holoviews.core.util import cartesian_product, get_param_values, pd
+from holoviews.core.util import cartesian_product, get_param_values
 from holoviews.operation import Operation
 from shapely.geometry import Polygon, MultiPolygon
 from shapely.geometry.collection import GeometryCollection

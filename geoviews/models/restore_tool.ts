@@ -1,6 +1,7 @@
 import * as p from "@bokehjs/core/properties"
 import {ActionTool, ActionToolView} from "@bokehjs/models/tools/actions/action_tool"
 import {ColumnDataSource} from "@bokehjs/models/sources/column_data_source"
+import {tool_icon_undo} from "@bokehjs/styles/icons.css"
 
 
 export class RestoreToolView extends ActionToolView {
@@ -35,14 +36,14 @@ export class RestoreTool extends ActionTool {
 
   static __module__ = "geoviews.models.custom_tools"
 
-  static init_RestoreTool(): void {
+  static {
     this.prototype.default_view = RestoreToolView
 
-    this.define<RestoreTool.Props>({
-      sources: [ p.Array, [] ]
-    })
+    this.define<RestoreTool.Props>(({Array, Ref}) => ({
+      sources: [ Array(Ref(ColumnDataSource)), [] ],
+    }))
   }
 
   tool_name = "Restore"
-  icon = "bk-tool-icon-undo"
+  tool_icon = tool_icon_undo
 }

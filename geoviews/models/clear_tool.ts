@@ -1,6 +1,7 @@
 import * as p from "@bokehjs/core/properties"
 import {ActionTool, ActionToolView} from "@bokehjs/models/tools/actions/action_tool"
 import {ColumnDataSource} from "@bokehjs/models/sources/column_data_source"
+import {tool_icon_reset} from "@bokehjs/styles/icons.css"
 
 
 export class ClearToolView extends ActionToolView {
@@ -35,14 +36,14 @@ export class ClearTool extends ActionTool {
 
   static __module__ = "geoviews.models.custom_tools"
 
-  static init_ClearTool(): void {
+  static {
     this.prototype.default_view = ClearToolView
 
-    this.define<ClearTool.Props>({
-      sources: [ p.Array, [] ],
-    })
+    this.define<ClearTool.Props>(({Array, Ref}) => ({
+      sources: [ Array(Ref(ColumnDataSource)), [] ],
+    }))
   }
 
   tool_name = "Clear data"
-  icon = "bk-tool-icon-reset"
+  tool_icon = tool_icon_reset
 }

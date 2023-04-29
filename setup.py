@@ -94,14 +94,14 @@ except:
 ### dependencies ###
 
 _required = [
-    'bokeh >=2.4.0,<2.5',
+    'bokeh >=3.1.0,<3.2.0',
     'cartopy >=0.18.0',
-    'holoviews >=1.14.2',
+    'holoviews >=1.16.0a5',
     'packaging',
     'numpy',
     'shapely',
     'param',
-    'panel <1.0.0',
+    'panel',
     'pyproj',
 ]
 
@@ -161,7 +161,7 @@ extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
 extras_require['build'] = [
     'param >=1.9.2',
     'pyct >=0.4.4',
-    'bokeh >=2.4,<2.5',
+    'bokeh >=3.1.0,<3.2.0',
     'pyviz_comms >=0.6.0'
 ]
 
@@ -173,7 +173,7 @@ extras_require['build'] = [
 setup_args = dict(
     name='geoviews',
     version=get_setup_version("geoviews"),
-    python_requires = '>=3.7',
+    python_requires = '>=3.8',
     install_requires = _required,
     extras_require = extras_require,
     tests_require = extras_require['tests'],
@@ -194,7 +194,6 @@ setup_args = dict(
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 5 - Production/Stable",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",

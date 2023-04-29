@@ -101,7 +101,7 @@ _required = [
     'numpy',
     'shapely',
     'param',
-    'panel',
+    'panel >=1.0.0rc1',
     'pyproj',
 ]
 

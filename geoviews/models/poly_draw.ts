@@ -73,6 +73,8 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
   }
 
   _set_vertices(xs: number[] | number, ys: number[] | number, styles?: any): void {
+    if (this.model.vertex_renderer == null)
+      return
     const point_glyph: any = this.model.vertex_renderer.glyph
     const point_cds = this.model.vertex_renderer.data_source
     const [pxkey, pykey] = [point_glyph.x.field, point_glyph.y.field]
@@ -189,12 +191,12 @@ export class PolyVertexDrawTool extends PolyDrawTool {
 
   static __module__ = "geoviews.models.custom_tools"
 
-  static init_PolyVertexDrawTool(): void {
+  static {
     this.prototype.default_view = PolyVertexDrawToolView
 
-    this.define<PolyVertexDrawTool.Props>({
-      end_style:  [ p.Any, {} ],
-      node_style: [ p.Any, {} ],
-    })
+    this.define<PolyVertexDrawTool.Props>(({Any}) => ({
+      end_style:  [ Any, {} ],
+      node_style: [ Any, {} ],
+    }))
   }
 }

@@ -28,10 +28,10 @@ export class PolyVertexEditToolView extends PolyEditToolView {
   }
 
   _pan(ev: GestureEvent): void {
-    if (this._basepoint == null)
+    if (this._basepoint == null || this.model.vertex_renderer == null)
       return
     const points = this._drag_points(ev, [this.model.vertex_renderer])
-    if (!ev.shiftKey) {
+    if (!ev.shift_key) {
       this._move_linked(points)
     }
     if (this._selected_renderer)
@@ -39,10 +39,10 @@ export class PolyVertexEditToolView extends PolyEditToolView {
   }
 
   _pan_end(ev: GestureEvent): void {
-    if (this._basepoint == null)
+    if (this._basepoint == null || this.model.vertex_renderer == null)
       return
     const points = this._drag_points(ev, [this.model.vertex_renderer])
-    if (!ev.shiftKey) {
+    if (!ev.shift_key) {
       this._move_linked(points)
     }
     this._emit_cds_changes(this.model.vertex_renderer.data_source, false, true, true)
@@ -91,6 +91,8 @@ export class PolyVertexEditToolView extends PolyEditToolView {
   }
 
   _set_vertices(xs: number[] | number, ys: number[] | number, styles?: any): void {
+    if (this.model.vertex_renderer == null)
+      return
     const point_glyph: any = this.model.vertex_renderer.glyph
     const point_cds = this.model.vertex_renderer.data_source
     const [pxkey, pykey] = [point_glyph.x.field, point_glyph.y.field]
@@ -145,6 +147,8 @@ export class PolyVertexEditToolView extends PolyEditToolView {
   }
 
   _tap(ev: TapEvent): void {
+    if (this.model.vertex_renderer == null)
+      return
     const renderer = this.model.vertex_renderer
     const point = this._map_drag(ev.sx, ev.sy, renderer)
     if (point == null)
@@ -250,12 +254,13 @@ export class PolyVertexEditTool extends PolyEditTool {
 
   static __module__ = "geoviews.models.custom_tools"
 
-  static init_PolyVertexEditTool(): void {
+  static {
     this.prototype.default_view = PolyVertexEditToolView
 
-    this.define<PolyVertexEditTool.Props>({
-      node_style: [ p.Any, {} ],
-      end_style:  [ p.Any, {} ],
-    })
+    this.define<PolyVertexEditTool.Props>(({Any}) => ({
+      end_style:  [ Any, {} ],
+      node_style: [ Any, {} ],
+    }))
+
   }
 }

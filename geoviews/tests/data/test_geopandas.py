@@ -4,6 +4,7 @@ Test for the GeoPandasInterface
 from unittest import SkipTest
 
 import numpy as np
+import pandas as pd
 
 from shapely import geometry as sgeom
 
@@ -13,7 +14,6 @@ try:
 except ImportError:
     geopandas = None
 
-from holoviews.core.util import pd
 from holoviews.core.data import Dataset
 from holoviews.core.data.interface import DataError
 from holoviews.element import Polygons, Path, Points

@@ -36,7 +36,7 @@ class TilePlot(GeoPlot):
     style_opts = ['alpha', 'render_parents', 'level', 'smoothing', 'min_zoom', 'max_zoom']
 
     def get_extents(self, element, ranges, range_type='combined'):
-        extents = super(TilePlot, self).get_extents(element, ranges, range_type)
+        extents = super().get_extents(element, ranges, range_type)
         if (not self.overlaid and all(e is None or not np.isfinite(e) for e in extents)
             and range_type in ('combined', 'data')):
             (x0, x1), (y0, y1) = GOOGLE_MERCATOR.x_limits, GOOGLE_MERCATOR.y_limits
@@ -195,7 +195,7 @@ class GeoShapePlot(GeoPolygonPlot):
         else:
             el_type = Polygons
         polys = el_type([element.data], crs=element.crs, **util.get_param_values(element))
-        return super(GeoShapePlot, self).get_data(polys, ranges, style)
+        return super().get_data(polys, ranges, style)
 
 
 class FeaturePlot(GeoPolygonPlot):
@@ -211,7 +211,7 @@ class FeaturePlot(GeoPolygonPlot):
             return tuple(round(c, 12) for c in (x0, y0, x1, y1))
         elif self.overlaid:
             return (np.NaN,)*4
-        return super(FeaturePlot, self).get_extents(element, ranges, range_type)
+        return super().get_extents(element, ranges, range_type)
 
     def get_data(self, element, ranges, style):
         mapping = dict(self._mapping)
@@ -230,7 +230,7 @@ class FeaturePlot(GeoPolygonPlot):
         else:
             el_type = Polygons
         polys = el_type(geoms, crs=element.crs, **util.get_param_values(element))
-        return super(FeaturePlot, self).get_data(polys, ranges, style)
+        return super().get_data(polys, ranges, style)
 
 
 
@@ -239,7 +239,7 @@ class GeoTextPlot(GeoPlot, TextPlot):
     def get_data(self, element, ranges, style):
         mapping = dict(x='x', y='y', text='text')
         if not self.geographic:
-            return super(GeoTextPlot, self).get_data(element, ranges, style)
+            return super().get_data(element, ranges, style)
         if element.crs:
             x, y = self.projection.transform_point(element.x, element.y,
                                                    element.crs)

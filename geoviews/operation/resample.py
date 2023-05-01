@@ -132,7 +132,7 @@ class resample_geometry(Operation):
 
     @param.parameterized.bothmethod
     def instance(self_or_cls,**params):
-        inst = super(resample_geometry, self_or_cls).instance(**params)
+        inst = super().instance(**params)
         inst._cache = {}
         return inst
 

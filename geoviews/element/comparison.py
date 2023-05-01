@@ -8,7 +8,7 @@ class Comparison(HvComparison):
 
     @classmethod
     def register(cls):
-        super(Comparison, cls).register()
+        super().register()
         cls.equality_type_funcs[Image] = cls.compare_dataset
         cls.equality_type_funcs[Points] = cls.compare_dataset
         cls.equality_type_funcs[LineContours] = cls.compare_dataset

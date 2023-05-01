@@ -4,22 +4,22 @@ Test for the MultiInterface and GeomDictInterface
 from unittest import SkipTest
 
 import numpy as np
+import pandas as pd
 
 from holoviews.core.data import Dataset, MultiInterface
 from holoviews.core.data.interface import DataError
-from holoviews.core.util import pd
 from holoviews.element import Polygons, Path
 from holoviews.element.comparison import ComparisonTestCase
 from holoviews.tests.core.data.test_multiinterface import MultiBaseInterfaceTest
 
 try:
     from shapely import geometry as sgeom
-except:
+except ImportError:
     sgeom = None
 
 try:
     import spatialpandas
-except:
+except ImportError:
     spatialpandas = None
 
 from geoviews.data.geom_dict import GeomDictInterface
@@ -35,7 +35,7 @@ class GeomInterfaceTest(ComparisonTestCase):
     def setUp(self):
         if sgeom is None:
             raise SkipTest('GeomInterfaceTest requires shapely, skipping tests')
-        super(GeomInterfaceTest, self).setUp()
+        super().setUp()
 
     def test_multi_geom_dataset_geom_list_constructor(self):
         geoms = [sgeom.Polygon([(0, 0), (3, 3), (6, 0)])]
@@ -138,7 +138,7 @@ class SpatialPandasGeomInterfaceTest(GeomInterfaceTest):
     def setUp(self):
         if spatialpandas is None:
             raise SkipTest('SpatialPandasInterface requires spatialpandas, skipping tests')
-        super(SpatialPandasGeomInterfaceTest, self).setUp()
+        super().setUp()
 
 
 class MultiGeomDictInterfaceTest(MultiBaseInterfaceTest):

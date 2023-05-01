@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import sys
 import warnings
 
@@ -9,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from holoviews.core.util import isscalar, unique_iterator, unique_array
-from holoviews.core.data import Dataset, Interface, MultiInterface
+from holoviews.core.data import Dataset, Interface, MultiInterface, PandasAPI
 from holoviews.core.data.interface import DataError
 from holoviews.core.data import PandasInterface
 from holoviews.core.data.spatialpandas import get_value_array
@@ -18,11 +16,6 @@ from holoviews.element import Path
 
 from ..util import asarray, geom_to_array, geom_types, geom_length
 from .geom_dict import geom_from_dict
-
-try:
-    from holoviews.core.data import PandasAPI
-except ImportError:
-    class PandasAPI: pass
 
 
 class GeoPandasInterface(PandasAPI, MultiInterface):
@@ -98,7 +91,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
 
         try:
             shp_types = {gt[5:] if 'Multi' in gt else gt for gt in data.geom_type}
-        except:
+        except Exception:
             shp_types = []
         if len(shp_types) > 1:
             raise DataError('The GeopandasInterface can only read dataframes which '
@@ -191,9 +184,10 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
         elif isinstance(xsel, tuple):
             x0, x1 = xsel
         else:
-            raise ValueError("Only slicing is supported on geometries, %s "
-                             "selection is of type %s."
-                             % (xdim, type(xsel).__name__))
+            raise ValueError(
+                f"Only slicing is supported on geometries, {xdim} "
+                f"selection is of type {type(xsel).__name__}."
+            )
 
         if ysel is None:
             y0, y1 = cls.range(dataset, ydim)
@@ -202,9 +196,10 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
         elif isinstance(ysel, tuple):
             y0, y1 = ysel
         else:
-            raise ValueError("Only slicing is supported on geometries, %s "
-                             "selection is of type %s."
-                             % (ydim, type(ysel).__name__))
+            raise ValueError(
+                f"Only slicing is supported on geometries, {ydim} "
+                f"selection is of type {type(ysel).__name__}."
+            )
 
         bounds = box(x0, y0, x1, y1)
         col = cls.geo_column(dataset.data)

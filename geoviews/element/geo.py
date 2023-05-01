@@ -1,6 +1,7 @@
 import param
 import numpy as np
 
+from bokeh.models import MercatorTileSource
 from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles
@@ -29,14 +30,11 @@ try:
 except ImportError:
     Cube = None
 
-try:
-    from bokeh.models import MercatorTileSource
-except:
-    MercatorTileSource = None
+
 
 try:
     from owslib.wmts import WebMapTileService
-except:
+except ImportError:
     WebMapTileService = None
 
 from ..util import (
@@ -107,14 +105,14 @@ class _Element(Element2D):
             kwargs['crs'] = crs
         elif isinstance(data, _Element):
             kwargs['crs'] = data.crs
-        super(_Element, self).__init__(data, kdims=kdims, vdims=vdims, **kwargs)
+        super().__init__(data, kdims=kdims, vdims=vdims, **kwargs)
 
 
     def clone(self, data=None, shared_data=True, new_type=None,
               *args, **overrides):
         if 'crs' not in overrides and (not new_type or isinstance(new_type, _Element)):
             overrides['crs'] = self.crs
-        return super(_Element, self).clone(data, shared_data, new_type,
+        return super().clone(data, shared_data, new_type,
                                            *args, **overrides)
 
 
@@ -144,7 +142,7 @@ class Feature(_GeoFeature):
         if not isinstance(data, cFeature):
             raise TypeError('%s data has to be an cartopy Feature type'
                             % type(data).__name__)
-        super(Feature, self).__init__(data, kdims=kdims, vdims=vdims, **params)
+        super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
     def __call__(self, *args, **kwargs):
         return self.clone().opts(*args, **kwargs)
@@ -203,7 +201,7 @@ class Feature(_GeoFeature):
                 return util.dimension_range(lower, upper, dim.range, dim.soft_range)
             else:
                 return lower, upper
-        return super(Feature, self).range(dim, data_range, dimension_range)
+        return super().range(dim, data_range, dimension_range)
 
 
 class WMTS(_GeoFeature):
@@ -230,9 +228,11 @@ class WMTS(_GeoFeature):
         elif WebMapTileService and isinstance(data, WebMapTileService):
             pass
         elif not isinstance(data, str):
-            raise TypeError('%s data should be a tile service URL not a %s type.'
-                            % (type(self).__name__, type(data).__name__) )
-        super(WMTS, self).__init__(data, kdims=kdims, vdims=vdims, **params)
+            raise TypeError(
+                f'{type(self).__name__} data should be a tile service '
+                f'URL not a {type(data).__name__} type.'
+            )
+        super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
     def __call__(self, *args, **kwargs):
         return self.opts(*args, **kwargs)
@@ -253,6 +253,7 @@ class Dataset(_Element, HvDataset):
     """
 
     kdims = param.List(default=[Dimension('Longitude'), Dimension('Latitude')],
+                       bounds=(0, None),
                        constant=True)
 
     group = param.String(default='Dataset')
@@ -381,7 +382,7 @@ class QuadMesh(_Element, HvQuadMesh):
         return from_xarray(da, crs, apply_transform, **kwargs)
 
     def trimesh(self):
-        trimesh = super(QuadMesh, self).trimesh()
+        trimesh = super().trimesh()
         node_params = util.get_param_values(trimesh.nodes)
         node_params['crs'] = self.crs
         nodes = TriMesh.node_type(trimesh.nodes.data, **node_params)
@@ -579,22 +580,23 @@ class Graph(_Element, HvGraph):
         if 'crs' in params:
             crs = params['crs']
             mismatch = None
-            if nodes is not None and type(crs) != type(nodes.crs):
+            if nodes is not None and type(crs) != type(nodes.crs):  # noqa: E721
                 mismatch = 'nodes'
-            elif edges is not None and type(crs) != type(edges.crs):
+            elif edges is not None and type(crs) != type(edges.crs):  # noqa: E721
                 mismatch = 'edges'
             if mismatch:
-                raise ValueError("Coordinate reference system supplied "
-                                 "to %s element must match the crs of "
-                                 "the %s. Expected %s found %s." %
-                                 (mismatch, type(self).__name__, nodes.crs, crs))
+                raise ValueError(
+                    "Coordinate reference system supplied "
+                    f"to {mismatch} element must match the crs of "
+                    f"the {type(self).__name__}. Expected {nodes.crs} found {crs}."
+                )
         elif nodes is not None:
             crs = nodes.crs
             params['crs'] = crs
         else:
             crs = self.crs
 
-        super(Graph, self).__init__(data, kdims, vdims, **params)
+        super().__init__(data, kdims, vdims, **params)
         self.nodes.crs = crs
 
 
@@ -604,7 +606,7 @@ class Graph(_Element, HvGraph):
         Returns the fixed EdgePaths or computes direct connections
         between supplied nodes.
         """
-        edgepaths = super(Graph, self).edgepaths
+        edgepaths = super().edgepaths
         edgepaths.crs = self.crs
         return edgepaths
 
@@ -631,22 +633,23 @@ class TriMesh(HvTriMesh, Graph):
         if 'crs' in params:
             crs = params['crs']
             mismatch = None
-            if nodes is not None and type(crs) != type(nodes.crs):
+            if nodes is not None and type(crs) != type(nodes.crs):  # noqa: E721
                 mismatch = 'nodes'
-            elif edges is not None and type(crs) != type(edges.crs):
+            elif edges is not None and type(crs) != type(edges.crs):  # noqa: E721
                 mismatch = 'edges'
             if mismatch:
-                raise ValueError("Coordinate reference system supplied "
-                                 "to %s element must match the crs of "
-                                 "the %s. Expected %s found %s." %
-                                 (mismatch, type(self).__name__, nodes.crs, crs))
+                raise ValueError(
+                    "Coordinate reference system supplied "
+                    f"to {mismatch} element must match the crs of "
+                    f"the {type(self).__name__}. Expected {nodes.crs} found {crs}."
+                )
         elif nodes is not None:
             crs = nodes.crs
             params['crs'] = crs
         else:
             crs = self.crs
 
-        super(TriMesh, self).__init__(data, kdims, vdims, **params)
+        super().__init__(data, kdims, vdims, **params)
         self.nodes.crs = crs
 
     @property
@@ -655,7 +658,7 @@ class TriMesh(HvTriMesh, Graph):
         Returns the fixed EdgePaths or computes direct connections
         between supplied nodes.
         """
-        edgepaths = super(TriMesh, self).edgepaths
+        edgepaths = super().edgepaths
         edgepaths.crs = self.crs
         return edgepaths
 
@@ -832,7 +835,7 @@ class Shape(Dataset):
                          'provide the value as part of a dictionary of '
                          'the form {\'geometry\': <shapely.Geometry>, '
                          '\'level\': %s} instead' % params['level'])
-        super(Shape, self).__init__(data, kdims=kdims, vdims=vdims, **params)
+        super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
 
     @classmethod
@@ -940,8 +943,8 @@ class Shape(Dataset):
                 vdims = dataset.vdims
             ddims = dataset.dimensions()
             if None in vdims:
-                raise ValueError('Value dimension %s not found '
-                                 'in dataset dimensions %s' % (value, ddims) )
+                raise ValueError('Value dimension {} not found '
+                                 'in dataset dimensions {}'.format(value, ddims) )
         else:
             vdims = []
 

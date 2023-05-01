@@ -1,6 +1,3 @@
-from __future__ import division
-
-import sys
 import warnings
 
 import numpy as np
@@ -11,7 +8,6 @@ from cartopy import crs as ccrs
 from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
 from holoviews.element import Tiles
 from packaging.version import Version
-from pyproj import Transformer
 from shapely.geometry import (
     LinearRing, LineString, MultiLineString, MultiPoint,
     MultiPolygon, Point, Polygon, box
@@ -95,7 +91,7 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
         try:
             geom_clipped_to_dest_proj = dest_poly.intersection(
                 geom_in_src_proj)
-        except:
+        except Exception:
             geom_clipped_to_dest_proj = None
         if geom_clipped_to_dest_proj:
             geom_in_src_proj = geom_clipped_to_dest_proj
@@ -104,11 +100,11 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
         except ValueError:
             src_name =type(src_proj).__name__
             dest_name =type(dest_proj).__name__
-            raise ValueError('Could not project data from %s projection '
-                             'to %s projection. Ensure the coordinate '
-                             'reference system (crs) matches your data '
-                             'and the kdims.' %
-                             (src_name, dest_name))
+            raise ValueError(
+                f'Could not project data from {src_name} projection '
+                f'to {dest_name} projection. Ensure the coordinate '
+                'reference system (crs) matches your data and the kdims.'
+            )
     else:
         geom_in_crs = boundary_poly.intersection(domain_in_src_proj)
     return geom_in_crs.bounds
@@ -366,9 +362,8 @@ def geom_length(geom):
     if shapely_version < Version('1.8.0'):
         if not geom.geom_type.startswith('Multi') and hasattr(geom, 'array_interface_base'):
             return len(geom.array_interface_base['data'])//2
-    else:
-        if not geom.geom_type.startswith('Multi'):
-            return len(geom.coords)
+    elif not geom.geom_type.startswith('Multi'):
+        return len(geom.coords)
     # MultiPolygon, MultiPoint, MultiLineString (recursively)
     glength = len(geom.geoms)
     length = 0
@@ -462,7 +457,7 @@ def check_crs(crs):
     import pyproj
     if isinstance(crs, pyproj.Proj):
         out = crs
-    elif isinstance(crs, dict) or isinstance(crs, str):
+    elif isinstance(crs, (str, dict)):
         try:
             out = pyproj.Proj(crs)
         except RuntimeError:
@@ -535,7 +530,7 @@ def proj_to_cartopy(proj):
         v = s[1].strip()
         try:
             v = float(v)
-        except:
+        except Exception:
             pass
         if k == 'proj':
             if v == 'tmerc':
@@ -568,8 +563,6 @@ def proj_to_cartopy(proj):
 
 
 def is_pyproj(crs):
-    if 'pyproj' not in sys.modules:
-        return False
     import pyproj
     return isinstance(crs, pyproj.Proj)
 
@@ -586,7 +579,7 @@ def process_crs(crs):
     try:
         import cartopy.crs as ccrs
         import geoviews as gv # noqa
-    except:
+    except ImportError:
         raise ImportError('Geographic projection support requires GeoViews and cartopy.')
 
     if crs is None:
@@ -595,14 +588,14 @@ def process_crs(crs):
     if isinstance(crs, str) and crs.lower().startswith('epsg'):
         try:
             crs = ccrs.epsg(crs[5:].lstrip().rstrip())
-        except:
+        except Exception:
             raise ValueError("Could not parse EPSG code as CRS, must be of the format 'EPSG: {code}.'")
     elif isinstance(crs, int):
         crs = ccrs.epsg(crs)
     elif isinstance(crs, str) or is_pyproj(crs):
         try:
             crs = proj_to_cartopy(crs)
-        except:
+        except Exception:
             raise ValueError("Could not parse EPSG code as CRS, must be of the format 'proj4: {proj4 string}.'")
     elif not isinstance(crs, ccrs.CRS):
         raise ValueError("Projection must be defined as a EPSG code, proj4 string, cartopy CRS or pyproj.Proj.")
@@ -637,7 +630,7 @@ def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwa
     """
     try:
         import xarray as xr
-    except:
+    except ImportError:
         raise ImportError('Loading tiffs requires xarray to be installed')
 
     with warnings.catch_warnings():
@@ -677,7 +670,7 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
     elif hasattr(da, 'crs'):
         try:
             kwargs['crs'] = process_crs(da.crs)
-        except:
+        except Exception:
             param.main.warning('Could not decode projection from crs string %r, '
                                'defaulting to non-geographic element.' % da.crs)
 
@@ -797,6 +790,8 @@ def asarray(v):
 
 
 def transform_shapely(geom, crs_from, crs_to):
+    from pyproj import Transformer
+
     if isinstance(crs_to, str):
         crs_to = ccrs.CRS(crs_to)
     if isinstance(crs_from, str):

@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import sys
 import datetime
 from itertools import product
@@ -116,7 +114,7 @@ class CubeInterface(GridInterface):
             try:
                 data = iris.cube.Cube(value_array, long_name=vdim.name,
                                       dim_coords_and_dims=coords)
-            except:
+            except Exception:
                 pass
             if not isinstance(data, iris.cube.Cube):
                 raise TypeError('Data must be be an iris Cube type.')

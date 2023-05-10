@@ -63,7 +63,6 @@ jobs:
         run: |
           conda activate test-environment
           doit env_capture
-          echo "UDUNITS2_XML_PATH="$UDUNITS2_XML_PATH
       - name: sampledata
         run: |
           conda activate test-environment

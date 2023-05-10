@@ -96,12 +96,12 @@ except:
 _required = [
     'bokeh >=3.1.0,<3.2.0',
     'cartopy >=0.18.0',
-    'holoviews >=1.16.0a5',
+    'holoviews >=1.16.0',
     'packaging',
     'numpy',
     'shapely',
     'param',
-    'panel >=1.0.0rc1',
+    'panel >=1.0.0rc7',
     'pyproj',
 ]
 

@@ -233,20 +233,18 @@ class RectanglesTableLinkCallback(HvRectanglesTableLinkCallback):
 
     source_code = """
     const projections = Bokeh.require("core/util/projections");
-    const xs = source_cds.data[source_glyph.x.field]
-    const ys = source_cds.data[source_glyph.y.field]
-    const ws = source_cds.data[source_glyph.width.field]
-    const hs = source_cds.data[source_glyph.height.field]
+    const l = source_cds.data[source_glyph.left.field]
+    const b = source_cds.data[source_glyph.bottom.field]
+    const r = source_cds.data[source_glyph.right.field]
+    const t = source_cds.data[source_glyph.top.field]
 
     const x0 = []
     const x1 = []
     const y0 = []
     const y1 = []
-    for (let i = 0; i < xs.length; i++) {
-      const hw = ws[i]/2.
-      const hh = hs[i]/2.
-      const p1 = projections.wgs84_mercator.invert(xs[i]-hw, ys[i]-hh)
-      const p2 = projections.wgs84_mercator.invert(xs[i]+hw, ys[i]+hh)
+    for (let i = 0; i < l.length; i++) {
+      const p1 = projections.wgs84_mercator.invert(l[i], b[i])
+      const p2 = projections.wgs84_mercator.invert(r[i], t[i])
       x0.push(p1[0])
       x1.push(p2[0])
       y0.push(p1[1])
@@ -265,10 +263,10 @@ class RectanglesTableLinkCallback(HvRectanglesTableLinkCallback):
     const x1s = target_cds.data[columns[2]]
     const y1s = target_cds.data[columns[3]]
 
-    const xs = []
-    const ys = []
-    const ws = []
-    const hs = []
+    const l = []
+    const b = []
+    const r = []
+    const t = []
     for (let i = 0; i < x0s.length; i++) {
       const x0 = Math.min(x0s[i], x1s[i])
       const y0 = Math.min(y0s[i], y1s[i])
@@ -276,15 +274,15 @@ class RectanglesTableLinkCallback(HvRectanglesTableLinkCallback):
       const y1 = Math.max(y0s[i], y1s[i])
       const p1 = projections.wgs84_mercator.compute(x0, y0)
       const p2 = projections.wgs84_mercator.compute(x1, y1)
-      xs.push((p1[0]+p2[0])/2.)
-      ys.push((p1[1]+p2[1])/2.)
-      ws.push(p2[0]-p1[0])
-      hs.push(p2[1]-p1[1])
+      l.push(p1[0])
+      b.push(p1[1])
+      r.push(p2[0])
+      t.push(p2[1])
     }
-    source_cds.data['x'] = xs
-    source_cds.data['y'] = ys
-    source_cds.data['width'] = ws
-    source_cds.data['height'] = hs
+    source_cds.data['left'] = l
+    source_cds.data['bottom'] = b
+    source_cds.data['right'] = r
+    source_cds.data['top'] = t
     """
 
 VertexTableLink.register_callback('bokeh', VertexTableLinkCallback)

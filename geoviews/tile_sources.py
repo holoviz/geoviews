@@ -86,7 +86,13 @@ ESRI = EsriImagery # For backwards compatibility with gv 1.5
 # Miscellaneous
 OSM = WMTS('https://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png', name="OSM")
 OpenTopoMap = WMTS('https://a.tile.opentopomap.org/{Z}/{X}/{Y}.png', name="OpenTopoMap")
-Wikipedia = WMTS('https://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png', name="Wikipedia")
+
+def __getattr__(name):
+    if name == "Wikipedia":
+        from ._warnings import deprecated
+        deprecated("1.11", "Wikipedia", "OSM")
+        return WMTS('https://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png', name="Wikipedia")
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
 tile_sources = {k: v for k, v in locals().items() if isinstance(v, WMTS) and k != 'ESRI'}

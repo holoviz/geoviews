@@ -27,7 +27,10 @@ from shapely.ops import unary_union
 
 try:
     from iris.cube import Cube
-except ImportError:
+except (ImportError, OSError):
+    # OSError because environment variable $UDUNITS2_XML_PATH
+    # is sometimes not set. Should be done automatically
+    # when installing the package.
     Cube = None
 
 

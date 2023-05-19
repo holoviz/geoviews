@@ -47,7 +47,7 @@ class TestRectangles(ComparisonTestCase):
                 [0., 1.],
                 [0., 0.],
                 [1., 0.]
-            ])   
+            ])
         )
         self.assertEqual(
             np.array(geom.geoms[1].exterior.coords),
@@ -123,7 +123,7 @@ class TestPath(ComparisonTestCase):
                 [1, 1],
                 [2, 0]
             ])
-        )            
+        )
         self.assertEqual(
             np.array(geom.geoms[1].coords),
             np.array([

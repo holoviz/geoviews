@@ -1,5 +1,5 @@
-import os
 import numpy as np
+from pathlib import Path
 
 from bokeh.models import CustomJS, CustomAction, PolyEditTool
 from holoviews.core.ndmapping import UniformNdMapping
@@ -117,27 +117,27 @@ def project_poly(cb, msg):
 class GeoRangeXYCallback(RangeXYCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoRangeXYCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_ranges(self, msg, ('x_range', 'y_range'))
 
 class GeoRangeXCallback(RangeXCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoRangeXCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_ranges(self, msg, ('x_range',))
 
 
 class GeoRangeYCallback(RangeYCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoRangeYCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_ranges(self, msg, ('y_range',))
 
 
 class GeoSelectionXYCallback(SelectionXYCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoSelectionXYCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         if (skip(self, msg, ('x_selection', 'y_selection')) or
             not all(isinstance(sel, tuple) for sel in msg.values())):
             return msg
@@ -153,7 +153,7 @@ class GeoSelectionXYCallback(SelectionXYCallback):
 class GeoBoundsXYCallback(BoundsCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoBoundsXYCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         if skip(self, msg, ('bounds',)): return msg
         plot = get_cb_plot(self)
         msg['bounds'] = project_extents(msg['bounds'], plot.projection,
@@ -164,7 +164,7 @@ class GeoBoundsXYCallback(BoundsCallback):
 class GeoBoundsXCallback(BoundsXCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoBoundsXCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         if skip(self, msg, ('boundsx',)): return msg
         x0, x1 = msg['boundsx']
         plot = get_cb_plot(self)
@@ -176,7 +176,7 @@ class GeoBoundsXCallback(BoundsXCallback):
 class GeoBoundsYCallback(BoundsYCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoBoundsYCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         if skip(self, msg, ('boundsy',)): return msg
         y0, y1 = msg['boundsy']
         plot = get_cb_plot(self)
@@ -188,87 +188,87 @@ class GeoBoundsYCallback(BoundsYCallback):
 class GeoPointerXYCallback(PointerXYCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoPointerXYCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_point(self, msg)
 
 
 class GeoPointerXCallback(PointerXCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoPointerXCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_point(self, msg, ('x',))
 
 
 class GeoPointerYCallback(PointerYCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoPointerYCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_point(self, msg, ('y',))
 
 
 class GeoTapCallback(TapCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoTapCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_point(self, msg)
 
 
 class GeoSingleTapCallback(SingleTapCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoSingleTapCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_point(self, msg)
 
 
 class GeoDoubleTapCallback(DoubleTapCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoDoubleTapCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_point(self, msg)
 
 
 class GeoMouseEnterCallback(MouseEnterCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoMouseEnterCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_point(self, msg)
 
 
 class GeoMouseLeaveCallback(MouseLeaveCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoMouseLeaveCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_point(self, msg)
 
 
 class GeoPolyDrawCallback(PolyDrawCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoPolyDrawCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_poly(self, msg)
 
     def _update_cds_vdims(self, data):
         if isinstance(self.source, Shape):
             return
-        super(GeoPolyDrawCallback, self)._update_cds_vdims(data)
+        super()._update_cds_vdims(data)
 
 
 class GeoPolyEditCallback(PolyEditCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoPolyEditCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_poly(self, msg)
 
     def _update_cds_vdims(self, data):
         if isinstance(self.source, Shape):
             return
-        super(GeoPolyEditCallback, self)._update_cds_vdims(data)
+        super()._update_cds_vdims(data)
 
 
 class GeoBoxEditCallback(BoxEditCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoBoxEditCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         proj = self.plot.projection
         element = self.source
         if isinstance(element, UniformNdMapping):
@@ -291,7 +291,7 @@ class GeoBoxEditCallback(BoxEditCallback):
 class GeoPointDrawCallback(PointDrawCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoPointDrawCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         if not msg['data']:
             return msg
 
@@ -334,11 +334,9 @@ class PolyVertexEditCallback(GeoPolyEditCallback):
     vcds.selection_manager.clear();
     """
 
-    icon = os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__), '..', '..', 'icons', 'PolyBreak.png'
-        )
-    )
+    icon = (
+        Path(__file__).parents[2] / "icons" / "PolyBreak.png"
+    ).resolve()
 
     def _create_vertex_split_link(self, action, poly_renderer,
                                   vertex_renderer, vertex_tool):
@@ -404,13 +402,13 @@ class PolyVertexDrawCallback(GeoPolyDrawCallback):
 class GeoFreehandDrawCallback(FreehandDrawCallback):
 
     def _process_msg(self, msg):
-        msg = super(GeoFreehandDrawCallback, self)._process_msg(msg)
+        msg = super()._process_msg(msg)
         return project_poly(self, msg)
 
     def _update_cds_vdims(self, data):
         if isinstance(self.source, Shape):
             return
-        super(GeoFreehandDrawCallback, self)._update_cds_vdims(data)
+        super()._update_cds_vdims(data)
 
 
 callbacks = Stream._callbacks['bokeh']

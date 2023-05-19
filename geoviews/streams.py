@@ -18,7 +18,7 @@ class PolyVertexEdit(PolyEdit):
     def __init__(self, node_style={}, feature_style={}, **params):
         self.node_style = node_style
         self.feature_style = feature_style
-        super(PolyVertexEdit, self).__init__(**params)
+        super().__init__(**params)
 
 
 class PolyVertexDraw(PolyDraw):
@@ -38,4 +38,4 @@ class PolyVertexDraw(PolyDraw):
     def __init__(self, node_style={}, feature_style={}, **params):
         self.node_style = node_style
         self.feature_style = feature_style
-        super(PolyVertexDraw, self).__init__(**params)
+        super().__init__(**params)

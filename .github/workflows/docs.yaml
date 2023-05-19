@@ -30,6 +30,7 @@ jobs:
         shell: bash -l {0}
     env:
       DESC: "Documentation build"
+      SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
       MPLBACKEND: "Agg"
       MOZ_HEADLESS: 1
       DISPLAY: ":99.0"
@@ -49,7 +50,7 @@ jobs:
         run: |
           conda create -n test-environment
           conda activate test-environment
-          conda config --env --append channels pyviz/label/dev --append channels conda-forge
+          conda config --env --append channels pyviz/label/dev --append channels bokeh --append channels conda-forge
           conda config --env --remove channels defaults
           conda config --env --set channel_priority strict
           conda config --env --show-sources
@@ -88,7 +89,7 @@ jobs:
       - name: Deploy main
         if: |
           (github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'main') ||
-          (github.event_name == 'push' && !(contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc')))        
+          (github.event_name == 'push' && !(contains(steps.vars.outputs.tag, 'a') || contains(steps.vars.outputs.tag, 'b') || contains(steps.vars.outputs.tag, 'rc')))
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

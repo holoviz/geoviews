@@ -2,13 +2,13 @@
 
 from nbsite.shared_conf import *
 
-project = u'GeoViews'
-authors = u'HoloViz Developers'
-copyright = u'2018-2021 ' + authors
+project = 'GeoViews'
+authors = 'HoloViz Developers'
+copyright = '2018 ' + authors
 description = 'Geographic visualizations for HoloViews.'
 
 import geoviews
-version = release = str(geoviews.__version__)
+version = release = base_version(geoviews.__version__)
 
 html_static_path += ['_static']
 
@@ -34,7 +34,11 @@ html_theme_options = {
             "url": "https://discourse.holoviz.org/",
             "icon": "fab fa-discourse",
         }
-    ]
+    ],
+    "navbar_end": ["navbar-icon-links"],
+    "google_analytics_id": "UA-154795830-3",
+    "pygment_light_style": "material",
+    "pygment_dark_style": "material",
 }
 
 extensions += [
@@ -59,8 +63,11 @@ nbsite_gallery_conf = {
 }
 
 html_context.update({
-    "last_release": f"v{'.'.join(geoviews.__version__.split('.')[:3])}",
+    "last_release": f"v{release}",
     "github_user": "holoviz",
     "github_repo": "geoviews",
-    "google_analytics_id": "UA-154795830-3",
+    "default_mode": "light"
 })
+
+# Override the Sphinx default title that appends `documentation`
+html_title = f'{project} v{version}'

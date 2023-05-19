@@ -11,10 +11,10 @@ from .resample import resample_geometry # noqa (API import)
 
 geo_ops = [contours, bivariate_kde]
 try:
-    from holoviews.operation.datashader import (
-        ResamplingOperation, shade, stack, dynspread)
-    geo_ops += [ResamplingOperation, shade, stack, dynspread]
-except:
+    from holoviews.operation.datashader import shade, stack, dynspread
+    from holoviews.operation.resample import ResampleOperation2D
+    geo_ops += [ResampleOperation2D, shade, stack, dynspread]
+except ImportError:
     pass
 
 def convert_to_geotype(element, crs=None):

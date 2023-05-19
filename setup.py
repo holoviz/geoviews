@@ -94,14 +94,15 @@ except:
 ### dependencies ###
 
 _required = [
-    'bokeh >=2.4.0,<2.5',
+    'bokeh >=3.1.0,<3.2.0',
     'cartopy >=0.18.0',
-    'holoviews >=1.14.2',
+    'holoviews >=1.16.0',
     'packaging',
     'numpy',
     'shapely',
     'param',
-    'panel',
+    'panel >=1.0.0rc7',
+    'pyproj',
 ]
 
 _recommended = [
@@ -116,6 +117,7 @@ _recommended = [
     'shapely',
     'xarray',
     'datashader',
+    'pooch',
 ]
 
 # can only currently run all examples with packages from conda-forge
@@ -130,13 +132,13 @@ extras_require={
     'recommended': _recommended,
     'examples_extra': _examples_extra,
     'doc': _examples_extra + [
-        'nbsite >=0.7.2rc10',
+        'nbsite ==0.8.0rc15',  # Broken for newer versions
         'cartopy >=0.20.0',
         'graphviz',
         'lxml',
         'selenium',
         'pooch',
-        'pydata-sphinx-theme <0.9.0',
+        'pydata-sphinx-theme ==0.9.0',
         'sphinx-copybutton',
     ],
     'tests': [
@@ -156,7 +158,7 @@ extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
 extras_require['build'] = [
     'param >=1.9.2',
     'pyct >=0.4.4',
-    'bokeh >=2.4,<2.5',
+    'bokeh >=3.1.0,<3.2.0',
     'pyviz_comms >=0.6.0'
 ]
 
@@ -168,7 +170,7 @@ extras_require['build'] = [
 setup_args = dict(
     name='geoviews',
     version=get_setup_version("geoviews"),
-    python_requires = '>=3.7',
+    python_requires = '>=3.8',
     install_requires = _required,
     extras_require = extras_require,
     tests_require = extras_require['tests'],
@@ -189,7 +191,6 @@ setup_args = dict(
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 5 - Production/Stable",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",

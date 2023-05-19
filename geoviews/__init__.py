@@ -4,11 +4,7 @@ from holoviews import (extension, help, opts, output, renderer, Store, # noqa (A
                        Cycle, Palette, Overlay, Layout, NdOverlay, NdLayout,
                        HoloMap, DynamicMap, GridSpace, Dimension, dim)
 
-try:
-    # Only available in HoloViews >=1.11
-    from holoviews import render, save # noqa (API import)
-except:
-    pass
+from holoviews import render, save # noqa (API import)
 
 from .annotators import annotate # noqa (API import)
 from .element import ( # noqa (API import)
@@ -19,6 +15,7 @@ from .element import ( # noqa (API import)
 )
 from .util import load_tiff, from_xarray # noqa (API import)
 from .operation import project                      # noqa (API import)
+from ._warnings import GeoviewsDeprecationWarning, GeoviewsUserWarning  # noqa: F401
 from . import data                                  # noqa (API import)
 from . import operation                             # noqa (API import)
 from . import plotting                              # noqa (API import)

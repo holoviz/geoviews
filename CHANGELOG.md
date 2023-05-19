@@ -1,3 +1,39 @@
+Version 1.9.6
+=============
+
+Date: Jan 17, 2023
+
+This release contains a small number of bug fixes and compatibility with the latest releases of Numpy and Shapely. Many thanks to @pmav99, @philippjfr, @maximlt, and @Hoxbro.
+
+Bug fixes:
+
+- Fix regression and remove deprecation warnings for `gv.annotators` ([#583](https://github.com/holoviz/geoviews/pull/583))
+
+Compatibility:
+
+- Compatibility with Shapely 2.0 ([#570](https://github.com/holoviz/geoviews/pull/570), [#603](https://github.com/holoviz/geoviews/pull/603))
+- Compatibility with Numpy 1.24 ([#608](https://github.com/holoviz/geoviews/pull/608))
+- Compatibility with HoloViews 1.15 ([#572](https://github.com/holoviz/geoviews/pull/572), [#574](https://github.com/holoviz/geoviews/pull/574))
+- Compatibility with Python 3.11 ([#601](https://github.com/holoviz/geoviews/pull/601))
+
+Packaging:
+
+- Fix TypeScript files not being packaged and therefore gave an uncaught error in the console for `gv.annotators` ([#610](https://github.com/holoviz/geoviews/pull/610))
+- Fix building with `pip install .` and update of packages ([#575](https://github.com/holoviz/geoviews/pull/575), [#579](https://github.com/holoviz/geoviews/pull/579))
+- Setting NPM access to public and update `package.json` ([#585](https://github.com/holoviz/geoviews/pull/585), [#586](https://github.com/holoviz/geoviews/pull/586))
+
+Documentation:
+
+- Fix docs build ([#580](https://github.com/holoviz/geoviews/pull/580), [#588](https://github.com/holoviz/geoviews/pull/588), [#611](https://github.com/holoviz/geoviews/pull/611), [#612](https://github.com/holoviz/geoviews/pull/612))
+
+Maintenance:
+
+- Adding pre-commit to CI ([#604](https://github.com/holoviz/geoviews/pull/604))
+- Renamed `master` branch to `main` ([#606](https://github.com/holoviz/geoviews/pull/606))
+- Remove Trove Classifier for Python 3.6 ([#565](https://github.com/holoviz/geoviews/pull/565))
+- Various fixes and general maintenance of the CI ([#566](https://github.com/holoviz/geoviews/pull/566), [#567](https://github.com/holoviz/geoviews/pull/567), [#569](https://github.com/holoviz/geoviews/pull/569), [#573](https://github.com/holoviz/geoviews/pull/573), [#587](https://github.com/holoviz/geoviews/pull/587), [#591](https://github.com/holoviz/geoviews/pull/591), [#594](https://github.com/holoviz/geoviews/pull/594), [#595](https://github.com/holoviz/geoviews/pull/595), [#596](https://github.com/holoviz/geoviews/pull/596), [#600](https://github.com/holoviz/geoviews/pull/600), [#607](https://github.com/holoviz/geoviews/pull/607))
+
+
 Version 1.9.5
 =============
 
@@ -24,7 +60,7 @@ Bug fixes:
 Compatibility:
 
 - Compatibility with HoloViews 1.14.8 ([#556](https://github.com/holoviz/geoviews/pull/556))
-- Compatibility with Python 3.10 by replacing LooseVersion with packaging.Version ([#555](https://github.com/holoviz/geoviews/pull/555)) 
+- Compatibility with Python 3.10 by replacing LooseVersion with packaging.Version ([#555](https://github.com/holoviz/geoviews/pull/555))
 
 Version 1.9.3
 =============
@@ -164,7 +200,7 @@ Bug fixes and minor improvements:
 Version 1.6.4
 =============
 
-Minor bugfix release. Includes contributions from @philippjfr, @ahuang11, @zassa, and @ceball 
+Minor bugfix release. Includes contributions from @philippjfr, @ahuang11, @zassa, and @ceball
 
 Bug fixes and minor improvements:
 
@@ -241,7 +277,7 @@ Enhancements:
 
 Bug fixes:
 
-- Improved handling of Point geometries in geopandas dataframe ([#204](https://github.com/holoviz/geoviews/pull/204)) 
+- Improved handling of Point geometries in geopandas dataframe ([#204](https://github.com/holoviz/geoviews/pull/204))
 - Fixes for projecting draw tool data ([#205](https://github.com/holoviz/geoviews/pull/205))
 - Improvements and fixes for handling of QuadMesh projections ([#250](https://github.com/holoviz/geoviews/pull/250))
 - Fixes for Image longitude wrapping ([#260](https://github.com/holoviz/geoviews/pull/260))
@@ -287,8 +323,8 @@ New components:
 
 New features:
 
-- Hover tool now supports displaying geographic coordinates as longitude and latitude ([#158](https://github.com/holoviz/geoviews/pull/158)) 
-    
+- Hover tool now supports displaying geographic coordinates as longitude and latitude ([#158](https://github.com/holoviz/geoviews/pull/158))
+
 - Added a new ``geoviews.tile_sources`` module with a predefined set of tile sources ([#165](https://github.com/holoviz/geoviews/pull/165))
 
 - Wrapped the xESMF library as a regridding and interpolation operation for rectilinear and curvilinear grids ([#127](https://github.com/holoviz/geoviews/pull/127))
@@ -325,7 +361,7 @@ Version 1.4.0
 - Allow specifying WMTS element with just the URL ([#89](https://github.com/holoviz/geoviews/pull/89))
 - Added GeoPandas interface to plot geometries more easily ([#88](https://github.com/holoviz/geoviews/pull/88))
 - Added further projection operations allowing most geographic element types to be explicitly projected ([#88](https://github.com/holoviz/geoviews/pull/88))
-- Enabled MercatorTicker on geographic bokeh plots ensuring axes are labelled with latitudes and longitudes ([#64](https://github.com/holoviz/geoviews/pull/64)) 
+- Enabled MercatorTicker on geographic bokeh plots ensuring axes are labelled with latitudes and longitudes ([#64](https://github.com/holoviz/geoviews/pull/64))
 
 
 

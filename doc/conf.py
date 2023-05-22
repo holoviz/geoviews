@@ -12,8 +12,7 @@ version = release = base_version(geoviews.__version__)
 
 html_static_path += ['_static']
 
-html_css_files = [
-    'nbsite.css',
+html_css_files += [
     'custom.css'
 ]
 

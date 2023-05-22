@@ -49,8 +49,6 @@ extensions += [
 ]
 napoleon_numpy_docstring = True
 
-templates_path = ['_templates']
-
 nbsite_gallery_conf = {
     'github_org': 'holoviz',
     'github_project': 'geoviews',

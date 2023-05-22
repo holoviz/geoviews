@@ -135,14 +135,12 @@ extras_require={
     'recommended': _recommended,
     'examples_extra': _examples_extra,
     'doc': _examples_extra + [
-        'nbsite ==0.8.0rc15',  # Broken for newer versions
+        'nbsite >=0.8.0rc34',
         'cartopy >=0.20.0',
         'graphviz',
         'lxml',
         'selenium',
         'pooch',
-        'pydata-sphinx-theme ==0.9.0',
-        'sphinx-copybutton',
     ],
     'tests': [
         'pytest-cov',
@@ -164,7 +162,6 @@ extras_require['build'] = [
     'bokeh >=3.1.0,<3.2.0',
     'pyviz_comms >=0.6.0'
 ]
-
 
 ########################
 ### package metadata ###

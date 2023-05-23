@@ -256,7 +256,7 @@ class geo_hex_binning(hex_binning, project_points):
     Applies hex binning by computing aggregates on a hexagonal grid.
 
     Should not be user facing as the returned element is not directly
-    useable.
+    usable.
     """
 
     def _process(self, element, key=None):

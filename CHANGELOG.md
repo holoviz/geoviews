@@ -28,7 +28,8 @@ Compatibility:
 
 Maintenance:
 
-- Use ruff as a formatting tool ([#628](https://github.com/holoviz/geoviews/pull/628))
+- Use `ruff` as a formatting tool ([#628](https://github.com/holoviz/geoviews/pull/628))
+- Use `codespell` as a spelling checker ([#641](https://github.com/holoviz/geoviews/pull/641))
 - General maintenance ([#602](https://github.com/holoviz/geoviews/pull/602), [#630](https://github.com/holoviz/geoviews/pull/630), [#632](https://github.com/holoviz/geoviews/pull/632))
 - Update to latest `nbsite` ([#638](https://github.com/holoviz/geoviews/pull/638))
 

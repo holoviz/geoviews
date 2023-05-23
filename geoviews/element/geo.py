@@ -27,12 +27,10 @@ from shapely.ops import unary_union
 
 try:
     from iris.cube import Cube
-except (ImportError, OSError, AttributeError):
+except (ImportError, OSError):
     # OSError because environment variable $UDUNITS2_XML_PATH
     # is sometimes not set. Should be done automatically
     # when installing the package.
-    # AttributeError because iris on Python 3.8 does not work
-    # with numpy=1.24.0: module 'numpy' has no attribute 'float'
     Cube = None
 
 

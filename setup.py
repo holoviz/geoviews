@@ -101,7 +101,7 @@ _required = [
     'numpy',
     'shapely',
     'param',
-    'panel >=1.0.0rc7',
+    'panel >=1.0.0',
     'pyproj',
 ]
 
@@ -122,7 +122,7 @@ _recommended = [
 
 # can only currently run all examples with packages from conda-forge
 _examples_extra = _recommended + [
-    'iris',
+    'iris >=3.5',  # Pin to support numpy 1.24
     'xesmf',
     'mock',
     'fiona',

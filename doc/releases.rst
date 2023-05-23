@@ -1,6 +1,62 @@
 Releases
 ========
 
+Version 1.10.0
+--------------
+
+Date: May 24, 2023
+
+This release adds Bokeh 3 support to Geoviews, along with bug fixes and
+enhancements. Many thanks to @maximlt, @philippjfr, and @Hoxbro.
+
+This release also deprecates the ``Wikipedia`` tile source. If you are
+using this tile source, please switch to the ``OSM`` tile source
+instead. The ``Wikipedia`` tile source will be removed in version
+1.11.0. ``geoviews.util.load_tiff`` has also been deprecated
+``rioxarray.open_rasterio`` to load GeoTIFFs into a
+``xarray.DataArray``.
+
+Enhancements:
+
+-  Add Bokeh 3 support to GeoViews
+   (`#625 <https://github.com/holoviz/geoviews/pull/625>`__)
+-  Add ``PandasAPI`` to ``GeoPandasInterface``
+   (`#620 <https://github.com/holoviz/geoviews/pull/620>`__)
+
+Bug fixes:
+
+-  Fix hover for overlays of ``gv.Points``
+   (`#631 <https://github.com/holoviz/geoviews/pull/631>`__)
+
+Compatibility:
+
+-  Allow ``Dataset`` to have any number of ``kdims``
+   (`#626 <https://github.com/holoviz/geoviews/pull/626>`__)
+-  Add ``pyproj`` to the runtime dependencies
+   (`#627 <https://github.com/holoviz/geoviews/pull/627>`__)
+-  HoloViews 1.16 support
+   (`#633 <https://github.com/holoviz/geoviews/pull/633>`__)
+-  Deprecate Wikipedia tile
+   (`#630 <https://github.com/holoviz/geoviews/pull/630>`__,
+   `#636 <https://github.com/holoviz/geoviews/pull/636>`__)
+-  Use Geodatasets for geo datasets
+   (`#635 <https://github.com/holoviz/geoviews/pull/635>`__)
+-  Deprecate ``geoviews.util.load_tiff``
+   (`#640 <https://github.com/holoviz/geoviews/pull/640>`__)
+
+Maintenance:
+
+-  Use ``ruff`` as a formatting tool
+   (`#628 <https://github.com/holoviz/geoviews/pull/628>`__)
+-  Use ``codespell`` as a spelling checker
+   (`#641 <https://github.com/holoviz/geoviews/pull/641>`__)
+-  General maintenance
+   (`#602 <https://github.com/holoviz/geoviews/pull/602>`__,
+   `#630 <https://github.com/holoviz/geoviews/pull/630>`__,
+   `#632 <https://github.com/holoviz/geoviews/pull/632>`__)
+-  Update to latest ``nbsite``
+   (`#638 <https://github.com/holoviz/geoviews/pull/638>`__)
+
 Version 1.9.6
 -------------
 

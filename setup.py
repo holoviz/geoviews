@@ -116,12 +116,9 @@ _recommended = [
     'scipy',
     'shapely',
     'xarray',
+    'datashader',
     'pooch',
 ]
-
-# Packages not working on python 3.11 becauase of numba
-if sys.version_info < (3, 11):
-    _recommended.append('datashader')
 
 # can only currently run all examples with packages from conda-forge
 _examples_extra = _recommended + [

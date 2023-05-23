@@ -1,7 +1,9 @@
-#! /bin/sh
+#!/usr/bin/env bash
+
 bokeh sampledata
 
-geoviews fetch-data --path=examples
+HERE=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+geoviews fetch-data --path="$HERE/../examples"
 
 python -c "
 try:

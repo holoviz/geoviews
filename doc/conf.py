@@ -12,8 +12,7 @@ version = release = base_version(geoviews.__version__)
 
 html_static_path += ['_static']
 
-html_css_files = [
-    'nbsite.css',
+html_css_files += [
     'custom.css'
 ]
 
@@ -27,28 +26,27 @@ html_theme_options = {
         {
             "name": "Twitter",
             "url": "https://twitter.com/HoloViews",
-            "icon": "fab fa-twitter-square",
+            "icon": "fa-brands fa-twitter-square",
         },
         {
             "name": "Discourse",
-            "url": "https://discourse.holoviz.org/",
-            "icon": "fab fa-discourse",
-        }
+            "url": "https://discourse.holoviz.org/c/geoviews",
+            "icon": "fa-brands fa-discourse",
+        },
+        {
+            "name": "Discord",
+            "url": "https://discord.gg/AXRHnJU6sP",
+            "icon": "fa-brands fa-discord",
+        },
     ],
-    "navbar_end": ["navbar-icon-links"],
-    "google_analytics_id": "UA-154795830-3",
-    "pygment_light_style": "material",
-    "pygment_dark_style": "material",
+    "analytics": {"google_analytics_id": "UA-154795830-3"},
+    "pygment_dark_style": "material"
 }
 
 extensions += [
-    'sphinx.ext.napoleon',
     'nbsite.gallery',
-    'sphinx_copybutton',
 ]
 napoleon_numpy_docstring = True
-
-templates_path = ['_templates']
 
 nbsite_gallery_conf = {
     'github_org': 'holoviz',
@@ -59,7 +57,7 @@ nbsite_gallery_conf = {
             'title': 'Gallery'
         }
     },
-    'thumbnail_url': 'https://assets.holoviews.org/geoviews/thumbnails',
+    'thumbnail_url': 'https://assets.holoviz.org/geoviews/thumbnails',
 }
 
 html_context.update({

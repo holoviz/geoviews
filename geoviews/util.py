@@ -15,6 +15,8 @@ from shapely.geometry import (
 from shapely.geometry.base import BaseMultipartGeometry
 from shapely.ops import transform
 
+from ._warnings import deprecated
+
 geom_types = (MultiLineString, LineString, MultiPolygon, Polygon,
               LinearRing, Point, MultiPoint)
 line_types = (MultiLineString, LineString)
@@ -628,16 +630,23 @@ def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwa
     -------
     element: Image/RGB/QuadMesh element
     """
+    new = (
+        "geoviews.util.from_xarray(rioxarray.open_rasterio(filename))"
+    )
     try:
         import xarray as xr
     except ImportError:
         raise ImportError('Loading tiffs requires xarray to be installed')
-
-    with warnings.catch_warnings():
-        warnings.filterwarnings('ignore')
-        da = xr.open_rasterio(filename)
-    return from_xarray(da, crs, apply_transform, nan_nodata, **kwargs)
-
+    try:
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore')
+            da = xr.open_rasterio(filename)
+        deprecated("1.11", "load_tiff(filename)", new)
+        return from_xarray(da, crs, apply_transform, nan_nodata, **kwargs)
+    except AttributeError as e:
+        raise ImportError(
+            f"'load_tiff' is not supported anymore. Use {new!r} instead."
+        ) from e
 
 def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
     """

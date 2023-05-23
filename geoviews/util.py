@@ -631,7 +631,7 @@ def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwa
     element: Image/RGB/QuadMesh element
     """
     new = (
-        "geoviews.util.from_xarray(rioxarray.open_rasterio(filepath))"
+        "geoviews.util.from_xarray(rioxarray.open_rasterio(filename))"
     )
     try:
         import xarray as xr
@@ -641,11 +641,11 @@ def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwa
         with warnings.catch_warnings():
             warnings.filterwarnings('ignore')
             da = xr.open_rasterio(filename)
-        deprecated("1.11", "load_tiff(filepath)", new)
+        deprecated("1.11", "load_tiff(filename)", new)
         return from_xarray(da, crs, apply_transform, nan_nodata, **kwargs)
     except AttributeError as e:
         raise ImportError(
-            f"Loading tiff files require rioxarray to be installed. Use {new!r} instead."
+            f"'load_tiff' is not supported anymore. Use {new!r} instead."
         ) from e
 
 def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs):

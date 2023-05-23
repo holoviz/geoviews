@@ -80,3 +80,4 @@ geoviews/.version
 
 node_modules/
 .bokeh
+examples/data

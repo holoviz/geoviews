@@ -128,7 +128,8 @@ _examples_extra = _recommended + [
     'iris',
     'xesmf',
     'mock',
-    'fiona'
+    'fiona',
+    'geodatasets',
 ]
 
 extras_require={

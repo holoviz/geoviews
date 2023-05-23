@@ -46,8 +46,10 @@ Compatibility:
 
 Maintenance:
 
--  Use ruff as a formatting tool
+-  Use ``ruff`` as a formatting tool
    (`#628 <https://github.com/holoviz/geoviews/pull/628>`__)
+-  Use ``codespell`` as a spelling checker
+   (`#641 <https://github.com/holoviz/geoviews/pull/641>`__)
 -  General maintenance
    (`#602 <https://github.com/holoviz/geoviews/pull/602>`__,
    `#630 <https://github.com/holoviz/geoviews/pull/630>`__,

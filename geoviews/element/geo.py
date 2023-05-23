@@ -827,7 +827,7 @@ class Shape(Dataset):
         Optional level associated with the set of Contours.""")
 
     vdims = param.List(default=[], doc="""
-        Shpae optionally accept a value dimension, corresponding
+        Shape optionally accept a value dimension, corresponding
         to the supplied values.""", bounds=(0, None))
 
     def __init__(self, data, kdims=None, vdims=None, **params):

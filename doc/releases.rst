@@ -75,7 +75,7 @@ Version 1.9.5
 
 Date: Mar 8, 2022
 
-This is a micro release fixes a regression introdued in the 1.9.4 release.
+This is a micro release fixes a regression introduced in the 1.9.4 release.
 
 Bug fixes:
 

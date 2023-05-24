@@ -7,7 +7,7 @@ Version 1.10.0
 Date: May 24, 2023
 
 This release adds Bokeh 3 support to Geoviews, along with bug fixes and
-enhancements. Many thanks to @maximlt, @philippjfr, and @Hoxbro.
+enhancements. Many thanks to @maximlt, @philippjfr, @Hoxbro, and @ahuang11.
 
 This release also deprecates the ``Wikipedia`` tile source. If you are
 using this tile source, please switch to the ``OSM`` tile source
@@ -16,12 +16,17 @@ instead. The ``Wikipedia`` tile source will be removed in version
 ``rioxarray.open_rasterio`` to load GeoTIFFs into a
 ``xarray.DataArray``.
 
+Note, this release has a minor breaking change where `gv.feature.states`
+defaults to `fill_color=None` so the fill color is transparent.
+
 Enhancements:
 
 -  Add Bokeh 3 support to GeoViews
    (`#625 <https://github.com/holoviz/geoviews/pull/625>`__)
 -  Add ``PandasAPI`` to ``GeoPandasInterface``
    (`#620 <https://github.com/holoviz/geoviews/pull/620>`__)
+- Updated the default for ``gv.feature.states`` to ``fill_color=None``
+   (`#620 <https://github.com/holoviz/geoviews/pull/643>`__)
 
 Bug fixes:
 

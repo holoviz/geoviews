@@ -66,11 +66,10 @@ jobs:
         run: |
           conda activate test-environment
           doit env_capture
-      - name: download test data
+      - name: download data
         run: |
           conda activate test-environment
-          bokeh sampledata
-          geoviews fetch-data --path=examples
+          bash scripts/download_data.sh
       - name: git describe
         run: |
           git describe

@@ -25,7 +25,7 @@ Enhancements:
    (`#625 <https://github.com/holoviz/geoviews/pull/625>`__)
 -  Add ``PandasAPI`` to ``GeoPandasInterface``
    (`#620 <https://github.com/holoviz/geoviews/pull/620>`__)
-- Updated the default for ``gv.feature.states`` to ``fill_color=None``
+-  Updated the default for ``gv.feature.states`` to ``fill_color=None``
    (`#620 <https://github.com/holoviz/geoviews/pull/643>`__)
 
 Bug fixes:

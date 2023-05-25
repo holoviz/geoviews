@@ -4,7 +4,7 @@ Version 1.10.0
 
 Date: May 24, 2023
 
-This release adds Bokeh 3 support to Geoviews, along with bug fixes and enhancements. Many thanks to @maximlt, @philippjfr, and @Hoxbro.
+This release adds Bokeh 3 support to Geoviews, along with bug fixes and enhancements. Many thanks to @ahuang11, @maximlt, @philippjfr, and @Hoxbro.
 
 This release also deprecates the `Wikipedia` tile source. If you are using this tile source, please switch to the `OSM` tile source instead. The `Wikipedia` tile source will be removed in version 1.11.0. `geoviews.util.load_tiff` has also been deprecated `rioxarray.open_rasterio` to load GeoTIFFs into a `xarray.DataArray`.
 

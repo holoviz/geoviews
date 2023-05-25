@@ -4,7 +4,7 @@ Releases
 Version 1.10.0
 --------------
 
-Date: May 24, 2023
+Date: May 25, 2023
 
 This release adds Bokeh 3 support to Geoviews, along with bug fixes and
 enhancements. Many thanks to @ahuang11, @maximlt, @philippjfr, and @Hoxbro.

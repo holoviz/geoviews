@@ -1,7 +1,6 @@
 import warnings
 
 import numpy as np
-import param
 import shapely
 import shapely.geometry as sgeom
 from cartopy import crs as ccrs
@@ -15,7 +14,7 @@ from shapely.geometry import (
 from shapely.geometry.base import BaseMultipartGeometry
 from shapely.ops import transform
 
-from ._warnings import deprecated
+from ._warnings import deprecated, warn
 
 geom_types = (MultiLineString, LineString, MultiPolygon, Polygon,
               LinearRing, Point, MultiPoint)
@@ -687,11 +686,19 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
     if crs:
         kwargs['crs'] = crs
     elif hasattr(da, 'crs'):
+        # xarray.open_rasterio (not supported since April 2023)
         try:
             kwargs['crs'] = process_crs(da.crs)
         except Exception:
-            param.main.warning('Could not decode projection from crs string %r, '
-                               'defaulting to non-geographic element.' % da.crs)
+            warn(f'Could not decode projection from crs string {da.crs}, '
+                  'defaulting to non-geographic element.')
+    elif hasattr(da, 'rio') and da.rio.crs is not None:
+        # rioxarray.open_rasterio
+        try:
+            kwargs['crs'] = process_crs(da.rio.crs.to_proj4())
+        except Exception:
+            warn(f'Could not decode projection from crs string {da.rio.crs}, '
+                  'defaulting to non-geographic element.')
 
     coords = list(da.coords.dims)
     if coords not in (['band', 'y', 'x'], ['y', 'x']):

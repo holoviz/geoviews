@@ -581,27 +581,37 @@ def process_crs(crs):
     try:
         import cartopy.crs as ccrs
         import geoviews as gv # noqa
+        import pyproj
     except ImportError:
-        raise ImportError('Geographic projection support requires GeoViews and cartopy.')
+        raise ImportError('Geographic projection support requires geoviews, pyproj and cartopy.')
 
     if crs is None:
         return ccrs.PlateCarree()
 
-    if isinstance(crs, str) and crs.lower().startswith('epsg'):
+    errors = []
+    if isinstance(crs, str):
+        starts = ['epsg:', '+init=epsg:']
+        for start in starts:
+            if crs.lower().startswith(start):
+                try:
+                    return ccrs.epsg(crs[len(start):].strip())
+                except Exception as e:
+                    errors.append(e)
+    if isinstance(crs, int):
         try:
-            crs = ccrs.epsg(crs[5:].lstrip().rstrip())
-        except Exception:
-            raise ValueError("Could not parse EPSG code as CRS, must be of the format 'EPSG: {code}.'")
-    elif isinstance(crs, int):
-        crs = ccrs.epsg(crs)
-    elif isinstance(crs, str) or is_pyproj(crs):
+            return ccrs.epsg(crs)
+        except Exception as e:
+            crs = str(crs)
+            errors.append(e)
+    if isinstance(crs, (str, pyproj.Proj)):
         try:
-            crs = proj_to_cartopy(crs)
-        except Exception:
-            raise ValueError("Could not parse EPSG code as CRS, must be of the format 'proj4: {proj4 string}.'")
-    elif not isinstance(crs, ccrs.CRS):
-        raise ValueError("Projection must be defined as a EPSG code, proj4 string, cartopy CRS or pyproj.Proj.")
-    return crs
+            return proj_to_cartopy(crs)
+        except Exception as e:
+            errors.append(e)
+    if isinstance(crs, ccrs.CRS):
+        return crs
+
+    raise ValueError("Projection must be defined as a EPSG code, proj4 string, cartopy CRS or pyproj.Proj.") from Exception(*errors)
 
 
 def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwargs):

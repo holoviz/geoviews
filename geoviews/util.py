@@ -683,7 +683,7 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
             param.main.warning('Could not decode projection from crs string %r, '
                                'defaulting to non-geographic element.' % da.crs)
 
-    coords = list(da.coords)
+    coords = list(da.coords.dims)
     if coords not in (['band', 'y', 'x'], ['y', 'x']):
         from .element.geo import Dataset, HvDataset
         el = Dataset if 'crs' in kwargs else HvDataset

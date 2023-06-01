@@ -34,7 +34,7 @@ def test_process_crs_raises_error():
         process_crs(43823)
 
 
-@pytest.mark.skipif(rxr is None, reason="Needs rasterio to be installed")
+@pytest.mark.skipif(rxr is None, reason="Needs rioxarray to be installed")
 def test_from_xarray():
     file = (
         "https://github.com/holoviz/hvplot/raw/main/hvplot/tests/data/RGB-red.byte.tif"

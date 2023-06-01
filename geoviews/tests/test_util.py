@@ -1,5 +1,6 @@
-import pytest
 import cartopy.crs as ccrs
+import pytest
+
 import geoviews as gv
 from geoviews.util import from_xarray, process_crs
 
@@ -7,6 +8,7 @@ try:
     import rioxarray as rxr
 except ImportError:
     rxr = None
+
 
 @pytest.mark.parametrize(
     "raw_crs",
@@ -34,7 +36,9 @@ def test_process_crs_raises_error():
 
 @pytest.mark.skipif(rxr is None, reason="Needs rasterio to be installed")
 def test_from_xarray():
-    file = "https://github.com/holoviz/hvplot/raw/main/hvplot/tests/data/RGB-red.byte.tif"
+    file = (
+        "https://github.com/holoviz/hvplot/raw/main/hvplot/tests/data/RGB-red.byte.tif"
+    )
     output = from_xarray(rxr.open_rasterio(file))
 
     assert isinstance(output, gv.RGB)

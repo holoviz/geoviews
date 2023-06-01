@@ -1,7 +1,12 @@
 import pytest
 import cartopy.crs as ccrs
-from geoviews.util import process_crs
+import geoviews as gv
+from geoviews.util import from_xarray, process_crs
 
+try:
+    import rioxarray as rxr
+except ImportError:
+    rxr = None
 
 @pytest.mark.parametrize(
     "raw_crs",
@@ -25,3 +30,13 @@ def test_process_crs_raises_error():
         ValueError, match="must be defined as a EPSG code, proj4 string"
     ):
         process_crs(43823)
+
+
+@pytest.mark.skipif(rxr is None, reason="Needs rasterio to be installed")
+def test_from_xarray():
+    file = "https://github.com/holoviz/hvplot/raw/main/hvplot/tests/data/RGB-red.byte.tif"
+    output = from_xarray(rxr.open_rasterio(file))
+
+    assert isinstance(output, gv.RGB)
+    assert sorted(map(str, output.kdims)) == ["x", "y"]
+    assert isinstance(output.crs, ccrs.CRS)

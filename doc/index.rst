@@ -11,9 +11,13 @@
 
 Please see the `User Guide <user_guide>`_ for further documentation.
 
+If you have any `issues <https://github.com/holoviz/geoviews/issues>`_ or wish
+to `contribute code <https://help.github.com/articles/about-pull-requests>`_., you can visit
+our `GitHub site <https://github.com/holoviz/geoviews>`_ or file a topic on
+the `HoloViz Discourse <https://discourse.holoviz.org/>`_.
 
 Installation
-------------
+============
 
 You can install GeoViews and its dependencies using conda::
 
@@ -75,101 +79,82 @@ in how non-Python packages are built between conda-forge and defaults.
 
 -----
 
-GeoViews itself is also installable using `pip`, but to do that you
+GeoViews itself is also installable using ``pip``, but to do that you
 will first need to have installed the `dependencies of cartopy <http://scitools.org.uk/cartopy/docs/latest/installing.html#requirements>`_,
 or else have set up your system to be able to build them.
 
-Using `gv.feature`s without internet
-====================================
+Using GeoViews offline
+======================
 
-Under the hood, GeoViews features simply wrap `cartopy` features, so it's a matter of properly
-configuring `cartopy` ahead of time.
+Under the hood, GeoViews features simply wrap ``cartopy`` features, so it's a matter of properly
+configuring ``cartopy`` ahead of time.
 
-1. Create a new cartopy environment (or use an existing one):
+1. Create a new cartopy environment (or use an existing one)::
 
-```bash
-conda create -n cartopy_env python=3.10
-```
+    conda create -n cartopy_env python=3.10
 
-2. Install the required packages:
+2. Install the required packages::
 
-```bash
-conda install -c conda-forge geoviews cartopy cartopy_offlinedata
-```
+    conda install -c conda-forge geoviews cartopy cartopy_offlinedata
 
-3. Verify offline shapefiles were downloaded:
+3. Verify offline shapefiles were downloaded::
 
-```python
-import cartopy
+    import cartopy
 
-data_dir = cartopy.config["pre_existing_data_dir"]
-shapefiles = data_dir / "shapefiles" / "natural_earth" / "cultural"
-list(shapefiles.glob("*"))
-```
+    data_dir = cartopy.config["pre_existing_data_dir"]
+    shapefiles = data_dir / "shapefiles" / "natural_earth" / "cultural"
+    list(shapefiles.glob("*"))
 
-4. Test GeoViews offline (toggle internet off):
+4. Test GeoViews offline (toggle internet off)::
 
-```python
-import geoviews as gv
-from bokeh.resources import INLINE
+    import geoviews as gv
+    from bokeh.resources import INLINE
 
-gv.extension("bokeh")
+    gv.extension("bokeh")
 
-coastline = gv.feature.coastline()
-borders = gv.feature.borders()
-world = (coastline * borders).opts(global_extent=True)
+    coastline = gv.feature.coastline()
+    borders = gv.feature.borders()
+    world = (coastline * borders).opts(global_extent=True)
 
-gv.save(world, "world.html", resources=INLINE)
-```
+    gv.save(world, "world.html", resources=INLINE)
 
-Please ensure to set resources=INLINE if the machine you're using is completely
+Please ensure to set ``resources=INLINE`` if the machine you're using is completely
 offline and you intend to view the output on that machine.
 Failure to do so will result in the HTML file appearing empty when opened.
 
 If you wish to change the default data directory, follow these steps:
 
-1. Create a new directory and move the data:
+1. Create a new directory and move the data::
 
-```python
-import cartopy
+    import cartopy
 
-new_data_dir = Path("~/.cartopy").expanduser()
-new_data_dir.mkdir(exist_ok=True)
+    new_data_dir = Path("~/.cartopy").expanduser()
+    new_data_dir.mkdir(exist_ok=True)
 
-data_dir = Path(cartopy.config["pre_existing_data_dir"])
-data_dir.rename(new_data_dir / "cartopy")
-```
+    data_dir = Path(cartopy.config["pre_existing_data_dir"])
+    data_dir.rename(new_data_dir / "cartopy")
 
-2. Point to the new data directory within the script:
+2. Point to the new data directory within the script::
 
-```python
-import cartopy
-import geoviews as gv
-from bokeh.resources import INLINE
+    import cartopy
+    import geoviews as gv
+    from bokeh.resources import INLINE
 
-cartopy.config["pre_existing_data_dir"] = "~/.cartopy/cartopy"
+    cartopy.config["pre_existing_data_dir"] = "~/.cartopy/cartopy"
 
-gv.extension("bokeh")
+    gv.extension("bokeh")
 
-coastline = gv.feature.coastline()
-borders = gv.feature.borders()
-world = (coastline * borders).opts(global_extent=True)
+    coastline = gv.feature.coastline()
+    borders = gv.feature.borders()
+    world = (coastline * borders).opts(global_extent=True)
 
-gv.save(world, "world.html", resources=INLINE)
-```
+    gv.save(world, "world.html", resources=INLINE)
 
-3. Or set an environment variable `CARTOPY_DATA_DIR`:
+3. Or set an environment variable ``CARTOPY_DATA_DIR``::
 
-```bash
-export CARTOPY_DATA_DIR="$HOME/.cartopy/cartopy"
-```
+    export CARTOPY_DATA_DIR="$HOME/.cartopy/cartopy"
 
-Please note using tilde (`~`) in the environment variable will not work.
-
-If you have any `issues <https://github.com/holoviz/geoviews/issues>`_ or wish
-to `contribute code <https://help.github.com/articles/about-pull-requests>`_., you can visit
-our `GitHub site <https://github.com/holoviz/geoviews>`_ or file a topic on
-the `HoloViz Discourse <https://discourse.holoviz.org/>`_.
+Please note using tilde (``~``) in the environment variable will not work.
 
 .. toctree::
    :hidden:

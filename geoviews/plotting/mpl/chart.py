@@ -22,17 +22,6 @@ class WindBarbsPlot(ColorbarPlot):
     to the minimum distance respectively.
     """
 
-    rounding = param.Boolean(default=True, doc="""
-        Whether the vector magnitude should be rounded when allocating
-        barb components.""")
-
-    barb_increments = param.Dict(default=None, doc="""
-        A dictionary of increments specifying values to associate
-        with different parts of the barb.""")
-
-    flip_barb = param.Parameter(default=False, doc="""
-        Whether the lines and flags should point opposite to normal.""")
-
     padding = param.ClassSelector(default=0.05, class_=(int, float, tuple))
 
     style_opts = [
@@ -44,12 +33,18 @@ class WindBarbsPlot(ColorbarPlot):
         "marker",
         "visible",
         "cmap",
+        "norm",
+        # barb specific
         "length",
         "barbcolor",
         "flagcolor",
+        "fill_empty",
+        "rounding",
+        "barb_increments",
+        "flip_barb",
         "pivot",
+        "sizes",
         "width",
-        "norm",
     ]
 
     _nonvectorized_styles = [
@@ -58,7 +53,17 @@ class WindBarbsPlot(ColorbarPlot):
         "cmap",
         "visible",
         "norm",
+        # TODO: clarify whether these are vectorized or not
+        "length",
+        "barbcolor",
+        "flagcolor",
+        "fill_empty",
+        "rounding",
+        "barb_increments",
+        "flip_barb",
         "pivot",
+        "sizes",
+        "width",
     ]
 
     _plot_methods = dict(single="barbs")

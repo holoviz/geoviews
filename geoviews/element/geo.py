@@ -348,8 +348,7 @@ class WindBarbs(_Element, Selection2DExpr, HvGeometry):
     
     group = param.String(default='WindBarbs', constant=True)
 
-    vdims = param.List(default=[Dimension('Angle', cyclic=True, range=(0,2*np.pi)),
-                                Dimension('Magnitude')], bounds=(1, None))
+    vdims = param.List(default=[Dimension('U'), Dimension('V')], bounds=(2, None))
 
 
 class Image(_Element, HvImage):

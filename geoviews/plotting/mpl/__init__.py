@@ -30,7 +30,7 @@ from ...element import (
     Image, Points, Feature, WMTS, Tiles, Text, LineContours,
     FilledContours, is_geographic, Path, Polygons, Shape, RGB,
     Contours, Nodes, EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
-    HexTiles, Labels, Rectangles, Segments
+    HexTiles, Labels, Rectangles, Segments, WindBarbs
 )
 from ...util import geo_mesh, poly_types
 from ..plot import ProjectionPlot
@@ -39,6 +39,7 @@ from ...operation import (
     project_points, project_path, project_graph, project_quadmesh,
     project_geom
 )
+from .chart import WindBarbsPlot
 
 
 
@@ -327,6 +328,16 @@ class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
     _project_operation = project_points
 
 
+class GeoWindBarbsPlot(GeoPlot, WindBarbsPlot):
+    """
+    Draws a wind barbs plot from the data in a WindBarbs Element.
+    """
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_points
+
+
 class GeometryPlot(GeoPlot):
 
     def init_artists(self, ax, plot_args, plot_kwargs):
@@ -567,6 +578,7 @@ Store.register({LineContours: LineContourPlot,
                 Points: GeoPointPlot,
                 Labels: GeoLabelsPlot,
                 VectorField: GeoVectorFieldPlot,
+                WindBarbs: GeoWindBarbsPlot,
                 Text: GeoTextPlot,
                 Layout: LayoutPlot,
                 NdLayout: LayoutPlot,

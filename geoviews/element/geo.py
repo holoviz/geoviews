@@ -15,8 +15,10 @@ from holoviews.element import (
     QuadMesh as HvQuadMesh, Points as HvPoints,
     VectorField as HvVectorField, HexTiles as HvHexTiles,
     Labels as HvLabels, Rectangles as HvRectangles,
-    Segments as HvSegments
+    Segments as HvSegments, Geometry as HvGeometry,
 )
+from holoviews.element.selection import Selection2DExpr
+
 
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry import (
@@ -335,6 +337,16 @@ class VectorField(_Element, HvVectorField):
     """
 
     group = param.String(default='VectorField', constant=True)
+
+    vdims = param.List(default=[Dimension('Angle', cyclic=True, range=(0,2*np.pi)),
+                                Dimension('Magnitude')], bounds=(1, None))
+
+
+class WindBarbs(_Element, Selection2DExpr, HvGeometry):
+    """
+    """
+    
+    group = param.String(default='WindBarbs', constant=True)
 
     vdims = param.List(default=[Dimension('Angle', cyclic=True, range=(0,2*np.pi)),
                                 Dimension('Magnitude')], bounds=(1, None))

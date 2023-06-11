@@ -72,9 +72,7 @@ class WindBarbsPlot(ColorbarPlot):
 
     _plot_methods = dict(single="barbs")
 
-
-    def _get_us_vs(self, element, style, ranges):
-        mag_dim = self.magnitude
+    def _get_us_vs(self, element):
         if self.from_uv_components:
             us = element.dimension_values(2, flat=False) if len(element.data) else []
             vs = element.dimension_values(3, flat=False) if len(element.data) else []
@@ -82,12 +80,10 @@ class WindBarbsPlot(ColorbarPlot):
             radians = (np.pi / 2.0) - np.arctan2(us / uv_magnitudes, vs / uv_magnitudes)
             element = element.add_dimension("Angle", 4, radians, vdim=True)
             element = element.add_dimension("Magnitude", 5, uv_magnitudes, vdim=True)
-            if mag_dim is None:
-                mag_dim = element.get_dimension(5)
+            mag_dim = element.get_dimension(5)
         else:
             radians = element.dimension_values(2) if len(element.data) else []
-            if mag_dim is None:
-                mag_dim = element.get_dimension(3)
+            mag_dim = element.get_dimension(3)
 
         if isinstance(mag_dim, str):
             mag_dim = element.get_dimension(mag_dim)
@@ -115,31 +111,42 @@ class WindBarbsPlot(ColorbarPlot):
         xs = element.dimension_values(xidx) if len(element.data) else []
         ys = element.dimension_values(yidx) if len(element.data) else []
 
-        # Compute vector angle and magnitude
-        us, vs = self._get_us_vs(element, style, ranges)
+        # Compute U and V components as required by matplotlib plt.barbs
+        us, vs = self._get_us_vs(element)
         args = (xs, ys, us, vs)
+
+        color = style.get('color', None)  # must do before apply transform
+        flagcolor = style.get('flagcolor', None)
+        barbcolor = style.get('barbcolor', None)
 
         # Process style
         with abbreviated_exception():
             style = self._apply_transforms(element, ranges, style)
+        uses_color = ((isinstance(color, str) and color in element) or isinstance(color, dim))
+        if uses_color and (flagcolor is not None or barbcolor is not None):
+            self.param.warning(
+                "Cannot declare style mapping for 'color' option and either "
+                "'flagcolor' and 'barbcolor'; ignoring 'flagcolor' and 'barbcolor'.")
+            style.pop('flagcolor', None)
+            style.pop('barbcolor', None)
         if "vmin" in style:
             style["clim"] = (style.pop("vmin"), style.pop("vmax"))
         if "c" in style:
             style["array"] = style.pop("c")
         if "pivot" not in style:
             style["pivot"] = "tip"
-
         return args, style, {}
 
     def update_handles(self, key, axis, element, ranges, style):
         args, style, axis_kwargs = self.get_data(element, ranges, style)
 
-        # Set magnitudes, angles and colors if supplied.
         barbs = self.handles["artist"]
         barbs.set_offsets(np.column_stack(args[:2]))
         if "color" in style:
-            barbs.set_facecolors(style["color"])
-            barbs.set_edgecolors(style["color"])
+            if "flagcolor" not in style:
+                barbs.set_facecolors(style["color"])
+            if "barbcolor" not in style:
+                barbs.set_edgecolors(style["color"])
         if "array" in style:
             barbs.set_array(style["array"])
         if "clim" in style:

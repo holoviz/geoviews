@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from holoviews.element.comparison import Comparison as HvComparison
 
-from .geo import Image, Points, LineContours, FilledContours
+from .geo import Image, Points, LineContours, FilledContours, WindBarbs
 
 class Comparison(HvComparison):
 
@@ -13,6 +13,7 @@ class Comparison(HvComparison):
         cls.equality_type_funcs[Points] = cls.compare_dataset
         cls.equality_type_funcs[LineContours] = cls.compare_dataset
         cls.equality_type_funcs[FilledContours] = cls.compare_dataset
+        cls.equality_type_funcs[WindBarbs] = cls.compare_dataset
         return cls.equality_type_funcs
 
 

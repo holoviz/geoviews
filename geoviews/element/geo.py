@@ -345,7 +345,7 @@ class VectorField(_Element, HvVectorField):
 class WindBarbs(_Element, Selection2DExpr, HvGeometry):
     """
     """
-    
+
     group = param.String(default='WindBarbs', constant=True)
 
     vdims = param.List(default=[Dimension('Angle', cyclic=True, range=(0,2*np.pi)),

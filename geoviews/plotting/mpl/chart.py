@@ -2,9 +2,7 @@ import param
 import numpy as np
 from holoviews.plotting.mpl.element import ColorbarPlot
 from holoviews.util.transform import dim
-from holoviews.core.dimension import dimension_name
-from holoviews.plotting.util import get_min_distance
-from holoviews.core.options import Store, abbreviated_exception
+from holoviews.core.options import abbreviated_exception
 
 
 class WindBarbsPlot(ColorbarPlot):

@@ -50,7 +50,7 @@ jobs:
       SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
       USE_PYGEOS: '0'
     steps:
-      - uses: pyviz-dev/holoviz_tasks/install@v0.1a9
+      - uses: holoviz-dev/holoviz_tasks/install@v0.1a9
         with:
           name: unit_test_suite
           python-version: ${{ matrix.python-version }}

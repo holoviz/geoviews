@@ -39,7 +39,7 @@ html_theme_options = {
             "icon": "fa-brands fa-discord",
         },
     ],
-    "analytics": {"google_analytics_id": "UA-154795830-3"},
+    "analytics": {"google_analytics_id": "G-XTWHHEZL7Q"},
     "pygment_dark_style": "material"
 }
 

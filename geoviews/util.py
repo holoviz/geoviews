@@ -1,7 +1,6 @@
 import warnings
 
 import numpy as np
-import param
 import shapely
 import shapely.geometry as sgeom
 from cartopy import crs as ccrs
@@ -15,7 +14,7 @@ from shapely.geometry import (
 from shapely.geometry.base import BaseMultipartGeometry
 from shapely.ops import transform
 
-from ._warnings import deprecated
+from ._warnings import deprecated, warn
 
 geom_types = (MultiLineString, LineString, MultiPolygon, Polygon,
               LinearRing, Point, MultiPoint)
@@ -580,28 +579,34 @@ def process_crs(crs):
     """
     try:
         import cartopy.crs as ccrs
-        import geoviews as gv # noqa
+        import pyproj
     except ImportError:
-        raise ImportError('Geographic projection support requires GeoViews and cartopy.')
+        raise ImportError('Geographic projection support requires pyproj and cartopy.')
 
     if crs is None:
         return ccrs.PlateCarree()
+    elif isinstance(crs, ccrs.CRS):
+        return crs
 
-    if isinstance(crs, str) and crs.lower().startswith('epsg'):
+    errors = []
+    if isinstance(crs, str):
         try:
-            crs = ccrs.epsg(crs[5:].lstrip().rstrip())
-        except Exception:
-            raise ValueError("Could not parse EPSG code as CRS, must be of the format 'EPSG: {code}.'")
-    elif isinstance(crs, int):
-        crs = ccrs.epsg(crs)
-    elif isinstance(crs, str) or is_pyproj(crs):
+            return ccrs.epsg("".join([c for c in crs if c.isdigit()]))
+        except Exception as e:
+            errors.append(e)
+    if isinstance(crs, int):
         try:
-            crs = proj_to_cartopy(crs)
-        except Exception:
-            raise ValueError("Could not parse EPSG code as CRS, must be of the format 'proj4: {proj4 string}.'")
-    elif not isinstance(crs, ccrs.CRS):
-        raise ValueError("Projection must be defined as a EPSG code, proj4 string, cartopy CRS or pyproj.Proj.")
-    return crs
+            return ccrs.epsg(crs)
+        except Exception as e:
+            crs = str(crs)
+            errors.append(e)
+    if isinstance(crs, (str, pyproj.Proj)):
+        try:
+            return proj_to_cartopy(crs)
+        except Exception as e:
+            errors.append(e)
+
+    raise ValueError("Projection must be defined as a EPSG code, proj4 string, cartopy CRS or pyproj.Proj.") from Exception(*errors)
 
 
 def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
@@ -677,13 +682,21 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
     if crs:
         kwargs['crs'] = crs
     elif hasattr(da, 'crs'):
+        # xarray.open_rasterio (not supported since April 2023)
         try:
             kwargs['crs'] = process_crs(da.crs)
         except Exception:
-            param.main.warning('Could not decode projection from crs string %r, '
-                               'defaulting to non-geographic element.' % da.crs)
+            warn(f'Could not decode projection from crs string {da.crs}, '
+                  'defaulting to non-geographic element.')
+    elif hasattr(da, 'rio') and da.rio.crs is not None:
+        # rioxarray.open_rasterio
+        try:
+            kwargs['crs'] = process_crs(da.rio.crs.to_proj4())
+        except Exception:
+            warn(f'Could not decode projection from crs string {da.rio.crs}, '
+                  'defaulting to non-geographic element.')
 
-    coords = list(da.coords)
+    coords = list(da.dims)
     if coords not in (['band', 'y', 'x'], ['y', 'x']):
         from .element.geo import Dataset, HvDataset
         el = Dataset if 'crs' in kwargs else HvDataset

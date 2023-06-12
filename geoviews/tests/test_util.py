@@ -18,6 +18,7 @@ except ImportError:
         4326,
         "epsg:4326",
         "EPSG: 4326",
+        ccrs.PlateCarree(),
     ],
 )
 def test_process_crs(raw_crs) -> None:

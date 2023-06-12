@@ -581,20 +581,19 @@ def process_crs(crs):
         import cartopy.crs as ccrs
         import pyproj
     except ImportError:
-        raise ImportError('Geographic projection support requires geoviews, pyproj and cartopy.')
+        raise ImportError('Geographic projection support requires pyproj and cartopy.')
 
     if crs is None:
         return ccrs.PlateCarree()
+    elif isinstance(crs, ccrs.CRS):
+        return crs
 
     errors = []
     if isinstance(crs, str):
-        starts = ['epsg:', '+init=epsg:']
-        for start in starts:
-            if crs.lower().startswith(start):
-                try:
-                    return ccrs.epsg(crs[len(start):].strip())
-                except Exception as e:
-                    errors.append(e)
+        try:
+            return ccrs.epsg("".join([c for c in crs if c.isdigit()]))
+        except Exception as e:
+            errors.append(e)
     if isinstance(crs, int):
         try:
             return ccrs.epsg(crs)
@@ -606,8 +605,6 @@ def process_crs(crs):
             return proj_to_cartopy(crs)
         except Exception as e:
             errors.append(e)
-    if isinstance(crs, ccrs.CRS):
-        return crs
 
     raise ValueError("Projection must be defined as a EPSG code, proj4 string, cartopy CRS or pyproj.Proj.") from Exception(*errors)
 

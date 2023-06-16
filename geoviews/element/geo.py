@@ -241,8 +241,10 @@ class WMTS(_GeoFeature):
         elif WebMapTileService and isinstance(data, WebMapTileService):
             pass
         elif data is not None and not isinstance(data, (str, dict)):
-            raise TypeError('{} data should be a tile service URL or '
-                            'xyzservices.TileProvider not a {} type.'.format(type(self).__name__, type(data).__name__) )
+            raise TypeError(
+                f'{type(self).__name__} data should be a tile service URL or '
+                f'xyzservices.TileProvider not a {type(data).__name__} type.'
+            )
         super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
     def __call__(self, *args, **kwargs):

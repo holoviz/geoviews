@@ -45,26 +45,37 @@ class TilePlot(GeoPlot):
         return extents
 
     def get_data(self, element, ranges, style):
-        if not isinstance(element.data, str):
+        if not isinstance(element.data, (str, dict)):
             SkipRendering("WMTS element data must be a URL string, "
                           "bokeh cannot render %r" % element.data)
-        if '{Q}' in element.data.upper():
-            tile_source = QUADKEYTileSource
-        elif all(kw in element.data.upper() for kw in ('{XMIN}', '{XMAX}', '{YMIN}', '{YMAX}')):
-            tile_source = BBoxTileSource
-        elif all(kw in element.data.upper() for kw in ('{X}', '{Y}', '{Z}')):
+
+        if isinstance(element.data, dict):
+            # xyzservices tile provider
+            params = {
+                'url': element.data.build_url(scale_factor="@2x"),
+                'min_zoom': element.data.get("min_zoom", 0),
+                'max_zoom': element.data.get("max_zoom", 20),
+                'attribution': element.data.html_attribution
+            }
             tile_source = WMTSTileSource
         else:
-            raise ValueError('Tile source URL format not recognized. '
-                             'Must contain {X}/{Y}/{Z}, {XMIN}/{XMAX}/{YMIN}/{YMAX} '
-                             'or {Q} template strings.')
-        params = {'url': element.data}
-        for zoom in ('min_zoom', 'max_zoom'):
-            if zoom in style:
-                params[zoom] = style[zoom]
-        for key, attribution in _ATTRIBUTIONS.items():
-            if all(k in element.data for k in key):
-                params['attribution'] = attribution
+            if all(kw in element.data.upper() for kw in ('{X}', '{Y}', '{Z}')):
+                tile_source = WMTSTileSource
+            elif '{Q}' in element.data.upper():
+                tile_source = QUADKEYTileSource
+            elif all(kw in element.data.upper() for kw in ('{XMIN}', '{XMAX}', '{YMIN}', '{YMAX}')):
+                tile_source = BBoxTileSource
+            else:
+                raise ValueError('Tile source URL format not recognized. '
+                                'Must contain {X}/{Y}/{Z}, {XMIN}/{XMAX}/{YMIN}/{YMAX} '
+                                'or {Q} template strings.')
+            params = {'url': element.data}
+            for zoom in ('min_zoom', 'max_zoom'):
+                if zoom in style:
+                    params[zoom] = style[zoom]
+            for key, attribution in _ATTRIBUTIONS.items():
+                if all(k in element.data for k in key):
+                    params['attribution'] = attribution
         return {}, {'tile_source': tile_source(**params)}, style
 
     def _update_glyph(self, renderer, properties, mapping, glyph, source=None, data=None):

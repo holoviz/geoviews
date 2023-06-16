@@ -103,6 +103,7 @@ _required = [
     'param',
     'panel >=1.0.0',
     'pyproj',
+    'xyzservices',
 ]
 
 _recommended = [

@@ -209,10 +209,20 @@ class Feature(_GeoFeature):
 
 class WMTS(_GeoFeature):
     """
-    The WMTS Element represents a Web Map Tile Service specified as a
-    URL containing {x}, {y}, and {z} templating variables, e.g.:
+    The WMTS Element represents a Web Map Tile Service specified as URL
+    containing different template variables or xyzservices.TileProvider.
 
-    https://maps.wikimedia.org/osm-intl/{Z}/{X}/{Y}@2x.png
+    These variables correspond to three different formats for specifying the spatial
+    location and zoom level of the requested tiles:
+
+    * Web mapping tiles sources containing {x}, {y}, and {z} variables
+    * Bounding box tile sources containing {XMIN}, {XMAX}, {YMIN}, {YMAX} variables
+    * Quadkey tile sources containin a {Q} variable
+
+    Tiles are defined in a pseudo-Mercator projection (EPSG:3857)
+    defined as eastings and northings. Any data overlaid on a tile
+    source therefore has to be defined in those coordinates or be
+    projected.
     """
 
     crs = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR, class_=ccrs.CRS, doc="""
@@ -230,10 +240,10 @@ class WMTS(_GeoFeature):
             data = data.url
         elif WebMapTileService and isinstance(data, WebMapTileService):
             pass
-        elif not isinstance(data, str):
+        elif data is not None and not isinstance(data, (str, dict)):
             raise TypeError(
-                f'{type(self).__name__} data should be a tile service '
-                f'URL not a {type(data).__name__} type.'
+                f'{type(self).__name__} data should be a tile service URL or '
+                f'xyzservices.TileProvider not a {type(data).__name__} type.'
             )
         super().__init__(data, kdims=kdims, vdims=vdims, **params)
 

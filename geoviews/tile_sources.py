@@ -55,6 +55,18 @@ _ATTRIBUTIONS = {
     ('arcgis','USA_Topo') : (
         '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
         'NatGeo, i-cubed'
+    ),
+    ('arcgis','World_Physical_Map') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
+        'US National Park Service'
+    ),
+    ('arcgis','World_Shaded_Relief') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
+        'Esri'
+    ),
+    ('arcgis','World_Topo_Map') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
+        'Esri, HERE, Garmin, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), (c) OpenStreetMap contributors, and the GIS User Community'
     )
 }
 
@@ -80,6 +92,9 @@ EsriTerrain = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/World_T
 EsriReference = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{Z}/{Y}/{X}', name="EsriReference")
 EsriOceanBase = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{Z}/{Y}/{X}', name="EsriOceanBase")
 EsriOceanReference = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{Z}/{Y}/{X}', name="EsriOceanReference")
+EsriWorldPhysical = WMTS('https://server.arcgisonline.com/arcgis/rest/services/World_Physical_Map/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldPhysical")
+EsriWorldShadedRelief = WMTS('https://server.arcgisonline.com/arcgis/rest/services/World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldShadedRelief")
+EsriWorldTopo = WMTS('https://server.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldTopo")
 ESRI = EsriImagery # For backwards compatibility with gv 1.5
 
 

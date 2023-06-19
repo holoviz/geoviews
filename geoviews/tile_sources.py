@@ -67,7 +67,71 @@ _ATTRIBUTIONS = {
     ('arcgis','World_Topo_Map') : (
         '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
         'Esri, HERE, Garmin, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), (c) OpenStreetMap contributors, and the GIS User Community'
-    )
+    ),
+    ('arcgis','World_Dark_Gray_Base') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
+        'Esri, HERE, Garmin, (c) OpenStreetMap contributors, and the GIS user community'
+    ),
+    ('arcgis','World_Dark_Gray_Reference') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
+        'Esri, HERE, Garmin, (c) OpenStreetMap contributors, and the GIS user community'
+    ),
+    ('arcgis','World_Light_Gray_Base') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
+        'Esri, HERE, Garmin, (c) OpenStreetMap contributors, and the GIS user community'
+    ),
+    ('arcgis','World_Light_Gray_Reference') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a>, '
+        'Esri, HERE, Garmin, (c) OpenStreetMap contributors, and the GIS user community'
+    ),
+    ('arcgis','World_Hillshade_Dark') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a> '
+        'Esri, Airbus DS, USGS, NGA, NASA, CGIAR, N Robinson, NCEAS, NLS, OS, NMA, Geodatastyrelsen, Rijkswaterstaat, GSA, Geoland, FEMA, Intermap and the GIS user community'
+    ),
+    ('arcgis','World_Hillshade') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a> '
+        'Esri, Airbus DS, USGS, NGA, NASA, CGIAR, N Robinson, NCEAS, NLS, OS, NMA, Geodatastyrelsen, Rijkswaterstaat, GSA, Geoland, FEMA, Intermap and the GIS user community'
+    ),
+    ('arcgis','Antarctic_Imagery') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a> '
+        'Earthstar Geographics'
+    ),
+    ('arcgis','Arctic_Imagery') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a> '
+        'Earthstar Geographics'
+    ),
+    ('arcgis','Arctic_Ocean_Base') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a> '
+        'Esri, Garmin, GEBCO, NOAA NGDC, and other contributors'
+    ),
+    ('arcgis','Arctic_Ocean_Reference') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a> '
+        'Esri, GEBCO, NOAA, National Geographic, Garmin, HERE, Geonames.org, and other contributors'
+    ),
+    ('arcgis','World_Boundaries_and_Places') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a> '
+        'Esri, HERE, Garmin, (c) OpenStreetMap contributors, and the GIS user community'
+    ),
+    ('arcgis','World_Boundaries_and_Places_Alternate') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a> '
+        'Esri, HERE, Garmin, (c) OpenStreetMap contributors, and the GIS user community'
+    ),
+    ('arcgis','World_Transportation') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a> '
+        'Esri, HERE, Garmin, (c) OpenStreetMap contributors'
+    ),
+    ('arcgis','DeLorme_World_Base_Map') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a> '
+        'Garmin'
+    ),
+    ('arcgis','World_Navigation_Charts') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a> '
+        'East View Cartographic'
+    ),
+    ('arcgis','World_Street_Map') : (
+        '&copy; <a href="http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf">Esri</a> '
+        'Esri, HERE, Garmin, USGS, Intermap, INCREMENT P, NRCan, Esri Japan, METI, Esri China (Hong Kong), Esri Korea, Esri (Thailand), NGCC, (c) OpenStreetMap contributors, and the GIS User Community'
+    ),
 }
 
 # CartoDB basemaps
@@ -95,6 +159,22 @@ EsriOceanReference = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/
 EsriWorldPhysical = WMTS('https://server.arcgisonline.com/arcgis/rest/services/World_Physical_Map/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldPhysical")
 EsriWorldShadedRelief = WMTS('https://server.arcgisonline.com/arcgis/rest/services/World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldShadedRelief")
 EsriWorldTopo = WMTS('https://server.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldTopo")
+EsriWorldDarkGrayBase = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldDarkGrayBase")
+EsriWorldDarkGrayReference = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldDarkGrayReference")
+EsriWorldLightGrayBase = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldLightGrayBase")
+EsriWorldLightGrayReference = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldLightGrayReference")
+EsriWorldHillshadeDark = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade_Dark/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldHillshadeDark")
+EsriWorldHillshade = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldHillshade")
+EsriAntarcticImagery = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Polar/Antarctic_Imagery/MapServer/tile/{Z}/{Y}/{X}', name="EsriAntarcticImagery")
+EsriArcticImagery = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Polar/Arctic_Imagery/MapServer/tile/{Z}/{Y}/{X}', name="EsriArcticImagery")
+EsriArcticOceanBase = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Polar/Arctic_Ocean_Base/MapServer/tile/{Z}/{Y}/{X}', name="EsriArcticOceanBase")
+EsriArcticOceanReference = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Polar/Arctic_Ocean_Reference/MapServer/tile/{Z}/{Y}/{X}', name="EsriArcticOceanReference")
+EsriWorldBoundariesAndPlaces = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldBoundariesAndPlaces")
+EsriWorldBoundariesAndPlacesAlternate = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldBoundariesAndPlacesAlternate")
+EsriWorldTransportation = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Reference/World_Transportation/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldTransportation")
+EsriDelormeWorldBaseMap = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{Z}/{Y}/{X}', name="EsriDelormeWorldBaseMap")
+EsriWorldNavigationCharts = WMTS('https://server.arcgisonline.com/arcgis/rest/services/Specialty/World_Navigation_Charts/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldNavigationCharts")
+EsriWorldStreetMap = WMTS('https://server.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer/tile/{Z}/{Y}/{X}', name="EsriWorldStreetMap")
 ESRI = EsriImagery # For backwards compatibility with gv 1.5
 
 

@@ -24,9 +24,10 @@ class WindBarbsPlot(ColorbarPlot):
 
     padding = param.ClassSelector(default=0.05, class_=(int, float, tuple))
 
-    from_uv_components = param.Boolean(default=False, doc="""
-        If True, the vdims are expected to be in the form of
-        wind components (U and V); else, wind direction and speed.""")
+    convention = param.ObjectSelector(objects=["from", "to"], doc="""
+        Convention to return direction; 'from' returns the direction the wind is coming from
+        (meteorological convention), 'to' returns the direction the wind is going towards
+        (oceanographic convention).""")
 
     style_opts = [
         "alpha",
@@ -73,35 +74,22 @@ class WindBarbsPlot(ColorbarPlot):
     _plot_methods = dict(single="barbs")
 
     def _get_us_vs(self, element):
-        if self.from_uv_components:
-            us = element.dimension_values(2, flat=False) if len(element.data) else []
-            vs = element.dimension_values(3, flat=False) if len(element.data) else []
-            uv_magnitudes = np.hypot(us, vs)  # unscaled
-            radians = (np.pi / 2.0) - np.arctan2(us / uv_magnitudes, vs / uv_magnitudes)
-            element = element.add_dimension("Angle", 4, radians, vdim=True)
-            element = element.add_dimension("Magnitude", 5, uv_magnitudes, vdim=True)
-            mag_dim = element.get_dimension(5)
-        else:
-            radians = element.dimension_values(2) if len(element.data) else []
-            mag_dim = element.get_dimension(3)
+        radians = element.dimension_values(2) if len(element.data) else []
 
-        if isinstance(mag_dim, str):
-            mag_dim = element.get_dimension(mag_dim)
-
+        mag_dim = element.get_dimension(3)
         if isinstance(mag_dim, dim):
             magnitudes = mag_dim.apply(element, flat=True)
         else:
             magnitudes = element.dimension_values(mag_dim)
 
-        if self.invert_axes:
-            radians += 1.5 * np.pi
+        if self.convention == "to":
+            radians -= np.pi
 
-        # Compute U, V to serialize to matplotlib
-        # Even if it's from U, V components, we still need to re-compute
-        # because operations may have been applied to magnitudes
-        if not self.from_uv_components or isinstance(mag_dim, dim):
-            us = magnitudes * np.cos(radians.flatten())
-            vs = magnitudes * np.sin(radians.flatten())
+        if self.invert_axes:
+            radians -= 0.5 * np.pi
+
+        us = -magnitudes * np.sin(radians.flatten())
+        vs = -magnitudes * np.cos(radians.flatten())
 
         return us, vs
 

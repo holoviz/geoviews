@@ -351,6 +351,30 @@ class WindBarbs(_Element, Selection2DExpr, HvGeometry):
     vdims = param.List(default=[Dimension('Angle', cyclic=True, range=(0,2*np.pi)),
                                 Dimension('Magnitude')], bounds=(2, None))
 
+    @classmethod
+    def from_uv(cls, data, kdims=None, vdims=None, **params):
+        if isinstance(data, tuple):
+            xs, ys, us, vs = data
+        else:
+            us = data[vdims[0]]
+            vs = data[vdims[1]]
+
+        uv_magnitudes = np.hypot(us, vs)  # unscaled
+        radians = np.arctan2(-us, -vs)
+
+        if isinstance(data, tuple):
+            transformed_data = (xs, ys, radians, uv_magnitudes)
+        else:
+            transformed_data = {}
+            for kdim in kdims:
+                transformed_data[kdim] = data[kdim]
+            transformed_data["Angle"] = radians
+            transformed_data["Magnitude"] = uv_magnitudes
+            for vdim in vdims[2:]:
+                transformed_data[vdim] = data[vdim]
+            vdims = ["Angle", "Magnitude"] + vdims[2:]
+        return cls(transformed_data, kdims=kdims, vdims=vdims, **params)
+
 
 class Image(_Element, HvImage):
     """

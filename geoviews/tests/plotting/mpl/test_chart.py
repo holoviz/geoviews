@@ -19,7 +19,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 0 * Y
 
-        angle = np.arctan2(-U, -V)
+        angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
 
         gv_barbs = WindBarbs((X, Y, angle, mag))
@@ -34,7 +34,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 0 * Y
 
-        angle = np.arctan2(-U, -V)
+        angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
         ds = xr.Dataset(
             {
@@ -58,7 +58,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 0 * Y
 
-        angle = np.arctan2(-U, -V)
+        angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
 
         gv_barbs = WindBarbs((X, Y, angle, mag))
@@ -72,7 +72,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 0 * Y
 
-        angle = np.arctan2(-U, -V)
+        angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
         ds = xr.Dataset(
             {
@@ -105,7 +105,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 0 * Y
 
-        angle = np.arctan2(-U, -V)
+        angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
 
         barbs = gv.WindBarbs((X, Y, angle, mag)).opts(
@@ -129,7 +129,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 0 * Y
 
-        angle = np.arctan2(-U, -V)
+        angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
 
         barbs = gv.WindBarbs((X, Y, angle, mag)).opts(
@@ -153,7 +153,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 0 * Y
 
-        angle = np.arctan2(-U, -V)
+        angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
 
         barbs = gv.WindBarbs((X, Y, angle, mag)).opts(
@@ -177,7 +177,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 0 * Y
 
-        angle = np.arctan2(-U, -V)
+        angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
 
         barbs = gv.WindBarbs((X, Y, angle, mag)).opts(

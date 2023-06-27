@@ -360,7 +360,7 @@ class WindBarbs(_Element, Selection2DExpr, HvGeometry):
             vs = data[vdims[1]]
 
         uv_magnitudes = np.hypot(us, vs)  # unscaled
-        radians = np.arctan2(-us, -vs)
+        radians = np.pi / 2 - np.arctan2(-vs, -us)
 
         if isinstance(data, tuple):
             transformed_data = (xs, ys, radians, uv_magnitudes)

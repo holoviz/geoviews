@@ -4,12 +4,12 @@ import geoviews as gv
 
 from geoviews.element import WindBarbs
 
-from holoviews.tests.plotting.matplotlib.test_plot import TestMPLPlot
 from holoviews.tests.plotting.utils import ParamLogStream
 
 from geoviews import Store
 
-gv.extension("matplotlib")
+from test_plot import TestMPLPlot
+
 mpl_renderer = Store.renderers["matplotlib"]
 
 

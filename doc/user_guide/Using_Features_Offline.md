@@ -11,7 +11,7 @@ configuring ``cartopy`` ahead of time.
     conda create -n cartopy_env python=3.10
     ```
 
-2. Install the required packages:
+2. Install the required packages (note that `cartopy_offlinedata` is about 200MBs):
 
     ```bash
     conda install -c conda-forge geoviews cartopy cartopy_offlinedata

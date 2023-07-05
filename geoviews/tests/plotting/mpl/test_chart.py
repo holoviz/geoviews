@@ -9,7 +9,6 @@ from holoviews.tests.plotting.utils import ParamLogStream
 
 from geoviews import Store
 
-gv.extension("matplotlib")
 mpl_renderer = Store.renderers["matplotlib"]
 
 
@@ -17,7 +16,7 @@ class TestWindBarbsPlot(TestMPLPlot):
     def test_windbarbs(self):
         x = np.linspace(-1, 1, 4)
         X, Y = np.meshgrid(x, x)
-        U, V = 10 * X, 0 * Y
+        U, V = 10 * X, 5 * Y
 
         angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
@@ -27,7 +26,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         fig = gv.render(gv_barbs)
         mpl_barbs = fig.axes[0].get_children()[0]
         np.testing.assert_almost_equal(mpl_barbs.u.data, U.T.flatten())
-        # np.testing.assert_almost_equal(mpl_barbs.v.data, V.flatten())
+        np.testing.assert_almost_equal(mpl_barbs.v.data, V.flatten())
 
     def test_windbarbs_dataset(self):
         x = np.linspace(-1, 1, 4)

@@ -11,9 +11,13 @@
 
 Please see the `User Guide <user_guide>`_ for further documentation.
 
+If you have any `issues <https://github.com/holoviz/geoviews/issues>`_ or wish
+to `contribute code <https://help.github.com/articles/about-pull-requests>`_., you can visit
+our `GitHub site <https://github.com/holoviz/geoviews>`_ or file a topic on
+the `HoloViz Discourse <https://discourse.holoviz.org/>`_.
 
 Installation
-------------
+============
 
 You can install GeoViews and its dependencies using conda::
 
@@ -75,15 +79,9 @@ in how non-Python packages are built between conda-forge and defaults.
 
 -----
 
-GeoViews itself is also installable using `pip`, but to do that you
-will first need to have installed the `dependencies of cartopy <http://scitools.org.uk/cartopy/docs/v0.17/installing.html#requirements>`_,
+GeoViews itself is also installable using ``pip``, but to do that you
+will first need to have installed the `dependencies of cartopy <http://scitools.org.uk/cartopy/docs/latest/installing.html#requirements>`_,
 or else have set up your system to be able to build them.
-
-
-If you have any `issues <https://github.com/holoviz/geoviews/issues>`_ or wish
-to `contribute code <https://help.github.com/articles/about-pull-requests>`_., you can visit
-our `GitHub site <https://github.com/holoviz/geoviews>`_ or file a topic on
-the `HoloViz Discourse <https://discourse.holoviz.org/>`_.
 
 .. toctree::
    :hidden:

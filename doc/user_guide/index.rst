@@ -25,6 +25,11 @@ Contents:
 * `Annotating Geographic Elements <Annotators.html>`_
    Demonstrates the use of the annotate operation to annotate geographic elements.
 
+* `Using Features Offline <Using_Features_Offline.html>`_
+   Demonstrates how to use the features module offline.
+
+* `Using WMTS Offline <Using_WMTS_Offline.html>`_
+   Demonstrates how to use WMTS (web-map-tile-services) offline.
 
 .. toctree::
     :titlesonly:
@@ -38,3 +43,5 @@ Contents:
     Working with Bokeh <Working_with_Bokeh>
     Resampling Grids <Resampling_Grids>
     Annotating Geographic Elements <Annotators>
+    Using Features Offline <Using_Features_Offline>
+    Using WMTS Offline <Using_WMTS_Offline>

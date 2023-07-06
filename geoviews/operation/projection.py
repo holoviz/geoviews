@@ -15,7 +15,7 @@ from shapely.geometry.collection import GeometryCollection
 from ..data import GeoPandasInterface
 from ..element import (Image, Shape, Polygons, Path, Points, Contours,
                        RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField,
-                       HexTiles, Labels, Rectangles, Segments)
+                       HexTiles, Labels, Rectangles, Segments, WindBarbs)
 from ..util import (
     project_extents, path_to_geom_dicts, polygons_to_geom_dicts,
     geom_dict_to_array_dict
@@ -224,6 +224,9 @@ class project_vectorfield(_project_operation):
 
     supported_types = [VectorField]
 
+    def _calc_angles(self, ut, vt):
+        return np.pi / 2 - np.arctan2(ut, vt)
+
     def _process_element(self, element):
         if not len(element):
             return element.clone(crs=self.p.projection)
@@ -236,12 +239,12 @@ class project_vectorfield(_project_operation):
         new_data[xdim.name] = coordinates[mask, 0]
         new_data[ydim.name] = coordinates[mask, 1]
         datatype = [element.interface.datatype]+element.datatype
-        us = np.cos(ang) * ms
-        vs = np.sin(ang) * ms
+        us = np.sin(ang) * -ms
+        vs = np.cos(ang) * -ms
         ut, vt = self.p.projection.transform_vectors(element.crs, xs, ys, us, vs)
         with np.errstate(divide='ignore', invalid='ignore'):
-            angle = np.arctan2(vt, ut)
-        mag = np.sqrt(ut**2+vt**2)
+            angle = self._calc_angles(ut, vt)
+        mag = np.hypot(ut, vt)
 
         new_data[adim.name] = angle[mask]
         new_data[mdim.name] = mag[mask]
@@ -256,6 +259,14 @@ class project_vectorfield(_project_operation):
 
         return element.clone(tuple(new_data[d.name] for d in element.dimensions()),
                              crs=self.p.projection, datatype=datatype)
+
+class project_windbarbs(project_vectorfield):
+
+    supported_types = [WindBarbs]
+
+    def _calc_angles(self, ut, vt):
+        return np.pi / 2 - np.arctan2(-vt, -ut)
+
 
 class project_graph(_project_operation):
 
@@ -479,7 +490,7 @@ class project(Operation):
 
     _operations = [project_path, project_image, project_shape,
                    project_graph, project_quadmesh, project_points,
-                   project_vectorfield, project_geom]
+                   project_vectorfield, project_windbarbs, project_geom]
 
     def _process(self, element, key=None):
         for op in self._operations:

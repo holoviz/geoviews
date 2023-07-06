@@ -15,8 +15,10 @@ from holoviews.element import (
     QuadMesh as HvQuadMesh, Points as HvPoints,
     VectorField as HvVectorField, HexTiles as HvHexTiles,
     Labels as HvLabels, Rectangles as HvRectangles,
-    Segments as HvSegments
+    Segments as HvSegments, Geometry as HvGeometry,
 )
+from holoviews.element.selection import Selection2DExpr
+
 
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry import (
@@ -338,6 +340,42 @@ class VectorField(_Element, HvVectorField):
 
     vdims = param.List(default=[Dimension('Angle', cyclic=True, range=(0,2*np.pi)),
                                 Dimension('Magnitude')], bounds=(1, None))
+
+
+class WindBarbs(_Element, Selection2DExpr, HvGeometry):
+    """
+    """
+
+    group = param.String(default='WindBarbs', constant=True)
+
+    vdims = param.List(default=[Dimension('Angle', cyclic=True, range=(0,2*np.pi)),
+                                Dimension('Magnitude')], bounds=(2, None))
+
+    @classmethod
+    def from_uv(cls, data, kdims=None, vdims=None, **params):
+        if isinstance(data, tuple):
+            xs, ys, us, vs = data
+        else:
+            us = data[vdims[0]]
+            vs = data[vdims[1]]
+
+        uv_magnitudes = np.hypot(us, vs)  # unscaled
+        radians = np.pi / 2 - np.arctan2(-vs, -us)
+
+        if isinstance(data, tuple):
+            reorganized_data = (xs, ys, radians, uv_magnitudes)
+        else:
+            # calculations on this data could mutate the original data
+            # here we do not do any calculations; we only store the data
+            reorganized_data = {}
+            for kdim in kdims:
+                reorganized_data[kdim] = data[kdim]
+            reorganized_data["Angle"] = radians
+            reorganized_data["Magnitude"] = uv_magnitudes
+            for vdim in vdims[2:]:
+                reorganized_data[vdim] = data[vdim]
+            vdims = ["Angle", "Magnitude"] + vdims[2:]
+        return cls(reorganized_data, kdims=kdims, vdims=vdims, **params)
 
 
 class Image(_Element, HvImage):

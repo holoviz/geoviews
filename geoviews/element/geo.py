@@ -363,17 +363,19 @@ class WindBarbs(_Element, Selection2DExpr, HvGeometry):
         radians = np.pi / 2 - np.arctan2(-vs, -us)
 
         if isinstance(data, tuple):
-            transformed_data = (xs, ys, radians, uv_magnitudes)
+            reorganized_data = (xs, ys, radians, uv_magnitudes)
         else:
-            transformed_data = {}
+            # calculations on this data could mutate the original data
+            # here we do not do any calculations; we only store the data
+            reorganized_data = {}
             for kdim in kdims:
-                transformed_data[kdim] = data[kdim]
-            transformed_data["Angle"] = radians
-            transformed_data["Magnitude"] = uv_magnitudes
+                reorganized_data[kdim] = data[kdim]
+            reorganized_data["Angle"] = radians
+            reorganized_data["Magnitude"] = uv_magnitudes
             for vdim in vdims[2:]:
-                transformed_data[vdim] = data[vdim]
+                reorganized_data[vdim] = data[vdim]
             vdims = ["Angle", "Magnitude"] + vdims[2:]
-        return cls(transformed_data, kdims=kdims, vdims=vdims, **params)
+        return cls(reorganized_data, kdims=kdims, vdims=vdims, **params)
 
 
 class Image(_Element, HvImage):

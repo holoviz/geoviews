@@ -32,7 +32,7 @@ class TestWindBarbsPlot(TestMPLPlot):
     def test_windbarbs_dataset(self):
         x = np.linspace(-1, 1, 4)
         X, Y = np.meshgrid(x, x)
-        U, V = 10 * X, 0 * Y
+        U, V = 10 * X, 1 * Y
 
         angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
@@ -56,7 +56,7 @@ class TestWindBarbsPlot(TestMPLPlot):
     def test_windbarbs_from_uv(self):
         x = np.linspace(-1, 1, 4)
         X, Y = np.meshgrid(x, x)
-        U, V = 10 * X, 0 * Y
+        U, V = 10 * X, 2 * Y
 
         angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
@@ -70,7 +70,7 @@ class TestWindBarbsPlot(TestMPLPlot):
     def test_windbarbs_dataset_from_uv_other_dim(self):
         x = np.linspace(-1, 1, 4)
         X, Y = np.meshgrid(x, x)
-        U, V = 10 * X, 0 * Y
+        U, V = 10 * X, 3 * Y
 
         angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
@@ -103,7 +103,7 @@ class TestWindBarbsPlot(TestMPLPlot):
     def test_windbarbs_both_flagcolor_barbcolor(self):
         x = np.linspace(-1, 1, 4)
         X, Y = np.meshgrid(x, x)
-        U, V = 10 * X, 0 * Y
+        U, V = 10 * X, 4 * Y
 
         angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
@@ -127,7 +127,7 @@ class TestWindBarbsPlot(TestMPLPlot):
     def test_windbarbs_flagcolor(self):
         x = np.linspace(-1, 1, 4)
         X, Y = np.meshgrid(x, x)
-        U, V = 10 * X, 0 * Y
+        U, V = 10 * X, 5 * Y
 
         angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
@@ -151,7 +151,7 @@ class TestWindBarbsPlot(TestMPLPlot):
     def test_windbarbs_barbcolor(self):
         x = np.linspace(-1, 1, 4)
         X, Y = np.meshgrid(x, x)
-        U, V = 10 * X, 0 * Y
+        U, V = 10 * X, 6 * Y
 
         angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)
@@ -175,7 +175,7 @@ class TestWindBarbsPlot(TestMPLPlot):
     def test_windbarbs_color_warning(self):
         x = np.linspace(-1, 1, 4)
         X, Y = np.meshgrid(x, x)
-        U, V = 10 * X, 0 * Y
+        U, V = 10 * X, 7 * Y
 
         angle = np.pi / 2 - np.arctan2(-V, -U)
         mag = np.hypot(U, V)

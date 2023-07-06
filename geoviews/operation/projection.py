@@ -225,7 +225,8 @@ class project_vectorfield(_project_operation):
     supported_types = [VectorField]
 
     def _calc_angles(self, ut, vt):
-        return np.pi / 2 - np.arctan2(ut, vt)
+        # mathmetical convention
+        return np.arctan2(vt, ut)
 
     def _process_element(self, element):
         if not len(element):
@@ -265,6 +266,7 @@ class project_windbarbs(project_vectorfield):
     supported_types = [WindBarbs]
 
     def _calc_angles(self, ut, vt):
+        # meteorological convention
         return np.pi / 2 - np.arctan2(-vt, -ut)
 
 

@@ -43,7 +43,7 @@ class TestWindBarbsPlot(TestMPLPlot):
                 "a": (["y", "x"], angle),
                 "m": (["y", "x"], mag),
             },
-            coords={"x": x, "y": -x},
+            coords={"x": x, "y": x},
         )
 
         gv_barbs = gv.WindBarbs(ds, ["x", "y"], ["a", "m"])
@@ -51,7 +51,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         fig = gv.render(gv_barbs)
         mpl_barbs = fig.axes[0].get_children()[0]
         np.testing.assert_almost_equal(mpl_barbs.u.data, U.T.flatten())
-        np.testing.assert_almost_equal(mpl_barbs.v.data, V.flatten())
+        np.testing.assert_almost_equal(mpl_barbs.v.data, V.T.flatten())
 
     def test_windbarbs_from_uv(self):
         x = np.linspace(-1, 1, 4)

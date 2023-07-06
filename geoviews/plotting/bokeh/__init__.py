@@ -23,7 +23,7 @@ from ...element import (
 )
 from ...operation import (
     project_image, project_points, project_path, project_graph,
-    project_quadmesh, project_geom
+    project_quadmesh, project_geom, project_vectorfield
 )
 from ...tile_sources import _ATTRIBUTIONS
 from ...util import poly_types, line_types
@@ -106,7 +106,7 @@ class GeoPointPlot(GeoPlot, PointPlot):
 
 class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
 
-    _project_operation = project_points
+    _project_operation = project_vectorfield
 
 
 class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):

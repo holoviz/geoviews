@@ -157,7 +157,7 @@ class project_shape(_project_operation):
 
 class project_points(_project_operation):
 
-    supported_types = [Points, Nodes, VectorField, HexTiles, Labels]
+    supported_types = [Points, Nodes, HexTiles, Labels]
 
     def _process_element(self, element):
         if not len(element):
@@ -194,8 +194,6 @@ class project_geom(_project_operation):
     supported_types = [Rectangles, Segments]
 
     def _process_element(self, element):
-        if not len(element):
-            return element.clone(crs=self.p.projection)
         x0d, y0d, x1d, y1d = element.kdims
         x0, y0, x1, y1 = (element.dimension_values(i) for i in range(4))
         p1 = self.p.projection.transform_points(element.crs, x0, y0)
@@ -222,6 +220,42 @@ class project_geom(_project_operation):
         return element.clone(tuple(new_data[d.name] for d in element.dimensions()),
                              crs=self.p.projection)
 
+class project_vectorfield(_project_operation):
+
+    supported_types = [VectorField]
+
+    def _process_element(self, element):
+        if not len(element):
+            return element.clone(crs=self.p.projection)
+
+        xdim, ydim, adim, mdim = element.dimensions()[:4]
+        xs, ys, ang, ms = (element.dimension_values(i) for i in range(4))
+        coordinates = self.p.projection.transform_points(element.crs, xs, ys)
+        mask = np.isfinite(coordinates[:, 0])
+        new_data = {k: v[mask] for k, v in element.columns().items()}
+        new_data[xdim.name] = coordinates[mask, 0]
+        new_data[ydim.name] = coordinates[mask, 1]
+        datatype = [element.interface.datatype]+element.datatype
+        us = np.sin(ang) * ms
+        vs = np.cos(ang) * ms
+        ut, vt = self.p.projection.transform_vectors(element.crs, xs, ys, us, vs)
+        with np.errstate(divide='ignore', invalid='ignore'):
+            angle = np.arctan2(vt, ut)
+        mag = np.sqrt(ut**2+vt**2)
+
+        new_data[adim.name] = angle[mask]
+        new_data[mdim.name] = mag[mask]
+
+        if len(new_data[xdim.name]) == 0:
+            self.warning('While projecting a {} element from a {} coordinate '
+                         'reference system (crs) to a {} projection none of '
+                         'the projected paths were contained within the bounds '
+                         'specified by the projection. Ensure you have specified '
+                         'the correct coordinate system for your data.'.format(type(element).__name__, type(element.crs).__name__,
+                          type(self.p.projection).__name__))
+
+        return element.clone(tuple(new_data[d.name] for d in element.dimensions()),
+                             crs=self.p.projection, datatype=datatype)
 
 class project_graph(_project_operation):
 
@@ -445,7 +479,7 @@ class project(Operation):
 
     _operations = [project_path, project_image, project_shape,
                    project_graph, project_quadmesh, project_points,
-                   project_geom]
+                   project_vectorfield, project_geom]
 
     def _process(self, element, key=None):
         for op in self._operations:

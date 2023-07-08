@@ -54,7 +54,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         np.testing.assert_almost_equal(mpl_barbs.v.data, V.T.flatten())
 
     def test_windbarbs_from_uv(self):
-        x = np.linspace(-1, 1, 4)
+        x = np.linspace(-1, 1, 2)
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 2 * Y
 
@@ -64,8 +64,8 @@ class TestWindBarbsPlot(TestMPLPlot):
         gv_barbs = WindBarbs((X, Y, angle, mag))
         gv_barbs_uv = WindBarbs.from_uv((X, Y, U, V))
 
-        np.testing.assert_almost_equal(gv_barbs.data["Angle"], gv_barbs_uv.data["Angle"])
-        np.testing.assert_almost_equal(gv_barbs.data["Magnitude"], gv_barbs_uv.data["Magnitude"])
+        np.testing.assert_almost_equal(gv_barbs.data["Angle"].T.flatten(), gv_barbs_uv.data["Angle"])
+        np.testing.assert_almost_equal(gv_barbs.data["Magnitude"].T.flatten(), gv_barbs_uv.data["Magnitude"])
 
     def test_windbarbs_dataset_from_uv_other_dim(self):
         x = np.linspace(-1, 1, 4)

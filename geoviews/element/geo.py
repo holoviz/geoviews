@@ -358,9 +358,10 @@ class WindBarbs(_Element, Selection2DExpr, HvGeometry):
         if vdims is None:
             vdims = ['u', 'v']
         dataset = Dataset(data, kdims=kdims, vdims=vdims, **params)
-        us, vs = (dataset.dimension_values(i) for i in range(2, 4))
+        us, vs = (dataset.dimension_values(i) for i in (2, 3))
 
         uv_magnitudes = np.hypot(us, vs)  # unscaled
+        # using meteorological convention (direction FROM which wind blows)
         radians = np.pi / 2 - np.arctan2(-vs, -us)
 
         # calculations on this data could mutate the original data

@@ -122,6 +122,7 @@ _recommended = [
 
 # can only currently run all examples with packages from conda-forge
 _examples_extra = _recommended + [
+    'iris >=3.5',  # Pin to support numpy 1.24
     'xesmf',
     'mock',
     'fiona',
@@ -129,8 +130,8 @@ _examples_extra = _recommended + [
 ]
 
 if sys.version_info[:2] == (3, 8):
-    _examples_extra += [
-        'iris >=3.5',  # Pin to support numpy 1.24
+    _recommended += [
+        "pillow <10"
     ]
 
 extras_require={

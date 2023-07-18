@@ -111,7 +111,7 @@ _recommended = [
     'geopandas',
     'netcdf4',
     'jupyter',
-    'matplotlib >2.2',
+    'matplotlib >3.3',
     'pandas',
     'pyct',
     'scipy',

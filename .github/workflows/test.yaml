@@ -61,10 +61,6 @@ jobs:
           conda-update: true
           nodejs: true
         id: install
-      - name: doit env_capture
-        run: |
-          conda activate test-environment
-          doit env_capture
       - name: download data
         run: |
           conda activate test-environment

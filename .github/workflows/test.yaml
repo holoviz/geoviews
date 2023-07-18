@@ -59,7 +59,6 @@ jobs:
           envs: "-o tests -o examples_extra -o recommended"
           cache: true
           conda-update: true
-          conda-mamba: mamba
           nodejs: true
         id: install
       - name: doit env_capture

@@ -31,7 +31,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     if (this._basepoint == null || this.model.vertex_renderer == null)
       return
     const points = this._drag_points(ev, [this.model.vertex_renderer])
-    if (!ev.shift_key) {
+    if (!ev.modifiers.shift) {
       this._move_linked(points)
     }
     if (this._selected_renderer)
@@ -42,7 +42,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     if (this._basepoint == null || this.model.vertex_renderer == null)
       return
     const points = this._drag_points(ev, [this.model.vertex_renderer])
-    if (!ev.shift_key) {
+    if (!ev.modifiers.shift) {
       this._move_linked(points)
     }
     this._emit_cds_changes(this.model.vertex_renderer.data_source, false, true, true)

@@ -122,12 +122,16 @@ _recommended = [
 
 # can only currently run all examples with packages from conda-forge
 _examples_extra = _recommended + [
-    'iris >=3.5',  # Pin to support numpy 1.24
     'xesmf',
     'mock',
     'fiona',
     'geodatasets',
 ]
+
+if sys.version_info[:2] == (3, 8):
+    _examples_extra += [
+        'iris >=3.5',  # Pin to support numpy 1.24
+    ]
 
 extras_require={
     'recommended': _recommended,

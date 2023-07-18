@@ -110,7 +110,6 @@ _recommended = [
     # geopandas-base installed with conda, see setup.cfg
     'geopandas',
     'netcdf4',
-    'jupyter',
     'matplotlib >3.3',
     'pandas',
     'pyct',

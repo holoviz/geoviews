@@ -165,7 +165,6 @@ extras_require['build'] = [
     'pyct >=0.4.4',
     'bokeh >=3.1.0,<3.3.0',
     'pyviz_comms >=0.6.0',
-    'conda-libmamba-solver', # Needed as we create a new environment with a conda in it
 ]
 
 ########################

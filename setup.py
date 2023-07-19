@@ -131,7 +131,7 @@ _examples_extra = _recommended + [
 
 if sys.version_info[:2] == (3, 8):
     _recommended += [
-        "pillow <10"
+        "iris ==3.5"  # Hard pin for Windows + Python 3.8
     ]
 
 extras_require={

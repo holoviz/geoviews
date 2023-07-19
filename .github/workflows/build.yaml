@@ -50,6 +50,8 @@ jobs:
       - name: conda setup
         run: |
           conda config --set always_yes True
+          conda install -n base conda-libmamba-solver
+          conda config --set solver libmamba
           conda install -c pyviz "pyctdev>=0.5"
           doit ecosystem_setup
           conda install -c conda-forge "urllib3<2.0.0" "conda-build==3.24"

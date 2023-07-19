@@ -60,7 +60,6 @@ jobs:
           cache: true
           conda-update: true
           nodejs: true
-          nodejs-version: 18
         id: install
       - name: download data
         run: |

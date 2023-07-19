@@ -110,7 +110,7 @@ _recommended = [
     # geopandas-base installed with conda, see setup.cfg
     'geopandas',
     'netcdf4',
-    'matplotlib >3.3',
+    'matplotlib >2.2',
     'pandas',
     'pyct',
     'scipy',
@@ -130,7 +130,7 @@ _examples_extra = _recommended + [
 ]
 
 if sys.version_info[:2] == (3, 8):
-    _recommended += [
+    _examples_extra += [
         "iris ==3.5"  # Hard pin for Windows + Python 3.8
     ]
 

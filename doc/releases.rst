@@ -1,6 +1,53 @@
 Releases
 ========
 
+Version 1.10.1
+--------------
+
+Date: July 20, 2023
+
+This micro release adds support for Bokeh 3.2. More maps are added to
+Geoviews with ``xyzservices`` and many more maps from ESRI. WindBarbs
+plot is now supported in the Matplotlib backend. Many thanks to
+@djm93dev for his first contribution and also @ahuang11, @maximlt,
+@philippjfr, and @Hoxbro for their continuous contributions.
+
+Enhancements:
+
+-  Add WindBarbs to the Matplotlib Backend
+   (`#651 <https://github.com/holoviz/geoviews/pull/651>`__,
+   `#662 <https://github.com/holoviz/geoviews/pull/662>`__)
+-  Add support for ``xyzservices``
+   (`#654 <https://github.com/holoviz/geoviews/pull/654>`__)
+-  Add ``World_Physical_Map``, ``World_Shaded_Relief`` and
+   ``World_Topo_Map`` and many more maps from ESRI
+   (`#655 <https://github.com/holoviz/geoviews/pull/655>`__)
+
+Documentation:
+
+-  Add documentation for GeoViews offline features and tiles
+   (`#649 <https://github.com/holoviz/geoviews/pull/649>`__)
+
+Compatibility:
+
+-  Add Bokeh 3.2 support to GeoViews
+   (`#664 <https://github.com/holoviz/geoviews/pull/664>`__)
+-  Improve ``rioxarray`` support
+   (`#645 <https://github.com/holoviz/geoviews/pull/645>`__)
+-  Remove deprecated ``np.product`` for ``np.prod``
+   (`#660 <https://github.com/holoviz/geoviews/pull/660>`__)
+
+Maintenance:
+
+-  General maintenance
+   (`#648 <https://github.com/holoviz/geoviews/pull/648>`__,
+   `#652 <https://github.com/holoviz/geoviews/pull/652>`__,
+   `#653 <https://github.com/holoviz/geoviews/pull/653>`__,
+   `#657 <https://github.com/holoviz/geoviews/pull/657>`__,
+   `#661 <https://github.com/holoviz/geoviews/pull/661>`__)
+
+
+
 Version 1.10.0
 --------------
 

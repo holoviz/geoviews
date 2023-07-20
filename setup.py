@@ -94,7 +94,7 @@ except:
 ### dependencies ###
 
 _required = [
-    'bokeh >=3.1.0,<3.2.0',
+    'bokeh >=3.1.0,<3.3.0',
     'cartopy >=0.18.0',
     'holoviews >=1.16.0',
     'packaging',
@@ -110,7 +110,6 @@ _recommended = [
     # geopandas-base installed with conda, see setup.cfg
     'geopandas',
     'netcdf4',
-    'jupyter',
     'matplotlib >2.2',
     'pandas',
     'pyct',
@@ -130,11 +129,16 @@ _examples_extra = _recommended + [
     'geodatasets',
 ]
 
+if sys.version_info[:2] == (3, 8):
+    _examples_extra += [
+        "iris ==3.5"  # Hard pin for Windows + Python 3.8
+    ]
+
 extras_require={
     'recommended': _recommended,
     'examples_extra': _examples_extra,
     'doc': _examples_extra + [
-        'nbsite ==0.8.0',
+        'nbsite >=0.8.2,<0.9.0',
         'cartopy >=0.20.0',
         'graphviz',
         'lxml',
@@ -159,8 +163,8 @@ extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
 extras_require['build'] = [
     'param >=1.9.2',
     'pyct >=0.4.4',
-    'bokeh >=3.1.0,<3.2.0',
-    'pyviz_comms >=0.6.0'
+    'bokeh >=3.1.0,<3.3.0',
+    'pyviz_comms >=0.6.0',
 ]
 
 ########################

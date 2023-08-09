@@ -27,8 +27,8 @@ Alternatively you can use conda to install geoviews:
 
     conda install -c pyviz geoviews
 
-the geoviews-core package, which
-only installs the minimal dependencies required to run geoviews::
+Or, the geoviews-core package, which only installs the minimal
+dependencies required to run geoviews::
 
     conda install -c pyviz geoviews-core
 

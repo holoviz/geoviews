@@ -223,7 +223,7 @@ class GeomDictInterface(DictInterface):
                 new_data[k] = v
             else:
                 new_data[k] = v[selection_mask]
-        if indexed and len(list(new_data.values())[0]) == 1 and len(dataset.vdims) == 1:
+        if indexed and len(next(iter(new_data.values()))) == 1 and len(dataset.vdims) == 1:
             value = new_data[dataset.vdims[0].name]
             return value if isscalar(value) else value[0]
         return new_data

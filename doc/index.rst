@@ -19,12 +19,16 @@ the `HoloViz Discourse <https://discourse.holoviz.org/>`_.
 Installation
 ============
 
-You can install GeoViews and its dependencies using conda::
+You can install GeoViews and its dependencies using pip::
+
+    pip install geoviews
+
+Alternatively you can use conda to install geoviews:
 
     conda install -c pyviz geoviews
 
-Alternatively you can install the geoviews-core package, which
-only installs the minimal dependencies required to run geoviews::
+Or, the geoviews-core package, which only installs the minimal
+dependencies required to run geoviews::
 
     conda install -c pyviz geoviews-core
 
@@ -79,9 +83,10 @@ in how non-Python packages are built between conda-forge and defaults.
 
 -----
 
-GeoViews itself is also installable using ``pip``, but to do that you
-will first need to have installed the `dependencies of cartopy <http://scitools.org.uk/cartopy/docs/latest/installing.html#requirements>`_,
-or else have set up your system to be able to build them.
+GeoViews itself is installable using ``pip``, as long as you're using
+cartopy>=0.22.0; otherwise you will first need to have installed the
+`dependencies of cartopy <http://scitools.org.uk/cartopy/docs/latest/installing.html#requirements>`_,
+or have set up your system to be able to build them.
 
 .. toctree::
    :hidden:

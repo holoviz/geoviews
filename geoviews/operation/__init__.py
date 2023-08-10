@@ -6,7 +6,8 @@ from .. import element as gv_element
 from ..element import _Element
 from .projection import ( # noqa (API import)
     project_image, project_path, project_shape, project_points,
-    project_graph, project_quadmesh, project_geom, project)
+    project_graph, project_quadmesh, project_geom,
+    project_vectorfield, project_windbarbs, project)
 from .resample import resample_geometry # noqa (API import)
 
 geo_ops = [contours, bivariate_kde]

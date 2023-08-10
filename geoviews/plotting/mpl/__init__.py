@@ -37,7 +37,7 @@ from ..plot import ProjectionPlot
 
 from ...operation import (
     project_points, project_path, project_graph, project_quadmesh,
-    project_geom
+    project_geom, project_vectorfield, project_windbarbs
 )
 from .chart import WindBarbsPlot
 
@@ -325,7 +325,7 @@ class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
 
     apply_ranges = param.Boolean(default=True)
 
-    _project_operation = project_points
+    _project_operation = project_vectorfield
 
 
 class GeoWindBarbsPlot(GeoPlot, WindBarbsPlot):
@@ -335,7 +335,7 @@ class GeoWindBarbsPlot(GeoPlot, WindBarbsPlot):
 
     apply_ranges = param.Boolean(default=True)
 
-    _project_operation = project_points
+    _project_operation = project_windbarbs
 
 
 class GeometryPlot(GeoPlot):

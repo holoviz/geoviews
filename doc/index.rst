@@ -19,7 +19,7 @@ the `HoloViz Discourse <https://discourse.holoviz.org/>`_.
 Installation
 ============
 
-You can install GeoViews and its dependencies using just pip::
+You can install GeoViews and its dependencies using pip::
 
     pip install geoviews
 

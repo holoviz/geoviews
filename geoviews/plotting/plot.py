@@ -54,7 +54,7 @@ class ProjectionPlot(param.Parameterized):
         else:
             return None
 
-    def get_extents(self, element, ranges, range_type='combined'):
+    def get_extents(self, element, ranges, range_type='combined', **kwargs):
         """
         Subclasses the get_extents method using the GeoAxes
         set_extent method to project the extents to the

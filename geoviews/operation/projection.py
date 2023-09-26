@@ -251,7 +251,7 @@ class project_vectorfield(_project_operation):
         new_data[mdim.name] = mag[mask]
 
         if len(new_data[xdim.name]) == 0:
-            self.warning('While projecting a {} element from a {} coordinate '
+            self.param.warning('While projecting a {} element from a {} coordinate '
                          'reference system (crs) to a {} projection none of '
                          'the projected paths were contained within the bounds '
                          'specified by the projection. Ensure you have specified '

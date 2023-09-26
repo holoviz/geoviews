@@ -17,13 +17,13 @@ repos:
       - id: trailing-whitespace
         exclude: \.svg$
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.0.283
+    rev: v0.0.291
     hooks:
       - id: ruff
         args: [geoviews]
         files: geoviews/
   - repo: https://github.com/hoxbro/clean_notebook
-    rev: v0.1.10
+    rev: v0.1.11
     hooks:
       - id: clean-notebook
   - repo: https://github.com/codespell-project/codespell

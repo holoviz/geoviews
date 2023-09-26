@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -eux pipefail
+
 bokeh sampledata
 
 HERE=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )

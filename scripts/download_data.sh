@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eux pipefail
+set -euxo pipefail
 
 bokeh sampledata
 

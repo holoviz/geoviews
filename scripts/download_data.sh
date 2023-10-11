@@ -26,4 +26,5 @@ except ImportError:
     pass
 else:
     xr.tutorial.open_dataset('air_temperature')
+    xr.tutorial.open_dataset('rasm')
 "

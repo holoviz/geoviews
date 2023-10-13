@@ -71,4 +71,4 @@ class ProjectionPlot(param.Parameterized):
             extents = None
         else:
             extents = project_extents(extents, element.crs, proj)
-        return (np.NaN,)*4 if not extents else extents
+        return (np.nan,)*4 if not extents else extents

@@ -727,7 +727,7 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
 
             values = values.astype(float)
             for d in da.attrs['nodatavals']:
-                values[values==d] = np.NaN
+                values[values==d] = np.nan
         data += (values,)
 
     if 'datatype' not in kwargs:

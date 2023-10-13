@@ -221,7 +221,7 @@ class FeaturePlot(GeoPolygonPlot):
             (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
             return tuple(round(c, 12) for c in (x0, y0, x1, y1))
         elif self.overlaid:
-            return (np.NaN,)*4
+            return (np.nan,)*4
         return super().get_extents(element, ranges, range_type)
 
     def get_data(self, element, ranges, style):

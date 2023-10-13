@@ -405,7 +405,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
             ds.data['geometry'] = ds.data.pop(data.geometry.name)
             values.append(ds.interface.values(ds, dimension))
             if 'Point' not in geom_type and expanded:
-                values.append([np.NaN])
+                values.append([np.nan])
         values = values if 'Point' in geom_type or not expanded else values[:-1]
         if not values:
             return np.array([])

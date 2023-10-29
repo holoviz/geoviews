@@ -42,13 +42,13 @@ jobs:
       SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
       USE_PYGEOS: '0'
     steps:
-      - uses: holoviz-dev/holoviz_tasks/install@v0.1a17
+      - uses: holoviz-dev/holoviz_tasks/install@v0.1a18
         with:
           name: unit_test_suite
           python-version: ${{ matrix.python-version }}
           channel-priority: strict
           channels: pyviz/label/dev,bokeh,conda-forge,nodefaults
-          envs: "-o tests -o examples_extra -o recommended"
+          envs: "-o tests -o examples_extra -o recommended -o tests_ci"
           cache: true
           conda-update: true
           nodejs: true
@@ -114,7 +114,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: |
-          python -m pip install -ve '.[tests_core]'
+          python -m pip install -ve '.[tests_core, tests_ci]'
       - name: download data
         run: |
           # conda activate test-environment

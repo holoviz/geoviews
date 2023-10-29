@@ -140,6 +140,7 @@ extras_require={
         'pooch',
     ],
     'tests_core': [
+        # Combination of tests and recommended without numba
         'pytest',
         'geopandas',
         'netcdf4',
@@ -151,14 +152,16 @@ extras_require={
         'pooch',
     ],
     'tests': [
-        'pytest-cov',
-        'codecov',
-        'flake8',
         'nbsmoke >=0.2.0',
         'pytest',
         'fiona',
         'rioxarray',
     ],
+    'tests_ci': [
+        'pytest-cov',
+        'codecov',
+        'pytest-github-actions-annotate-failures',
+    ]
 }
 
 extras_require['all'] = sorted(set(sum(extras_require.values(), [])))

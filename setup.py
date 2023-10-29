@@ -128,12 +128,6 @@ _examples_extra = _recommended + [
     'fiona',
     'geodatasets',
 ]
-
-if sys.version_info[:2] == (3, 8):
-    _examples_extra += [
-        "iris ==3.5"  # Hard pin for Windows + Python 3.8
-    ]
-
 extras_require={
     'recommended': _recommended,
     'examples_extra': _examples_extra,
@@ -174,7 +168,7 @@ extras_require['build'] = [
 setup_args = dict(
     name='geoviews',
     version=get_setup_version("geoviews"),
-    python_requires = '>=3.8',
+    python_requires = '>=3.9',
     install_requires = _required,
     extras_require = extras_require,
     tests_require = extras_require['tests'],
@@ -195,7 +189,6 @@ setup_args = dict(
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 5 - Production/Stable",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",

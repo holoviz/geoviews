@@ -20,8 +20,8 @@ jobs:
         shell: bash -l {0}
     env:
       CHANS_DEV: "-c pyviz/label/dev -c bokeh -c conda-forge -c nodefaults"
-      PKG_TEST_PYTHON: "--test-python=py38"
-      PYTHON_VERSION: "3.8"
+      PKG_TEST_PYTHON: "--test-python=py39"
+      PYTHON_VERSION: "3.9"
       MPLBACKEND: "Agg"
       CONDA_UPLOAD_TOKEN: ${{ secrets.CONDA_UPLOAD_TOKEN }}
       SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
@@ -103,8 +103,8 @@ jobs:
         shell: bash -l {0}
     env:
       CHANS_DEV: "-c pyviz/label/dev -c bokeh -c conda-forge"
-      PKG_TEST_PYTHON: "--test-python=py38"
-      PYTHON_VERSION: "3.8"
+      PKG_TEST_PYTHON: "--test-python=py39"
+      PYTHON_VERSION: "3.9"
       CHANS: "-c pyviz"
       MPLBACKEND: "Agg"
       PPU: ${{ secrets.PPU }}

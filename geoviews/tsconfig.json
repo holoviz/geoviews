@@ -29,7 +29,7 @@
       "@bokehjs/*": [
         "node_modules/@bokeh/bokehjs/build/js/lib/*",
         "node_modules/@bokeh/bokehjs/build/js/types/*"
-      ],
+      ]
     }
   },
   "include": ["./**/*.ts"]

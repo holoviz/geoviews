@@ -5,29 +5,32 @@ exclude: (\.min\.js$|\.svg$|\.html$)
 default_stages: [commit]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
       - id: check-builtin-literals
       - id: check-case-conflict
       - id: check-docstring-first
       - id: check-executables-have-shebangs
       - id: check-toml
+      - id: check-yaml
+        exclude: conda.recipe
+      - id: check-json
       - id: detect-private-key
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-        exclude: \.svg$
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.0.291
+    rev: v0.1.3
     hooks:
       - id: ruff
         args: [geoviews]
         files: geoviews/
   - repo: https://github.com/hoxbro/clean_notebook
-    rev: v0.1.11
+    rev: v0.1.13
     hooks:
       - id: clean-notebook
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.5
+    rev: v2.2.6
     hooks:
     - id: codespell
       additional_dependencies:

@@ -139,6 +139,17 @@ extras_require={
         'selenium',
         'pooch',
     ],
+    'tests_core': [
+        'pytest',
+        'geopandas',
+        'netcdf4',
+        'matplotlib >2.2',
+        'pandas',
+        'scipy',
+        'shapely',
+        'xarray',
+        'pooch',
+    ],
     'tests': [
         'pytest-cov',
         'codecov',

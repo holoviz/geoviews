@@ -2,7 +2,6 @@
 
 import sys,os,json
 import shutil
-import platform
 
 from setuptools import setup, find_packages
 from setuptools.command.develop import develop
@@ -95,7 +94,7 @@ except:
 ### dependencies ###
 
 _required = [
-    'bokeh >=3.1.0,<3.3.0',
+    'bokeh >=3.2.0,<3.4.0',
     'cartopy >=0.18.0',
     'holoviews >=1.16.0',
     'packaging',
@@ -123,22 +122,12 @@ _recommended = [
 
 # can only currently run all examples with packages from conda-forge
 _examples_extra = _recommended + [
+    'iris >=3.5',  # Pin to support numpy 1.24
     'xesmf',
     'mock',
     'fiona',
     'geodatasets',
 ]
-
-if sys.version_info[:2] == (3, 8) and platform.system() == "Windows":
-    _examples_extra += [
-        "iris ==3.5"  # Hard pin for Windows + Python 3.8
-    ]
-else:
-    _examples_extra += [
-        'iris >=3.5',  # Pin to support numpy 1.24
-    ]
-
-
 extras_require={
     'recommended': _recommended,
     'examples_extra': _examples_extra,
@@ -150,15 +139,29 @@ extras_require={
         'selenium',
         'pooch',
     ],
+    'tests_core': [
+        # Combination of tests and recommended without numba
+        'pytest',
+        'geopandas',
+        'netcdf4',
+        'matplotlib >2.2',
+        'pandas',
+        'scipy',
+        'shapely',
+        'xarray',
+        'pooch',
+    ],
     'tests': [
-        'pytest-cov',
-        'codecov',
-        'flake8',
         'nbsmoke >=0.2.0',
         'pytest',
         'fiona',
         'rioxarray',
     ],
+    'tests_ci': [
+        'pytest-cov',
+        'codecov',
+        'pytest-github-actions-annotate-failures',
+    ]
 }
 
 extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
@@ -168,7 +171,7 @@ extras_require['all'] = sorted(set(sum(extras_require.values(), [])))
 extras_require['build'] = [
     'param >=1.9.2',
     'pyct >=0.4.4',
-    'bokeh >=3.1.0,<3.3.0',
+    'bokeh ==3.3',
     'pyviz_comms >=0.6.0',
 ]
 
@@ -179,7 +182,7 @@ extras_require['build'] = [
 setup_args = dict(
     name='geoviews',
     version=get_setup_version("geoviews"),
-    python_requires = '>=3.8',
+    python_requires = '>=3.9',
     install_requires = _required,
     extras_require = extras_require,
     tests_require = extras_require['tests'],
@@ -200,10 +203,10 @@ setup_args = dict(
     classifiers = [
         "License :: OSI Approved :: BSD License",
         "Development Status :: 5 - Production/Stable",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Operating System :: OS Independent",
         "Intended Audience :: Science/Research",
         "Intended Audience :: Developers",

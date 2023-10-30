@@ -14,13 +14,13 @@ _ATTRIBUTIONS = {
         '&copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
     ),
     ('stamen', 'com/t') : ( # to match both 'toner' and 'terrain'
-        'Map tiles by <a href="https://stamen.com">Stamen Design</a>, '
+        'Map tiles by <a href="https://stamen.com">Stamen Design</a> / <a href="https://stadiamaps.com">Stadia Maps</a>, '
         'under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. '
         'Data by <a href="https://openstreetmap.org">OpenStreetMap</a>, '
         'under <a href="https://www.openstreetmap.org/copyright">ODbL</a>.'
     ),
     ('stamen', 'watercolor') : (
-        'Map tiles by <a href="https://stamen.com">Stamen Design</a>, '
+        'Map tiles by <a href="https://stamen.com">Stamen Design</a> / <a href="https://stadiamaps.com">Stadia Maps</a>, '
         'under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. '
         'Data by <a href="https://openstreetmap.org">OpenStreetMap</a>, '
         'under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
@@ -141,12 +141,15 @@ CartoLight = WMTS('https://cartodb-basemaps-4.global.ssl.fastly.net/light_all/{Z
 CartoMidnight = WMTS('http://3.api.cartocdn.com/base-midnight/{Z}/{X}/{Y}.png', name="CartoMidnight")
 
 # Stamen basemaps
-StamenTerrain = WMTS('http://tile.stamen.com/terrain/{Z}/{X}/{Y}.png', name="StamenTerrain")
-StamenTerrainRetina = WMTS('http://tile.stamen.com/terrain/{Z}/{X}/{Y}@2x.png', name="StamenTerrainRetina")
-StamenWatercolor = WMTS('http://tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg', name="StamenWatercolor")
-StamenToner = WMTS('http://tile.stamen.com/toner/{Z}/{X}/{Y}.png', name="StamenToner")
-StamenTonerBackground = WMTS('http://tile.stamen.com/toner-background/{Z}/{X}/{Y}.png', name="StamenTonerBackground")
-StamenLabels = WMTS('http://tile.stamen.com/toner-labels/{Z}/{X}/{Y}.png', name="StamenLabels")
+StamenTerrain = WMTS('https://tiles.stadiamaps.com/tiles/stamen_terrain/{Z}/{X}/{Y}.png', name="StamenTerrain")
+StamenTerrainRetina = WMTS('https://tiles.stadiamaps.com/tiles/stamen_terrain/{Z}/{X}/{Y}@2x.png', name="StamenTerrainRetina")
+StamenWatercolor = WMTS('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{Z}/{X}/{Y}.jpg', name="StamenWatercolor")
+StamenToner = WMTS('https://tiles.stadiamaps.com/tiles/stamen_toner/{Z}/{X}/{Y}.png', name="StamenToner")
+StamenTonerRetina = WMTS('https://tiles.stadiamaps.com/tiles/stamen_toner/{Z}/{X}/{Y}@2x.png', name="StamenTonerRetina")
+StamenTonerBackground = WMTS('https://tiles.stadiamaps.com/tiles/stamen_toner_background/{Z}/{X}/{Y}.png', name="StamenTonerBackground")
+StamenTonerBackgroundRetina = WMTS('https://tiles.stadiamaps.com/tiles/stamen_toner_background/{Z}/{X}/{Y}@2x.png', name="StamenTonerBackgroundRetina")
+StamenLabels = WMTS('https://tiles.stadiamaps.com/tiles/stamen_toner_labels/{Z}/{X}/{Y}.png', name="StamenLabels")
+StamenLabelsRetina = WMTS('https://tiles.stadiamaps.com/tiles/stamen_toner_labels/{Z}/{X}/{Y}@2x.png', name="StamenLabelsRetina")
 
 # Esri maps (see https://server.arcgisonline.com/arcgis/rest/services for the full list)
 EsriImagery = WMTS('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}.jpg', name="EsriImagery")

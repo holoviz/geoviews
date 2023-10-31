@@ -193,4 +193,6 @@ def __getattr__(name):
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
-tile_sources = {k: v for k, v in locals().items() if isinstance(v, WMTS) and k != 'ESRI'}
+tile_sources = {k: v for k, v in locals().items() if isinstance(v, WMTS) and k != 'ESRI' or "Stamen" not in k}
+
+stamen_sources = [k for k, v in locals().items() if isinstance(v, WMTS) and "Stamen" in k]

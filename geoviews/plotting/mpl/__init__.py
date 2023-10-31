@@ -487,7 +487,7 @@ class WMTSPlot(GeoPlot):
     Adds a Web Map Tile Service from a WMTS Element.
     """
 
-    zoom = param.Integer(default=8, doc="""
+    zoom = param.Integer(default=3, doc="""
         Controls the zoom level of the tile source.""")
 
     style_opts = ['alpha', 'cmap', 'interpolation', 'visible',

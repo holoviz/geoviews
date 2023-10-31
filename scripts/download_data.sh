@@ -16,3 +16,15 @@ else:
     gds.get_path('geoda airbnb')
     gds.get_path('nybb')
 "
+
+python -c "
+try:
+    import pooch
+    import scipy
+    import xarray as xr
+except ImportError:
+    pass
+else:
+    xr.tutorial.open_dataset('air_temperature')
+    xr.tutorial.open_dataset('rasm')
+"

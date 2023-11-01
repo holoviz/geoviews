@@ -6,10 +6,12 @@ Date: November 1, 2023
 This release brings compatibility with the latest releases of Bokeh and Python 3.12. Many thanks to @ahuang11, @maximlt, @philippjfr, and @Hoxbro for their continuous contributions.
 
 Enhancements:
+
 - Add `VectorField`/`WindBarbs` `project` operation ([#296](https://github.com/holoviz/geoviews/pull/296))
 
 Bug fixes:
-- Add `**kwargs` to all get_extents ([#670](https://github.com/holoviz/geoviews/pull/670))
+
+- Add `**kwargs` to all ``get_extents`` ([#670](https://github.com/holoviz/geoviews/pull/670))
 - Update to use `self.param.warning` ([#672](https://github.com/holoviz/geoviews/pull/672))
 - Set default `zoom_level` on `Matplotlib`'s WMTS to 3 from 8 ([#685](https://github.com/holoviz/geoviews/pull/685))
 

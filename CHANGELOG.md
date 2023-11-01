@@ -3,7 +3,7 @@ Version 1.11.0
 
 Date: November 1, 2023
 
-This release brings compatibility with the latest releases of Bokeh and Python 3.12. Many thanks to @ahuang11, @maximlt, @philippjfr, and @Hoxbro for their continuous contributions.
+This release brings compatibility with the latest versions of Bokeh (3.3) and Python (3.12), while also discontinuing support for Python 3.8. Many thanks to @ahuang11, @maximlt, @philippjfr, and @Hoxbro for their ongoing contributions.
 
 Enhancements:
 

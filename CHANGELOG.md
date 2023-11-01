@@ -1,3 +1,36 @@
+Version 1.11.0
+==============
+
+Date: November 1, 2023
+
+This release brings compatibility with the latest releases of Bokeh and Python 3.12. Many thanks to @ahuang11, @maximlt, @philippjfr, and @Hoxbro for their continuous contributions.
+
+Enhancements:
+- Add `VectorField`/`WindBarbs` `project` operation ([#296](https://github.com/holoviz/geoviews/pull/296))
+
+Bug fixes:
+- Add `**kwargs` to all get_extents ([#670](https://github.com/holoviz/geoviews/pull/670))
+- Update to use `self.param.warning` ([#672](https://github.com/holoviz/geoviews/pull/672))
+- Set default `zoom_level` on `Matplotlib`'s WMTS to 3 from 8 ([#685](https://github.com/holoviz/geoviews/pull/685))
+
+Compatibility:
+
+- Replace `np.NaN` with `np.nan` ([#680](https://github.com/holoviz/geoviews/pull/680))
+- Update to support Bokeh 3.3 and Python 3.12 and drop Python 3.8 ([#683](https://github.com/holoviz/geoviews/pull/683))
+- Update to support Python 3.12 and drop Python 3.8 ([#683](https://github.com/holoviz/geoviews/pull/683))
+- Update Stamen maps ([#684](https://github.com/holoviz/geoviews/pull/684))
+
+Documentation:
+
+- Update GeoViews installation ([#669](https://github.com/holoviz/geoviews/pull/669))
+- Remove calling `.cols(3)` on the homepage ([#681](https://github.com/holoviz/geoviews/pull/681))
+
+Maintenance:
+
+- Add [OpenCollective](https://opencollective.com/holoviz) sponsor link on the repo page ([#666](https://github.com/holoviz/geoviews/pull/666))
+- General maintenance update ([#668](https://github.com/holoviz/geoviews/pull/668), [#675](https://github.com/holoviz/geoviews/pull/675), [#676](https://github.com/holoviz/geoviews/pull/676))
+
+
 
 Version 1.10.1
 ==============

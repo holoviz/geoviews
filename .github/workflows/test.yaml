@@ -19,7 +19,7 @@ jobs:
     name: Run pre-commit
     runs-on: 'ubuntu-latest'
     steps:
-      - uses: holoviz-dev/holoviz_tasks/pre-commit@v0.1a17
+      - uses: holoviz-dev/holoviz_tasks/pre-commit@v0.1a19
   unit_test_suite:
     name: Unit tests on Python ${{ matrix.python-version }}, ${{ matrix.os }}
     needs: [pre_commit]
@@ -42,7 +42,7 @@ jobs:
       SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
       USE_PYGEOS: '0'
     steps:
-      - uses: holoviz-dev/holoviz_tasks/install@v0.1a18
+      - uses: holoviz-dev/holoviz_tasks/install@v0.1a19
         with:
           name: unit_test_suite
           python-version: ${{ matrix.python-version }}
@@ -92,7 +92,7 @@ jobs:
       SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
     steps:
       # Add back when this works on Python 3.12
-      # - uses: holoviz-dev/holoviz_tasks/install@v0.1a18
+      # - uses: holoviz-dev/holoviz_tasks/install@v0.1a19
       #   with:
       #     name: core_test_suite
       #     python-version: ${{ matrix.python-version }}

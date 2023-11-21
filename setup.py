@@ -152,7 +152,7 @@ extras_require={
         'pooch',
     ],
     'tests': [
-        'nbsmoke >=0.2.0',
+        'nbval',
         'pytest',
         'fiona',
         'rioxarray',

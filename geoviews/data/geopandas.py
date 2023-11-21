@@ -44,7 +44,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
         except AttributeError:
             if len(data):
                 raise ValueError('No geometry column found in geopandas.DataFrame, '
-                                 'use the PandasInterface instead.')
+                                 'use the PandasInterface instead.') from None
             return None
 
     @classmethod

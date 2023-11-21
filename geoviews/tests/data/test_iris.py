@@ -7,7 +7,7 @@ try:
     from iris.tests.stock import lat_lon_cube
     from iris.exceptions import MergeError
 except ImportError:
-    raise SkipTest("Could not import iris, skipping IrisInterface tests.")
+    raise SkipTest("Could not import iris, skipping IrisInterface tests.") from None
 
 from holoviews.core.data import Dataset, concat
 from geoviews.data.iris import coord_to_dimension

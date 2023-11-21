@@ -98,14 +98,14 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
             geom_in_src_proj = geom_clipped_to_dest_proj
         try:
             geom_in_crs = dest_proj.project_geometry(geom_in_src_proj, src_proj)
-        except ValueError:
+        except ValueError as e:
             src_name =type(src_proj).__name__
             dest_name =type(dest_proj).__name__
             raise ValueError(
                 f'Could not project data from {src_name} projection '
                 f'to {dest_name} projection. Ensure the coordinate '
                 'reference system (crs) matches your data and the kdims.'
-            )
+            ) from e
     else:
         geom_in_crs = boundary_poly.intersection(domain_in_src_proj)
     return geom_in_crs.bounds
@@ -583,7 +583,7 @@ def process_crs(crs):
         import cartopy.crs as ccrs
         import pyproj
     except ImportError:
-        raise ImportError('Geographic projection support requires pyproj and cartopy.')
+        raise ImportError('Geographic projection support requires pyproj and cartopy.') from None
 
     if crs is None:
         return ccrs.PlateCarree()
@@ -643,7 +643,7 @@ def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwa
     try:
         import xarray as xr
     except ImportError:
-        raise ImportError('Loading tiffs requires xarray to be installed')
+        raise ImportError('Loading tiffs requires xarray to be installed') from None
     try:
         with warnings.catch_warnings():
             warnings.filterwarnings('ignore')

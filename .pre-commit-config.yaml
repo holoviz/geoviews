@@ -23,7 +23,6 @@ repos:
     rev: v0.1.6
     hooks:
       - id: ruff
-        args: [geoviews]
         files: geoviews/
   - repo: https://github.com/hoxbro/clean_notebook
     rev: v0.1.13

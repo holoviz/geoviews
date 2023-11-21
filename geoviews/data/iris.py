@@ -356,10 +356,12 @@ class CubeInterface(GridInterface):
 
 
     @classmethod
-    def sort(cls, columns, by=[], reverse=False):
+    def sort(cls, columns, by=None, reverse=False):
         """
         Cubes are assumed to be sorted by default.
         """
+        if by is None:
+            by = []
         return columns
 
 
@@ -372,10 +374,12 @@ class CubeInterface(GridInterface):
 
 
     @classmethod
-    def sample(cls, dataset, samples=[]):
+    def sample(cls, dataset, samples=None):
         """
         Sampling currently not implemented.
         """
+        if samples is None:
+            samples = []
         raise NotImplementedError
 
 

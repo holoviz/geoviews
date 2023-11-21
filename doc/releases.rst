@@ -116,8 +116,8 @@ instead. The ``Wikipedia`` tile source will be removed in version
 ``rioxarray.open_rasterio`` to load GeoTIFFs into a
 ``xarray.DataArray``.
 
-Note, this release has a minor breaking change where `gv.feature.states`
-defaults to `fill_color=None` so the fill color is transparent.
+Note, this release has a minor breaking change where ``gv.feature.states``
+defaults to ``fill_color=None`` so the fill color is transparent.
 
 Enhancements:
 
@@ -358,7 +358,7 @@ Features:
 * Added geographic projection awareness to ``hv.annotate`` function (`#377 <https://github.com/holoviz/geoviews/pull/377>`_, `#419 <https://github.com/holoviz/geoviews/pull/419>`_)
 * Rewrote geometry interfaces such as geopandas to conform to new HoloViews geometry protocol (`#407 <https://github.com/holoviz/geoviews/pull/407>`_)
 * Implement consistent .geom method on geometry types (e.g. Path, Polygons, Points) (`#424 <https://github.com/holoviz/geoviews/pull/424>`_)
-* Add new `Rectangles` and `Segments` elements (`#377 <https://github.com/holoviz/geoviews/pull/377>`_)
+* Add new ``Rectangles`` and ``Segments`` elements (`#377 <https://github.com/holoviz/geoviews/pull/377>`_)
 
 Bug fixes:
 

@@ -44,7 +44,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
         except AttributeError:
             if len(data):
                 raise ValueError('No geometry column found in geopandas.DataFrame, '
-                                 'use the PandasInterface instead.')
+                                 'use the PandasInterface instead.') from None
             return None
 
     @classmethod
@@ -314,12 +314,16 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
         return dataset.data
 
     @classmethod
-    def sample(cls, columns, samples=[]):
+    def sample(cls, columns, samples=None):
+        if samples is None:
+            samples = []
         raise NotImplementedError
 
 
     @classmethod
-    def sort(cls, dataset, by=[], reverse=False):
+    def sort(cls, dataset, by=None, reverse=False):
+        if by is None:
+            by = []
         geo_dims = cls.geom_dims(dataset)
         if any(d in geo_dims for d in by):
             raise DataError("SpatialPandasInterface does not allow sorting "
@@ -398,7 +402,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
         ds = dataset.clone(dict_data, datatype=['geom_dictionary'])
         values = []
         geom_type = data.geom_type.iloc[0]
-        for i, row in data.iterrows():
+        for _i, row in data.iterrows():
             ds.data = row.to_dict()
             if new_geo_col_name != default_geo_name:
                 ds.data[new_geo_col_name] = ds.data.pop(default_geo_name)
@@ -496,7 +500,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
         d.update({vd.name: row[vd.name] for vd in dataset.vdims})
         geom_type = cls.geom_type(dataset)
         ds = dataset.clone([d], datatype=['multitabular'])
-        for i, row in dataset.data.iterrows():
+        for _i, row in dataset.data.iterrows():
             if datatype == 'geom':
                 objs.append(row[col])
                 continue
@@ -544,7 +548,7 @@ def get_geom_type(geom):
         return 'Polygon'
 
 
-def to_geopandas(data, xdim, ydim, columns=[], geom='point'):
+def to_geopandas(data, xdim, ydim, columns=None, geom='point'):
     """Converts list of dictionary format geometries to spatialpandas line geometries.
 
     Args:
@@ -560,6 +564,8 @@ def to_geopandas(data, xdim, ydim, columns=[], geom='point'):
     from shapely.geometry import (
         Point, LineString, Polygon, MultiPoint, MultiPolygon, MultiLineString
     )
+    if columns is None:
+        columns = []
     poly = any('holes' in d for d in data) or geom == 'Polygon'
     if poly:
         single_type, multi_type = Polygon, MultiPolygon

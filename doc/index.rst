@@ -40,9 +40,9 @@ notebook::
     cd geoviews-examples
     jupyter notebook
 
-(Here `geoviews examples` is a shorthand for `geoviews copy-examples
+(Here ``geoviews examples`` is a shorthand for ``geoviews copy-examples
 --path geoviews-examples && geoviews fetch-data --path
-geoviews-examples`.)
+geoviews-examples``.)
 
 In the classic Jupyter notebook environment and JupyterLab, first make
 sure to load the ``gv.extension()``. For versions of
@@ -59,8 +59,8 @@ Once you have installed JupyterLab and the extension launch it with::
   jupyter-lab
 
 If you want to try out the latest features between releases, you can
-get the latest dev release by specifying `-c pyviz/label/dev` in place
-of `-c pyviz`.
+get the latest dev release by specifying ``-c pyviz/label/dev`` in place
+of ``-c pyviz``.
 
 Additional dependencies
 =======================

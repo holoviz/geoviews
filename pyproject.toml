@@ -9,9 +9,11 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.ruff]
-target-version = "py39"
+fix = true
 
+[tool.ruff.lint]
 select = [
+    "B",
     "E",
     "F",
     "FLY",
@@ -35,7 +37,6 @@ ignore = [
     "E731",     # Do not assign a lambda expression, use a def
     "E741",     # Ambiguous variable name
     "F405",     # From star imports
-    "PLC1901",  # empty string is falsey
     "PLE0604",  # Invalid object in `__all__`, must contain only strings
     "PLE0605",  # Invalid format for `__all__`
     "PLR091",   # Too many arguments/branches/statements
@@ -45,12 +46,11 @@ ignore = [
     "RUF012",   # Mutable class attributes should use `typing.ClassVar`
 ]
 
-fix = true
 unfixable = [
     "F401",     # Unused imports
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F403"]
 "geoviews/tests/*" = [
     "RUF001", "RUF002", "RUF003",  # Ambiguous unicode character

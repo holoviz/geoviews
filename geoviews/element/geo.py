@@ -928,7 +928,7 @@ class Shape(Dataset):
 
     @classmethod
     def from_records(cls, records, dataset=None, on=None, value=None,
-                     index=[], drop_missing=False, element=None, **kwargs):
+                     index=None, drop_missing=False, element=None, **kwargs):
         """
         Load data from a collection of `cartopy.io.shapereader.Record`
         objects and optionally merge it with a dataset to assign
@@ -965,6 +965,8 @@ class Shape(Dataset):
         shapes: Polygons or Path object
           A Polygons or Path object containing the geometries
         """
+        if index is None:
+            index = []
         if dataset is not None and not on:
             raise ValueError('To merge dataset with shapes mapping '
                              'must define attribute(s) to merge on.')
@@ -1002,7 +1004,7 @@ class Shape(Dataset):
             vdims = []
 
         data = []
-        for i, rec in enumerate(records):
+        for rec in records:
             geom = {}
             if dataset:
                 selection = {dim: rec.attributes.get(attr, None)

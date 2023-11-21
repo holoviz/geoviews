@@ -268,19 +268,19 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
     return polys
 
 
-def path_to_geom_dicts(path, skip_invalid=True):
+def path_to_geom_dicts(fullpath, skip_invalid=True):
     """
     Converts a Path element into a list of geometry dictionaries,
     preserving all value dimensions.
     """
-    geoms = unpack_geoms(path)
+    geoms = unpack_geoms(fullpath)
     if geoms is not None:
         return geoms
 
     geoms = []
     invalid = False
-    xdim, ydim = path.kdims
-    for i, path in enumerate(path.split(datatype='columns')):
+    xdim, ydim = fullpath.kdims
+    for path in fullpath.split(datatype='columns'):
         array = np.column_stack([path.pop(xdim.name), path.pop(ydim.name)])
         splits = np.where(np.isnan(array[:, :2].astype('float')).sum(axis=1))[0]
         arrays = np.split(array, splits+1) if len(splits) else [array]
@@ -753,7 +753,7 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
     return el
 
 
-def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=ccrs.PlateCarree()):
+def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=None):
     """
     Returns an RGB element given a tile_source, bounding box and zoom level.
 
@@ -775,6 +775,9 @@ def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=ccrs.PlateCarree()):
     """
 
     from .element import RGB, WMTS
+    if bbox_crs is None:
+        bbox_crs = ccrs.PlateCarree()
+
     if isinstance(tile_source, (WMTS, Tiles)):
         tile_source = tile_source.data
 

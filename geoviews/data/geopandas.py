@@ -402,7 +402,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
         ds = dataset.clone(dict_data, datatype=['geom_dictionary'])
         values = []
         geom_type = data.geom_type.iloc[0]
-        for i, row in data.iterrows():
+        for _i, row in data.iterrows():
             ds.data = row.to_dict()
             if new_geo_col_name != default_geo_name:
                 ds.data[new_geo_col_name] = ds.data.pop(default_geo_name)

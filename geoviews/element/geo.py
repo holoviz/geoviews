@@ -1004,7 +1004,7 @@ class Shape(Dataset):
             vdims = []
 
         data = []
-        for i, rec in enumerate(records):
+        for rec in records:
             geom = {}
             if dataset:
                 selection = {dim: rec.attributes.get(attr, None)

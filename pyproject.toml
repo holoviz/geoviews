@@ -9,8 +9,9 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.ruff]
-target-version = "py39"
+fix = true
 
+[tool.ruff.lint]
 select = [
     "B",
     "E",
@@ -45,12 +46,11 @@ ignore = [
     "RUF012",   # Mutable class attributes should use `typing.ClassVar`
 ]
 
-fix = true
 unfixable = [
     "F401",     # Unused imports
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F403"]
 "geoviews/tests/*" = [
     "RUF001", "RUF002", "RUF003",  # Ambiguous unicode character

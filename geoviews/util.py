@@ -139,12 +139,14 @@ def zoom_level(bounds, width, height):
     return int(zoom) if np.isfinite(zoom) else 0
 
 
-def geom_dict_to_array_dict(geom_dict, coord_names=['Longitude', 'Latitude']):
+def geom_dict_to_array_dict(geom_dict, coord_names=None):
     """
     Converts a dictionary containing an geometry key to a dictionary
     of x- and y-coordinate arrays and if present a list-of-lists of
     hole array.
     """
+    if coord_names is None:
+        coord_names = ["Longitude", "Latitude"]
     x, y = coord_names
     geom = geom_dict['geometry']
     new_dict = {k: v for k, v in geom_dict.items() if k != 'geometry'}

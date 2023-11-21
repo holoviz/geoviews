@@ -285,7 +285,9 @@ class GeomDictInterface(DictInterface):
         return data
 
     @classmethod
-    def sample(cls, dataset, samples=[]):
+    def sample(cls, dataset, samples=None):
+        if samples is None:
+            samples = []
         raise NotImplementedError('sampling operation not implemented for geometries.')
 
     @classmethod

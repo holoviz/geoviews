@@ -15,7 +15,11 @@ class PolyVertexEdit(PolyEdit):
         A dictionary specifying the style options for the intermediate nodes.
     """
 
-    def __init__(self, node_style={}, feature_style={}, **params):
+    def __init__(self, node_style=None, feature_style=None, **params):
+        if feature_style is None:
+            feature_style = {}
+        if node_style is None:
+            node_style = {}
         self.node_style = node_style
         self.feature_style = feature_style
         super().__init__(**params)
@@ -35,7 +39,11 @@ class PolyVertexDraw(PolyDraw):
         A dictionary specifying the style options for the intermediate nodes.
     """
 
-    def __init__(self, node_style={}, feature_style={}, **params):
+    def __init__(self, node_style=None, feature_style=None, **params):
+        if feature_style is None:
+            feature_style = {}
+        if node_style is None:
+            node_style = {}
         self.node_style = node_style
         self.feature_style = feature_style
         super().__init__(**params)

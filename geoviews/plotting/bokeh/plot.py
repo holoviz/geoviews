@@ -98,7 +98,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 if (end-start) < min_interval:
                     mid = (start+end)/2.
                     ax_range.start = mid - min_interval/2.
-                    ax_range.start = mid + min_interval/2.
+                    ax_range.end = mid + min_interval/2.
                 ax_range.min_interval = min_interval
 
     def initialize_plot(self, ranges=None, plot=None, plots=None, source=None):

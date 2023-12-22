@@ -132,7 +132,7 @@ extras_require={
     'recommended': _recommended,
     'examples_extra': _examples_extra,
     'doc': _examples_extra + [
-        'nbsite >=0.8.2,<0.9.0',
+        'nbsite >=0.8.4,<0.9.0',
         'cartopy >=0.20.0',
         'graphviz',
         'lxml',

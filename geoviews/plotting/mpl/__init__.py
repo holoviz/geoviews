@@ -27,7 +27,7 @@ from holoviews.plotting.mpl.util import get_raster_array, wrap_formatter
 
 
 from ...element import (
-    Image, Points, Feature, WMTS, Tiles, Text, LineContours,
+    Image, ImageStack, Points, Feature, WMTS, Tiles, Text, LineContours,
     FilledContours, is_geographic, Path, Polygons, Shape, RGB,
     Contours, Nodes, EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
     HexTiles, Labels, Rectangles, Segments, WindBarbs
@@ -246,7 +246,6 @@ class GeoImagePlot(GeoPlot, RasterPlot):
         return GeoPlot.update_handles(self, *args)
 
 
-
 class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):
 
     _project_operation = project_quadmesh
@@ -286,6 +285,24 @@ class GeoRGBPlot(GeoImagePlot):
         Update the elements of the plot.
         """
         return GeoPlot.update_handles(self, *args)
+
+
+class GeoImageStackPlot(GeoImagePlot):
+
+    style_opts = ['alpha', 'cmap', 'visible', 'filterrad', 'clims', 'norm']
+
+    def __init__(self, element, **params):
+        super().__init__(element, **params)
+
+    def get_data(self, element, ranges, style):
+        self._norm_kwargs(element, ranges, style, element.vdims[0])
+        style.pop('interpolation', None)
+        xs, ys, zs = geo_mesh(element)
+        xs = GridInterface._infer_interval_breaks(xs)
+        ys = GridInterface._infer_interval_breaks(ys)
+        if self.geographic:
+            style['transform'] = element.crs
+        return (xs, ys, zs), style, {}
 
 
 class GeoPointPlot(GeoPlot, PointPlot):
@@ -587,6 +604,7 @@ Store.register({LineContours: LineContourPlot,
                 Path: GeoPathPlot,
                 Contours: GeoContourPlot,
                 RGB: GeoRGBPlot,
+                ImageStack: GeoImageStackPlot,
                 Shape: GeoShapePlot,
                 Graph: GeoGraphPlot,
                 TriMesh: GeoTriMeshPlot,

@@ -1,6 +1,59 @@
 Releases
 ========
 
+Version 1.11.0
+--------------
+
+Date: November 1, 2023
+
+This release brings compatibility with the latest versions of Bokeh
+(3.3) and Python (3.12), while also discontinuing support for Python
+3.8. Many thanks to @ahuang11, @maximlt, @philippjfr, and @Hoxbro for
+their ongoing contributions.
+
+Enhancements:
+
+-  Add ``VectorField``/``WindBarbs`` ``project`` operation
+   (`#296 <https://github.com/holoviz/geoviews/pull/296>`__)
+
+Bug fixes:
+
+-  Add ``**kwargs`` to all ``get_extents``
+   (`#670 <https://github.com/holoviz/geoviews/pull/670>`__)
+-  Update to use ``self.param.warning``
+   (`#672 <https://github.com/holoviz/geoviews/pull/672>`__)
+-  Set default ``zoom_level`` on ``Matplotlib``\ ’s WMTS to 3 from 8
+   (`#685 <https://github.com/holoviz/geoviews/pull/685>`__)
+
+
+Compatibility:
+
+-  Replace ``np.NaN`` with ``np.nan``
+   (`#680 <https://github.com/holoviz/geoviews/pull/680>`__)
+-  Update to support Bokeh 3.3 and Python 3.12 and drop Python 3.8
+   (`#683 <https://github.com/holoviz/geoviews/pull/683>`__)
+-  Update to support Python 3.12 and drop Python 3.8
+   (`#683 <https://github.com/holoviz/geoviews/pull/683>`__)
+-  Update Stamen maps
+   (`#684 <https://github.com/holoviz/geoviews/pull/684>`__)
+
+Documentation:
+
+-  Update GeoViews installation
+   (`#669 <https://github.com/holoviz/geoviews/pull/669>`__)
+-  Remove calling ``.cols(3)`` on the homepage
+   (`#681 <https://github.com/holoviz/geoviews/pull/681>`__)
+
+Maintenance:
+
+-  Add `OpenCollective <https://opencollective.com/holoviz>`__ sponsor
+   link on the repo page
+   (`#666 <https://github.com/holoviz/geoviews/pull/666>`__)
+-  General maintenance update
+   (`#668 <https://github.com/holoviz/geoviews/pull/668>`__,
+   `#675 <https://github.com/holoviz/geoviews/pull/675>`__,
+   `#676 <https://github.com/holoviz/geoviews/pull/676>`__)
+
 Version 1.10.1
 --------------
 
@@ -63,8 +116,8 @@ instead. The ``Wikipedia`` tile source will be removed in version
 ``rioxarray.open_rasterio`` to load GeoTIFFs into a
 ``xarray.DataArray``.
 
-Note, this release has a minor breaking change where `gv.feature.states`
-defaults to `fill_color=None` so the fill color is transparent.
+Note, this release has a minor breaking change where ``gv.feature.states``
+defaults to ``fill_color=None`` so the fill color is transparent.
 
 Enhancements:
 
@@ -305,7 +358,7 @@ Features:
 * Added geographic projection awareness to ``hv.annotate`` function (`#377 <https://github.com/holoviz/geoviews/pull/377>`_, `#419 <https://github.com/holoviz/geoviews/pull/419>`_)
 * Rewrote geometry interfaces such as geopandas to conform to new HoloViews geometry protocol (`#407 <https://github.com/holoviz/geoviews/pull/407>`_)
 * Implement consistent .geom method on geometry types (e.g. Path, Polygons, Points) (`#424 <https://github.com/holoviz/geoviews/pull/424>`_)
-* Add new `Rectangles` and `Segments` elements (`#377 <https://github.com/holoviz/geoviews/pull/377>`_)
+* Add new ``Rectangles`` and ``Segments`` elements (`#377 <https://github.com/holoviz/geoviews/pull/377>`_)
 
 Bug fixes:
 

@@ -39,14 +39,18 @@ html_theme_options = {
             "icon": "fa-brands fa-discord",
         },
     ],
-    "analytics": {"google_analytics_id": "G-XTWHHEZL7Q"},
     "pygment_dark_style": "material"
 }
 
 extensions += [
     'nbsite.gallery',
+    'nbsite.analytics',
 ]
 napoleon_numpy_docstring = True
+
+nbsite_analytics = {
+    'goatcounter_holoviz': True,
+}
 
 nbsite_gallery_conf = {
     'github_org': 'holoviz',

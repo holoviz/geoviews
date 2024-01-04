@@ -98,14 +98,14 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
             geom_in_src_proj = geom_clipped_to_dest_proj
         try:
             geom_in_crs = dest_proj.project_geometry(geom_in_src_proj, src_proj)
-        except ValueError:
+        except ValueError as e:
             src_name =type(src_proj).__name__
             dest_name =type(dest_proj).__name__
             raise ValueError(
                 f'Could not project data from {src_name} projection '
                 f'to {dest_name} projection. Ensure the coordinate '
                 'reference system (crs) matches your data and the kdims.'
-            )
+            ) from e
     else:
         geom_in_crs = boundary_poly.intersection(domain_in_src_proj)
     return geom_in_crs.bounds
@@ -139,12 +139,14 @@ def zoom_level(bounds, width, height):
     return int(zoom) if np.isfinite(zoom) else 0
 
 
-def geom_dict_to_array_dict(geom_dict, coord_names=['Longitude', 'Latitude']):
+def geom_dict_to_array_dict(geom_dict, coord_names=None):
     """
     Converts a dictionary containing an geometry key to a dictionary
     of x- and y-coordinate arrays and if present a list-of-lists of
     hole array.
     """
+    if coord_names is None:
+        coord_names = ["Longitude", "Latitude"]
     x, y = coord_names
     geom = geom_dict['geometry']
     new_dict = {k: v for k, v in geom_dict.items() if k != 'geometry'}
@@ -266,19 +268,19 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
     return polys
 
 
-def path_to_geom_dicts(path, skip_invalid=True):
+def path_to_geom_dicts(fullpath, skip_invalid=True):
     """
     Converts a Path element into a list of geometry dictionaries,
     preserving all value dimensions.
     """
-    geoms = unpack_geoms(path)
+    geoms = unpack_geoms(fullpath)
     if geoms is not None:
         return geoms
 
     geoms = []
     invalid = False
-    xdim, ydim = path.kdims
-    for i, path in enumerate(path.split(datatype='columns')):
+    xdim, ydim = fullpath.kdims
+    for path in fullpath.split(datatype='columns'):
         array = np.column_stack([path.pop(xdim.name), path.pop(ydim.name)])
         splits = np.where(np.isnan(array[:, :2].astype('float')).sum(axis=1))[0]
         arrays = np.split(array, splits+1) if len(splits) else [array]
@@ -581,7 +583,7 @@ def process_crs(crs):
         import cartopy.crs as ccrs
         import pyproj
     except ImportError:
-        raise ImportError('Geographic projection support requires pyproj and cartopy.')
+        raise ImportError('Geographic projection support requires pyproj and cartopy.') from None
 
     if crs is None:
         return ccrs.PlateCarree()
@@ -641,7 +643,7 @@ def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwa
     try:
         import xarray as xr
     except ImportError:
-        raise ImportError('Loading tiffs requires xarray to be installed')
+        raise ImportError('Loading tiffs requires xarray to be installed') from None
     try:
         with warnings.catch_warnings():
             warnings.filterwarnings('ignore')
@@ -727,7 +729,7 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
 
             values = values.astype(float)
             for d in da.attrs['nodatavals']:
-                values[values==d] = np.NaN
+                values[values==d] = np.nan
         data += (values,)
 
     if 'datatype' not in kwargs:
@@ -753,7 +755,7 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
     return el
 
 
-def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=ccrs.PlateCarree()):
+def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=None):
     """
     Returns an RGB element given a tile_source, bounding box and zoom level.
 
@@ -775,6 +777,9 @@ def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=ccrs.PlateCarree()):
     """
 
     from .element import RGB, WMTS
+    if bbox_crs is None:
+        bbox_crs = ccrs.PlateCarree()
+
     if isinstance(tile_source, (WMTS, Tiles)):
         tile_source = tile_source.data
 

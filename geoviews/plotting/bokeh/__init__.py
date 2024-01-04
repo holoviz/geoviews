@@ -23,7 +23,7 @@ from ...element import (
 )
 from ...operation import (
     project_image, project_points, project_path, project_graph,
-    project_quadmesh, project_geom
+    project_quadmesh, project_geom, project_vectorfield
 )
 from ...tile_sources import _ATTRIBUTIONS
 from ...util import poly_types, line_types
@@ -35,7 +35,7 @@ class TilePlot(GeoPlot):
 
     style_opts = ['alpha', 'render_parents', 'level', 'smoothing', 'min_zoom', 'max_zoom']
 
-    def get_extents(self, element, ranges, range_type='combined'):
+    def get_extents(self, element, ranges, range_type='combined', **kwargs):
         extents = super().get_extents(element, ranges, range_type)
         if (not self.overlaid and all(e is None or not np.isfinite(e) for e in extents)
             and range_type in ('combined', 'data')):
@@ -106,7 +106,7 @@ class GeoPointPlot(GeoPlot, PointPlot):
 
 class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
 
-    _project_operation = project_points
+    _project_operation = project_vectorfield
 
 
 class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):
@@ -215,13 +215,13 @@ class FeaturePlot(GeoPolygonPlot):
                                  objects=['10m', '50m', '110m'],
                                  doc="The scale of the Feature in meters.")
 
-    def get_extents(self, element, ranges, range_type='combined'):
+    def get_extents(self, element, ranges, range_type='combined', **kwargs):
         proj = self.projection
         if self.global_extent and range_type in ('combined', 'data'):
             (x0, x1), (y0, y1) = proj.x_limits, proj.y_limits
             return tuple(round(c, 12) for c in (x0, y0, x1, y1))
         elif self.overlaid:
-            return (np.NaN,)*4
+            return (np.nan,)*4
         return super().get_extents(element, ranges, range_type)
 
     def get_data(self, element, ranges, style):

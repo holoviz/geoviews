@@ -53,7 +53,7 @@ class weighted_regrid(regrid):
         try:
             import xesmf as xe
         except ImportError:
-            raise ImportError("xESMF library required for weighted regridding.")
+            raise ImportError("xESMF library required for weighted regridding.") from None
         x, y = element.kdims
         if self.p.target:
             tx, ty = self.p.target.kdims[:2]

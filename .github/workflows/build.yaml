@@ -20,8 +20,8 @@ jobs:
         shell: bash -l {0}
     env:
       CHANS_DEV: "-c pyviz/label/dev -c bokeh -c conda-forge -c nodefaults"
-      PKG_TEST_PYTHON: "--test-python=py38"
-      PYTHON_VERSION: "3.8"
+      PKG_TEST_PYTHON: "--test-python=py39"
+      PYTHON_VERSION: "3.9"
       MPLBACKEND: "Agg"
       CONDA_UPLOAD_TOKEN: ${{ secrets.CONDA_UPLOAD_TOKEN }}
       SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
@@ -39,9 +39,9 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '15'
+          node-version: 16.x
       - name: Fetch unshallow
         run: git fetch --prune --tags --unshallow -f
       - name: Set output
@@ -103,8 +103,8 @@ jobs:
         shell: bash -l {0}
     env:
       CHANS_DEV: "-c pyviz/label/dev -c bokeh -c conda-forge"
-      PKG_TEST_PYTHON: "--test-python=py38"
-      PYTHON_VERSION: "3.8"
+      PKG_TEST_PYTHON: "--test-python=py39"
+      PYTHON_VERSION: "3.9"
       CHANS: "-c pyviz"
       MPLBACKEND: "Agg"
       PPU: ${{ secrets.PPU }}
@@ -125,9 +125,9 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '15'
+          node-version: 16.x
       - name: Fetch unshallow
         run: git fetch --prune --tags --unshallow -f
       - name: conda setup

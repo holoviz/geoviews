@@ -71,7 +71,9 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 )
 
     def _axis_properties(self, axis, key, plot, dimension=None,
-                         ax_mapping={'x': 0, 'y': 1}):
+                         ax_mapping=None):
+        if ax_mapping is None:
+            ax_mapping = {'x': 0, 'y': 1}
         axis_props = super()._axis_properties(axis, key, plot,
                                                            dimension, ax_mapping)
         proj = self.projection
@@ -98,7 +100,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 if (end-start) < min_interval:
                     mid = (start+end)/2.
                     ax_range.start = mid - min_interval/2.
-                    ax_range.start = mid + min_interval/2.
+                    ax_range.end = mid + min_interval/2.
                 ax_range.min_interval = min_interval
 
     def initialize_plot(self, ranges=None, plot=None, plots=None, source=None):
@@ -115,7 +117,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
     def _postprocess_hover(self, renderer, source):
         super()._postprocess_hover(renderer, source)
-        hover = getattr(self.handles["plot"], "hover")
+        hover = self.handles["plot"].hover
         hover = hover[0] if hover else None
         if (not self.geographic or hover is None or
             isinstance(hover.tooltips, str) or self.projection is not GOOGLE_MERCATOR

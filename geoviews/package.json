@@ -1,6 +1,6 @@
 {
   "name": "@holoviz/geoviews",
-  "version": "1.10.1",
+  "version": "1.11.0",
   "description": "Simple, concise geographical visualization in Python",
   "license": "BSD-3-Clause",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "https://github.com/holoviz/geoviews.git"
   },
   "dependencies": {
-    "@bokeh/bokehjs": "~3.2.1"
+    "@bokeh/bokehjs": "~3.3.0"
   },
   "devDependencies": {},
   "files": [

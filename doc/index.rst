@@ -19,12 +19,16 @@ the `HoloViz Discourse <https://discourse.holoviz.org/>`_.
 Installation
 ============
 
-You can install GeoViews and its dependencies using conda::
+You can install GeoViews and its dependencies using pip::
+
+    pip install geoviews
+
+Alternatively you can use conda to install geoviews:
 
     conda install -c pyviz geoviews
 
-Alternatively you can install the geoviews-core package, which
-only installs the minimal dependencies required to run geoviews::
+Or, the geoviews-core package, which only installs the minimal
+dependencies required to run geoviews::
 
     conda install -c pyviz geoviews-core
 
@@ -36,9 +40,9 @@ notebook::
     cd geoviews-examples
     jupyter notebook
 
-(Here `geoviews examples` is a shorthand for `geoviews copy-examples
+(Here ``geoviews examples`` is a shorthand for ``geoviews copy-examples
 --path geoviews-examples && geoviews fetch-data --path
-geoviews-examples`.)
+geoviews-examples``.)
 
 In the classic Jupyter notebook environment and JupyterLab, first make
 sure to load the ``gv.extension()``. For versions of
@@ -55,8 +59,8 @@ Once you have installed JupyterLab and the extension launch it with::
   jupyter-lab
 
 If you want to try out the latest features between releases, you can
-get the latest dev release by specifying `-c pyviz/label/dev` in place
-of `-c pyviz`.
+get the latest dev release by specifying ``-c pyviz/label/dev`` in place
+of ``-c pyviz``.
 
 Additional dependencies
 =======================
@@ -79,9 +83,10 @@ in how non-Python packages are built between conda-forge and defaults.
 
 -----
 
-GeoViews itself is also installable using ``pip``, but to do that you
-will first need to have installed the `dependencies of cartopy <http://scitools.org.uk/cartopy/docs/latest/installing.html#requirements>`_,
-or else have set up your system to be able to build them.
+GeoViews itself is installable using ``pip``, as long as you're using
+cartopy>=0.22.0; otherwise you will first need to have installed the
+`dependencies of cartopy <http://scitools.org.uk/cartopy/docs/latest/installing.html#requirements>`_,
+or have set up your system to be able to build them.
 
 .. toctree::
    :hidden:

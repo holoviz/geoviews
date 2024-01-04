@@ -287,11 +287,13 @@ class GeoRGBPlot(GeoImagePlot):
         return GeoPlot.update_handles(self, *args)
 
 
-class GeoImageStackPlot(GeoImagePlot):
+class GeoImageStackPlot(GeoPlot):
 
     style_opts = ['alpha', 'cmap', 'visible', 'filterrad', 'clims', 'norm']
 
     def __init__(self, element, **params):
+        print(element, **params)
+        raise
         super().__init__(element, **params)
 
     def get_data(self, element, ranges, style):
@@ -302,7 +304,22 @@ class GeoImageStackPlot(GeoImagePlot):
         ys = GridInterface._infer_interval_breaks(ys)
         if self.geographic:
             style['transform'] = element.crs
+        raise
         return (xs, ys, zs), style, {}
+
+
+    def init_artists(self, ax, plot_args, plot_kwargs):
+        artist = ax.imshow(*plot_args, **plot_kwargs)
+        raise
+        return {'artist': artist}
+
+
+    def update_handles(self, *args):
+        """
+        Update the elements of the plot.
+        """
+        raise
+        return GeoPlot.update_handles(self, *args)
 
 
 class GeoPointPlot(GeoPlot, PointPlot):

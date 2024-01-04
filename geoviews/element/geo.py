@@ -10,9 +10,9 @@ from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
 from holoviews.core import util
 from holoviews.element import (
     Contours as HvContours, Graph as HvGraph, Image as HvImage,
-    Nodes as HvNodes, Path as HvPath, Polygons as HvPolygons,
-    RGB as HvRGB, Text as HvText, TriMesh as HvTriMesh,
-    QuadMesh as HvQuadMesh, Points as HvPoints,
+    ImageStack as HvImageStack, Nodes as HvNodes, Path as HvPath,
+    Polygons as HvPolygons, RGB as HvRGB, Text as HvText,
+    TriMesh as HvTriMesh, QuadMesh as HvQuadMesh, Points as HvPoints,
     VectorField as HvVectorField, HexTiles as HvHexTiles,
     Labels as HvLabels, Rectangles as HvRectangles,
     Segments as HvSegments, Geometry as HvGeometry,
@@ -400,6 +400,39 @@ class Image(_Element, HvImage):
                     nan_nodata=False, **kwargs):
         return from_xarray(da, crs, apply_transform, **kwargs)
 
+
+class ImageStack(_Element, HvImageStack):
+    """
+    ImageStack expands the capabilities of Image to by supporting
+    multiple layers of images.
+
+    As there is many ways to represent multiple layers of images,
+    the following options are supported:
+
+        1) A 3D Numpy array with the shape (y, x, level)
+        2) A list of 2D Numpy arrays with identical shape (y, x)
+        3) A dictionary where the keys will be set as the vdims and the
+            values are 2D Numpy arrays with identical shapes (y, x).
+            If the dictionary's keys matches the kdims of the element,
+            they need to be 1D arrays.
+        4) A tuple containing (x, y, level_0, level_1, ...),
+            where the level is a 2D Numpy array in the shape of (y, x).
+        5) An xarray DataArray or Dataset where its `coords` contain the kdims.
+
+    If no kdims are supplied, x and y are used.
+
+    If no vdims are supplied, and the naming can be inferred like with a dictionary
+    the levels will be named level_0, level_1, etc.
+    """
+
+    vdims = param.List(doc="""
+        The dimension description of the data held in the matrix.""")
+
+    group = param.String(default='ImageStack', constant=True)
+
+    _ndim = 3
+
+    _vdim_reductions = {1: Image}
 
 
 class QuadMesh(_Element, HvQuadMesh):

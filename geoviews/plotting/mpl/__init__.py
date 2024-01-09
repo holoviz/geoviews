@@ -267,9 +267,10 @@ class GeoRGBPlot(GeoImagePlot):
     def get_data(self, element, ranges, style):
         self._norm_kwargs(element, ranges, style, element.vdims[0])
         style.pop('interpolation', None)
-        zs = get_raster_array(element)[::-1]
+        zs = get_raster_array(element)
         l, b, r, t = element.bounds.lbrt()
         style['extent'] = [l, r, b, t]
+        style['origin'] = 'upper'
         if self.geographic:
             style['transform'] = element.crs
         return (zs,), style, {}
@@ -284,41 +285,6 @@ class GeoRGBPlot(GeoImagePlot):
         """
         Update the elements of the plot.
         """
-        return GeoPlot.update_handles(self, *args)
-
-
-class GeoImageStackPlot(GeoPlot):
-
-    style_opts = ['alpha', 'cmap', 'visible', 'filterrad', 'clims', 'norm']
-
-    def __init__(self, element, **params):
-        print(element, **params)
-        raise
-        super().__init__(element, **params)
-
-    def get_data(self, element, ranges, style):
-        self._norm_kwargs(element, ranges, style, element.vdims[0])
-        style.pop('interpolation', None)
-        xs, ys, zs = geo_mesh(element)
-        xs = GridInterface._infer_interval_breaks(xs)
-        ys = GridInterface._infer_interval_breaks(ys)
-        if self.geographic:
-            style['transform'] = element.crs
-        raise
-        return (xs, ys, zs), style, {}
-
-
-    def init_artists(self, ax, plot_args, plot_kwargs):
-        artist = ax.imshow(*plot_args, **plot_kwargs)
-        raise
-        return {'artist': artist}
-
-
-    def update_handles(self, *args):
-        """
-        Update the elements of the plot.
-        """
-        raise
         return GeoPlot.update_handles(self, *args)
 
 
@@ -621,7 +587,7 @@ Store.register({LineContours: LineContourPlot,
                 Path: GeoPathPlot,
                 Contours: GeoContourPlot,
                 RGB: GeoRGBPlot,
-                ImageStack: GeoImageStackPlot,
+                ImageStack: GeoRGBPlot,
                 Shape: GeoShapePlot,
                 Graph: GeoGraphPlot,
                 TriMesh: GeoTriMeshPlot,
@@ -629,7 +595,6 @@ Store.register({LineContours: LineContourPlot,
                 EdgePaths: GeoPathPlot,
                 HexTiles: GeoHexTilesPlot,
                 QuadMesh: GeoQuadMeshPlot}, 'matplotlib')
-
 
 # Define plot and style options
 options = Store.options(backend='matplotlib')

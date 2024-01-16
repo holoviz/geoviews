@@ -14,8 +14,7 @@ from holoviews.plotting.bokeh.geometry import RectanglesPlot, SegmentPlot
 from holoviews.plotting.bokeh.graphs import TriMeshPlot, GraphPlot
 from holoviews.plotting.bokeh.hex_tiles import hex_binning, HexTilesPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
-from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot, QuadMeshPlot, ImageStackPlot
-
+from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot, QuadMeshPlot
 from ...element import (
     WMTS, Points, Polygons, Path, Contours, Shape, Image, ImageStack, Feature,
     Text, RGB, Nodes, EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
@@ -29,7 +28,13 @@ from ...tile_sources import _ATTRIBUTIONS
 from ...util import poly_types, line_types
 from .plot import GeoPlot, GeoOverlayPlot
 from . import callbacks # noqa
+try:
+    from holoviews.plotting.bokeh.raster import ImageStackPlot
+except ImportError:
+    class ImageStackPlot:
 
+        def __init__(self, *args, **kwargs):
+            raise ImportError('ImageStackPlot requires HoloViews>=1.18.0')
 
 class TilePlot(GeoPlot):
 

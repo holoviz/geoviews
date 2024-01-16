@@ -10,15 +10,21 @@ from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay
 from holoviews.core import util
 from holoviews.element import (
     Contours as HvContours, Graph as HvGraph, Image as HvImage,
-    ImageStack as HvImageStack, Nodes as HvNodes, Path as HvPath,
-    Polygons as HvPolygons, RGB as HvRGB, Text as HvText,
-    TriMesh as HvTriMesh, QuadMesh as HvQuadMesh, Points as HvPoints,
+    Nodes as HvNodes, Path as HvPath, Polygons as HvPolygons,
+    RGB as HvRGB, Text as HvText, TriMesh as HvTriMesh,
+    QuadMesh as HvQuadMesh, Points as HvPoints,
     VectorField as HvVectorField, HexTiles as HvHexTiles,
     Labels as HvLabels, Rectangles as HvRectangles,
     Segments as HvSegments, Geometry as HvGeometry,
 )
+from holoviews import __version__ as _hv_version
+try:
+    from holoviews import ImageStack as HvImageStack
+except ImportError:
+    class HvImageStack:
+        # will check version below
+        pass
 from holoviews.element.selection import Selection2DExpr
-
 
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry import (
@@ -424,6 +430,11 @@ class ImageStack(_Element, HvImageStack):
     If no vdims are supplied, and the naming can be inferred like with a dictionary
     the levels will be named level_0, level_1, etc.
     """
+
+    def __init__(self, data, kdims=None, vdims=None, **params):
+        if _hv_version < '1.18':
+            raise ImportError('ImageStack requires HoloViews 1.18 or greater.')
+        super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
     vdims = param.List(doc="""
         The dimension description of the data held in the matrix.""")

@@ -195,3 +195,26 @@ class TestWindBarbsPlot(TestMPLPlot):
             "'flagcolor' and 'barbcolor'; ignoring 'flagcolor' and 'barbcolor'.\n"
         )
         self.assertEqual(log_msg, warning)
+
+
+class TestImageStackPlot(TestMPLPlot):
+
+    def test_image_stack_crs(self):
+        x = np.arange(-120, -115)
+        y = np.arange(40, 43)
+        a = np.random.rand(len(y), len(x))
+        b = np.random.rand(len(y), len(x))
+
+        img_stack = gv.ImageStack(
+            (x, y, a, b), kdims=["x", "y"], vdims=["a", "b"],
+        )
+        data = img_stack.data
+        np.testing.assert_almost_equal(data["x"], x)
+        np.testing.assert_almost_equal(data["y"], y)
+        np.testing.assert_almost_equal(data["a"], a)
+        np.testing.assert_almost_equal(data["b"], b)
+
+        fig = gv.render(img_stack)
+        mpl_img = fig.axes[0].get_children()[0]
+        np.testing.assert_almost_equal(mpl_img.get_extent(), (-120.5, -115.5, 39.5, 42.5))
+        assert np.sum(mpl_img.get_array()) > 0

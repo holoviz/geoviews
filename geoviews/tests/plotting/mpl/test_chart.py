@@ -1,3 +1,4 @@
+import pytest
 import numpy as np
 import xarray as xr
 import geoviews as gv
@@ -9,6 +10,11 @@ from holoviews.tests.plotting.utils import ParamLogStream
 from geoviews import Store
 
 from test_plot import TestMPLPlot
+
+try:
+    import datashader
+except ImportError:
+    datashader = None
 
 mpl_renderer = Store.renderers["matplotlib"]
 
@@ -199,6 +205,7 @@ class TestWindBarbsPlot(TestMPLPlot):
 
 class TestImageStackPlot(TestMPLPlot):
 
+    @pytest.mark.skipif(datashader is None, reason="Needs datashader to be installed")
     def test_image_stack_crs(self):
         x = np.arange(-120, -115)
         y = np.arange(40, 43)

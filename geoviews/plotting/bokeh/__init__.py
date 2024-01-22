@@ -32,9 +32,7 @@ try:
     from holoviews.plotting.bokeh.raster import ImageStackPlot
 except ImportError:
     class ImageStackPlot:
-
-        def __init__(self, *args, **kwargs):
-            raise ImportError('ImageStackPlot requires HoloViews>=1.18.0')
+        ...
 
 class TilePlot(GeoPlot):
 

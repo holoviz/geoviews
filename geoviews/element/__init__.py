@@ -4,7 +4,7 @@ from holoviews.element import (
 )
 
 from .geo import (_Element, Feature, Tiles, is_geographic,     # noqa (API import)
-                  WMTS, Points, Image, Text, LineContours, RGB,
+                  WMTS, Points, Image, ImageStack, Text, LineContours, RGB,
                   FilledContours, Path, Polygons, Shape, Dataset,
                   Contours, TriMesh, Graph, Nodes, EdgePaths, QuadMesh,
                   VectorField, Labels, HexTiles, Rectangles, Segments, WindBarbs)
@@ -50,6 +50,9 @@ class GeoConversion(ElementConversion):
 
     def image(self, kdims=None, vdims=None, mdims=None, **kwargs):
         return self(Image, kdims, vdims, mdims, **kwargs)
+
+    def image_stack(self, kdims=None, vdims=None, mdims=None, **kwargs):
+        return self(ImageStack, kdims, vdims, mdims, **kwargs)
 
     def points(self, kdims=None, vdims=None, mdims=None, **kwargs):
         if kdims is None: kdims = self._element.kdims

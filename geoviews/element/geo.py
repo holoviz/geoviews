@@ -19,7 +19,6 @@ from holoviews.element import (
 )
 from holoviews.element.selection import Selection2DExpr
 
-
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry import (
     box, GeometryCollection, MultiPolygon, LineString, MultiLineString,
@@ -35,12 +34,17 @@ except (ImportError, OSError):
     # when installing the package.
     Cube = None
 
-
-
 try:
     from owslib.wmts import WebMapTileService
 except ImportError:
     WebMapTileService = None
+
+try:
+    from holoviews import ImageStack as HvImageStack
+    _IMAGESTACK_AVAILABLE = True
+except ImportError:
+    class HvImageStack: ...
+    _IMAGESTACK_AVAILABLE = False
 
 from ..util import (
     path_to_geom_dicts, polygons_to_geom_dicts, load_tiff, from_xarray,
@@ -400,6 +404,44 @@ class Image(_Element, HvImage):
                     nan_nodata=False, **kwargs):
         return from_xarray(da, crs, apply_transform, **kwargs)
 
+
+class ImageStack(_Element, HvImageStack):
+    """
+    ImageStack expands the capabilities of Image to by supporting
+    multiple layers of images.
+
+    As there is many ways to represent multiple layers of images,
+    the following options are supported:
+
+        1) A 3D Numpy array with the shape (y, x, level)
+        2) A list of 2D Numpy arrays with identical shape (y, x)
+        3) A dictionary where the keys will be set as the vdims and the
+            values are 2D Numpy arrays with identical shapes (y, x).
+            If the dictionary's keys matches the kdims of the element,
+            they need to be 1D arrays.
+        4) A tuple containing (x, y, level_0, level_1, ...),
+            where the level is a 2D Numpy array in the shape of (y, x).
+        5) An xarray DataArray or Dataset where its `coords` contain the kdims.
+
+    If no kdims are supplied, x and y are used.
+
+    If no vdims are supplied, and the naming can be inferred like with a dictionary
+    the levels will be named level_0, level_1, etc.
+    """
+
+    def __init__(self, data, kdims=None, vdims=None, **params):
+        if not _IMAGESTACK_AVAILABLE:
+            raise ImportError('ImageStack requires HoloViews 1.18 or greater.')
+        super().__init__(data, kdims=kdims, vdims=vdims, **params)
+
+    vdims = param.List(doc="""
+        The dimension description of the data held in the matrix.""")
+
+    group = param.String(default='ImageStack', constant=True)
+
+    _ndim = 3
+
+    _vdim_reductions = {1: Image}
 
 
 class QuadMesh(_Element, HvQuadMesh):

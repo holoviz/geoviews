@@ -9,7 +9,7 @@ from holoviews import render, save # noqa (API import)
 from .annotators import annotate # noqa (API import)
 from .element import ( # noqa (API import)
     _Element, Feature, Tiles, WMTS, LineContours, FilledContours,
-    Text, Image, Points, Path, Polygons, Shape, Dataset, RGB,
+    Text, Image, ImageStack, Points, Path, Polygons, Shape, Dataset, RGB,
     Contours, Graph, TriMesh, Nodes, EdgePaths, QuadMesh, VectorField,
     HexTiles, Labels, Rectangles, Segments, WindBarbs
 )

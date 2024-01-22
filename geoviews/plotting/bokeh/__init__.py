@@ -15,9 +15,8 @@ from holoviews.plotting.bokeh.graphs import TriMeshPlot, GraphPlot
 from holoviews.plotting.bokeh.hex_tiles import hex_binning, HexTilesPlot
 from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
 from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot, QuadMeshPlot
-
 from ...element import (
-    WMTS, Points, Polygons, Path, Contours, Shape, Image, Feature,
+    WMTS, Points, Polygons, Path, Contours, Shape, Image, ImageStack, Feature,
     Text, RGB, Nodes, EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
     Labels, HexTiles, LineContours, FilledContours, Rectangles, Segments
 )
@@ -29,7 +28,11 @@ from ...tile_sources import _ATTRIBUTIONS
 from ...util import poly_types, line_types
 from .plot import GeoPlot, GeoOverlayPlot
 from . import callbacks # noqa
-
+try:
+    from holoviews.plotting.bokeh.raster import ImageStackPlot
+except ImportError:
+    class ImageStackPlot:
+        ...
 
 class TilePlot(GeoPlot):
 
@@ -136,6 +139,11 @@ class GeoRasterPlot(GeoPlot, RasterPlot):
 
 
 class GeoRGBPlot(GeoPlot, RGBPlot):
+
+    _project_operation = project_image.instance(fast=False)
+
+
+class GeoImageStackPlot(GeoPlot, ImageStackPlot):
 
     _project_operation = project_image.instance(fast=False)
 
@@ -293,6 +301,7 @@ Store.register({WMTS: TilePlot,
                 Path: GeoPathPlot,
                 Shape: GeoShapePlot,
                 Image: GeoRasterPlot,
+                ImageStack: GeoImageStackPlot,
                 RGB: GeoRGBPlot,
                 LineContours: LineContourPlot,
                 FilledContours: FilledContourPlot,

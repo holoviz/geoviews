@@ -27,7 +27,7 @@ from holoviews.plotting.mpl.util import get_raster_array, wrap_formatter
 
 
 from ...element import (
-    Image, Points, Feature, WMTS, Tiles, Text, LineContours,
+    Image, ImageStack, Points, Feature, WMTS, Tiles, Text, LineContours,
     FilledContours, is_geographic, Path, Polygons, Shape, RGB,
     Contours, Nodes, EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
     HexTiles, Labels, Rectangles, Segments, WindBarbs
@@ -246,7 +246,6 @@ class GeoImagePlot(GeoPlot, RasterPlot):
         return GeoPlot.update_handles(self, *args)
 
 
-
 class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):
 
     _project_operation = project_quadmesh
@@ -268,9 +267,10 @@ class GeoRGBPlot(GeoImagePlot):
     def get_data(self, element, ranges, style):
         self._norm_kwargs(element, ranges, style, element.vdims[0])
         style.pop('interpolation', None)
-        zs = get_raster_array(element)[::-1]
+        zs = get_raster_array(element)
         l, b, r, t = element.bounds.lbrt()
         style['extent'] = [l, r, b, t]
+        style['origin'] = 'upper'
         if self.geographic:
             style['transform'] = element.crs
         return (zs,), style, {}
@@ -587,6 +587,7 @@ Store.register({LineContours: LineContourPlot,
                 Path: GeoPathPlot,
                 Contours: GeoContourPlot,
                 RGB: GeoRGBPlot,
+                ImageStack: GeoRGBPlot,
                 Shape: GeoShapePlot,
                 Graph: GeoGraphPlot,
                 TriMesh: GeoTriMeshPlot,
@@ -594,7 +595,6 @@ Store.register({LineContours: LineContourPlot,
                 EdgePaths: GeoPathPlot,
                 HexTiles: GeoHexTilesPlot,
                 QuadMesh: GeoQuadMeshPlot}, 'matplotlib')
-
 
 # Define plot and style options
 options = Store.options(backend='matplotlib')

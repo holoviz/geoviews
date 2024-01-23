@@ -63,15 +63,13 @@ skip = "doc/generate_modules.py,*.json,*.csv"
 write-changes = true
 
 [tool.pytest.ini_options]
-addopts = "-v --pyargs --doctest-ignore-import-errors --strict-markers --strict-config --color=yes"
+addopts = ["--pyargs", "--doctest-ignore-import-errors", "--strict-config", "--strict-markers", "--color=yes"]
 norecursedirs = "doc .git dist build _build .ipynb_checkpoints"
 minversion = 7
 xfail_strict = true
 log_cli_level = "INFO"
 filterwarnings = [
-       "error::holoviews.HoloviewsUserWarning",
-       "error::geoviews.GeoviewsDeprecationWarning",
-       "error::geoviews.GeoviewsUserWarning",
+       "error",
        #  2023-01: https://github.com/bokeh/bokeh/pull/12690
        "ignore:`.+?` is a deprecated alias for `.+?`.:DeprecationWarning:bokeh",
        #  2023-01: https://github.com/cupy/cupy/pull/7245
@@ -81,4 +79,7 @@ filterwarnings = [
        "error::holoviews.HoloviewsDeprecationWarning",
        #  2023-09: See https://github.com/Unidata/MetPy/pull/3117
        "ignore:'xdrlib' is deprecated and slated for removal in Python 3.13:DeprecationWarning:metpy.io.nexrad",
+       # 2024-01: Pandas 2.0
+       "ignore:\\s*Pyarrow will become a required dependency of pandas:DeprecationWarning",  # Will go away by itself in Pandas 3.0
+       "ignore:Passing a (SingleBlockManager|BlockManager) to (Series|GeoSeries|DataFrame|GeoDataFrame) is deprecated:DeprecationWarning",  # https://github.com/holoviz/spatialpandas/issues/137
 ]

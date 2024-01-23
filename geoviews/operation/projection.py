@@ -407,10 +407,12 @@ class project_image(_project_operation):
         if xn == 0 or yn == 0:
             return img.clone([], bounds=tgt_extent, crs=proj)
 
-        xunit = ((tgt_extent[1]-tgt_extent[0])/float(xn))/2.
-        yunit = ((tgt_extent[3]-tgt_extent[2])/float(yn))/2.
-        xs = np.linspace(tgt_extent[0]+xunit, tgt_extent[1]-xunit, xn)
-        ys = np.linspace(tgt_extent[2]+yunit, tgt_extent[3]-yunit, yn)
+        xs = np.linspace(x0, x1, xn)
+        ys = np.linspace(y0, y1, yn)
+        xs, ys, _ = proj.transform_points(
+            img.crs, np.asarray(xs), np.asarray(ys)
+        ).T
+
         return img.clone((xs, ys)+tuple(arrays), bounds=None, kdims=img.kdims,
                          vdims=img.vdims, crs=proj, xdensity=None,
                          ydensity=None)

@@ -38,7 +38,7 @@ jobs:
           fetch-depth: "100"
       - uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.PYTHON_VERSION }
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
@@ -121,7 +121,7 @@ jobs:
           fetch-depth: "100"
       - uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.PYTHON_VERSION }}
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"

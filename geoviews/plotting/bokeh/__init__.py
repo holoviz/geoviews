@@ -36,7 +36,10 @@ except ImportError:
 
 class TilePlot(GeoPlot):
 
-    style_opts = ['alpha', 'render_parents', 'level', 'smoothing', 'min_zoom', 'max_zoom']
+    style_opts = [
+        'alpha', 'render_parents', 'level', 'smoothing', 'min_zoom', 'max_zoom',
+        'extra_url_vars', 'tile_size', 'use_latlon', 'wrap_around'
+    ]
 
     def get_extents(self, element, ranges, range_type='combined', **kwargs):
         extents = super().get_extents(element, ranges, range_type)
@@ -79,6 +82,7 @@ class TilePlot(GeoPlot):
             for key, attribution in _ATTRIBUTIONS.items():
                 if all(k in element.data for k in key):
                     params['attribution'] = attribution
+
         return {}, {'tile_source': tile_source(**params)}, style
 
     def _update_glyph(self, renderer, properties, mapping, glyph, source=None, data=None):

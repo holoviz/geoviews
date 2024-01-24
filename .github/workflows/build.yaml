@@ -11,6 +11,12 @@ on:
   schedule:
     - cron: '0 18 * * SUN'
 
+env:
+  PYTHON_VERSION: "3.9"
+  NODE_VERSION: "18"
+  MPLBACKEND: "Agg"
+  SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
+
 jobs:
   conda_build:
     name: Build Conda Packages
@@ -21,10 +27,7 @@ jobs:
     env:
       CHANS_DEV: "-c pyviz/label/dev -c bokeh -c conda-forge -c nodefaults"
       PKG_TEST_PYTHON: "--test-python=py39"
-      PYTHON_VERSION: "3.9"
-      MPLBACKEND: "Agg"
       CONDA_UPLOAD_TOKEN: ${{ secrets.CONDA_UPLOAD_TOKEN }}
-      SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
     steps:
       - name: remove nodejs
         run: |
@@ -35,13 +38,13 @@ jobs:
           fetch-depth: "100"
       - uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.PYTHON_VERSION }
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: ${{ env.NODE_VERSION }}
       - name: Fetch unshallow
         run: git fetch --prune --tags --unshallow -f
       - name: Set output
@@ -104,13 +107,10 @@ jobs:
     env:
       CHANS_DEV: "-c pyviz/label/dev -c bokeh -c conda-forge"
       PKG_TEST_PYTHON: "--test-python=py39"
-      PYTHON_VERSION: "3.9"
       CHANS: "-c pyviz"
-      MPLBACKEND: "Agg"
       PPU: ${{ secrets.PPU }}
       PPP: ${{ secrets.PPP }}
       PYPI: "https://upload.pypi.org/legacy/"
-      SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
     steps:
       - name: remove nodejs
         run: |
@@ -121,13 +121,13 @@ jobs:
           fetch-depth: "100"
       - uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.PYTHON_VERSION }}
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: ${{ env.NODE_VERSION }}
       - name: Fetch unshallow
         run: git fetch --prune --tags --unshallow -f
       - name: conda setup

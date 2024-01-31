@@ -128,13 +128,6 @@ _examples_extra = _recommended + [
     'fiona',
     'geodatasets',
 ]
-
-# Only run on Linux
-if sys.platform == 'linux':
-    _examples_extra += [
-        'azure-core-cpp <1.11', # https://github.com/geopandas/geopandas/issues/3140
-    ]
-
 extras_require={
     'recommended': _recommended,
     'examples_extra': _examples_extra,

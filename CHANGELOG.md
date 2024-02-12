@@ -1,3 +1,34 @@
+Version 1.11.1
+==============
+
+Date: February 13, 2024
+
+This release brings minor bug fix and a few docs changes. Many thanks to @Hoxbro, @dwr-psandhu, @maximlt, @ahuang11 for their ongoing contributions.
+
+Enhancements:
+
+- Add support for ImageStack ([#693](https://github.com/holoviz/geoviews/pull/693))
+- Update WMTS params to match bokeh ([#698](https://github.com/holoviz/geoviews/pull/698))
+
+Documentation:
+
+- Show all tile sources ([#699](https://github.com/holoviz/geoviews/pull/699))
+- Add downloads badges by @ahuang11 ([#702](https://github.com/holoviz/geoviews/pull/702))
+- Replace Google Analytics with GoatCounter ([#692](https://github.com/holoviz/geoviews/pull/692))
+
+Bug Fixes:
+
+- Fix minimum zoom level ([#688](https://github.com/holoviz/geoviews/pull/688))
+
+Maintenance:
+
+- Update install task ([#687](https://github.com/holoviz/geoviews/pull/687))
+- Adding spellcheck and rst to pre-commit hooks ([#689](https://github.com/holoviz/geoviews/pull/689))
+- Update pytest settings to remove verbose as it makes it hard to read the changelog at a glance, raise warning as error in test suite and filterwarnings which are outside our control, and update pre-commit ([#696](https://github.com/holoviz/geoviews/pull/696))
+- Update pre-commit and ignore the warning from dask.dataframe ([#705](https://github.com/holoviz/geoviews/pull/705))
+- Update pytest to align with HoloViews ([#690](https://github.com/holoviz/geoviews/pull/690))
+- Update node version for build ([#700](https://github.com/holoviz/geoviews/pull/700))
+
 Version 1.11.0
 ==============
 

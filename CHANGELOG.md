@@ -3,7 +3,7 @@ Version 1.11.1
 
 Date: February 13, 2024
 
-This release brings minor bug fix and a few docs changes. Many thanks to @Hoxbro, @dwr-psandhu, @maximlt, @ahuang11 for their ongoing contributions.
+This release brings minor bug fix and a few docs changes. Many thanks to @dwr-psandhu for his first contribution and @Hoxbro, @maximlt, and @ahuang11 for their ongoing contributions.
 
 Enhancements:
 

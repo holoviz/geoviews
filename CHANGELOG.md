@@ -1,3 +1,29 @@
+Version 1.11.1
+==============
+
+Date: February 13, 2024
+
+This release brings minor bug fix and a few docs changes. Many thanks to @dwr-psandhu for his first contribution and @Hoxbro, @maximlt, and @ahuang11 for their ongoing contributions.
+
+Enhancements:
+
+- Add support for `ImageStack` ([#693](https://github.com/holoviz/geoviews/pull/693))
+- Update `WMTS` params to match Bokeh ([#698](https://github.com/holoviz/geoviews/pull/698))
+
+Documentation:
+
+- Show all tile sources ([#699](https://github.com/holoviz/geoviews/pull/699))
+- Add downloads badges by @ahuang11 ([#702](https://github.com/holoviz/geoviews/pull/702))
+- Replace Google Analytics with GoatCounter ([#692](https://github.com/holoviz/geoviews/pull/692))
+
+Bug Fixes:
+
+- Fix minimum zoom level ([#688](https://github.com/holoviz/geoviews/pull/688))
+
+Maintenance:
+
+- General maintenance ([#687](https://github.com/holoviz/geoviews/pull/687), [#689](https://github.com/holoviz/geoviews/pull/689), [#696](https://github.com/holoviz/geoviews/pull/696), [#705](https://github.com/holoviz/geoviews/pull/705))
+
 Version 1.11.0
 ==============
 

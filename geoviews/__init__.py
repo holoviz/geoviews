@@ -53,3 +53,16 @@ def __getattr__(attr):
         from . import operation
         return operation
     raise AttributeError(f"module {__name__} has no attribute {attr!r}")
+
+__all__ = [k for k in locals() if not k.startswith('_')]
+__all__ += ['annotate', 'project', 'operation']
+
+def __dir__():
+    return __all__
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .annotators import annotate
+    from .operation import project
+    from . import operation

@@ -6,7 +6,6 @@ from holoviews import (extension, help, opts, output, renderer, Store, # noqa (A
 
 from holoviews import render, save # noqa (API import)
 
-from .annotators import annotate # noqa (API import)
 from .element import ( # noqa (API import)
     _Element, Feature, Tiles, WMTS, LineContours, FilledContours,
     Text, Image, ImageStack, Points, Path, Polygons, Shape, Dataset, RGB,
@@ -14,10 +13,8 @@ from .element import ( # noqa (API import)
     HexTiles, Labels, Rectangles, Segments, WindBarbs
 )
 from .util import load_tiff, from_xarray # noqa (API import)
-from .operation import project                      # noqa (API import)
 from ._warnings import GeoviewsDeprecationWarning, GeoviewsUserWarning  # noqa: F401
 from . import data                                  # noqa (API import)
-from . import operation                             # noqa (API import)
 from . import plotting                              # noqa (API import)
 from . import feature                               # noqa (API import)
 from . import tile_sources                          # noqa (API import)
@@ -42,3 +39,17 @@ except ImportError:
     def _err(): raise ValueError(_missing_cmd())
     fetch_data = copy_examples = examples = _err
 del partial, _examples, _copy, _fetch
+
+
+def __getattr__(attr):
+    # Lazy loading heavy modules
+    if attr == 'annotate':
+        from .annotators import annotate
+        return annotate
+    elif attr == 'project':
+        from .operation import project
+        return project
+    elif attr == 'operation':
+        from . import operation
+        return operation
+    raise AttributeError(f"module {__name__} has no attribute {attr!r}")

@@ -150,6 +150,7 @@ extras_require={
         'shapely',
         'xarray',
         'pooch',
+        'pyviz_comms',
     ],
     'tests': [
         'nbval',
@@ -172,7 +173,7 @@ extras_require['build'] = [
     'param >=1.9.2',
     'pyct >=0.4.4',
     'bokeh ==3.3',
-    'pyviz_comms >=0.6.0',
+    'setuptools',
 ]
 
 ########################

@@ -26,13 +26,16 @@ from shapely.geometry import (
 )
 from shapely.ops import unary_union
 
-try:
-    from iris.cube import Cube
-except (ImportError, OSError):
-    # OSError because environment variable $UDUNITS2_XML_PATH
-    # is sometimes not set. Should be done automatically
-    # when installing the package.
-    Cube = None
+def _get_iris_cube():
+    try:
+        from iris.cube import Cube
+    except (ImportError, OSError):
+        # OSError because environment variable $UDUNITS2_XML_PATH
+        # is sometimes not set. Should be done automatically
+        # when installing the package.
+        Cube = None
+    return Cube
+
 
 try:
     from owslib.wmts import WebMapTileService
@@ -99,7 +102,7 @@ class _Element(Element2D):
             crs_data = data.data
         else:
             crs_data = data
-        if Cube and isinstance(crs_data, Cube):
+        if hasattr(crs_data, 'coord_system') and _get_iris_cube() and isinstance(crs_data, _get_iris_cube()):
             coord_sys = crs_data.coord_system()
             if hasattr(coord_sys, 'as_cartopy_projection'):
                 crs = coord_sys.as_cartopy_projection()

@@ -1,0 +1,544 @@
+
+<!DOCTYPE html>
+
+<html data-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="Docutils 0.19: https://docutils.sourceforge.io/" name="generator"/>
+<title>Using WMTS Offline — GeoViews v1.11.1</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet"/>
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet"/>
+<link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet"/>
+<link as="font" crossorigin="" href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" rel="preload" type="font/woff2"/>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/nbsite.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/notebook.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/gallery.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/alert.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/dataframe.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/scroller.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css" rel="stylesheet" type="text/css"/>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" rel="preload"/>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/sphinx_highlight.js"></script>
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script>
+    window.goatcounter = {
+        path: function(p) { return location.host + p }
+    }
+</script>
+<script async="async" data-goatcounter="https://holoviz.goatcounter.com/count" src="../_static/js/goatcounter.js"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/Using_WMTS_Offline';</script>
+<link href="../_static/favicon.ico" rel="shortcut icon"/>
+<link href="../about.html" rel="author" title="About these documents"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="../gallery/index.html" rel="next" title="Gallery"/>
+<link href="Using_Features_Offline.html" rel="prev" title="Using Features Offline"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="light" data-offset="180">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<input class="sidebar-toggle" id="__primary" name="__primary" type="checkbox"/>
+<label class="overlay overlay-primary" for="__primary"></label>
+<input class="sidebar-toggle" id="__secondary" name="__secondary" type="checkbox"/>
+<label class="overlay overlay-secondary" for="__secondary"></label>
+<div class="search-button__wrapper">
+<div class="search-button__overlay"></div>
+<div class="search-button__search-container">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search the docs ..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" id="search-input" name="q" placeholder="Search the docs ..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+</div>
+<nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+<label class="sidebar-toggle primary-toggle" for="__primary">
+<span class="fa-solid fa-bars"></span>
+</label>
+<div class="navbar-header-items__start">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="../index.html">
+<img alt="Logo image" class="logo__image only-light" src="../_static/logo_horizontal.png"/>
+<script>document.write(`<img src="../_static/logo_horizontal.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+</a></div>
+</div>
+<div class="col-lg-9 navbar-header-items">
+<div class="me-auto navbar-header-items__center">
+<div class="navbar-item"><nav class="navbar-nav">
+<p aria-label="Site Navigation" aria-level="1" class="sidebar-header-items__title" role="heading">
+    Site Navigation
+  </p>
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../index.html">
+                        Home
+                      </a>
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="index.html">
+                        User Guide
+                      </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../gallery/index.html">
+                        Gallery
+                      </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../topics.html">
+                        Topics
+                      </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../releases.html">
+                        Releases
+                      </a>
+</li>
+<div class="nav-item dropdown">
+<button aria-expanded="false" aria-haspopup="true" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
+                    More
+                </button>
+<div class="dropdown-menu">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../about.html">
+                        About
+                      </a>
+</li>
+</div>
+</div>
+</ul>
+</nav></div>
+</div>
+<div class="navbar-header-items__end">
+<div class="navbar-item navbar-persistent--container">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+</div>
+<div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/holoviz/geoviews" rel="noopener" target="_blank" title="GitHub"><span><i class="fa-brands fa-square-github"></i></span>
+<label class="sr-only">GitHub</label></a>
+</li>
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://twitter.com/HoloViews" rel="noopener" target="_blank" title="Twitter"><span><i class="fa-brands fa-twitter-square"></i></span>
+<label class="sr-only">Twitter</label></a>
+</li>
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://discourse.holoviz.org/c/geoviews" rel="noopener" target="_blank" title="Discourse"><span><i class="fa-brands fa-discourse"></i></span>
+<label class="sr-only">Discourse</label></a>
+</li>
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://discord.gg/AXRHnJU6sP" rel="noopener" target="_blank" title="Discord"><span><i class="fa-brands fa-discord"></i></span>
+<label class="sr-only">Discord</label></a>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+</div>
+<label class="sidebar-toggle secondary-toggle" for="__secondary">
+<span class="fa-solid fa-outdent"></span>
+</label>
+</div>
+</nav>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<div class="bd-sidebar-primary bd-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item"><nav class="navbar-nav">
+<p aria-label="Site Navigation" aria-level="1" class="sidebar-header-items__title" role="heading">
+    Site Navigation
+  </p>
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../index.html">
+                        Home
+                      </a>
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="index.html">
+                        User Guide
+                      </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../gallery/index.html">
+                        Gallery
+                      </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../topics.html">
+                        Topics
+                      </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../releases.html">
+                        Releases
+                      </a>
+</li>
+<div class="nav-item dropdown">
+<button aria-expanded="false" aria-haspopup="true" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
+                    More
+                </button>
+<div class="dropdown-menu">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../about.html">
+                        About
+                      </a>
+</li>
+</div>
+</div>
+</ul>
+</nav></div>
+</div>
+<div class="sidebar-header-items__end">
+<div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links navbar-nav">
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/holoviz/geoviews" rel="noopener" target="_blank" title="GitHub"><span><i class="fa-brands fa-square-github"></i></span>
+<label class="sr-only">GitHub</label></a>
+</li>
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://twitter.com/HoloViews" rel="noopener" target="_blank" title="Twitter"><span><i class="fa-brands fa-twitter-square"></i></span>
+<label class="sr-only">Twitter</label></a>
+</li>
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://discourse.holoviz.org/c/geoviews" rel="noopener" target="_blank" title="Discourse"><span><i class="fa-brands fa-discourse"></i></span>
+<label class="sr-only">Discourse</label></a>
+</li>
+<li class="nav-item">
+<a class="nav-link" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://discord.gg/AXRHnJU6sP" rel="noopener" target="_blank" title="Discord"><span><i class="fa-brands fa-discord"></i></span>
+<label class="sr-only">Discord</label></a>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item"><nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
+<div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Projections.html">Projections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Geometries.html">Geometries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Gridded_Datasets_I.html">Gridded Datasets I</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Gridded_Datasets_II.html">Gridded Datasets II</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Working_with_Bokeh.html">Working with Bokeh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Resampling_Grids.html">Resampling Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Annotators.html">Annotating Geographic Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Using_Features_Offline.html">Using Features Offline</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Using WMTS Offline</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../gallery/index.html">Gallery</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../topics.html">Topics</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference external" href="https://examples.pyviz.org/bay_trimesh/bay_trimesh.html">Bay Trimesh</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://examples.pyviz.org/census/census.html">Census</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://examples.pyviz.org/gerrymandering/gerrymandering.html">Gerrymandering</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://examples.pyviz.org/glaciers/glaciers.html">Glaciers</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://examples.pyviz.org/landsat/landsat.html">LandSat</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+</div>
+</nav></div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+</div>
+<div id="rtd-footer-container"></div>
+</div>
+<main class="bd-main" id="main-content">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item">
+<nav aria-label="Breadcrumbs">
+<ul aria-label="Breadcrumb" class="bd-breadcrumbs" role="navigation">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li class="breadcrumb-item"><a class="nav-link" href="index.html">User Guide</a></li>
+<li aria-current="page" class="breadcrumb-item active">Using WMTS Offline</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article" role="main">
+<section id="using-wmts-offline">
+<h1>Using WMTS Offline<a class="headerlink" href="#using-wmts-offline" title="Permalink to this heading">#</a></h1>
+<section id="caching-the-tiles">
+<h2>Caching the Tiles<a class="headerlink" href="#caching-the-tiles" title="Permalink to this heading">#</a></h2>
+<p>Web map tile services simply provide tiled images for a given target domain request. So to use them offline, you simply need to copy these images from their server to a preferred local mirror and point to that local mirror.</p>
+<p>However, attempting to determine the corresponding tiles to specific target domains can be a daunting task–thankfully, Cartopy provides utilities that can assist you with this task.</p>
+<p>When Cartopy is invoked for a given target domain, it retrieves and stores the relevant map tiles in a NumPy, binary file format <code class="docutils literal notranslate"><span class="pre">.npy</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+<span class="kn">import</span> <span class="nn">cartopy.io.img_tiles</span> <span class="k">as</span> <span class="nn">cimgt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">shapely</span> <span class="kn">import</span> <span class="n">box</span>
+
+
+<span class="k">def</span> <span class="nf">cache_tiles</span><span class="p">(</span>
+    <span class="n">tile_source</span><span class="p">,</span>
+    <span class="n">max_target_z</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">x_bounds</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">),</span>
+    <span class="n">y_bounds</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">),</span>
+    <span class="n">cache_dir</span><span class="o">=</span><span class="s2">"tiles"</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Caches map tiles within specified bounds from a given tile source.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tile_source (str or cartopy.io.img_tiles.Tiles): The tile source to use for caching.</span>
+<span class="sd">            It can be a string specifying a built-in tile source, or an instance of a custom tile source class.</span>
+<span class="sd">        max_target_z (int, optional): The maximum zoom level to cache. Defaults to 1.</span>
+<span class="sd">        x_bounds (tuple, optional): The longitudinal bounds of the tiles to cache. Defaults to (-180, 180).</span>
+<span class="sd">        y_bounds (tuple, optional): The latitudinal bounds of the tiles to cache. Defaults to (-90, 90).</span>
+<span class="sd">        cache_dir (str, optional): The directory to store the cached tiles. Defaults to "tiles".</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pathlib.Path: The path to the cache directory.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tile_source</span><span class="p">,</span> <span class="n">cimgt</span><span class="o">.</span><span class="n">GoogleWTS</span><span class="p">):</span>
+        <span class="n">tile_source</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">cimgt</span><span class="p">,</span> <span class="n">tile_source</span><span class="p">)</span>
+    <span class="n">tiles</span> <span class="o">=</span> <span class="n">tile_source</span><span class="p">(</span><span class="n">cache</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">)</span>
+
+    <span class="n">bbox</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">GOOGLE_MERCATOR</span><span class="o">.</span><span class="n">transform_points</span><span class="p">(</span>
+        <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_bounds</span><span class="p">),</span> <span class="n">y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_bounds</span><span class="p">)</span>
+    <span class="p">)[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>  <span class="c1"># drop Z, then convert to x0, y0, x1, y1</span>
+    <span class="n">target_domain</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span><span class="o">*</span><span class="n">bbox</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">target_z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_target_z</span><span class="p">):</span>
+        <span class="n">tiles</span><span class="o">.</span><span class="n">image_for_domain</span><span class="p">(</span><span class="n">target_domain</span><span class="p">,</span> <span class="n">target_z</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">tile_source</span><span class="o">.</span><span class="vm">__name__</span>
+</pre></div>
+</div>
+<p>As an example, to cache OpenStreetMaps tiles, you can simply call the provided function, ensuring that you specify a maximum zoom level (<code class="docutils literal notranslate"><span class="pre">max_target_z</span></code>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cache_dir</span> <span class="o">=</span> <span class="n">cache_tiles</span><span class="p">(</span><span class="s2">"OSM"</span><span class="p">,</span> <span class="n">max_target_z</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>WARNING: When working with higher zoom levels, it is <strong>highly recommended</strong> to specify the <code class="docutils literal notranslate"><span class="pre">x_bounds</span></code> and <code class="docutils literal notranslate"><span class="pre">y_bounds</span></code> parameters to your region of interest. This is crucial to prevent potential issues such as rate limiting or, in extreme cases, <em>being banned</em>.</p>
+<p>As the zoom level increases, the time required for downloading and caching the tiles grows exponentially due to the increasing number of fine-grained tiles that need to be retrieved. By setting appropriate boundaries, you can effectively manage the download process and mitigate the risk of encountering problems related to excessive requests.</p>
+<p>Here is a table illustrating the number of tiles for <em>global extents</em> at different zoom levels:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">:</span> <span class="mi">1</span> <span class="n">tile</span> <span class="p">(</span><span class="n">entire</span> <span class="n">world</span><span class="p">)</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">1</span><span class="p">:</span> <span class="mi">4</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span> <span class="mi">16</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">3</span><span class="p">:</span> <span class="mi">64</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">4</span><span class="p">:</span> <span class="mi">256</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">5</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span><span class="mi">024</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">6</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span><span class="mi">096</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">7</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span><span class="mi">384</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">8</span><span class="p">:</span> <span class="mi">65</span><span class="p">,</span><span class="mi">536</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">9</span><span class="p">:</span> <span class="mi">262</span><span class="p">,</span><span class="mi">144</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">10</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span><span class="mi">048</span><span class="p">,</span><span class="mi">576</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">11</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span><span class="mi">194</span><span class="p">,</span><span class="mi">304</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">12</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span><span class="mi">777</span><span class="p">,</span><span class="mi">216</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">13</span><span class="p">:</span> <span class="mi">67</span><span class="p">,</span><span class="mi">108</span><span class="p">,</span><span class="mi">864</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">14</span><span class="p">:</span> <span class="mi">268</span><span class="p">,</span><span class="mi">435</span><span class="p">,</span><span class="mi">456</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">15</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span><span class="mi">073</span><span class="p">,</span><span class="mi">741</span><span class="p">,</span><span class="mi">824</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">16</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span><span class="mi">294</span><span class="p">,</span><span class="mi">967</span><span class="p">,</span><span class="mi">296</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">17</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span><span class="mi">179</span><span class="p">,</span><span class="mi">869</span><span class="p">,</span><span class="mi">184</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">18</span><span class="p">:</span> <span class="mi">68</span><span class="p">,</span><span class="mi">719</span><span class="p">,</span><span class="mi">476</span><span class="p">,</span><span class="mi">736</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">19</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span><span class="mi">877</span><span class="p">,</span><span class="mi">906</span><span class="p">,</span><span class="mi">944</span> <span class="n">tiles</span>
+<span class="n">z</span><span class="o">=</span><span class="mi">20</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span><span class="mi">099</span><span class="p">,</span><span class="mi">511</span><span class="p">,</span><span class="mi">627</span><span class="p">,</span><span class="mi">776</span> <span class="n">tiles</span>
+</pre></div>
+</div>
+</section>
+<section id="converting-to-png">
+<h2>Converting to PNG<a class="headerlink" href="#converting-to-png" title="Permalink to this heading">#</a></h2>
+<p>Since GeoViews lacks support for reading cached NumPy binary files, an additional step is required to:</p>
+<ol class="arabic simple">
+<li><p>convert them to PNG format</p></li>
+<li><p>update their directories</p></li>
+<li><p>build a format string containing “{X}/{Y}/{Z}” (or similar variations)</p></li>
+</ol>
+<p>Fortunately, this process only involves a straightforward loop that performs minimal processing on each file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">convert_tiles_cache</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Converts cached tiles from numpy format to PNG format.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cache_dir (str): The directory containing the cached tiles in numpy format.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The format string representing the converted PNG tiles.</span>
+<span class="sd">    """</span>
+    <span class="k">for</span> <span class="n">np_path</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">"*.npy"</span><span class="p">):</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">np_path</span><span class="p">))</span>
+        <span class="n">img_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">np_path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">".png"</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">))</span>
+        <span class="n">img_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+
+    <span class="n">tiles_fmt</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="s2">"</span><span class="si">{X}</span><span class="s2">"</span> <span class="o">/</span> <span class="s2">"</span><span class="si">{Y}</span><span class="s2">"</span> <span class="o">/</span> <span class="s2">"</span><span class="si">{Z}</span><span class="s2">.png"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tiles_fmt</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tiles_fmt</span> <span class="o">=</span> <span class="n">convert_tiles_cache</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="testing-locally">
+<h2>Testing Locally<a class="headerlink" href="#testing-locally" title="Permalink to this heading">#</a></h2>
+<p>Now, all that’s left is passing that generated tiles format string into <code class="docutils literal notranslate"><span class="pre">gv.WMTS</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">geoviews</span> <span class="k">as</span> <span class="nn">gv</span>
+
+<span class="n">gv</span><span class="o">.</span><span class="n">extension</span><span class="p">(</span><span class="s2">"bokeh"</span><span class="p">)</span>
+
+<span class="n">gv</span><span class="o">.</span><span class="n">WMTS</span><span class="p">(</span><span class="n">tiles_dir</span><span class="p">)</span><span class="o">.</span><span class="n">opts</span><span class="p">(</span><span class="n">global_extent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Please keep in mind that when reaching higher zoom levels beyond the cached max_target_z, you might encounter a blank map.</p>
+<p>To avoid this issue, it is essential to set the <code class="docutils literal notranslate"><span class="pre">max_zoom</span></code> option to the same value as <code class="docutils literal notranslate"><span class="pre">max_target_z</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">geoviews</span> <span class="k">as</span> <span class="nn">gv</span>
+
+<span class="n">gv</span><span class="o">.</span><span class="n">extension</span><span class="p">(</span><span class="s2">"bokeh"</span><span class="p">)</span>
+
+<span class="n">gv</span><span class="o">.</span><span class="n">WMTS</span><span class="p">(</span><span class="n">tiles_dir</span><span class="p">)</span><span class="o">.</span><span class="n">opts</span><span class="p">(</span><span class="n">global_extent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_zoom</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</article>
+<footer class="bd-footer-article">
+<div class="footer-article-items footer-article__inner">
+<div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+<a class="left-prev" href="Using_Features_Offline.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">Using Features Offline</p>
+</div>
+</a>
+<a class="right-next" href="../gallery/index.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">Gallery</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div></div>
+</div>
+</footer>
+</div>
+<div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i> On this page
+  </div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#caching-the-tiles">Caching the Tiles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converting-to-png">Converting to PNG</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-locally">Testing Locally</a></li>
+</ul>
+</nav></div>
+<div class="sidebar-secondary-item">
+<div class="tocsection sourcelink">
+<a href="../_sources/user_guide/Using_WMTS_Offline.md.txt">
+<i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+</div>
+</div>
+</div></div>
+</div>
+<footer class="bd-footer-content">
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+<footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+<div class="footer-items__start">
+<div class="footer-item">
+<p class="copyright">
+    
+      © Copyright 2018 HoloViz Developers.
+      <br/>
+</p>
+</div>
+<div class="footer-item">
+<p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    <br/>
+</p>
+</div>
+</div>
+<div class="footer-items__end">
+<div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+</div>
+</div>
+</footer>
+</body>
+</html>

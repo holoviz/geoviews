@@ -1,0 +1,4 @@
+:root[data-theme="light"] {
+    --pst-color-primary: rgb(47, 47, 47);
+    --pst-color-link: rgb(56, 123, 178);
+}

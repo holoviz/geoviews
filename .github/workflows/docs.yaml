@@ -40,7 +40,7 @@ jobs:
           name: Documentation
           python-version: "3.10"
           channel-priority: strict
-          channels: conda-forge,nodefaults
+          channels: pyviz,conda-forge,nodefaults
           envs: "-o doc -o examples_extra"
           cache: true
           conda-update: true

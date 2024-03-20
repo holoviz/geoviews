@@ -2,14 +2,14 @@ name: packages
 on:
   push:
     tags:
-    - 'v[0-9]+.[0-9]+.[0-9]+'
-    - 'v[0-9]+.[0-9]+.[0-9]+a[0-9]+'
-    - 'v[0-9]+.[0-9]+.[0-9]+b[0-9]+'
-    - 'v[0-9]+.[0-9]+.[0-9]+rc[0-9]+'
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+a[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+b[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
   # Dry-run only
   workflow_dispatch:
   schedule:
-    - cron: '0 18 * * SUN'
+    - cron: "0 18 * * SUN"
 
 env:
   PYTHON_VERSION: "3.9"
@@ -20,7 +20,7 @@ env:
 jobs:
   conda_build:
     name: Build Conda Packages
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
     defaults:
       run:
         shell: bash -l {0}
@@ -100,7 +100,7 @@ jobs:
           npm publish --tag latest
   pip_build:
     name: Build PyPI Packages
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
     defaults:
       run:
         shell: bash -l {0}

@@ -1,25 +1,17 @@
-{% set sdata = load_setup_py_data(setup_file="../../setup.py", from_recipe_dir=True) %}
+{% set sdata = load_setup_py_data(setup_file="../../../setup.py", from_recipe_dir=True) %}
 
 package:
   name: {{ sdata['name'] }}
   version: {{ VERSION }}
 
 source:
-  url: ../../dist/{{ sdata['name'] }}-{{ VERSION }}-py3-none-any.whl
+  url: ../../../dist/{{ sdata['name'] }}-{{ VERSION }}-py3-none-any.whl
 
 build:
   noarch: python
   script: {{ PYTHON }} -m pip install -vv {{ sdata['name'] }}-{{ VERSION }}-py3-none-any.whl
-  entry_points:
-    {% for group,epoints in sdata.get("entry_points",{}).items() %}
-    {% for entry_point in epoints %}
-    - {{ entry_point }}
-    {% endfor %}
-    {% endfor %}
 
 requirements:
-  run_constrained:
-    - geoviews {{ sdata['version'] }}
   host:
     - python {{ sdata['python_requires'] }}
     {% for dep in sdata['extras_require']['build'] %}
@@ -27,8 +19,9 @@ requirements:
     {% endfor %}
   run:
     - python {{ sdata['python_requires'] }}
-    {% for dep in sdata.get('install_requires',{}) %}
-    - {{ dep }}
+    - geoviews-core =={{ sdata['version'] }}
+    {% for dep in sdata['extras_require']['recommended'] %}
+    - {{ dep if dep != 'geopandas' else 'geopandas-base'}}
     {% endfor %}
 
 about:

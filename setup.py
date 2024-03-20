@@ -159,6 +159,7 @@ extras_require={
         'rioxarray',
     ],
     'tests_ci': [
+        'pyct',
         'pytest-cov',
         'codecov',
         'pytest-github-actions-annotate-failures',

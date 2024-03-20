@@ -85,4 +85,5 @@ filterwarnings = [
     "ignore:The current Dask DataFrame implementation is deprecated:DeprecationWarning",  # https://github.com/dask/dask/issues/10917
     # 2024-03
     "ignore:\\s*Dask dataframe query planning is disabled because dask-expr is not installed:FutureWarning",
+    "ignore:numpy.ndarray size changed, may indicate binary incompatibility:RuntimeWarning",  # https://github.com/pydata/xarray/issues/7259
 ]

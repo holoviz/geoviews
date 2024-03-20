@@ -173,31 +173,24 @@ jobs:
       #     conda-update: true
       #     id: install
       - uses: actions/checkout@v3
-        if: github.event_name == 'push'
         with:
           fetch-depth: "100"
       - name: Fetch unshallow
-        if: github.event_name == 'push'
         run: git fetch --prune --tags --unshallow -f
       - uses: actions/setup-node@v3
-        if: github.event_name == 'push'
         with:
           node-version: 16.x
       - uses: actions/setup-python@v4
-        if: github.event_name == 'push'
         with:
           python-version: "3.12"
       - name: install
-        if: github.event_name == 'push'
         run: |
           python -m pip install -ve '.[tests_core, tests_ci]'
       - name: download data
-        if: github.event_name == 'push'
         run: |
           # conda activate test-environment
           bash scripts/download_data.sh
       - name: doit test_unit
-        if: github.event_name == 'push'
         run: |
           # conda activate test-environment
           pytest geoviews

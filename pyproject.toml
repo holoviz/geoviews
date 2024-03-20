@@ -83,4 +83,6 @@ filterwarnings = [
     "ignore:datetime.datetime.utcfromtimestamp():DeprecationWarning:dateutil.tz.tz",  # https://github.com/dateutil/dateutil/pull/1285
     # 2024-02
     "ignore:The current Dask DataFrame implementation is deprecated:DeprecationWarning",  # https://github.com/dask/dask/issues/10917
+    # 2024-03
+    "ignore:\\s*Dask dataframe query planning is disabled because dask-expr is not installed:FuturesWarning",
 ]

@@ -9,7 +9,6 @@ source:
 
 build:
   noarch: python
-  script: {{ PYTHON }} -m pip install -vv {{ sdata['name'] }}-{{ VERSION }}-py3-none-any.whl
 
 requirements:
   host:

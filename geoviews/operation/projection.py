@@ -251,12 +251,14 @@ class project_vectorfield(_project_operation):
         new_data[mdim.name] = mag[mask]
 
         if len(new_data[xdim.name]) == 0:
-            self.param.warning('While projecting a {} element from a {} coordinate '
-                         'reference system (crs) to a {} projection none of '
-                         'the projected paths were contained within the bounds '
-                         'specified by the projection. Ensure you have specified '
-                         'the correct coordinate system for your data.'.format(type(element).__name__, type(element.crs).__name__,
-                          type(self.p.projection).__name__))
+            self.param.warning(
+                f'While projecting a {type(element).__name__} element from '
+                f'a {type(element.crs).__name__} coordinate reference system (crs) '
+                f'to a {type(self.p.projection).__name__} projection none of '
+                'the projected paths were contained within the bounds '
+                'specified by the projection. Ensure you have specified '
+                'the correct coordinate system for your data.'
+            )
 
         return element.clone(tuple(new_data[d.name] for d in element.dimensions()),
                              crs=self.p.projection, datatype=datatype)

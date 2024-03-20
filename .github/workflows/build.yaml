@@ -80,12 +80,12 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: conda
+          name: ${{ matrix.conda-name }}
           path: dist/
       - name: Set environment variables
         run: |
           echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-          echo "CONDA_FILE=$(ls dist/${{ matrix.conda-name }}.tar.bz2)" >> $GITHUB_ENV
+          echo "CONDA_FILE=$(ls dist/${{ matrix.conda-name }}*.tar.bz2)" >> $GITHUB_ENV
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"

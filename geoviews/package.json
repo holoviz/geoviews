@@ -1,6 +1,6 @@
 {
   "name": "@holoviz/geoviews",
-  "version": "1.12.0-a.1",
+  "version": "1.12.0-a.2",
   "description": "Simple, concise geographical visualization in Python",
   "license": "BSD-3-Clause",
   "repository": {

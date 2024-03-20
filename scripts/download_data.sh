@@ -2,10 +2,10 @@
 
 set -euxo pipefail
 
-bokeh sampledata
+python -m bokeh sampledata
 
 HERE=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-geoviews fetch-data --path="$HERE/../examples"
+python -m geoviews fetch-data --path="$HERE/../examples"
 
 python -c "
 try:

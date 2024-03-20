@@ -50,16 +50,16 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - name: conda setup
         run: |
-          conda install -y conda-build build
+          conda install -y conda-build build pyct
       - name: conda build
         run: |
-          source ./scripts/build_conda.sh
+          source ./scripts/conda/build.sh
           echo "CONDA_FILE="$CONDA_PREFIX/conda-bld/noarch/$PACKAGE-$VERSION-py_0.tar.bz2"" >> $GITHUB_ENV
           echo "CONDA_CORE_FILE="$CONDA_PREFIX/conda-bld/noarch/$PACKAGE-core-$VERSION-py_0.tar.bz2"" >> $GITHUB_ENV
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: conda-core
+          name: conda
           path: ${{ env.CONDA_FILE }}
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
@@ -182,7 +182,7 @@ jobs:
           python -m pip install -ve .
       - name: npm build
         run: |
-          cd ./panel
+          cd ${{ env.PACKAGE }}
           TARBALL=$(npm pack .)
           echo "TARBALL=$TARBALL" >> $GITHUB_ENV
           npm publish --dry-run $TARBALL
@@ -192,7 +192,7 @@ jobs:
         with:
           name: npm
           if-no-files-found: error
-          path: ./panel/${{ env.TARBALL }}
+          path: ${{ env.PACKAGE }}/${{ env.TARBALL }}
 
   npm_publish:
     name: Publish NPM

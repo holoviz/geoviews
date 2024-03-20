@@ -1,11 +1,11 @@
-{% set sdata = load_setup_py_data() %}
+{% set sdata = load_setup_py_data(setup_file="../../../setup.py", from_recipe_dir=True) %}
 
 package:
-  name: geoviews
-  version: {{ sdata['version'] }}
+  name: {{ sdata['name'] }}
+  version: {{ VERSION }}
 
 source:
-  path: ../..
+  url: ../../../dist/{{ sdata['name'] }}-{{ VERSION }}-py3-none-any.whl
 
 build:
   noarch: python
@@ -18,7 +18,7 @@ requirements:
     {% endfor %}
   run:
     - python {{ sdata['python_requires'] }}
-    - geoviews-core ={{ sdata['version'] }}
+    - geoviews-core =={{ sdata['version'] }}
     {% for dep in sdata['extras_require']['recommended'] %}
     - {{ dep if dep != 'geopandas' else 'geopandas-base'}}
     {% endfor %}

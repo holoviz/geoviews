@@ -5,7 +5,7 @@ set -euxo pipefail
 python -m bokeh sampledata
 
 HERE=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-python -m geoviews fetch-data --path="$HERE/../examples"
+python -m geoviews fetch-data --path="$HERE/../examples" || echo "geoviews fetch-data failed"
 
 python -c "
 try:

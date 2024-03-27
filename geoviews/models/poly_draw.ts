@@ -126,7 +126,10 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
       const glyph: any = renderer.glyph
       const [xkey, ykey] = [glyph.xs.field, glyph.ys.field]
       for (const array of cds.get_array(xkey)) {
-        Array.prototype.push.apply(xs, array)
+        if (isArray<number>(array)) {
+          xs.push(...array)
+        }
+
         for (const key of keys((this.model as any).end_style)) {
           styles[key].push((this.model as any).end_style[key])
         }
@@ -140,7 +143,9 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
         }
       }
       for (const array of cds.get_array(ykey)) {
-        Array.prototype.push.apply(ys, array)
+        if (isArray<number>(array)) {
+          ys.push(...array)
+        }
       }
       if (this._drawing && (i == (this.model.renderers.length-1))) {
         // Skip currently drawn vertex

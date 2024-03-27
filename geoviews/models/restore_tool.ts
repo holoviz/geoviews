@@ -1,4 +1,4 @@
-import * as p from "@bokehjs/core/properties"
+import type * as p from "@bokehjs/core/properties"
 import {ActionTool, ActionToolView} from "@bokehjs/models/tools/actions/action_tool"
 import {ColumnDataSource} from "@bokehjs/models/sources/column_data_source"
 import {tool_icon_undo} from "@bokehjs/styles/icons.css"
@@ -7,12 +7,14 @@ export class RestoreToolView extends ActionToolView {
   declare model: RestoreTool
 
   doit(): void {
-    const sources: any = this.model.sources;
+    const sources: any = this.model.sources
     for (const source of sources) {
-      if (!source.buffer || (source.buffer.length == 0)) { continue; }
-      source.data = source.buffer.pop();
-      source.change.emit();
-      source.properties.data.change.emit();
+      if (!source.buffer || source.buffer.length == 0) {
+        continue
+      }
+      source.data = source.buffer.pop()
+      source.change.emit()
+      source.properties.data.change.emit()
     }
   }
 }

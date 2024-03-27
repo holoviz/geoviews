@@ -1,10 +1,10 @@
-import * as p from "@bokehjs/core/properties"
+import type * as p from "@bokehjs/core/properties"
 import type {GestureEvent, UIEvent, TapEvent} from "@bokehjs/core/ui_events"
 import {keys} from "@bokehjs/core/util/object"
 import {isArray} from "@bokehjs/core/util/types"
-import {MultiLine} from "@bokehjs/models/glyphs/multi_line"
-import {Patches} from "@bokehjs/models/glyphs/patches"
-import {GlyphRenderer} from "@bokehjs/models/renderers/glyph_renderer"
+import type {MultiLine} from "@bokehjs/models/glyphs/multi_line"
+import type {Patches} from "@bokehjs/models/glyphs/patches"
+import type {GlyphRenderer} from "@bokehjs/models/renderers/glyph_renderer"
 import type {HasXYGlyph} from "@bokehjs/models/tools/edit/edit_tool"
 import {PolyEditTool, PolyEditToolView} from "@bokehjs/models/tools/edit/poly_edit_tool"
 
@@ -27,19 +27,22 @@ export class PolyVertexEditToolView extends PolyEditToolView {
   }
 
   override _pan(ev: GestureEvent): void {
-    if (this._basepoint == null || this.model.vertex_renderer == null)
+    if (this._basepoint == null || this.model.vertex_renderer == null) {
       return
+    }
     const points = this._drag_points(ev, [this.model.vertex_renderer])
     if (!ev.modifiers.shift) {
       this._move_linked(points)
     }
-    if (this._selected_renderer)
+    if (this._selected_renderer) {
       this._selected_renderer.data_source.change.emit()
+    }
   }
 
   override _pan_end(ev: GestureEvent): void {
-    if (this._basepoint == null || this.model.vertex_renderer == null)
+    if (this._basepoint == null || this.model.vertex_renderer == null) {
       return
+    }
     const points = this._drag_points(ev, [this.model.vertex_renderer])
     if (!ev.modifiers.shift) {
       this._move_linked(points)
@@ -52,10 +55,11 @@ export class PolyVertexEditToolView extends PolyEditToolView {
   }
 
   override _drag_points(ev: UIEvent, renderers: (GlyphRenderer & HasXYGlyph)[]): number[][] {
-    if (this._basepoint == null)
+    if (this._basepoint == null) {
       return []
+    }
     const [bx, by] = this._basepoint
-    const points = [];
+    const points = []
     for (const renderer of renderers) {
       const basepoint = this._map_drag(bx, by, renderer)
       const point = this._map_drag(ev.sx, ev.sy, renderer)
@@ -90,22 +94,25 @@ export class PolyVertexEditToolView extends PolyEditToolView {
   }
 
   override _set_vertices(xs: number[] | number, ys: number[] | number, styles?: any): void {
-    if (this.model.vertex_renderer == null)
+    if (this.model.vertex_renderer == null) {
       return
+    }
     const point_glyph: any = this.model.vertex_renderer.glyph
     const point_cds = this.model.vertex_renderer.data_source
     const [pxkey, pykey] = [point_glyph.x.field, point_glyph.y.field]
     if (pxkey) {
-      if (isArray(xs))
+      if (isArray(xs)) {
         point_cds.data[pxkey] = xs
-      else
+      } else {
         point_glyph.x = {value: xs}
+      }
     }
     if (pykey) {
-      if (isArray(ys))
+      if (isArray(ys)) {
         point_cds.data[pykey] = ys
-      else
+      } else {
         point_glyph.y = {value: ys}
+      }
     }
 
     if (styles != null) {
@@ -122,8 +129,9 @@ export class PolyVertexEditToolView extends PolyEditToolView {
   }
 
   _move_linked(points: number[][]): void {
-    if (!this._selected_renderer)
+    if (!this._selected_renderer) {
       return
+    }
     const renderer = this._selected_renderer
     const glyph: any = renderer.glyph
     const cds: any = renderer.data_source
@@ -137,8 +145,8 @@ export class PolyVertexEditToolView extends PolyEditToolView {
         const ys = ypaths[index]
         for (let i = 0; i < xs.length; i++) {
           if ((xs[i] == x) && (ys[i] == y)) {
-            xs[i] += dx;
-            ys[i] += dy;
+            xs[i] += dx
+            ys[i] += dy
           }
         }
       }
@@ -146,13 +154,14 @@ export class PolyVertexEditToolView extends PolyEditToolView {
   }
 
   override _tap(ev: TapEvent): void {
-    if (this.model.vertex_renderer == null)
+    if (this.model.vertex_renderer == null) {
       return
+    }
     const renderer = this.model.vertex_renderer
     const point = this._map_drag(ev.sx, ev.sy, renderer)
-    if (point == null)
+    if (point == null) {
       return
-    else if (this._drawing && this._selected_renderer) {
+    } else if (this._drawing && this._selected_renderer) {
       let [x, y] = point
       const cds = renderer.data_source
       // Type once dataspecs are typed
@@ -177,16 +186,17 @@ export class PolyVertexEditToolView extends PolyEditToolView {
       cds.change.emit()
       this._emit_cds_changes(this._selected_renderer.data_source, true, false, true)
       return
-	}
+    }
     this._select_event(ev, this._select_mode(ev), [renderer])
   }
 
   override _show_vertices(ev: UIEvent): void {
-    if (!this.model.active)
+    if (!this.model.active) {
       return
+    }
 
     const renderers = this._select_event(ev, "replace", this.model.renderers)
-    if (!renderers.length) {
+    if (renderers.length === 0) {
       this._hide_vertices()
       this._selected_renderer = null
       this._drawing = false
@@ -202,30 +212,34 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     let ys: number[]
     if (xkey) {
       xs = cds.data[xkey][index]
-      if (!isArray(xs))
+      if (!isArray(xs)) {
         cds.data[xkey][index] = xs = Array.from(xs)
+      }
     } else {
       xs = glyph.xs.value
     }
 
     if (ykey) {
       ys = cds.data[ykey][index]
-      if (!isArray(ys))
+      if (!isArray(ys)) {
         cds.data[ykey][index] = ys = Array.from(ys)
+      }
     } else {
       ys = glyph.ys.value
     }
 
     const styles: any = {}
-    for (const key of keys((this.model as any).end_style))
+    for (const key of keys((this.model as any).end_style)) {
       styles[key] = [(this.model as any).end_style[key]]
+    }
     for (const key of keys((this.model as any).node_style)) {
       for (let index = 0; index < (xs.length-2); index++) {
         styles[key].push((this.model as any).node_style[key])
       }
     }
-    for (const key of keys((this.model as any).end_style))
+    for (const key of keys((this.model as any).end_style)) {
       styles[key].push((this.model as any).end_style[key])
+    }
     this._selected_renderer = renderer
     this._set_vertices(xs, ys, styles)
   }

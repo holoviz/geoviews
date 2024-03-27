@@ -1,4 +1,4 @@
-import * as p from "@bokehjs/core/properties"
+import type * as p from "@bokehjs/core/properties"
 import {ActionTool, ActionToolView} from "@bokehjs/models/tools/actions/action_tool"
 import {ColumnDataSource} from "@bokehjs/models/sources/column_data_source"
 import {tool_icon_reset} from "@bokehjs/styles/icons.css"
@@ -7,12 +7,12 @@ export class ClearToolView extends ActionToolView {
   declare model: ClearTool
 
   doit(): void {
-    for (var source of this.model.sources) {
+    for (const source of this.model.sources) {
       for (const column in source.data) {
         source.data[column] = []
       }
-      source.change.emit();
-      source.properties.data.change.emit();
+      source.change.emit()
+      source.properties.data.change.emit()
     }
   }
 }

@@ -1,4 +1,4 @@
-import * as p from "@bokehjs/core/properties"
+import type * as p from "@bokehjs/core/properties"
 import {copy} from "@bokehjs/core/util/array"
 import {ActionTool, ActionToolView} from "@bokehjs/models/tools/actions/action_tool"
 import {ColumnDataSource} from "@bokehjs/models/sources/column_data_source"
@@ -8,12 +8,14 @@ export class CheckpointToolView extends ActionToolView {
   declare model: CheckpointTool
 
   doit(): void {
-    const sources: any = this.model.sources;
+    const sources: any = this.model.sources
     for (const source of sources) {
-      if (!source.buffer) { source.buffer = [] }
-      let data_copy: any = {};
+      if (!source.buffer) {
+        source.buffer = []
+      }
+      const data_copy: any = {}
       for (const key in source.data) {
-        const column = source.data[key];
+        const column = source.data[key]
         const new_column = []
         for (const arr of column) {
           if (Array.isArray(arr) || (ArrayBuffer.isView(arr))) {
@@ -22,7 +24,7 @@ export class CheckpointToolView extends ActionToolView {
             new_column.push(arr)
           }
         }
-        data_copy[key] = new_column;
+        data_copy[key] = new_column
       }
       source.buffer.push(data_copy)
     }

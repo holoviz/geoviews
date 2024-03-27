@@ -44,7 +44,7 @@ jobs:
     name: Run pre-commit
     runs-on: "ubuntu-latest"
     steps:
-      - uses: holoviz-dev/holoviz_tasks/pre-commit@v0.1a19
+      - uses: holoviz-dev/holoviz_tasks/pre-commit@v0
   setup:
     name: Setup workflow
     runs-on: ubuntu-latest
@@ -113,7 +113,7 @@ jobs:
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
     timeout-minutes: 60
     steps:
-      - uses: holoviz-dev/holoviz_tasks/install@v0.1a19
+      - uses: holoviz-dev/holoviz_tasks/install@v0
         if: needs.setup.outputs.code_change == 'true'
         with:
           name: unit_test_suite
@@ -162,7 +162,7 @@ jobs:
     timeout-minutes: 120
     steps:
       # Add back when this works on Python 3.12
-      # - uses: holoviz-dev/holoviz_tasks/install@v0.1a19
+      # - uses: holoviz-dev/holoviz_tasks/install@v0
       #   with:
       #     name: core_test_suite
       #     python-version: ${{ matrix.python-version }}

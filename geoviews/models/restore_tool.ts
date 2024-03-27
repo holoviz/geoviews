@@ -1,19 +1,24 @@
-import * as p from "@bokehjs/core/properties"
+import type * as p from "@bokehjs/core/properties"
+import type {Data} from "@bokehjs/core/types"
 import {ActionTool, ActionToolView} from "@bokehjs/models/tools/actions/action_tool"
 import {ColumnDataSource} from "@bokehjs/models/sources/column_data_source"
 import {tool_icon_undo} from "@bokehjs/styles/icons.css"
 
+type BufferedColumnDataSource = ColumnDataSource & {buffer?: Data[]}
 
 export class RestoreToolView extends ActionToolView {
-  model: RestoreTool
+  declare model: RestoreTool
 
   doit(): void {
-    const sources: any = this.model.sources;
+    const sources = this.model.sources as BufferedColumnDataSource[]
     for (const source of sources) {
-      if (!source.buffer || (source.buffer.length == 0)) { continue; }
-      source.data = source.buffer.pop();
-      source.change.emit();
-      source.properties.data.change.emit();
+      const new_data = source.buffer?.pop()
+      if (new_data == null) {
+        continue
+      }
+      source.data = new_data
+      source.change.emit()
+      source.properties.data.change.emit()
     }
   }
 }
@@ -28,13 +33,13 @@ export namespace RestoreTool {
 export interface RestoreTool extends RestoreTool.Attrs {}
 
 export class RestoreTool extends ActionTool {
-  properties: RestoreTool.Props
+  declare properties: RestoreTool.Props
 
   constructor(attrs?: Partial<RestoreTool.Attrs>) {
     super(attrs)
   }
 
-  static __module__ = "geoviews.models.custom_tools"
+  static override __module__ = "geoviews.models.custom_tools"
 
   static {
     this.prototype.default_view = RestoreToolView
@@ -44,6 +49,6 @@ export class RestoreTool extends ActionTool {
     }))
   }
 
-  tool_name = "Restore"
-  tool_icon = tool_icon_undo
+  override tool_name = "Restore"
+  override tool_icon = tool_icon_undo
 }

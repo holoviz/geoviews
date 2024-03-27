@@ -8,11 +8,18 @@
     "url": "https://github.com/holoviz/geoviews.git"
   },
   "dependencies": {
-    "@bokeh/bokehjs": "~3.3.0"
+    "@bokeh/bokehjs": "~3.4.0",
+    "@stylistic/eslint-plugin": "^1.6.3",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "eslint": "^8.57.0"
   },
   "devDependencies": {},
   "files": [
     "dist/**/*.{js,js.map,d.ts,json,css}"
   ],
-  "main": "dist/geoviews.min.js"
+  "main": "dist/geoviews.min.js",
+  "scripts": {
+    "lint": "npx eslint './*.ts' './models/**/*.ts'"
+  }
 }

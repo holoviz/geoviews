@@ -17,7 +17,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
 
   override deactivate(): void {
     this._hide_vertices()
-    if (!this._selected_renderer) {
+    if (this._selected_renderer == null) {
       return
     } else if (this._drawing) {
       this._remove_vertex()
@@ -34,7 +34,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     if (!ev.modifiers.shift) {
       this._move_linked(points)
     }
-    if (this._selected_renderer) {
+    if (this._selected_renderer != null) {
       this._selected_renderer.data_source.change.emit()
     }
   }
@@ -48,7 +48,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
       this._move_linked(points)
     }
     this._emit_cds_changes(this.model.vertex_renderer.data_source, false, true, true)
-    if (this._selected_renderer) {
+    if (this._selected_renderer != null) {
       this._emit_cds_changes(this._selected_renderer.data_source)
     }
     this._basepoint = null
@@ -129,7 +129,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
   }
 
   _move_linked(points: number[][]): void {
-    if (!this._selected_renderer) {
+    if (this._selected_renderer == null) {
       return
     }
     const renderer = this._selected_renderer
@@ -161,7 +161,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     const point = this._map_drag(ev.sx, ev.sy, renderer)
     if (point == null) {
       return
-    } else if (this._drawing && this._selected_renderer) {
+    } else if (this._drawing && this._selected_renderer != null) {
       let [x, y] = point
       const cds = renderer.data_source
       // Type once dataspecs are typed

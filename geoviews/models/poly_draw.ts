@@ -49,7 +49,7 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
   }
 
   override _snap_to_vertex(ev: UIEvent, x: number, y: number): [number, number] {
-    if (this.model.vertex_renderer) {
+    if (this.model.vertex_renderer != null) {
       // If an existing vertex is hit snap to it
       const vertex_selected = this._select_event(ev, "replace", [this.model.vertex_renderer])
       const point_ds = this.model.vertex_renderer.data_source

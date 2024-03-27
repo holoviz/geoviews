@@ -1,6 +1,7 @@
 import type * as p from "@bokehjs/core/properties"
+import type {Dict} from "@bokehjs/core/types"
 import type {GestureEvent, UIEvent, TapEvent} from "@bokehjs/core/ui_events"
-import {keys} from "@bokehjs/core/util/object"
+import {entries} from "@bokehjs/core/util/object"
 import {isArray} from "@bokehjs/core/util/types"
 import type {MultiLine} from "@bokehjs/models/glyphs/multi_line"
 import type {Patches} from "@bokehjs/models/glyphs/patches"
@@ -76,12 +77,14 @@ export class PolyVertexEditToolView extends PolyEditToolView {
       for (const index of cds.selected.indices) {
         const point = []
         if (xkey) {
-          point.push(cds.data[xkey][index])
-          cds.data[xkey][index] += dx
+          const xs = cds.get<number>(xkey)
+          point.push(xs[index])
+          xs[index] += dx
         }
         if (ykey) {
-          point.push(cds.data[ykey][index])
-          cds.data[ykey][index] += dy
+          const ys = cds.get<number>(ykey)
+          point.push(ys[index])
+          ys[index] += dy
         }
         point.push(dx)
         point.push(dy)
@@ -93,7 +96,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     return points
   }
 
-  override _set_vertices(xs: number[] | number, ys: number[] | number, styles?: any): void {
+  override _set_vertices(xs: number[] | number, ys: number[] | number, styles?: {[key: string]: unknown[]}): void {
     if (this.model.vertex_renderer == null) {
       return
     }
@@ -102,27 +105,27 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     const [pxkey, pykey] = [point_glyph.x.field, point_glyph.y.field]
     if (pxkey) {
       if (isArray(xs)) {
-        point_cds.data[pxkey] = xs
+        point_cds.set(pxkey, xs)
       } else {
         point_glyph.x = {value: xs}
       }
     }
     if (pykey) {
       if (isArray(ys)) {
-        point_cds.data[pykey] = ys
+        point_cds.set(pykey, ys)
       } else {
         point_glyph.y = {value: ys}
       }
     }
 
     if (styles != null) {
-      for (const key of keys(styles)) {
-        point_cds.data[key] = styles[key]
+      for (const [key, array] of entries(styles)) {
+        point_cds.set(key, array)
         point_glyph[key] = {field: key}
       }
     } else {
       for (const col of point_cds.columns()) {
-        point_cds.data[col] = []
+        point_cds.set(col, [])
       }
     }
     this._emit_cds_changes(point_cds, true, true, false)
@@ -211,34 +214,34 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     let xs: number[]
     let ys: number[]
     if (xkey) {
-      xs = cds.data[xkey][index]
+      xs = cds.get<number[]>(xkey)[index]
       if (!isArray(xs)) {
-        cds.data[xkey][index] = xs = Array.from(xs)
+        cds.get(xkey)[index] = xs = Array.from(xs)
       }
     } else {
       xs = glyph.xs.value
     }
 
     if (ykey) {
-      ys = cds.data[ykey][index]
+      ys = cds.get<number[]>(ykey)[index]
       if (!isArray(ys)) {
-        cds.data[ykey][index] = ys = Array.from(ys)
+        cds.get(ykey)[index] = ys = Array.from(ys)
       }
     } else {
       ys = glyph.ys.value
     }
-
-    const styles: any = {}
-    for (const key of keys((this.model as any).end_style)) {
-      styles[key] = [(this.model as any).end_style[key]]
+    const {end_style, node_style} = this.model
+    const styles: {[key: string]: unknown[]} = {}
+    for (const [key, val] of entries(end_style)) {
+      styles[key] = [val]
     }
-    for (const key of keys((this.model as any).node_style)) {
-      for (let index = 0; index < (xs.length-2); index++) {
-        styles[key].push((this.model as any).node_style[key])
+    for (const [key, val] of entries(node_style)) {
+      for (let index = 0; index < xs.length - 2; index++) {
+        styles[key].push(val)
       }
     }
-    for (const key of keys((this.model as any).end_style)) {
-      styles[key].push((this.model as any).end_style[key])
+    for (const [key, val] of entries(end_style)) {
+      styles[key].push(val)
     }
     this._selected_renderer = renderer
     this._set_vertices(xs, ys, styles)
@@ -249,8 +252,8 @@ export namespace PolyVertexEditTool {
   export type Attrs = p.AttrsOf<Props>
 
   export type Props = PolyEditTool.Props & {
-    end_style:  p.Property<any>
-    node_style: p.Property<any>
+    end_style:  p.Property<Dict<unknown>>
+    node_style: p.Property<Dict<unknown>>
   }
 }
 
@@ -270,9 +273,9 @@ export class PolyVertexEditTool extends PolyEditTool {
   static {
     this.prototype.default_view = PolyVertexEditToolView
 
-    this.define<PolyVertexEditTool.Props>(({Any}) => ({
-      end_style:  [ Any, {} ],
-      node_style: [ Any, {} ],
+    this.define<PolyVertexEditTool.Props>(({Dict, Unknown}) => ({
+      end_style:  [ Dict(Unknown), {} ],
+      node_style: [ Dict(Unknown), {} ],
     }))
   }
 }

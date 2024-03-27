@@ -1,7 +1,10 @@
 import type * as p from "@bokehjs/core/properties"
+import type {Dict} from "@bokehjs/core/types"
 import type {UIEvent} from "@bokehjs/core/ui_events"
-import {keys} from "@bokehjs/core/util/object"
+import {isField} from "@bokehjs/core/vectorization"
+import {keys, entries} from "@bokehjs/core/util/object"
 import {isArray} from "@bokehjs/core/util/types"
+import {assert} from "@bokehjs/core/util/assert"
 import {PolyDrawTool, PolyDrawToolView} from "@bokehjs/models/tools/edit/poly_draw_tool"
 
 import type {MultiLine} from "@bokehjs/models/glyphs/multi_line"
@@ -61,12 +64,12 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
         // converting to feature vertex
         const index = point_ds.selected.indices[0]
         if (pxkey) {
-          x = point_ds.data[pxkey][index]
+          x = point_ds.get(pxkey)[index] as number
         }
         if (pykey) {
-          y = point_ds.data[pykey][index]
+          y = point_ds.get(pykey)[index] as number
         }
-        if (ev.type != "mousemove") {
+        if (ev.type != "move") {
           this._split_path(x, y)
         }
         point_ds.selection_manager.clear()
@@ -85,14 +88,14 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
     const [pxkey, pykey] = [point_glyph.x.field, point_glyph.y.field]
     if (pxkey) {
       if (isArray(xs)) {
-        point_cds.data[pxkey] = xs
+        point_cds.set(pxkey, xs)
       } else {
         point_glyph.x = {value: xs}
       }
     }
     if (pykey) {
       if (isArray(ys)) {
-        point_cds.data[pykey] = ys
+        point_cds.set(pykey, ys)
       } else {
         point_glyph.y = {value: ys}
       }
@@ -100,12 +103,12 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
 
     if (styles != null) {
       for (const key of keys(styles)) {
-        point_cds.data[key] = styles[key]
+        point_cds.set(key, styles[key])
         point_glyph[key] = {field: key}
       }
     } else {
       for (const col of point_cds.columns()) {
-        point_cds.data[col] = []
+        point_cds.set(col, [])
       }
     }
     this._emit_cds_changes(point_cds, true, true, false)
@@ -118,7 +121,7 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
     const {renderers, node_style, end_style} = this.model
     const xs: number[] = []
     const ys: number[] = []
-    const styles: any = {}
+    const styles: {[key: string]: unknown[]} = {}
     for (const key of keys(end_style)) {
       styles[key] = []
     }
@@ -128,33 +131,31 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
       const glyph: any = renderer.glyph
       const [xkey, ykey] = [glyph.xs.field, glyph.ys.field]
       for (const array of cds.get_array(xkey)) {
-        if (isArray<number>(array)) {
-          xs.push(...array)
-        }
+        assert(isArray<number>(array))
+        xs.push(...array)
 
-        for (const key of keys(end_style)) {
-          styles[key].push(end_style[key])
+        for (const [key, val] of entries(end_style)) {
+          styles[key].push(val)
         }
-        for (const key of keys(node_style)) {
-          for (let index = 0; index < ((array as any).length-2); index++) {
-            styles[key].push(node_style[key])
+        for (const [key, val] of entries(node_style)) {
+          for (let index = 0; index < array.length - 2; index++) {
+            styles[key].push(val)
           }
         }
-        for (const key of keys(end_style)) {
-          styles[key].push(end_style[key])
+        for (const [key, val] of entries(end_style)) {
+          styles[key].push(val)
         }
       }
       for (const array of cds.get_array(ykey)) {
-        if (isArray<number>(array)) {
-          ys.push(...array)
-        }
+        assert(isArray<number>(array))
+        ys.push(...array)
       }
       if (this._drawing && i == renderers.length - 1) {
         // Skip currently drawn vertex
-        xs.splice(xs.length-1, 1)
-        ys.splice(ys.length-1, 1)
-        for (const key of keys(styles)) {
-          styles[key].splice(styles[key].length-1, 1)
+        xs.splice(xs.length - 1, 1)
+        ys.splice(ys.length - 1, 1)
+        for (const [_, array] of entries(styles)) {
+          array.splice(array.length - 1, 1)
         }
       }
     }
@@ -164,22 +165,25 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
   override _remove(): void {
     const renderer = this.model.renderers[0]
     const cds = renderer.data_source
-    const glyph: any = renderer.glyph
-    const [xkey, ykey] = [glyph.xs.field, glyph.ys.field]
-    if (xkey) {
-      const xidx = cds.data[xkey].length-1
-      const xs = cds.get_array<number[]>(xkey)[xidx]
-      xs.splice(xs.length-1, 1)
+    const glyph = renderer.glyph
+    if (isField(glyph.xs)) {
+      const xkey = glyph.xs.field
+      const array = cds.get_array<number[]>(xkey)
+      const xidx = array.length - 1
+      const xs = array[xidx]
+      xs.splice(xs.length - 1, 1)
       if (xs.length == 1) {
-        (cds.data[xkey] as any).splice(xidx, 1)
+        array.splice(xidx, 1)
       }
     }
-    if (ykey) {
-      const yidx = cds.data[ykey].length-1
-      const ys = cds.get_array<number[]>(ykey)[yidx]
-      ys.splice(ys.length-1, 1)
+    if (isField(glyph.ys)) {
+      const ykey = glyph.ys.field
+      const array = cds.get_array<number[]>(ykey)
+      const yidx = array.length - 1
+      const ys = array[yidx]
+      ys.splice(ys.length - 1, 1)
       if (ys.length == 1) {
-        (cds.data[ykey] as any).splice(yidx, 1)
+        array.splice(yidx, 1)
       }
     }
     this._emit_cds_changes(cds)
@@ -191,8 +195,8 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
 export namespace PolyVertexDrawTool {
   export type Attrs = p.AttrsOf<Props>
   export type Props = PolyDrawTool.Props & {
-    node_style: p.Property<any>
-    end_style:  p.Property<any>
+    node_style: p.Property<Dict<unknown>>
+    end_style:  p.Property<Dict<unknown>>
   }
 }
 
@@ -216,9 +220,9 @@ export class PolyVertexDrawTool extends PolyDrawTool {
   static {
     this.prototype.default_view = PolyVertexDrawToolView
 
-    this.define<PolyVertexDrawTool.Props>(({Any}) => ({
-      end_style:  [ Any, {} ],
-      node_style: [ Any, {} ],
+    this.define<PolyVertexDrawTool.Props>(({Dict, Unknown}) => ({
+      end_style:  [ Dict(Unknown), {} ],
+      node_style: [ Dict(Unknown), {} ],
     }))
   }
 }

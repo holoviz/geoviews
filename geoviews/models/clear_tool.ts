@@ -8,11 +8,7 @@ export class ClearToolView extends ActionToolView {
 
   doit(): void {
     for (const source of this.model.sources) {
-      for (const column in source.data) {
-        source.data[column] = []
-      }
-      source.change.emit()
-      source.properties.data.change.emit()
+      source.clear()
     }
   }
 }

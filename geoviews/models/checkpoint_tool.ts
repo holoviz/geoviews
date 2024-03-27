@@ -4,9 +4,8 @@ import {ActionTool, ActionToolView} from "@bokehjs/models/tools/actions/action_t
 import {ColumnDataSource} from "@bokehjs/models/sources/column_data_source"
 import {tool_icon_save} from "@bokehjs/styles/icons.css"
 
-
 export class CheckpointToolView extends ActionToolView {
-  model: CheckpointTool
+  declare model: CheckpointTool
 
   doit(): void {
     const sources: any = this.model.sources;
@@ -40,13 +39,13 @@ export namespace CheckpointTool {
 export interface CheckpointTool extends CheckpointTool.Attrs {}
 
 export class CheckpointTool extends ActionTool {
-  properties: CheckpointTool.Props
+  declare properties: CheckpointTool.Props
 
   constructor(attrs?: Partial<CheckpointTool.Attrs>) {
     super(attrs)
   }
 
-  static __module__ = "geoviews.models.custom_tools"
+  static override __module__ = "geoviews.models.custom_tools"
 
   static {
     this.prototype.default_view = CheckpointToolView
@@ -56,6 +55,6 @@ export class CheckpointTool extends ActionTool {
     }))
   }
 
-  tool_name = "Checkpoint"
-  tool_icon = tool_icon_save
+  override tool_name = "Checkpoint"
+  override tool_icon = tool_icon_save
 }

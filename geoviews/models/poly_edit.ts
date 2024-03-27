@@ -1,22 +1,21 @@
 import * as p from "@bokehjs/core/properties"
-import {GestureEvent, UIEvent, TapEvent} from "@bokehjs/core/ui_events"
+import type {GestureEvent, UIEvent, TapEvent} from "@bokehjs/core/ui_events"
 import {keys} from "@bokehjs/core/util/object"
 import {isArray} from "@bokehjs/core/util/types"
 import {MultiLine} from "@bokehjs/models/glyphs/multi_line"
 import {Patches} from "@bokehjs/models/glyphs/patches"
 import {GlyphRenderer} from "@bokehjs/models/renderers/glyph_renderer"
-import {HasXYGlyph} from "@bokehjs/models/tools/edit/edit_tool"
+import type {HasXYGlyph} from "@bokehjs/models/tools/edit/edit_tool"
 import {PolyEditTool, PolyEditToolView} from "@bokehjs/models/tools/edit/poly_edit_tool"
-
 
 export interface HasPolyGlyph {
   glyph: MultiLine | Patches
 }
 
 export class PolyVertexEditToolView extends PolyEditToolView {
-  model: PolyVertexEditTool
+  declare model: PolyVertexEditTool
 
-  deactivate(): void {
+  override deactivate(): void {
     this._hide_vertices()
     if (!this._selected_renderer) {
       return
@@ -27,7 +26,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     this._emit_cds_changes(this._selected_renderer.data_source, false, true, false)
   }
 
-  _pan(ev: GestureEvent): void {
+  override _pan(ev: GestureEvent): void {
     if (this._basepoint == null || this.model.vertex_renderer == null)
       return
     const points = this._drag_points(ev, [this.model.vertex_renderer])
@@ -38,7 +37,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
       this._selected_renderer.data_source.change.emit()
   }
 
-  _pan_end(ev: GestureEvent): void {
+  override _pan_end(ev: GestureEvent): void {
     if (this._basepoint == null || this.model.vertex_renderer == null)
       return
     const points = this._drag_points(ev, [this.model.vertex_renderer])
@@ -52,7 +51,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     this._basepoint = null
   }
 
-  _drag_points(ev: UIEvent, renderers: (GlyphRenderer & HasXYGlyph)[]): number[][] {
+  override _drag_points(ev: UIEvent, renderers: (GlyphRenderer & HasXYGlyph)[]): number[][] {
     if (this._basepoint == null)
       return []
     const [bx, by] = this._basepoint
@@ -90,7 +89,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     return points
   }
 
-  _set_vertices(xs: number[] | number, ys: number[] | number, styles?: any): void {
+  override _set_vertices(xs: number[] | number, ys: number[] | number, styles?: any): void {
     if (this.model.vertex_renderer == null)
       return
     const point_glyph: any = this.model.vertex_renderer.glyph
@@ -146,7 +145,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     }
   }
 
-  _tap(ev: TapEvent): void {
+  override _tap(ev: TapEvent): void {
     if (this.model.vertex_renderer == null)
       return
     const renderer = this.model.vertex_renderer
@@ -182,7 +181,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     this._select_event(ev, this._select_mode(ev), [renderer])
   }
 
-  _show_vertices(ev: UIEvent): void {
+  override _show_vertices(ev: UIEvent): void {
     if (!this.model.active)
       return
 
@@ -244,15 +243,15 @@ export namespace PolyVertexEditTool {
 export interface PolyVertexEditTool extends PolyVertexEditTool.Attrs {}
 
 export class PolyVertexEditTool extends PolyEditTool {
-  properties: PolyVertexEditTool.Props
+  declare properties: PolyVertexEditTool.Props
 
-  renderers: (GlyphRenderer & HasPolyGlyph)[]
+  override renderers: (GlyphRenderer & HasPolyGlyph)[]
 
   constructor(attrs?: Partial<PolyVertexEditTool.Attrs>) {
     super(attrs)
   }
 
-  static __module__ = "geoviews.models.custom_tools"
+  static override __module__ = "geoviews.models.custom_tools"
 
   static {
     this.prototype.default_view = PolyVertexEditToolView
@@ -261,6 +260,5 @@ export class PolyVertexEditTool extends PolyEditTool {
       end_style:  [ Any, {} ],
       node_style: [ Any, {} ],
     }))
-
   }
 }

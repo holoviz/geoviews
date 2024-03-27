@@ -1,5 +1,5 @@
 import * as p from "@bokehjs/core/properties"
-import {UIEvent} from "@bokehjs/core/ui_events"
+import type {UIEvent} from "@bokehjs/core/ui_events"
 import {keys} from "@bokehjs/core/util/object"
 import {isArray} from "@bokehjs/core/util/types"
 import {PolyDrawTool, PolyDrawToolView} from "@bokehjs/models/tools/edit/poly_draw_tool"
@@ -8,9 +8,8 @@ import {MultiLine} from "@bokehjs/models/glyphs/multi_line"
 import {Patches} from "@bokehjs/models/glyphs/patches"
 import {GlyphRenderer} from "@bokehjs/models/renderers/glyph_renderer"
 
-
 export class PolyVertexDrawToolView extends PolyDrawToolView {
-  model: PolyVertexDrawTool
+  declare model: PolyVertexDrawTool
 
   _split_path(x: number, y: number): void {
     for (let r=0; r<this.model.renderers.length; r++) {
@@ -48,7 +47,7 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
     }
   }
 
-  _snap_to_vertex(ev: UIEvent, x: number, y: number): [number, number] {
+  override _snap_to_vertex(ev: UIEvent, x: number, y: number): [number, number] {
     if (this.model.vertex_renderer) {
       // If an existing vertex is hit snap to it
       const vertex_selected = this._select_event(ev, "replace", [this.model.vertex_renderer])
@@ -72,7 +71,7 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
     return [x, y]
   }
 
-  _set_vertices(xs: number[] | number, ys: number[] | number, styles?: any): void {
+  override _set_vertices(xs: number[] | number, ys: number[] | number, styles?: any): void {
     if (this.model.vertex_renderer == null)
       return
     const point_glyph: any = this.model.vertex_renderer.glyph
@@ -104,7 +103,7 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
     this._emit_cds_changes(point_cds, true, true, false)
   }
 
-  _show_vertices(): void {
+  override _show_vertices(): void {
     if (!this.model.active ) { return }
     const xs: number[] = []
     const ys: number[] = []
@@ -141,7 +140,7 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
     this._set_vertices(xs, ys, styles)
   }
 
-  _remove(): void {
+  override _remove(): void {
     const renderer = this.model.renderers[0]
     const cds = renderer.data_source
     const glyph: any = renderer.glyph
@@ -181,15 +180,15 @@ export interface HasPolyGlyph {
 }
 
 export class PolyVertexDrawTool extends PolyDrawTool {
-  properties: PolyVertexDrawTool.Props
+  declare properties: PolyVertexDrawTool.Props
 
-  renderers: (GlyphRenderer & HasPolyGlyph)[]
+  override renderers: (GlyphRenderer & HasPolyGlyph)[]
 
   constructor(attrs?: Partial<PolyVertexDrawTool.Attrs>) {
     super(attrs)
   }
 
-  static __module__ = "geoviews.models.custom_tools"
+  static override __module__ = "geoviews.models.custom_tools"
 
   static {
     this.prototype.default_view = PolyVertexDrawToolView

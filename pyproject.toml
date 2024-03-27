@@ -2,7 +2,7 @@
 requires = [
     "param >=1.9.2",
     "pyct >=0.4.4",
-    "bokeh ==3.3",
+    "bokeh ==3.4",
     "setuptools",
 ]
 build-backend = "setuptools.build_meta"

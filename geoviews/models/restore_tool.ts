@@ -1,18 +1,22 @@
 import type * as p from "@bokehjs/core/properties"
+import type {Data} from "@bokehjs/core/types"
 import {ActionTool, ActionToolView} from "@bokehjs/models/tools/actions/action_tool"
 import {ColumnDataSource} from "@bokehjs/models/sources/column_data_source"
 import {tool_icon_undo} from "@bokehjs/styles/icons.css"
+
+type BufferedColumnDataSource = ColumnDataSource & {buffer?: Data[]}
 
 export class RestoreToolView extends ActionToolView {
   declare model: RestoreTool
 
   doit(): void {
-    const sources: any = this.model.sources
+    const sources = this.model.sources as BufferedColumnDataSource[]
     for (const source of sources) {
-      if (!source.buffer || source.buffer.length == 0) {
+      const new_data = source.buffer?.pop()
+      if (new_data == null) {
         continue
       }
-      source.data = source.buffer.pop()
+      source.data = new_data
       source.change.emit()
       source.properties.data.change.emit()
     }

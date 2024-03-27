@@ -12,8 +12,7 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
   declare model: PolyVertexDrawTool
 
   _split_path(x: number, y: number): void {
-    for (let r=0; r<this.model.renderers.length; r++) {
-      const renderer = this.model.renderers[r]
+    for (const renderer of this.model.renderers) {
       const glyph: any = renderer.glyph
       const cds: any = renderer.data_source
       const [xkey, ykey] = [glyph.xs.field, glyph.ys.field]
@@ -49,12 +48,13 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
   }
 
   override _snap_to_vertex(ev: UIEvent, x: number, y: number): [number, number] {
-    if (this.model.vertex_renderer != null) {
+    const {vertex_renderer} = this.model
+    if (vertex_renderer != null) {
       // If an existing vertex is hit snap to it
-      const vertex_selected = this._select_event(ev, "replace", [this.model.vertex_renderer])
-      const point_ds = this.model.vertex_renderer.data_source
+      const vertex_selected = this._select_event(ev, "replace", [vertex_renderer])
+      const point_ds = vertex_renderer.data_source
       // Type once dataspecs are typed
-      const point_glyph: any = this.model.vertex_renderer.glyph
+      const point_glyph: any = vertex_renderer.glyph
       const [pxkey, pykey] = [point_glyph.x.field, point_glyph.y.field]
       if (vertex_selected.length > 0) {
         // If existing vertex is hit split path at that location
@@ -76,11 +76,12 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
   }
 
   override _set_vertices(xs: number[] | number, ys: number[] | number, styles?: any): void {
-    if (this.model.vertex_renderer == null) {
+    const {vertex_renderer} = this.model
+    if (vertex_renderer == null) {
       return
     }
-    const point_glyph: any = this.model.vertex_renderer.glyph
-    const point_cds = this.model.vertex_renderer.data_source
+    const point_glyph: any = vertex_renderer.glyph
+    const point_cds = vertex_renderer.data_source
     const [pxkey, pykey] = [point_glyph.x.field, point_glyph.y.field]
     if (pxkey) {
       if (isArray(xs)) {
@@ -114,14 +115,15 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
     if (!this.model.active) {
       return
     }
+    const {renderers, node_style, end_style} = this.model
     const xs: number[] = []
     const ys: number[] = []
     const styles: any = {}
-    for (const key of keys((this.model as any).end_style)) {
+    for (const key of keys(end_style)) {
       styles[key] = []
     }
-    for (let i=0; i<this.model.renderers.length; i++) {
-      const renderer = this.model.renderers[i]
+    for (let i = 0; i < renderers.length; i++) {
+      const renderer = renderers[i]
       const cds = renderer.data_source
       const glyph: any = renderer.glyph
       const [xkey, ykey] = [glyph.xs.field, glyph.ys.field]
@@ -130,16 +132,16 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
           xs.push(...array)
         }
 
-        for (const key of keys((this.model as any).end_style)) {
-          styles[key].push((this.model as any).end_style[key])
+        for (const key of keys(end_style)) {
+          styles[key].push(end_style[key])
         }
-        for (const key of keys((this.model as any).node_style)) {
+        for (const key of keys(node_style)) {
           for (let index = 0; index < ((array as any).length-2); index++) {
-            styles[key].push((this.model as any).node_style[key])
+            styles[key].push(node_style[key])
           }
         }
-        for (const key of keys((this.model as any).end_style)) {
-          styles[key].push((this.model as any).end_style[key])
+        for (const key of keys(end_style)) {
+          styles[key].push(end_style[key])
         }
       }
       for (const array of cds.get_array(ykey)) {
@@ -147,7 +149,7 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
           ys.push(...array)
         }
       }
-      if (this._drawing && (i == (this.model.renderers.length-1))) {
+      if (this._drawing && i == renderers.length - 1) {
         // Skip currently drawn vertex
         xs.splice(xs.length-1, 1)
         ys.splice(ys.length-1, 1)

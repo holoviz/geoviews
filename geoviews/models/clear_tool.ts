@@ -1,19 +1,14 @@
-import * as p from "@bokehjs/core/properties"
+import type * as p from "@bokehjs/core/properties"
 import {ActionTool, ActionToolView} from "@bokehjs/models/tools/actions/action_tool"
 import {ColumnDataSource} from "@bokehjs/models/sources/column_data_source"
 import {tool_icon_reset} from "@bokehjs/styles/icons.css"
 
-
 export class ClearToolView extends ActionToolView {
-  model: ClearTool
+  declare model: ClearTool
 
   doit(): void {
-    for (var source of this.model.sources) {
-      for (const column in source.data) {
-        source.data[column] = []
-      }
-      source.change.emit();
-      source.properties.data.change.emit();
+    for (const source of this.model.sources) {
+      source.clear()
     }
   }
 }
@@ -28,13 +23,13 @@ export namespace ClearTool {
 export interface ClearTool extends ClearTool.Attrs {}
 
 export class ClearTool extends ActionTool {
-  properties: ClearTool.Props
+  declare properties: ClearTool.Props
 
   constructor(attrs?: Partial<ClearTool.Attrs>) {
     super(attrs)
   }
 
-  static __module__ = "geoviews.models.custom_tools"
+  static override __module__ = "geoviews.models.custom_tools"
 
   static {
     this.prototype.default_view = ClearToolView
@@ -44,6 +39,6 @@ export class ClearTool extends ActionTool {
     }))
   }
 
-  tool_name = "Clear data"
-  tool_icon = tool_icon_reset
+  override tool_name = "Clear data"
+  override tool_icon = tool_icon_reset
 }

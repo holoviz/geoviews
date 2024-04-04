@@ -1,29 +1,33 @@
-import * as p from "@bokehjs/core/properties"
+import type * as p from "@bokehjs/core/properties"
+import {entries} from "@bokehjs/core/util/object"
+import type {Data} from "@bokehjs/core/types"
 import {copy} from "@bokehjs/core/util/array"
 import {ActionTool, ActionToolView} from "@bokehjs/models/tools/actions/action_tool"
 import {ColumnDataSource} from "@bokehjs/models/sources/column_data_source"
 import {tool_icon_save} from "@bokehjs/styles/icons.css"
 
+type BufferedColumnDataSource = ColumnDataSource & {buffer?: Data[]}
 
 export class CheckpointToolView extends ActionToolView {
-  model: CheckpointTool
+  declare model: CheckpointTool
 
   doit(): void {
-    const sources: any = this.model.sources;
+    const sources = this.model.sources as BufferedColumnDataSource[]
     for (const source of sources) {
-      if (!source.buffer) { source.buffer = [] }
-      let data_copy: any = {};
-      for (const key in source.data) {
-        const column = source.data[key];
+      if (source.buffer == null) {
+        source.buffer = []
+      }
+      const data_copy: Data = {}
+      for (const [key, column] of entries(source.data)) {
         const new_column = []
         for (const arr of column) {
-          if (Array.isArray(arr) || (ArrayBuffer.isView(arr))) {
-            new_column.push(copy((arr as any)))
+          if (Array.isArray(arr) || ArrayBuffer.isView(arr)) {
+            new_column.push(copy(arr as any))
           } else {
             new_column.push(arr)
           }
         }
-        data_copy[key] = new_column;
+        data_copy[key] = new_column
       }
       source.buffer.push(data_copy)
     }
@@ -40,13 +44,13 @@ export namespace CheckpointTool {
 export interface CheckpointTool extends CheckpointTool.Attrs {}
 
 export class CheckpointTool extends ActionTool {
-  properties: CheckpointTool.Props
+  declare properties: CheckpointTool.Props
 
   constructor(attrs?: Partial<CheckpointTool.Attrs>) {
     super(attrs)
   }
 
-  static __module__ = "geoviews.models.custom_tools"
+  static override __module__ = "geoviews.models.custom_tools"
 
   static {
     this.prototype.default_view = CheckpointToolView
@@ -56,6 +60,6 @@ export class CheckpointTool extends ActionTool {
     }))
   }
 
-  tool_name = "Checkpoint"
-  tool_icon = tool_icon_save
+  override tool_name = "Checkpoint"
+  override tool_icon = tool_icon_save
 }

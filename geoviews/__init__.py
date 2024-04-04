@@ -12,7 +12,7 @@ from .element import ( # noqa (API import)
     Contours, Graph, TriMesh, Nodes, EdgePaths, QuadMesh, VectorField,
     HexTiles, Labels, Rectangles, Segments, WindBarbs
 )
-from .util import load_tiff, from_xarray # noqa (API import)
+from .util import from_xarray # noqa (API import)
 from ._warnings import GeoviewsDeprecationWarning, GeoviewsUserWarning  # noqa: F401
 from . import data                                  # noqa (API import)
 from . import plotting                              # noqa (API import)

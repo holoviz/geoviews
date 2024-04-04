@@ -50,7 +50,7 @@ except ImportError:
     _IMAGESTACK_AVAILABLE = False
 
 from ..util import (
-    path_to_geom_dicts, polygons_to_geom_dicts, load_tiff, from_xarray,
+    path_to_geom_dicts, polygons_to_geom_dicts, from_xarray,
     poly_types, expand_geoms, transform_shapely
 )
 
@@ -398,11 +398,6 @@ class Image(_Element, HvImage):
     group = param.String(default='Image')
 
     @classmethod
-    def load_tiff(cls, filename, crs=None, apply_transform=False,
-                  nan_nodata=False, **kwargs):
-        return load_tiff(filename, crs, apply_transform, **kwargs)
-
-    @classmethod
     def from_xarray(cls, da, crs=None, apply_transform=False,
                     nan_nodata=False, **kwargs):
         return from_xarray(da, crs, apply_transform, **kwargs)
@@ -470,11 +465,6 @@ class QuadMesh(_Element, HvQuadMesh):
     _binned = True
 
     @classmethod
-    def load_tiff(cls, filename, crs=None, apply_transform=False,
-                  nan_nodata=False, **kwargs):
-        return load_tiff(filename, crs, apply_transform, **kwargs)
-
-    @classmethod
     def from_xarray(cls, da, crs=None, apply_transform=False,
                     nan_nodata=False, **kwargs):
         return from_xarray(da, crs, apply_transform, **kwargs)
@@ -529,36 +519,6 @@ class RGB(_Element, HvRGB):
 
         If an alpha channel is supplied, the defined alpha_dimension
         is automatically appended to this list.""")
-
-    @classmethod
-    def load_tiff(cls, filename, crs=None, apply_transform=False,
-                  nan_nodata=False, **kwargs):
-        """
-        Returns an RGB or Image element loaded from a geotiff file.
-
-        The data is loaded using xarray and rasterio. If a crs attribute
-        is present on the loaded data it will attempt to decode it into
-        a cartopy projection otherwise it will default to a non-geographic
-        HoloViews element.
-
-        Parameters
-        ----------
-        filename: string
-          Filename pointing to geotiff file to load
-        crs: Cartopy CRS or EPSG string (optional)
-          Overrides CRS inferred from the data
-        apply_transform: boolean
-          Whether to apply affine transform if defined on the data
-        nan_nodata: boolean
-          If data contains nodata values convert them to NaNs
-        **kwargs:
-          Keyword arguments passed to the HoloViews/GeoViews element
-
-        Returns
-        -------
-        element: Image/RGB/QuadMesh element
-        """
-        return load_tiff(filename, crs, apply_transform, **kwargs)
 
     @classmethod
     def from_xarray(cls, da, crs=None, apply_transform=False,

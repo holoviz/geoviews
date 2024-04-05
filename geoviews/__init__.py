@@ -55,7 +55,7 @@ def __getattr__(attr):
     raise AttributeError(f"module {__name__} has no attribute {attr!r}")
 
 __all__ = [k for k in locals() if not k.startswith('_')]
-__all__ += ['annotate', 'project', 'operation']
+__all__ += ['annotate', 'project', 'operation', '__version__']
 
 def __dir__():
     return __all__

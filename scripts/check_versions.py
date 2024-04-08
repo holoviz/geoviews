@@ -4,7 +4,7 @@ from pathlib import Path
 from param import version
 
 ROOT = Path(__file__).parents[1]
-
+print(ROOT)
 
 def _py_version():
     return version.Version.setup_version(

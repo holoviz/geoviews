@@ -44,7 +44,7 @@ repos:
   - repo: local
     hooks:
       - id: version_check
-        name: Check Python and JavaScript versions
+        name: Check Python and JavaScript version
         entry: python scripts/check_versions.py
         language: python
         additional_dependencies: [param]

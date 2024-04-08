@@ -44,7 +44,13 @@ jobs:
     name: Run pre-commit
     runs-on: "ubuntu-latest"
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: "100"
+      - name: Fetch unshallow
+        run: git fetch --prune --tags --unshallow -f
       - uses: holoviz-dev/holoviz_tasks/pre-commit@v0
+
   setup:
     name: Setup workflow
     runs-on: ubuntu-latest

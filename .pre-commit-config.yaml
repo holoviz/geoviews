@@ -41,11 +41,3 @@ repos:
     rev: v0.10.0.1
     hooks:
       - id: shellcheck
-  - repo: local
-    hooks:
-      - id: version_check
-        name: Check Python and JavaScript version
-        entry: python scripts/check_versions.py
-        language: python
-        additional_dependencies: [param]
-        pass_filenames: false

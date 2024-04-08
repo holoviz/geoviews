@@ -1,6 +1,3 @@
-# This is the configuration for pre-commit, a local framework for managing pre-commit hooks
-#   Check out the docs at: https://pre-commit.com/
-
 exclude: (\.min\.js$|\.svg$|\.html$)
 default_stages: [commit]
 repos:
@@ -31,9 +28,9 @@ repos:
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.6
     hooks:
-    - id: codespell
-      additional_dependencies:
-        - tomli
+      - id: codespell
+        additional_dependencies:
+          - tomli
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0
     hooks:
@@ -44,3 +41,11 @@ repos:
     rev: v0.10.0.1
     hooks:
       - id: shellcheck
+  - repo: local
+    hooks:
+      - id: version_check
+        name: Check Python and JavaScript versions
+        entry: python scripts/check_versions.py
+        language: python
+        additional_dependencies: [param]
+        pass_filenames: false

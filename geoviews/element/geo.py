@@ -117,6 +117,7 @@ class _Element(Element2D):
             kwargs['crs'] = crs
         elif isinstance(data, _Element):
             kwargs['crs'] = data.crs
+
         super().__init__(data, kdims=kdims, vdims=vdims, **kwargs)
 
 

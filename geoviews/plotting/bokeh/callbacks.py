@@ -122,8 +122,7 @@ class GeoRangeXYCallback(RangeXYCallback):
 
     def _process_msg(self, msg):
         msg = super()._process_msg(msg)
-        ranges = project_ranges(self, msg, ('x_range', 'y_range'))
-        return ranges
+        return project_ranges(self, msg, ('x_range', 'y_range'))
 
 class GeoRangeXCallback(RangeXCallback):
 

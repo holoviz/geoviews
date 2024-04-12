@@ -3,7 +3,7 @@ Module for geographic bokeh plot baseclasses.
 """
 import param
 
-from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator
+from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator, _CylindricalProjection
 from bokeh.models.tools import BoxZoomTool, WheelZoomTool
 from bokeh.models import MercatorTickFormatter, MercatorTicker, CustomJSHover
 from holoviews.core.dimension import Dimension
@@ -69,8 +69,11 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                     'multiply the current element by gv.feature.grid() '
                     'and disable the show_grid option.'
                 )
-        x1, x2 = element.range(0)
-        self._unwrap_lons = 0 <= x1 <= 360 and 0 <= x2 <= 360
+
+        self._unwrap_lons = False
+        if isinstance(self.geographic, _CylindricalProjection):
+            x1, x2 = element.range(0)
+            self._unwrap_lons = 0 <= x1 <= 360 and 0 <= x2 <= 360
 
     def _axis_properties(self, axis, key, plot, dimension=None,
                          ax_mapping=None):

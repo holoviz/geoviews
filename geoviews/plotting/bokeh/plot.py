@@ -70,7 +70,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                     'and disable the show_grid option.'
                 )
         x1, x2 = element.range(0)
-        self._unwrap_lons = x1 >= 0 and x1 <= 360 and x2 >= 0 and x2 <= 360
+        self._unwrap_lons = 0 <= x1 <= 360 and 0 <= x2 <= 360
 
     def _axis_properties(self, axis, key, plot, dimension=None,
                          ax_mapping=None):

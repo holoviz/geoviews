@@ -286,7 +286,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
             vals = dataset.data[dim.name]
             try:
                 return vals.min(), vals.max()
-            except Exception:
+            except TypeError:
                 return np.nan, np.nan
 
     @classmethod

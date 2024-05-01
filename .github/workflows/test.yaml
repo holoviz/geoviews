@@ -129,7 +129,7 @@ jobs:
         if: needs.setup.outputs.code_change == 'true'
         run: |
           conda activate test-environment
-          bash scripts/download_data.sh
+          python scripts/download_data.py
       - name: git describe
         if: needs.setup.outputs.code_change == 'true'
         run: |
@@ -189,7 +189,7 @@ jobs:
       - name: download data
         run: |
           # conda activate test-environment
-          bash scripts/download_data.sh
+          python scripts/download_data.py
       - name: doit test_unit
         run: |
           # conda activate test-environment

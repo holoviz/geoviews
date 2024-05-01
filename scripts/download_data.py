@@ -1,17 +1,21 @@
 from pathlib import Path
 
 import bokeh.sampledata
-import pyct.cmd
 
 BASE_PATH = Path(__file__).resolve().parents[1]
 
 bokeh.sampledata.download()
 
-pyct.cmd.fetch_data(
-    name="data",
-    path=str(BASE_PATH / "examples"),
-    datasets="datasets.yml",
-)
+try:
+    import pyct.cmd
+except ImportError:
+    pass
+else:
+    pyct.cmd.fetch_data(
+        name="data",
+        path=str(BASE_PATH / "examples"),
+        datasets="datasets.yml",
+    )
 
 try:
     import geodatasets as gds

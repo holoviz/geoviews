@@ -50,7 +50,7 @@ jobs:
       - name: download data
         run: |
           conda activate test-environment
-          bash scripts/download_data.sh
+          python download_data.py
       - name: generate rst
         run: |
           conda activate test-environment

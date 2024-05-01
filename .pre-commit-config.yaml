@@ -20,12 +20,12 @@ repos:
       - id: check-json
       - id: detect-private-key
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.6
+    rev: v0.3.5
     hooks:
       - id: ruff
         files: geoviews/
   - repo: https://github.com/hoxbro/clean_notebook
-    rev: v0.1.13
+    rev: v0.1.14
     hooks:
       - id: clean-notebook
   - repo: https://github.com/codespell-project/codespell
@@ -41,6 +41,6 @@ repos:
       - id: rst-directive-colons
       - id: rst-inline-touching-normal
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.9.0.6
+    rev: v0.10.0.1
     hooks:
       - id: shellcheck

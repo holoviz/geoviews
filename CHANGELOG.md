@@ -1,3 +1,61 @@
+Version 1.12.0
+==============
+
+Date: April 5, 2024
+
+This release brings compatibility with the latest release of Bokeh 3.4. Many thanks to @droumis, @mattpap, @maximlt and @Hoxbro for their ongoing contributions.
+
+Enhancements:
+
+- Lazy load modules ([#709](https://github.com/holoviz/geoviews/pull/709))
+
+Project governance:
+
+- Create initial project gov docs ([#616](https://github.com/holoviz/geoviews/pull/616))
+
+Removed deprecations:
+
+- Removed `load_tiff` use `rioxarray.open_rasterio` instead ([#701](https://github.com/holoviz/geoviews/pull/701))
+- Removed `gv.tile_sources.Wikipedia` alias use `gv.tile_sources.OSM` instead ([#701](https://github.com/holoviz/geoviews/pull/701))
+
+Compatibility:
+
+- Modernize JS/TS codebase and upgrade to Bokeh 3.4 ([#715](https://github.com/holoviz/geoviews/pull/715))
+
+Maintenance:
+
+- Align build dependencies ([#710](https://github.com/holoviz/geoviews/pull/710))
+- Build the site without pulling the dev dependencies ([#711](https://github.com/holoviz/geoviews/pull/711))
+- Update pre-commit and fix test suite ([#712](https://github.com/holoviz/geoviews/pull/712))
+- Update build CI ([#713](https://github.com/holoviz/geoviews/pull/713))
+- General maintenance ([#717](https://github.com/holoviz/geoviews/pull/717))
+
+Version 1.11.1
+==============
+
+Date: February 13, 2024
+
+This release brings minor bug fix and a few docs changes. Many thanks to @dwr-psandhu for his first contribution and @Hoxbro, @maximlt, and @ahuang11 for their ongoing contributions.
+
+Enhancements:
+
+- Add support for `ImageStack` ([#693](https://github.com/holoviz/geoviews/pull/693))
+- Update `WMTS` params to match Bokeh ([#698](https://github.com/holoviz/geoviews/pull/698))
+
+Documentation:
+
+- Show all tile sources ([#699](https://github.com/holoviz/geoviews/pull/699))
+- Add downloads badges by @ahuang11 ([#702](https://github.com/holoviz/geoviews/pull/702))
+- Replace Google Analytics with GoatCounter ([#692](https://github.com/holoviz/geoviews/pull/692))
+
+Bug Fixes:
+
+- Fix minimum zoom level ([#688](https://github.com/holoviz/geoviews/pull/688))
+
+Maintenance:
+
+- General maintenance ([#687](https://github.com/holoviz/geoviews/pull/687), [#689](https://github.com/holoviz/geoviews/pull/689), [#696](https://github.com/holoviz/geoviews/pull/696), [#705](https://github.com/holoviz/geoviews/pull/705))
+
 Version 1.11.0
 ==============
 

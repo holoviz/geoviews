@@ -6,6 +6,7 @@
 
 |    |    |
 | --- | --- |
+| Downloads | ![https://pypistats.org/packages/geoviews](https://img.shields.io/pypi/dm/geoviews?label=pypi) ![https://anaconda.org/pyviz/geoviews](https://pyviz.org/_static/cache/geoviews_conda_downloads_badge.svg)
 | Build Status | [![Linux/MacOS/Windows Build Status](https://github.com/holoviz/geoviews/workflows/tests/badge.svg?query=branch:main)](https://github.com/holoviz/geoviews/actions/workflows/test.yaml?query=branch%3Amain) |
 | Coverage | [![codecov](https://codecov.io/gh/holoviz/geoviews/branch/main/graph/badge.svg)](https://codecov.io/gh/holoviz/geoviews) |
 | Latest dev release | [![Github tag](https://img.shields.io/github/tag/holoviz/geoviews.svg?label=tag&colorB=11ccbb)](https://github.com/holoviz/geoviews/tags) [![dev-site](https://img.shields.io/website-up-down-green-red/https/holoviz-dev.github.io/geoviews.svg?label=dev%20website)](https://holoviz-dev.github.io/geoviews/) |

@@ -19,7 +19,6 @@ from holoviews.element import (
 )
 from holoviews.element.selection import Selection2DExpr
 
-
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry import (
     box, GeometryCollection, MultiPolygon, LineString, MultiLineString,
@@ -27,14 +26,15 @@ from shapely.geometry import (
 )
 from shapely.ops import unary_union
 
-try:
-    from iris.cube import Cube
-except (ImportError, OSError):
-    # OSError because environment variable $UDUNITS2_XML_PATH
-    # is sometimes not set. Should be done automatically
-    # when installing the package.
-    Cube = None
-
+def _get_iris_cube():
+    try:
+        from iris.cube import Cube
+    except (ImportError, OSError):
+        # OSError because environment variable $UDUNITS2_XML_PATH
+        # is sometimes not set. Should be done automatically
+        # when installing the package.
+        Cube = None
+    return Cube
 
 
 try:
@@ -42,8 +42,15 @@ try:
 except ImportError:
     WebMapTileService = None
 
+try:
+    from holoviews import ImageStack as HvImageStack
+    _IMAGESTACK_AVAILABLE = True
+except ImportError:
+    class HvImageStack: ...
+    _IMAGESTACK_AVAILABLE = False
+
 from ..util import (
-    path_to_geom_dicts, polygons_to_geom_dicts, load_tiff, from_xarray,
+    path_to_geom_dicts, polygons_to_geom_dicts, from_xarray,
     poly_types, expand_geoms, transform_shapely
 )
 
@@ -95,7 +102,7 @@ class _Element(Element2D):
             crs_data = data.data
         else:
             crs_data = data
-        if Cube and isinstance(crs_data, Cube):
+        if hasattr(crs_data, 'coord_system') and _get_iris_cube() and isinstance(crs_data, _get_iris_cube()):
             coord_sys = crs_data.coord_system()
             if hasattr(coord_sys, 'as_cartopy_projection'):
                 crs = coord_sys.as_cartopy_projection()
@@ -391,15 +398,48 @@ class Image(_Element, HvImage):
     group = param.String(default='Image')
 
     @classmethod
-    def load_tiff(cls, filename, crs=None, apply_transform=False,
-                  nan_nodata=False, **kwargs):
-        return load_tiff(filename, crs, apply_transform, **kwargs)
-
-    @classmethod
     def from_xarray(cls, da, crs=None, apply_transform=False,
                     nan_nodata=False, **kwargs):
         return from_xarray(da, crs, apply_transform, **kwargs)
 
+
+class ImageStack(_Element, HvImageStack):
+    """
+    ImageStack expands the capabilities of Image to by supporting
+    multiple layers of images.
+
+    As there is many ways to represent multiple layers of images,
+    the following options are supported:
+
+        1) A 3D Numpy array with the shape (y, x, level)
+        2) A list of 2D Numpy arrays with identical shape (y, x)
+        3) A dictionary where the keys will be set as the vdims and the
+            values are 2D Numpy arrays with identical shapes (y, x).
+            If the dictionary's keys matches the kdims of the element,
+            they need to be 1D arrays.
+        4) A tuple containing (x, y, level_0, level_1, ...),
+            where the level is a 2D Numpy array in the shape of (y, x).
+        5) An xarray DataArray or Dataset where its `coords` contain the kdims.
+
+    If no kdims are supplied, x and y are used.
+
+    If no vdims are supplied, and the naming can be inferred like with a dictionary
+    the levels will be named level_0, level_1, etc.
+    """
+
+    def __init__(self, data, kdims=None, vdims=None, **params):
+        if not _IMAGESTACK_AVAILABLE:
+            raise ImportError('ImageStack requires HoloViews 1.18 or greater.')
+        super().__init__(data, kdims=kdims, vdims=vdims, **params)
+
+    vdims = param.List(doc="""
+        The dimension description of the data held in the matrix.""")
+
+    group = param.String(default='ImageStack', constant=True)
+
+    _ndim = 3
+
+    _vdim_reductions = {1: Image}
 
 
 class QuadMesh(_Element, HvQuadMesh):
@@ -423,11 +463,6 @@ class QuadMesh(_Element, HvQuadMesh):
     group = param.String(default='QuadMesh')
 
     _binned = True
-
-    @classmethod
-    def load_tiff(cls, filename, crs=None, apply_transform=False,
-                  nan_nodata=False, **kwargs):
-        return load_tiff(filename, crs, apply_transform, **kwargs)
 
     @classmethod
     def from_xarray(cls, da, crs=None, apply_transform=False,
@@ -484,36 +519,6 @@ class RGB(_Element, HvRGB):
 
         If an alpha channel is supplied, the defined alpha_dimension
         is automatically appended to this list.""")
-
-    @classmethod
-    def load_tiff(cls, filename, crs=None, apply_transform=False,
-                  nan_nodata=False, **kwargs):
-        """
-        Returns an RGB or Image element loaded from a geotiff file.
-
-        The data is loaded using xarray and rasterio. If a crs attribute
-        is present on the loaded data it will attempt to decode it into
-        a cartopy projection otherwise it will default to a non-geographic
-        HoloViews element.
-
-        Parameters
-        ----------
-        filename: string
-          Filename pointing to geotiff file to load
-        crs: Cartopy CRS or EPSG string (optional)
-          Overrides CRS inferred from the data
-        apply_transform: boolean
-          Whether to apply affine transform if defined on the data
-        nan_nodata: boolean
-          If data contains nodata values convert them to NaNs
-        **kwargs:
-          Keyword arguments passed to the HoloViews/GeoViews element
-
-        Returns
-        -------
-        element: Image/RGB/QuadMesh element
-        """
-        return load_tiff(filename, crs, apply_transform, **kwargs)
 
     @classmethod
     def from_xarray(cls, da, crs=None, apply_transform=False,

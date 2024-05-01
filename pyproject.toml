@@ -1,9 +1,8 @@
 [build-system]
 requires = [
-    "param >=1.9.0",
+    "param >=1.9.2",
     "pyct >=0.4.4",
-    "bokeh ==3.3",
-    "pyviz_comms >=0.6.0",
+    "bokeh ==3.4",
     "setuptools",
 ]
 build-backend = "setuptools.build_meta"
@@ -63,22 +62,28 @@ skip = "doc/generate_modules.py,*.json,*.csv"
 write-changes = true
 
 [tool.pytest.ini_options]
-addopts = "-v --pyargs --doctest-ignore-import-errors --strict-markers --strict-config --color=yes"
+addopts = ["--pyargs", "--doctest-ignore-import-errors", "--strict-config", "--strict-markers", "--color=yes"]
 norecursedirs = "doc .git dist build _build .ipynb_checkpoints"
 minversion = 7
 xfail_strict = true
 log_cli_level = "INFO"
 filterwarnings = [
-       "error::holoviews.HoloviewsUserWarning",
-       "error::geoviews.GeoviewsDeprecationWarning",
-       "error::geoviews.GeoviewsUserWarning",
-       #  2023-01: https://github.com/bokeh/bokeh/pull/12690
-       "ignore:`.+?` is a deprecated alias for `.+?`.:DeprecationWarning:bokeh",
-       #  2023-01: https://github.com/cupy/cupy/pull/7245
-       "ignore:`.+?` is a deprecated alias for `.+?`.:DeprecationWarning:cupy",
-       #  2023-01: https://github.com/SciTools/cartopy/issues/2113
-       "ignore:The 'geom_factory' function is deprecated in Shapely 2:DeprecationWarning:cartopy.crs",
-       "error::holoviews.HoloviewsDeprecationWarning",
-       #  2023-09: See https://github.com/Unidata/MetPy/pull/3117
-       "ignore:'xdrlib' is deprecated and slated for removal in Python 3.13:DeprecationWarning:metpy.io.nexrad",
+    "error",
+    # 2023-01: https://github.com/bokeh/bokeh/pull/12690
+    "ignore:`.+?` is a deprecated alias for `.+?`.:DeprecationWarning:bokeh",
+    # 2023-01: https://github.com/cupy/cupy/pull/7245
+    "ignore:`.+?` is a deprecated alias for `.+?`.:DeprecationWarning:cupy",
+    # 2023-01: https://github.com/SciTools/cartopy/issues/2113
+    "ignore:The 'geom_factory' function is deprecated in Shapely 2:DeprecationWarning:cartopy.crs",
+    # 2023-09: See https://github.com/Unidata/MetPy/pull/3117
+    "ignore:'xdrlib' is deprecated and slated for removal in Python 3.13:DeprecationWarning:metpy.io.nexrad",
+    # 2024-01
+    "ignore:\\s*Pyarrow will become a required dependency of pandas:DeprecationWarning",  # Will go away by itself in Pandas 3.0
+    "ignore:Passing a (SingleBlockManager|BlockManager) to (Series|GeoSeries|DataFrame|GeoDataFrame) is deprecated:DeprecationWarning",  # https://github.com/holoviz/spatialpandas/issues/137
+    "ignore:datetime.datetime.utcfromtimestamp():DeprecationWarning:dateutil.tz.tz",  # https://github.com/dateutil/dateutil/pull/1285
+    # 2024-02
+    "ignore:The current Dask DataFrame implementation is deprecated:DeprecationWarning",  # https://github.com/dask/dask/issues/10917
+    # 2024-03
+    "ignore:\\s*Dask dataframe query planning is disabled because dask-expr is not installed:FutureWarning",
+    "ignore:numpy.ndarray size changed, may indicate binary incompatibility:RuntimeWarning",  # https://github.com/pydata/xarray/issues/7259
 ]

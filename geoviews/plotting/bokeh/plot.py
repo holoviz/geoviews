@@ -120,12 +120,11 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                                      overlaid=True, renderer=self.renderer)
             shapeplot.geographic = False
             shapeplot.initialize_plot(plot=fig)
-        nonempty = [(k, el) for k, el in self.hmap.data.items() if el]
-        self._set_unwrap_lons(nonempty[-1][1])
+        self._set_unwrap_lons(self.current_frame)
         return fig
 
     def update_frame(self, key, ranges=None, element=None):
-        if element:
+        if element is not None:
             self._set_unwrap_lons(element)
         super().update_frame(key, ranges, element)
 

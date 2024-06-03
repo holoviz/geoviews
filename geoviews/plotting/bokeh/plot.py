@@ -3,7 +3,7 @@ Module for geographic bokeh plot baseclasses.
 """
 import param
 
-from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator
+from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator, _CylindricalProjection
 from bokeh.models.tools import BoxZoomTool, WheelZoomTool
 from bokeh.models import MercatorTickFormatter, MercatorTicker, CustomJSHover
 from holoviews.core.dimension import Dimension
@@ -70,6 +70,8 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                     'and disable the show_grid option.'
                 )
 
+        self._unwrap_lons = False
+
     def _axis_properties(self, axis, key, plot, dimension=None,
                          ax_mapping=None):
         if ax_mapping is None:
@@ -103,6 +105,11 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                     ax_range.end = mid + min_interval/2.
                 ax_range.min_interval = min_interval
 
+    def _set_unwrap_lons(self, element):
+        if isinstance(self.geographic, _CylindricalProjection):
+            x1, x2 = element.range(0)
+            self._unwrap_lons = 0 <= x1 <= 360 and 0 <= x2 <= 360
+
     def initialize_plot(self, ranges=None, plot=None, plots=None, source=None):
         opts = {} if isinstance(self, HvOverlayPlot) else {'source': source}
         fig = super().initialize_plot(ranges, plot, plots, **opts)
@@ -113,7 +120,13 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                                      overlaid=True, renderer=self.renderer)
             shapeplot.geographic = False
             shapeplot.initialize_plot(plot=fig)
+        self._set_unwrap_lons(self.current_frame)
         return fig
+
+    def update_frame(self, key, ranges=None, element=None):
+        if element is not None:
+            self._set_unwrap_lons(element)
+        super().update_frame(key, ranges, element)
 
     def _postprocess_hover(self, renderer, source):
         super()._postprocess_hover(renderer, source)

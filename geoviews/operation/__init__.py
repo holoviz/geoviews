@@ -4,15 +4,23 @@ from holoviews.operation.stats import bivariate_kde
 
 from .. import element as gv_element
 from ..element import _Element
-from .projection import ( # noqa (API import)
-    project_image, project_path, project_shape, project_points,
-    project_graph, project_quadmesh, project_geom,
-    project_vectorfield, project_windbarbs, project)
-from .resample import resample_geometry # noqa (API import)
+from .projection import (  # noqa: F401
+    project,
+    project_geom,
+    project_graph,
+    project_image,
+    project_path,
+    project_points,
+    project_quadmesh,
+    project_shape,
+    project_vectorfield,
+    project_windbarbs,
+)
+from .resample import resample_geometry  # noqa: F401
 
 geo_ops = [contours, bivariate_kde]
 try:
-    from holoviews.operation.datashader import shade, stack, dynspread
+    from holoviews.operation.datashader import dynspread, shade, stack
     from holoviews.operation.resample import ResampleOperation2D
     geo_ops += [ResampleOperation2D, shade, stack, dynspread]
 except ImportError:

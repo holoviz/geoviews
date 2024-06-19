@@ -6,8 +6,14 @@ from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
 from holoviews.element import Tiles
 from packaging.version import Version
 from shapely.geometry import (
-    LinearRing, LineString, MultiLineString, MultiPoint,
-    MultiPolygon, Point, Polygon, box
+    LinearRing,
+    LineString,
+    MultiLineString,
+    MultiPoint,
+    MultiPolygon,
+    Point,
+    Polygon,
+    box,
 )
 from shapely.geometry.base import BaseMultipartGeometry
 from shapely.ops import transform
@@ -690,11 +696,11 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
         kwargs['datatype'] = ['xarray', 'grid', 'image']
 
     if xs.ndim > 1:
-        from .element.geo import QuadMesh, HvQuadMesh
+        from .element.geo import HvQuadMesh, QuadMesh
         el = QuadMesh if 'crs' in kwargs else HvQuadMesh
         el = el(data, [x, y], **kwargs)
     elif bands < 3:
-        from .element.geo import Image, HvImage
+        from .element.geo import HvImage, Image
         el = Image if 'crs' in kwargs else HvImage
         el = el(data, [x, y], **kwargs)
     else:

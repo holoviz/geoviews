@@ -1,33 +1,59 @@
 import copy
 
-import param
 import numpy as np
+import param
+from bokeh.models import BBoxTileSource, QUADKEYTileSource, SaveTool, WMTSTileSource
 from cartopy.crs import GOOGLE_MERCATOR
-from bokeh.models import WMTSTileSource, BBoxTileSource, QUADKEYTileSource, SaveTool
-
-from holoviews import Store, Overlay, NdOverlay
+from holoviews import NdOverlay, Overlay, Store
 from holoviews.core import util
-from holoviews.core.options import SkipRendering, Options, Compositor
-from holoviews.plotting.bokeh.annotation import TextPlot, LabelsPlot
+from holoviews.core.options import Compositor, Options, SkipRendering
+from holoviews.plotting.bokeh.annotation import LabelsPlot, TextPlot
 from holoviews.plotting.bokeh.chart import PointPlot, VectorFieldPlot
 from holoviews.plotting.bokeh.geometry import RectanglesPlot, SegmentPlot
-from holoviews.plotting.bokeh.graphs import TriMeshPlot, GraphPlot
-from holoviews.plotting.bokeh.hex_tiles import hex_binning, HexTilesPlot
-from holoviews.plotting.bokeh.path import PolygonPlot, PathPlot, ContourPlot
-from holoviews.plotting.bokeh.raster import RasterPlot, RGBPlot, QuadMeshPlot
+from holoviews.plotting.bokeh.graphs import GraphPlot, TriMeshPlot
+from holoviews.plotting.bokeh.hex_tiles import HexTilesPlot, hex_binning
+from holoviews.plotting.bokeh.path import ContourPlot, PathPlot, PolygonPlot
+from holoviews.plotting.bokeh.raster import QuadMeshPlot, RasterPlot, RGBPlot
+
 from ...element import (
-    WMTS, Points, Polygons, Path, Contours, Shape, Image, ImageStack, Feature,
-    Text, RGB, Nodes, EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
-    Labels, HexTiles, LineContours, FilledContours, Rectangles, Segments
+    RGB,
+    WMTS,
+    Contours,
+    EdgePaths,
+    Feature,
+    FilledContours,
+    Graph,
+    HexTiles,
+    Image,
+    ImageStack,
+    Labels,
+    LineContours,
+    Nodes,
+    Path,
+    Points,
+    Polygons,
+    QuadMesh,
+    Rectangles,
+    Segments,
+    Shape,
+    Text,
+    TriMesh,
+    VectorField,
 )
 from ...operation import (
-    project_image, project_points, project_path, project_graph,
-    project_quadmesh, project_geom, project_vectorfield
+    project_geom,
+    project_graph,
+    project_image,
+    project_path,
+    project_points,
+    project_quadmesh,
+    project_vectorfield,
 )
 from ...tile_sources import _ATTRIBUTIONS
-from ...util import poly_types, line_types
-from .plot import GeoPlot, GeoOverlayPlot
-from . import callbacks # noqa
+from ...util import line_types, poly_types
+from . import callbacks  # noqa
+from .plot import GeoOverlayPlot, GeoPlot
+
 try:
     from holoviews.plotting.bokeh.raster import ImageStackPlot
 except ImportError:

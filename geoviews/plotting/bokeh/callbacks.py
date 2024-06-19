@@ -1,28 +1,60 @@
-import numpy as np
 from pathlib import Path
 
-from bokeh.models import CustomJS, CustomAction, PolyEditTool
+import numpy as np
+from bokeh.models import CustomAction, CustomJS, PolyEditTool
 from holoviews.core.ndmapping import UniformNdMapping
 from holoviews.plotting.bokeh.callbacks import (
-    RangeXYCallback, BoundsCallback, BoundsXCallback, BoundsYCallback,
-    PointerXYCallback, PointerXCallback, PointerYCallback, TapCallback,
-    SingleTapCallback, DoubleTapCallback, MouseEnterCallback,
-    MouseLeaveCallback, RangeXCallback, RangeYCallback, PolyDrawCallback,
-    PointDrawCallback, BoxEditCallback, PolyEditCallback, CDSCallback,
-    FreehandDrawCallback, SelectionXYCallback
+    BoundsCallback,
+    BoundsXCallback,
+    BoundsYCallback,
+    BoxEditCallback,
+    CDSCallback,
+    DoubleTapCallback,
+    FreehandDrawCallback,
+    MouseEnterCallback,
+    MouseLeaveCallback,
+    PointDrawCallback,
+    PointerXCallback,
+    PointerXYCallback,
+    PointerYCallback,
+    PolyDrawCallback,
+    PolyEditCallback,
+    RangeXCallback,
+    RangeXYCallback,
+    RangeYCallback,
+    SelectionXYCallback,
+    SingleTapCallback,
+    TapCallback,
 )
 from holoviews.streams import (
-    Stream, PointerXY, RangeXY, RangeX, RangeY, PointerX, PointerY,
-    BoundsX, BoundsY, Tap, SingleTap, DoubleTap, MouseEnter, MouseLeave,
-    BoundsXY, PolyDraw, PolyEdit, PointDraw, BoxEdit, FreehandDraw,
-    SelectionXY
+    BoundsX,
+    BoundsXY,
+    BoundsY,
+    BoxEdit,
+    DoubleTap,
+    FreehandDraw,
+    MouseEnter,
+    MouseLeave,
+    PointDraw,
+    PointerX,
+    PointerXY,
+    PointerY,
+    PolyDraw,
+    PolyEdit,
+    RangeX,
+    RangeXY,
+    RangeY,
+    SelectionXY,
+    SingleTap,
+    Stream,
+    Tap,
 )
 
-from ...element.geo import _Element, Shape
-from ...util import project_extents
+from ...element.geo import Shape, _Element
 from ...models import PolyVertexDrawTool, PolyVertexEditTool
 from ...operation import project
-from ...streams import PolyVertexEdit, PolyVertexDraw
+from ...streams import PolyVertexDraw, PolyVertexEdit
+from ...util import project_extents
 from .plot import GeoOverlayPlot
 
 

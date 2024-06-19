@@ -1,5 +1,5 @@
-import numpy as np
 import cartopy.crs as ccrs
+import numpy as np
 
 from geoviews.element import Image, VectorField, WindBarbs
 from geoviews.element.comparison import ComparisonTestCase

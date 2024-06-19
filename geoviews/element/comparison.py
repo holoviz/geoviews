@@ -2,7 +2,8 @@ from unittest import TestCase
 
 from holoviews.element.comparison import Comparison as HvComparison
 
-from .geo import Image, ImageStack, Points, LineContours, FilledContours, WindBarbs
+from .geo import FilledContours, Image, ImageStack, LineContours, Points, WindBarbs
+
 
 class Comparison(HvComparison):
 

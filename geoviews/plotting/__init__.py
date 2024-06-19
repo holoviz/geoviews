@@ -4,7 +4,6 @@ from holoviews.operation.element import contours
 
 from ..element import Contours, Polygons
 
-
 if hasattr(extension, 'register_backend_callback'):
     def _load_bokeh():
         from . import bokeh # noqa

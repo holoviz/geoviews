@@ -1,6 +1,5 @@
-import param
 import numpy as np
-
+import param
 from holoviews.core import CompositeOverlay, Element
 
 from ..util import project_extents

@@ -2,13 +2,13 @@ import sys
 from collections import OrderedDict
 
 import numpy as np
-from holoviews.core.data import Interface, DictInterface, MultiInterface
+from holoviews.core.data import DictInterface, Interface, MultiInterface
 from holoviews.core.data.interface import DataError
 from holoviews.core.data.spatialpandas import to_geom_dict
 from holoviews.core.dimension import dimension_name
 from holoviews.core.util import isscalar
 
-from ..util import asarray, geom_types, geom_to_array, geom_length
+from ..util import asarray, geom_length, geom_to_array, geom_types
 
 
 class GeomDictInterface(DictInterface):
@@ -37,8 +37,13 @@ class GeomDictInterface(DictInterface):
         elif not isinstance(data, dict) or 'geometry' not in data:
             xdim, ydim = kdims[:2]
             from shapely.geometry import (
-                Point, LineString, Polygon, MultiPoint, MultiPolygon,
-                MultiLineString, LinearRing
+                LinearRing,
+                LineString,
+                MultiLineString,
+                MultiPoint,
+                MultiPolygon,
+                Point,
+                Polygon,
             )
             data = to_geom_dict(eltype, data, kdims, vdims, GeomDictInterface)
             geom = data.get('geom_type') or MultiInterface.geom_type(eltype)
@@ -113,7 +118,11 @@ class GeomDictInterface(DictInterface):
     @classmethod
     def geom_type(cls, dataset):
         from shapely.geometry import (
-            Polygon, MultiPolygon, LineString, MultiLineString, LinearRing
+            LinearRing,
+            LineString,
+            MultiLineString,
+            MultiPolygon,
+            Polygon,
         )
         geom = dataset.data['geometry']
         if isinstance(geom, (Polygon, MultiPolygon)):
@@ -131,7 +140,7 @@ class GeomDictInterface(DictInterface):
 
     @classmethod
     def has_holes(cls, dataset):
-        from shapely.geometry import Polygon, MultiPolygon
+        from shapely.geometry import MultiPolygon, Polygon
         geom = dataset.data['geometry']
         if isinstance(geom, Polygon) and geom.interiors:
             return True
@@ -143,7 +152,7 @@ class GeomDictInterface(DictInterface):
 
     @classmethod
     def holes(cls, dataset):
-        from shapely.geometry import Polygon, MultiPolygon
+        from shapely.geometry import MultiPolygon, Polygon
         geom = dataset.data['geometry']
         if isinstance(geom, Polygon):
             return [[[geom_to_array(h) for h in geom.interiors]]]
@@ -301,7 +310,12 @@ class GeomDictInterface(DictInterface):
 
 def geom_from_dict(geom, xdim, ydim, single_type, multi_type):
     from shapely.geometry import (
-        Point, LineString, Polygon, MultiPoint, MultiPolygon, MultiLineString
+        LineString,
+        MultiLineString,
+        MultiPoint,
+        MultiPolygon,
+        Point,
+        Polygon,
     )
     if (xdim, ydim) in geom:
         xs, ys = asarray(geom.pop((xdim, ydim))).T

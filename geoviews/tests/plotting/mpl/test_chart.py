@@ -1,15 +1,12 @@
-import pytest
 import numpy as np
+import pytest
 import xarray as xr
-import geoviews as gv
-
-from geoviews.element import WindBarbs
-
 from holoviews.tests.plotting.utils import ParamLogStream
-
-from geoviews import Store
-
 from test_plot import TestMPLPlot
+
+import geoviews as gv
+from geoviews import Store
+from geoviews.element import WindBarbs
 
 try:
     import datashader

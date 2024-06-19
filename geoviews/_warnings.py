@@ -4,7 +4,6 @@ import warnings
 
 import holoviews as hv
 import param
-
 from packaging.version import Version
 
 __all__ = (

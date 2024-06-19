@@ -2,15 +2,14 @@
 Module for geographic bokeh plot baseclasses.
 """
 import param
-
-from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator, _CylindricalProjection
+from bokeh.models import CustomJSHover, MercatorTicker, MercatorTickFormatter
 from bokeh.models.tools import BoxZoomTool, WheelZoomTool
-from bokeh.models import MercatorTickFormatter, MercatorTicker, CustomJSHover
+from cartopy.crs import GOOGLE_MERCATOR, Mercator, PlateCarree, _CylindricalProjection
 from holoviews.core.dimension import Dimension
 from holoviews.core.util import dimension_sanitizer
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 
-from ...element import is_geographic, _Element, Shape
+from ...element import Shape, _Element, is_geographic
 from ..plot import ProjectionPlot
 
 

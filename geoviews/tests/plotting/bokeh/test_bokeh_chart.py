@@ -1,6 +1,8 @@
 
 import numpy as np
+
 import geoviews as gv
+
 
 class TestImageStackPlot:
 

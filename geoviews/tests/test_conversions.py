@@ -8,8 +8,9 @@ except ImportError:
 from holoviews.core import HoloMap
 from holoviews.element import Curve
 
-from geoviews.element import is_geographic, Image, Dataset
+from geoviews.element import Dataset, Image, is_geographic
 from geoviews.element.comparison import ComparisonTestCase
+
 
 class TestConversions(ComparisonTestCase):
 

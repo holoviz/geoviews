@@ -2,15 +2,19 @@
 Unit tests of Path types.
 """
 import numpy as np
-
 from holoviews.element.comparison import ComparisonTestCase
 from shapely.geometry import (
-    GeometryCollection, Polygon, Point, LineString, LinearRing,
-    MultiPolygon, MultiLineString, MultiPoint
+    GeometryCollection,
+    LinearRing,
+    LineString,
+    MultiLineString,
+    MultiPoint,
+    MultiPolygon,
+    Point,
+    Polygon,
 )
 
-from geoviews.element import Rectangles, Path, Polygons, Points, Segments
-
+from geoviews.element import Path, Points, Polygons, Rectangles, Segments
 
 
 class TestRectangles(ComparisonTestCase):

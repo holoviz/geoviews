@@ -1,9 +1,9 @@
 
 import pytest
+from holoviews.tests.plotting.bokeh.test_plot import TestBokehPlot, bokeh_renderer
 
 from geoviews.element import WMTS
 
-from holoviews.tests.plotting.bokeh.test_plot import TestBokehPlot, bokeh_renderer
 
 class TestWMTSPlot(TestBokehPlot):
 

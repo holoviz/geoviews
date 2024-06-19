@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 import pyviz_comms as comms
+from param import concrete_descendents
 
 from geoviews import Store
 from geoviews.element.comparison import ComparisonTestCase
 from geoviews.plotting.mpl import ElementPlot
-from param import concrete_descendents
 
 mpl_renderer = Store.renderers['matplotlib']
 

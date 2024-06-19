@@ -1,30 +1,50 @@
-import param
 import numpy as np
-
+import param
 from bokeh.models import MercatorTileSource
 from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles
 from cartopy.io.shapereader import Reader
-from holoviews.core import Element2D, Dimension, Dataset as HvDataset, NdOverlay, Overlay
-from holoviews.core import util
+from holoviews.core import (
+    Dataset as HvDataset,
+    Dimension,
+    Element2D,
+    NdOverlay,
+    Overlay,
+    util,
+)
 from holoviews.element import (
-    Contours as HvContours, Graph as HvGraph, Image as HvImage,
-    Nodes as HvNodes, Path as HvPath, Polygons as HvPolygons,
-    RGB as HvRGB, Text as HvText, TriMesh as HvTriMesh,
-    QuadMesh as HvQuadMesh, Points as HvPoints,
-    VectorField as HvVectorField, HexTiles as HvHexTiles,
-    Labels as HvLabels, Rectangles as HvRectangles,
-    Segments as HvSegments, Geometry as HvGeometry,
+    RGB as HvRGB,
+    Contours as HvContours,
+    Geometry as HvGeometry,
+    Graph as HvGraph,
+    HexTiles as HvHexTiles,
+    Image as HvImage,
+    Labels as HvLabels,
+    Nodes as HvNodes,
+    Path as HvPath,
+    Points as HvPoints,
+    Polygons as HvPolygons,
+    QuadMesh as HvQuadMesh,
+    Rectangles as HvRectangles,
+    Segments as HvSegments,
+    Text as HvText,
+    TriMesh as HvTriMesh,
+    VectorField as HvVectorField,
 )
 from holoviews.element.selection import Selection2DExpr
-
-from shapely.geometry.base import BaseGeometry
 from shapely.geometry import (
-    box, GeometryCollection, MultiPolygon, LineString, MultiLineString,
-    Point, MultiPoint
+    GeometryCollection,
+    LineString,
+    MultiLineString,
+    MultiPoint,
+    MultiPolygon,
+    Point,
+    box,
 )
+from shapely.geometry.base import BaseGeometry
 from shapely.ops import unary_union
+
 
 def _get_iris_cube():
     try:
@@ -50,8 +70,12 @@ except ImportError:
     _IMAGESTACK_AVAILABLE = False
 
 from ..util import (
-    path_to_geom_dicts, polygons_to_geom_dicts, from_xarray,
-    poly_types, expand_geoms, transform_shapely
+    expand_geoms,
+    from_xarray,
+    path_to_geom_dicts,
+    poly_types,
+    polygons_to_geom_dicts,
+    transform_shapely,
 )
 
 geographic_types = (GoogleTiles, cFeature, BaseGeometry)

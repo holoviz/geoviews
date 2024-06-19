@@ -1,13 +1,40 @@
 from holoviews.element import (
-    ElementConversion, Points as HvPoints, Polygons as HvPolygons,
-    Path as HvPath
+    ElementConversion,
+    Path as HvPath,
+    Points as HvPoints,
+    Polygons as HvPolygons,
 )
 
-from .geo import (_Element, Feature, Tiles, is_geographic,     # noqa (API import)
-                  WMTS, Points, Image, ImageStack, Text, LineContours, RGB,
-                  FilledContours, Path, Polygons, Shape, Dataset,
-                  Contours, TriMesh, Graph, Nodes, EdgePaths, QuadMesh,
-                  VectorField, Labels, HexTiles, Rectangles, Segments, WindBarbs)
+from .geo import (  # noqa: F401
+    RGB,
+    WMTS,
+    Contours,
+    Dataset,
+    EdgePaths,
+    Feature,
+    FilledContours,
+    Graph,
+    HexTiles,
+    Image,
+    ImageStack,
+    Labels,
+    LineContours,
+    Nodes,
+    Path,
+    Points,
+    Polygons,
+    QuadMesh,
+    Rectangles,
+    Segments,
+    Shape,
+    Text,
+    Tiles,
+    TriMesh,
+    VectorField,
+    WindBarbs,
+    _Element,
+    is_geographic,
+)
 
 
 class GeoConversion(ElementConversion):

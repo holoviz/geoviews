@@ -64,7 +64,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                                                  defaults=False)
             self.show_bounds = not any(not sb for sb in show_bounds.get('show_bounds', []))
             if self.show_grid:
-                param.main.warning(
+                param.main.param.warning(
                     f'Grid lines do not reflect {self.projection}; to do so '
                     'multiply the current element by gv.feature.grid() '
                     'and disable the show_grid option.'

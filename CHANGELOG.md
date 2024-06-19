@@ -1,3 +1,35 @@
+Version 1.12.0
+==============
+
+Date: April 5, 2024
+
+This release brings compatibility with the latest release of Bokeh 3.4. Many thanks to @droumis, @mattpap, @maximlt and @Hoxbro for their ongoing contributions.
+
+Enhancements:
+
+- Lazy load modules ([#709](https://github.com/holoviz/geoviews/pull/709))
+
+Project governance:
+
+- Create initial project gov docs ([#616](https://github.com/holoviz/geoviews/pull/616))
+
+Removed deprecations:
+
+- Removed `load_tiff` use `rioxarray.open_rasterio` instead ([#701](https://github.com/holoviz/geoviews/pull/701))
+- Removed `gv.tile_sources.Wikipedia` alias use `gv.tile_sources.OSM` instead ([#701](https://github.com/holoviz/geoviews/pull/701))
+
+Compatibility:
+
+- Modernize JS/TS codebase and upgrade to Bokeh 3.4 ([#715](https://github.com/holoviz/geoviews/pull/715))
+
+Maintenance:
+
+- Align build dependencies ([#710](https://github.com/holoviz/geoviews/pull/710))
+- Build the site without pulling the dev dependencies ([#711](https://github.com/holoviz/geoviews/pull/711))
+- Update pre-commit and fix test suite ([#712](https://github.com/holoviz/geoviews/pull/712))
+- Update build CI ([#713](https://github.com/holoviz/geoviews/pull/713))
+- General maintenance ([#717](https://github.com/holoviz/geoviews/pull/717))
+
 Version 1.11.1
 ==============
 

@@ -1,5 +1,3 @@
-import warnings
-
 import numpy as np
 import shapely
 import shapely.geometry as sgeom
@@ -14,7 +12,7 @@ from shapely.geometry import (
 from shapely.geometry.base import BaseMultipartGeometry
 from shapely.ops import transform
 
-from ._warnings import deprecated, warn
+from ._warnings import warn
 
 geom_types = (MultiLineString, LineString, MultiPolygon, Polygon,
               LinearRing, Point, MultiPoint)
@@ -610,50 +608,6 @@ def process_crs(crs):
 
     raise ValueError("Projection must be defined as a EPSG code, proj4 string, cartopy CRS or pyproj.Proj.") from Exception(*errors)
 
-
-def load_tiff(filename, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
-    """
-    Returns an RGB or Image element loaded from a geotiff file.
-
-    The data is loaded using xarray and rasterio. If a crs attribute
-    is present on the loaded data it will attempt to decode it into
-    a cartopy projection otherwise it will default to a non-geographic
-    HoloViews element.
-
-    Parameters
-    ----------
-    filename: string
-      Filename pointing to geotiff file to load
-    crs: Cartopy CRS or EPSG string (optional)
-      Overrides CRS inferred from the data
-    apply_transform: boolean
-      Whether to apply affine transform if defined on the data
-    nan_nodata: boolean
-      If data contains nodata values convert them to NaNs
-    **kwargs:
-      Keyword arguments passed to the HoloViews/GeoViews element
-
-    Returns
-    -------
-    element: Image/RGB/QuadMesh element
-    """
-    new = (
-        "geoviews.util.from_xarray(rioxarray.open_rasterio(filename))"
-    )
-    try:
-        import xarray as xr
-    except ImportError:
-        raise ImportError('Loading tiffs requires xarray to be installed') from None
-    try:
-        with warnings.catch_warnings():
-            warnings.filterwarnings('ignore')
-            da = xr.open_rasterio(filename)
-        deprecated("1.11", "load_tiff(filename)", new)
-        return from_xarray(da, crs, apply_transform, nan_nodata, **kwargs)
-    except AttributeError as e:
-        raise ImportError(
-            f"'load_tiff' is not supported anymore. Use {new!r} instead."
-        ) from e
 
 def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
     """

@@ -1,3 +1,5 @@
-from .geom_dict import GeomDictInterface # noqa (API import)
-from .geopandas import GeoPandasInterface # noqa (API import)
-from .iris import CubeInterface # noqa (API import)
+from .geom_dict import GeomDictInterface
+from .geopandas import GeoPandasInterface
+from .iris import CubeInterface
+
+__all__ = ("GeomDictInterface", "GeoPandasInterface", "CubeInterface")

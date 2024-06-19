@@ -1,7 +1,7 @@
 from functools import partial
 
 import param
-from holoviews import (  # noqa: F401
+from holoviews import (
     Cycle,
     Dimension,
     DynamicMap,
@@ -23,14 +23,14 @@ from holoviews import (  # noqa: F401
     save,
 )
 
-from . import (  # noqa: F401
+from . import (
     data,
     feature,
     plotting,
     tile_sources,
 )
-from ._warnings import GeoviewsDeprecationWarning, GeoviewsUserWarning  # noqa: F401
-from .element import (  # noqa: F401
+from ._warnings import GeoviewsDeprecationWarning, GeoviewsUserWarning
+from .element import (
     RGB,
     WMTS,
     Contours,
@@ -57,12 +57,74 @@ from .element import (  # noqa: F401
     TriMesh,
     VectorField,
     WindBarbs,
-    _Element,
 )
-from .util import from_xarray  # noqa: F401
+from .util import from_xarray
 
-__version__ = str(param.version.Version(fpath=__file__, archive_commit="$Format:%h$",
-                                        reponame="geoviews"))
+__version__ = str(
+    param.version.Version(
+        fpath=__file__, archive_commit="$Format:%h$", reponame="geoviews"
+    )
+)
+
+__all__ = (
+    "Contours",
+    "Cycle",
+    "Dataset",
+    "Dimension",
+    "DynamicMap",
+    "EdgePaths",
+    "Feature",
+    "FilledContours",
+    "GeoviewsDeprecationWarning",
+    "GeoviewsUserWarning",
+    "Graph",
+    "GridSpace",
+    "HexTiles",
+    "HoloMap",
+    "Image",
+    "ImageStack",
+    "Labels",
+    "Layout",
+    "LineContours",
+    "NdLayout",
+    "NdOverlay",
+    "Nodes",
+    "Overlay",
+    "Palette",
+    "Path",
+    "Points",
+    "Polygons",
+    "QuadMesh",
+    "RGB",
+    "Rectangles",
+    "Segments",
+    "Shape",
+    "Store",
+    "Text",
+    "Tiles",
+    "TriMesh",
+    "VectorField",
+    "WMTS",
+    "WindBarbs",
+    "__version__",
+    "data",
+    "dim",
+    "extension",
+    "feature",
+    "from_xarray",
+    "help",
+    "opts",
+    "output",
+    "plotting",
+    "render",
+    "renderer",
+    "save",
+    "tile_sources",
+    # Lazy modules
+    "annotate",
+    "project",
+    "operation",
+)
 
 # Ensure opts utility is initialized with GeoViews elements
 if Store._options:
@@ -99,8 +161,6 @@ def __getattr__(attr):
         return operation
     raise AttributeError(f"module {__name__} has no attribute {attr!r}")
 
-__all__ = [k for k in locals() if not k.startswith('_')]
-__all__ += ['annotate', 'project', 'operation', '__version__']
 
 def __dir__():
     return __all__

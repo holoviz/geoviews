@@ -5,7 +5,7 @@ from holoviews.element import (
     Polygons as HvPolygons,
 )
 
-from .geo import (  # noqa: F401
+from .geo import (
     RGB,
     WMTS,
     Contours,
@@ -34,6 +34,37 @@ from .geo import (  # noqa: F401
     WindBarbs,
     _Element,
     is_geographic,
+)
+
+__all__ = (
+    "Contours",
+    "Dataset",
+    "EdgePaths",
+    "Feature",
+    "FilledContours",
+    "GeoConversion",
+    "Graph",
+    "HexTiles",
+    "Image",
+    "ImageStack",
+    "Labels",
+    "LineContours",
+    "Nodes",
+    "Path",
+    "Points",
+    "Polygons",
+    "QuadMesh",
+    "RGB",
+    "Rectangles",
+    "Segments",
+    "Shape",
+    "Text",
+    "Tiles",
+    "TriMesh",
+    "VectorField",
+    "WMTS",
+    "WindBarbs",
+    "is_geographic",
 )
 
 

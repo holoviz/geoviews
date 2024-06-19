@@ -149,8 +149,7 @@ class Feature(_GeoFeature):
 
     def __init__(self, data, kdims=None, vdims=None, **params):
         if not isinstance(data, cFeature):
-            raise TypeError('%s data has to be an cartopy Feature type'
-                            % type(data).__name__)
+            raise TypeError(f'{type(data).__name__} data has to be an cartopy Feature type')
         super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
     def __call__(self, *args, **kwargs):
@@ -926,10 +925,12 @@ class Shape(Dataset):
         if params.get('level') is not None:
             if vdims is None:
                 vdims = [Dimension('Level')]
-            self.param.warning('Supplying a level to a Shape is deprecated '
-                         'provide the value as part of a dictionary of '
-                         'the form {\'geometry\': <shapely.Geometry>, '
-                         '\'level\': %s} instead' % params['level'])
+            self.param.warning(
+                "Supplying a level to a Shape is deprecated "
+                "provide the value as part of a dictionary of "
+                "the form {{'geometry': <shapely.Geometry>, "
+                f"'level': {params['level']}}} instead"
+            )
         super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
 

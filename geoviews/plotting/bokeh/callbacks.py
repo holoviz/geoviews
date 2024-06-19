@@ -356,7 +356,7 @@ class PolyVertexEditCallback(GeoPolyEditCallback):
         if vertex_tool is None:
             vertex_style = dict({'size': 10, 'alpha': 0.8}, **stream.vertex_style)
             r1 = plot.state.scatter([], [], **vertex_style)
-            tooltip = '%s Edit Tool' % type(element).__name__
+            tooltip = f'{type(element).__name__} Edit Tool'
             vertex_tool = PolyVertexEditTool(
                 vertex_renderer=r1, description=tooltip,
                 node_style=stream.node_style,
@@ -385,7 +385,7 @@ class PolyVertexDrawCallback(GeoPolyDrawCallback):
             r1 = plot.state.scatter([], [], **vertex_style)
             kwargs['vertex_renderer'] = r1
         renderer = plot.handles['glyph_renderer']
-        tooltip = '%s Draw Tool' % type(element).__name__
+        tooltip = f'{type(element).__name__} Draw Tool'
         if stream.empty_value is not None:
             kwargs['empty_value'] = stream.empty_value
         poly_tool = PolyVertexDrawTool(

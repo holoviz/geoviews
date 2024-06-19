@@ -124,8 +124,8 @@ class CubeInterface(GridInterface):
             for kd in kdims:
                 coord = data.coords(kd.name)
                 if len(coord) == 0:
-                    raise ValueError('Key dimension %s not found in '
-                                     'Iris cube.' % kd)
+                    raise ValueError(f'Key dimension {kd} not found in '
+                                     'Iris cube.')
                 coords.append(kd if isinstance(kd, Dimension) else coord[0])
         else:
             coords = data.dim_coords

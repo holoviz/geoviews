@@ -69,7 +69,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
                 data = from_multi(eltype, data, kdims, vdims)
         elif not isinstance(data, GeoDataFrame):
             raise ValueError("GeoPandasInterface only support geopandas "
-                             "DataFrames not %s." % type(data))
+                             f"DataFrames not {type(data)}.")
         elif 'geometry' not in data:
             cls.geo_column(data)
 
@@ -95,7 +95,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
             shp_types = []
         if len(shp_types) > 1:
             raise DataError('The GeopandasInterface can only read dataframes which '
-                            'share a common geometry type, found %s types.' % shp_types,
+                            f'share a common geometry type, found {shp_types} types.',
                             cls)
 
         return data, {'kdims': kdims, 'vdims': vdims}, {}
@@ -115,7 +115,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
         if not_found:
             raise DataError("Supplied data does not contain specified "
                              "dimensions, the following dimensions were "
-                             "not found: %s" % repr(not_found), cls)
+                             f"not found: {not_found!r}", cls)
 
     @classmethod
     def dtype(cls, dataset, dimension):
@@ -521,7 +521,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
             elif datatype is None:
                 obj = ds.clone()
             else:
-                raise ValueError("%s datatype not support" % datatype)
+                raise ValueError(f"{datatype} datatype not support")
             objs.append(obj)
         return objs
 

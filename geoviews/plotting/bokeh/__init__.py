@@ -53,7 +53,7 @@ class TilePlot(GeoPlot):
     def get_data(self, element, ranges, style):
         if not isinstance(element.data, (str, dict)):
             SkipRendering("WMTS element data must be a URL string, "
-                          "bokeh cannot render %r" % element.data)
+                          f"bokeh cannot render {element.data!r}")
 
         if isinstance(element.data, dict):
             # xyzservices tile provider

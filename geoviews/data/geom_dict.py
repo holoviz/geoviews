@@ -102,9 +102,9 @@ class GeomDictInterface(DictInterface):
         elif 'geometry' not in dataset.data:
             raise DataError("Could not find a 'geometry' column in the data.")
         elif not isinstance(dataset.data['geometry'], BaseGeometry):
+            data_type = type(dataset.data['geometry']).__name__
             raise DataError("The 'geometry' column should be a shapely"
-                            "geometry type, found %s type instead." %
-                            type(dataset.data['geometry']).__name__)
+                            f"geometry type, found {data_type} type instead.")
 
     @classmethod
     def shape(cls, dataset):

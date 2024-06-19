@@ -41,9 +41,8 @@ def find_crs(op, element):
         return {}
     crs = crss[0]
     if any(crs != ocrs for ocrs in crss[1:]):
-        raise ValueError('Cannot %s Elements in different '
-                         'coordinate reference systems.'
-                         % type(op).__name__)
+        raise ValueError(f'Cannot {type(op).__name__} Elements in different '
+                         'coordinate reference systems.')
     return {'crs': crs}
 
 

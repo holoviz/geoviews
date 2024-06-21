@@ -91,6 +91,7 @@ test-unit = 'pytest geoviews/tests -n logical --dist loadgroup'
 datashader = "*"
 fiona = "*"
 geopandas-base = "*"
+iris = ">=3.5"
 matplotlib-base = ">2.2"
 nbval = "*"
 netcdf4 = "*"

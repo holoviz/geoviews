@@ -88,5 +88,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./builtdocs
-          cname: geoviews.holoviz.org
+          cname: geoviews.org
           force_orphan: true

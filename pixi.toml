@@ -11,7 +11,6 @@ install = 'python -m pip install --no-deps --disable-pip-version-check -e .'
 PYTHONIOENCODING = "utf-8"
 USE_PYGEOS = "0"
 DASK_DATAFRAME__QUERY_PLANNING = "False"
-SETUPTOOLS_ENABLE_FEATURES = "legacy-editable"  # TODO: Remove before merge
 
 [environments]
 test-310 = ["py310", "test-core", "test", "example", "test-example", "download-data"]
@@ -81,7 +80,6 @@ psutil = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-github-actions-annotate-failures = "*"
-pytest-rerunfailures = "*"
 pytest-xdist = "*"
 
 [feature.test-core.tasks]

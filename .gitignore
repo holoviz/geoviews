@@ -82,6 +82,7 @@ node_modules/
 .bokeh
 examples/data
 
-# Pixi
+# Pixi + hatch
 pixi.lock
 .pixi
+geoviews/_version.py

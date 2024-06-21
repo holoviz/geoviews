@@ -1,11 +1,85 @@
 [build-system]
 requires = [
-    "param >=1.9.2",
-    "pyct >=0.4.4",
+    "hatchling",
+    "hatch-vcs",
     "bokeh ==3.4",
-    "setuptools",
 ]
-build-backend = "setuptools.build_meta"
+build-backend = "hatchling.build"
+
+[project]
+name = "geoviews"
+dynamic = ["version"]
+description = 'GeoViews is a Python library that makes it easy to explore and visualize geographical, meteorological, and oceanographic datasets, such as those used in weather, climate, and remote sensing research.'
+readme = "README.md"
+license = { text = "BSD 3-Clause" }
+requires-python = ">=3.10"
+authors = [{ name = "HoloViz developers", email = "developers@holoviz.org" }]
+maintainers = [{ name = "HoloViz developers", email = "developers@holoviz.org" }]
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Framework :: Matplotlib",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries"
+]
+
+dependencies = [
+    'bokeh >=3.4.0,<3.5.0',
+    'cartopy >=0.18.0',
+    'holoviews >=1.16.0',
+    'numpy',
+    'packaging',
+    'panel >=1.0.0',
+    'param',
+    'pyproj',
+    'shapely',
+    'xyzservices',
+]
+
+[project.urls]
+Homepage = "https://geoviews.org"
+Source = "https://github.com/holoviz/geoviews"
+HoloViz = "https://holoviz.org/"
+
+[project.optional-dependencies]
+tests = [
+    'psutil' ,
+    'pytest',
+    'pytest-xdist',
+]
+
+[project.scripts]
+geoviews = "geoviews.command:main"
+
+[tool.hatch.version]
+source = "vcs"
+raw-options = { version_scheme = "no-guess-dev" }
+
+[tool.hatch.build.targets.wheel]
+include = ["geoviews"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"geoviews/dist" = "geoviews/dist"
+
+[tool.hatch.build.targets.sdist]
+include = ["geoviews", "scripts", "examples"]
+
+[tool.hatch.build.targets.sdist.force-include]
+"geoviews/dist" = "geoviews/dist"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "geoviews/_version.py"
+
+[tool.hatch.build.hooks.custom]
+path = 'hatch_build.py'
 
 [tool.ruff]
 fix = true

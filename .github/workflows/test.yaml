@@ -35,7 +35,7 @@ defaults:
 env:
   DISPLAY: ":99.0"
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  COV: "--cov=./holoviews --cov-report=xml"
+  COV: "--cov=./geoviews --cov-report=xml"
 
 jobs:
   pre_commit:

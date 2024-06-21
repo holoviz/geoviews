@@ -20,6 +20,7 @@ on:
         description: "Use cache"
         type: boolean
         default: true
+
   schedule:
     - cron: "0 18 * * SUN"
 
@@ -27,17 +28,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  SETUPTOOLS_ENABLE_FEATURES: "legacy-editable"
-  DISPLAY: ":99.0"
-  PYTHONIOENCODING: "utf-8"
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  PYDEVD_DISABLE_FILE_VALIDATION: 1
-  USE_PYGEOS: 0
-
 defaults:
   run:
     shell: bash -el {0}
+
+env:
+  DISPLAY: ":99.0"
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  COV: "--cov=./holoviews --cov-report=xml"
 
 jobs:
   pre_commit:
@@ -45,6 +43,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - uses: holoviz-dev/holoviz_tasks/pre-commit@v0
+
   setup:
     name: Setup workflow
     runs-on: ubuntu-latest
@@ -54,7 +53,7 @@ jobs:
       code_change: ${{ steps.filter.outputs.code }}
       matrix: ${{ env.MATRIX }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: github.event_name != 'pull_request'
       - name: Check for code changes
         uses: dorny/paths-filter@v3
@@ -84,7 +83,7 @@ jobs:
         run: |
           MATRIX=$(jq -nsc '{
               "os": ["ubuntu-latest", "macos-latest", "windows-latest"],
-              "python-version": ["3.9", "3.11"]
+              "environment": ["test-310", "test-312"],
           }')
           echo "MATRIX=$MATRIX" >> $GITHUB_ENV
       - name: Set test matrix with 'full' option
@@ -92,7 +91,7 @@ jobs:
         run: |
           MATRIX=$(jq -nsc '{
               "os": ["ubuntu-latest", "macos-latest", "windows-latest"],
-              "python-version": ["3.9", "3.10", "3.11"]
+              "environment": ["test-310", "test-311", "test-312"]
           }')
           echo "MATRIX=$MATRIX" >> $GITHUB_ENV
       - name: Set test matrix with 'downstream' option
@@ -100,97 +99,60 @@ jobs:
         run: |
           MATRIX=$(jq -nsc '{
               "os": ["ubuntu-latest"],
-              "python-version": ["3.11"]
+              "environment": ["test-311"]
           }')
           echo "MATRIX=$MATRIX" >> $GITHUB_ENV
 
+  pixi_lock:
+    name: Pixi lock
+    runs-on: ubuntu-latest
+    steps:
+      - uses: holoviz-dev/holoviz_tasks/pixi_lock@pixi
+        with:
+          cache: ${{ github.event.inputs.cache == 'true' || github.event.inputs.cache == '' }}
+
   unit_test_suite:
-    name: Unit tests on Python ${{ matrix.python-version }}, ${{ matrix.os }}
-    needs: [pre_commit, setup]
+    name: unit:${{ matrix.environment }}:${{ matrix.os }}
+    needs: [pre_commit, setup, pixi_lock]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
-      - uses: holoviz-dev/holoviz_tasks/install@v0
+      - uses: holoviz-dev/holoviz_tasks/pixi_install@pixi
         if: needs.setup.outputs.code_change == 'true'
         with:
-          name: unit_test_suite
-          python-version: ${{ matrix.python-version }}
-          channel-priority: strict
-          channels: pyviz/label/dev,bokeh,conda-forge,nodefaults
-          envs: "-o tests -o examples_extra -o recommended -o tests_ci"
-          cache: ${{ github.event.inputs.cache || github.event.inputs.cache == '' }}
-          conda-update: true
-          nodejs: true
-        id: install
-      - name: download data
+          environments: ${{ matrix.environment }}
+      - name: Test Unit
         if: needs.setup.outputs.code_change == 'true'
         run: |
-          conda activate test-environment
-          python scripts/download_data.py
-      - name: git describe
+          pixi run -e ${{ matrix.environment }} test-unit $COV
+      - name: Test Examples
         if: needs.setup.outputs.code_change == 'true'
         run: |
-          git describe
-      - name: doit test_unit
+          pixi run -e ${{ matrix.environment }} test-example
+      - uses: codecov/codecov-action@v4
         if: needs.setup.outputs.code_change == 'true'
-        run: |
-          conda activate test-environment
-          doit test_unit
-      - name: test examples
-        if: needs.setup.outputs.code_change == 'true'
-        run: |
-          conda activate test-environment
-          doit test_examples
-      - name: codecov
-        if: needs.setup.outputs.code_change == 'true'
-        run: |
-          conda activate test-environment
-          codecov
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   core_test_suite:
-    name: Core tests on Python ${{ matrix.python-version }}, ${{ matrix.os }}
-    needs: [pre_commit]
+    name: core:${{ matrix.environment }}:${{ matrix.os }}
+    needs: [pre_commit, setup, pixi_lock]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: ["ubuntu-latest"]
-        python-version: ["3.12"]
+        environment: ["test-core"]
     timeout-minutes: 120
     steps:
-      # Add back when this works on Python 3.12
-      # - uses: holoviz-dev/holoviz_tasks/install@v0
-      #   with:
-      #     name: core_test_suite
-      #     python-version: ${{ matrix.python-version }}
-      #     # channel-priority: strict
-      #     channels: pyviz/label/dev,conda-forge,nodefaults
-      #     envs: "-o tests_core -o tests_ci"
-      #     cache: ${{ github.event.inputs.cache || github.event.inputs.cache == '' }}
-      #     conda-update: true
-      #     id: install
-      - uses: actions/checkout@v3
+      - uses: holoviz-dev/holoviz_tasks/pixi_install@pixi
+        if: needs.setup.outputs.code_change == 'true'
         with:
-          fetch-depth: "100"
-      - name: Fetch unshallow
-        run: git fetch --prune --tags --unshallow -f
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20.x
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.12"
-      - name: install
+          environments: ${{ matrix.environment }}
+      - name: Test Unit
+        if: needs.setup.outputs.code_change == 'true'
         run: |
-          python -m pip install -ve '.[tests_core, tests_ci]'
-      - name: download data
-        run: |
-          # conda activate test-environment
-          python scripts/download_data.py
-      - name: doit test_unit
-        run: |
-          # conda activate test-environment
-          pytest geoviews
+          pixi run -e ${{ matrix.environment }} test-unit

@@ -11,7 +11,7 @@ install = 'python -m pip install --no-deps --disable-pip-version-check -e .'
 [activation.env]
 PYTHONIOENCODING = "utf-8"
 USE_PYGEOS = "0"
-DASK_DATAFRAME__QUERY_PLANNING = 'False'
+DASK_DATAFRAME__QUERY_PLANNING = "False"
 
 [environments]
 test-310 = ["py310", "test-core", "test", "example", "test-example", "test-unit-task"]

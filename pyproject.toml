@@ -118,6 +118,8 @@ ignore = [
     "PLW2901",  # `for` loop variable is overwritten
     "RUF005",   # Consider {expr} instead of concatenation
     "RUF012",   # Mutable class attributes should use `typing.ClassVar`
+    'B905',     # `zip()` without an explicit `strict=` parameter
+    'UP038'     # Use `X | Y` in `isinstance` call instead of `(X, Y)`
 ]
 
 extend-unsafe-fixes = [

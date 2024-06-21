@@ -19,9 +19,9 @@ requirements:
     {% endfor %}
   run:
     - python {{ project['requires-python'] }}
-    - {{ pin_subpackage('geoviews-core', exact=True) }}
+    - geoviews-core =={{ VERSION }}
     {% for dep in sdata['extras_require']['recommended'] %}
-    - {{ dep.replace("geopandas", "geopandas-base").replace("matplotlib", "matplotlib-base" }}
+    - {{ dep.replace("geopandas", "geopandas-base").replace("matplotlib", "matplotlib-base") }}
     {% endfor %}
 
 test:

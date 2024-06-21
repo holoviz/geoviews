@@ -1,46 +1,82 @@
 import copy
 
+import matplotlib.ticker as mticker
 import numpy as np
 import param
-import matplotlib.ticker as mticker
 from cartopy import crs as ccrs
 from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
-from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+from cartopy.mpl.gridliner import LATITUDE_FORMATTER, LONGITUDE_FORMATTER
 
 try:
     from owslib.wmts import WebMapTileService
 except ImportError:
     WebMapTileService = None
 
-from holoviews.core import Store, HoloMap, Layout, Overlay, Element, NdLayout
-from holoviews.core import util
+from holoviews.core import Element, HoloMap, Layout, NdLayout, Overlay, Store, util
 from holoviews.core.data import GridInterface
-from holoviews.core.options import SkipRendering, Options
+from holoviews.core.options import Options, SkipRendering
 from holoviews.plotting.mpl import (
-    ElementPlot, PointPlot, AnnotationPlot, TextPlot, LabelsPlot,
-    LayoutPlot as HvLayoutPlot, OverlayPlot as HvOverlayPlot,
-    PathPlot, PolygonPlot, RasterPlot, ContourPlot, GraphPlot,
-    TriMeshPlot, QuadMeshPlot, VectorFieldPlot, HexTilesPlot,
-    SegmentPlot, RectanglesPlot
+    AnnotationPlot,
+    ContourPlot,
+    ElementPlot,
+    GraphPlot,
+    HexTilesPlot,
+    LabelsPlot,
+    LayoutPlot as HvLayoutPlot,
+    OverlayPlot as HvOverlayPlot,
+    PathPlot,
+    PointPlot,
+    PolygonPlot,
+    QuadMeshPlot,
+    RasterPlot,
+    RectanglesPlot,
+    SegmentPlot,
+    TextPlot,
+    TriMeshPlot,
+    VectorFieldPlot,
 )
 from holoviews.plotting.mpl.util import get_raster_array, wrap_formatter
 
-
 from ...element import (
-    Image, ImageStack, Points, Feature, WMTS, Tiles, Text, LineContours,
-    FilledContours, is_geographic, Path, Polygons, Shape, RGB,
-    Contours, Nodes, EdgePaths, Graph, TriMesh, QuadMesh, VectorField,
-    HexTiles, Labels, Rectangles, Segments, WindBarbs
+    RGB,
+    WMTS,
+    Contours,
+    EdgePaths,
+    Feature,
+    FilledContours,
+    Graph,
+    HexTiles,
+    Image,
+    ImageStack,
+    Labels,
+    LineContours,
+    Nodes,
+    Path,
+    Points,
+    Polygons,
+    QuadMesh,
+    Rectangles,
+    Segments,
+    Shape,
+    Text,
+    Tiles,
+    TriMesh,
+    VectorField,
+    WindBarbs,
+    is_geographic,
+)
+from ...operation import (
+    project_geom,
+    project_graph,
+    project_path,
+    project_points,
+    project_quadmesh,
+    project_vectorfield,
+    project_windbarbs,
 )
 from ...util import geo_mesh, poly_types
 from ..plot import ProjectionPlot
-
-from ...operation import (
-    project_points, project_path, project_graph, project_quadmesh,
-    project_geom, project_vectorfield, project_windbarbs
-)
 from .chart import WindBarbsPlot
-
 
 
 class LayoutPlot(ProjectionPlot, HvLayoutPlot):

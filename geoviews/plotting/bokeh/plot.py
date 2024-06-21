@@ -2,15 +2,14 @@
 Module for geographic bokeh plot baseclasses.
 """
 import param
-
-from cartopy.crs import GOOGLE_MERCATOR, PlateCarree, Mercator, _CylindricalProjection
+from bokeh.models import CustomJSHover, MercatorTicker, MercatorTickFormatter
 from bokeh.models.tools import BoxZoomTool, WheelZoomTool
-from bokeh.models import MercatorTickFormatter, MercatorTicker, CustomJSHover
+from cartopy.crs import GOOGLE_MERCATOR, Mercator, PlateCarree, _CylindricalProjection
 from holoviews.core.dimension import Dimension
 from holoviews.core.util import dimension_sanitizer
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 
-from ...element import is_geographic, _Element, Shape
+from ...element import Shape, _Element, is_geographic
 from ..plot import ProjectionPlot
 
 
@@ -143,11 +142,11 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         yhover = CustomJSHover(code=self._hover_code % 1)
         for name, formatter in hover.tooltips:
             customjs = None
-            if formatter in ('@{%s}' % xdim, '$x'):
+            if formatter in (f'@{{{xdim}}}', '$x'):
                 dim = xdim
                 formatter = '$x'
                 customjs = xhover
-            elif formatter in ('@{%s}' % ydim, '$y'):
+            elif formatter in (f'@{{{ydim}}}', '$y'):
                 dim = ydim
                 formatter = '$y'
                 customjs = yhover
@@ -163,7 +162,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         tooltips, hover_opts = self._hover_opts(element)
         hover = self.handles['hover']
         if 'hv_created' in hover.tags:
-            tooltips = [(ttp.pprint_label, '@{%s}' % dimension_sanitizer(ttp.name))
+            tooltips = [(ttp.pprint_label, f'@{{{dimension_sanitizer(ttp.name)}}}')
                         if isinstance(ttp, Dimension) else ttp for ttp in tooltips]
             if self.geographic and tooltips[2:] == hover.tooltips[2:]:
                 return

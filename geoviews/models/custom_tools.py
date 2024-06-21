@@ -1,5 +1,5 @@
-from bokeh.core.properties import Instance, List, Dict, String, Any
-from bokeh.models import Tool, ColumnDataSource, PolyEditTool, PolyDrawTool
+from bokeh.core.properties import Any, Dict, Instance, List, String
+from bokeh.models import ColumnDataSource, PolyDrawTool, PolyEditTool, Tool
 
 
 class CheckpointTool(Tool):

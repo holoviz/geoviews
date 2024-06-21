@@ -1,4 +1,4 @@
-from holoviews.streams import PolyEdit, PolyDraw
+from holoviews.streams import PolyDraw, PolyEdit
 
 
 class PolyVertexEdit(PolyEdit):

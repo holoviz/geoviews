@@ -16,6 +16,7 @@ select = [
     "E",
     "F",
     "FLY",
+    "I",
     "ICN",
     "NPY",
     "PIE",
@@ -45,8 +46,9 @@ ignore = [
     "RUF012",   # Mutable class attributes should use `typing.ClassVar`
 ]
 
-unfixable = [
-    "F401",     # Unused imports
+extend-unsafe-fixes = [
+    "F401", # Unused imports
+    "F841", # Unused variables
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -55,6 +57,10 @@ unfixable = [
     "RUF001", "RUF002", "RUF003",  # Ambiguous unicode character
     "NPY002",  # Replace legacy `np.random.rand` call with Generator
 ]
+
+[tool.ruff.lint.isort]
+known-first-party = ["geoviews"]
+combine-as-imports = true
 
 [tool.codespell]
 ignore-words-list = "lod,nd"

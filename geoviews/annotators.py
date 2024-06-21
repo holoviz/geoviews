@@ -1,17 +1,24 @@
-import param
-
 import cartopy.crs as ccrs
-
+import param
 from holoviews.annotators import (
-    annotate, Annotator, PathAnnotator, PolyAnnotator, PointAnnotator,
-    RectangleAnnotator
+    Annotator,
+    PathAnnotator,
+    PointAnnotator,
+    PolyAnnotator,
+    RectangleAnnotator,
+    annotate,
 )
 from holoviews.plotting.links import DataLink, VertexTableLink as hvVertexTableLink
 from panel.util import param_name
 
 from .element import Path
-from .models.custom_tools import CheckpointTool, RestoreTool, ClearTool
-from .links import VertexTableLink, PointTableLink, HvRectanglesTableLink, RectanglesTableLink
+from .links import (
+    HvRectanglesTableLink,
+    PointTableLink,
+    RectanglesTableLink,
+    VertexTableLink,
+)
+from .models.custom_tools import CheckpointTool, ClearTool, RestoreTool
 from .operation import project
 from .streams import PolyVertexDraw, PolyVertexEdit
 
@@ -74,12 +81,12 @@ class PathBreakingAnnotator(PathAnnotator):
         style_kwargs = dict(node_style=self.node_style, feature_style=self.feature_style)
         self._stream = PolyVertexDraw(
             source=self.plot, data={}, num_objects=self.num_objects,
-            show_vertices=self.show_vertices, tooltip='%s Tool' % name,
+            show_vertices=self.show_vertices, tooltip=f'{name} Tool',
             **style_kwargs
         )
         if self.edit_vertices:
             self._vertex_stream = PolyVertexEdit(
-                source=self.plot, tooltip='%s Edit Tool' % name,
+                source=self.plot, tooltip=f'{name} Edit Tool',
                 **style_kwargs
             )
 

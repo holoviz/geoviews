@@ -1,8 +1,8 @@
-import param
 import numpy as np
+import param
+from holoviews.core.options import abbreviated_exception
 from holoviews.plotting.mpl.element import ColorbarPlot
 from holoviews.util.transform import dim
-from holoviews.core.options import abbreviated_exception
 
 
 class WindBarbsPlot(ColorbarPlot):

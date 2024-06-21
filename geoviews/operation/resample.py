@@ -1,14 +1,11 @@
-import param
 import numpy as np
-
-from holoviews import Polygons, Path
+import param
+from holoviews import Operation, Path, Polygons
 from holoviews.streams import RangeXY
-from holoviews import Operation
 from shapely.geometry import Polygon
 from shapely.strtree import STRtree
 
-from ..util import polygons_to_geom_dicts, path_to_geom_dicts, shapely_v2
-
+from ..util import path_to_geom_dicts, polygons_to_geom_dicts, shapely_v2
 
 
 def find_geom(geom, geoms):

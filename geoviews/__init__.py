@@ -1,35 +1,142 @@
+from functools import partial
+
 import param
-
-from holoviews import (extension, help, opts, output, renderer, Store, # noqa (API import)
-                       Cycle, Palette, Overlay, Layout, NdOverlay, NdLayout,
-                       HoloMap, DynamicMap, GridSpace, Dimension, dim)
-
-from holoviews import render, save # noqa (API import)
-
-from .element import ( # noqa (API import)
-    _Element, Feature, Tiles, WMTS, LineContours, FilledContours,
-    Text, Image, ImageStack, Points, Path, Polygons, Shape, Dataset, RGB,
-    Contours, Graph, TriMesh, Nodes, EdgePaths, QuadMesh, VectorField,
-    HexTiles, Labels, Rectangles, Segments, WindBarbs
+from holoviews import (
+    Cycle,
+    Dimension,
+    DynamicMap,
+    GridSpace,
+    HoloMap,
+    Layout,
+    NdLayout,
+    NdOverlay,
+    Overlay,
+    Palette,
+    Store,
+    dim,
+    extension,
+    help,
+    opts,
+    output,
+    render,
+    renderer,
+    save,
 )
-from .util import from_xarray # noqa (API import)
-from ._warnings import GeoviewsDeprecationWarning, GeoviewsUserWarning  # noqa: F401
-from . import data                                  # noqa (API import)
-from . import plotting                              # noqa (API import)
-from . import feature                               # noqa (API import)
-from . import tile_sources                          # noqa (API import)
 
-__version__ = str(param.version.Version(fpath=__file__, archive_commit="$Format:%h$",
-                                        reponame="geoviews"))
+from . import (
+    data,
+    feature,
+    plotting,
+    tile_sources,
+)
+from ._warnings import GeoviewsDeprecationWarning, GeoviewsUserWarning
+from .element import (
+    RGB,
+    WMTS,
+    Contours,
+    Dataset,
+    EdgePaths,
+    Feature,
+    FilledContours,
+    Graph,
+    HexTiles,
+    Image,
+    ImageStack,
+    Labels,
+    LineContours,
+    Nodes,
+    Path,
+    Points,
+    Polygons,
+    QuadMesh,
+    Rectangles,
+    Segments,
+    Shape,
+    Text,
+    Tiles,
+    TriMesh,
+    VectorField,
+    WindBarbs,
+)
+from .util import from_xarray
+
+__version__ = str(
+    param.version.Version(
+        fpath=__file__, archive_commit="$Format:%h$", reponame="geoviews"
+    )
+)
+
+__all__ = (
+    "Contours",
+    "Cycle",
+    "Dataset",
+    "Dimension",
+    "DynamicMap",
+    "EdgePaths",
+    "Feature",
+    "FilledContours",
+    "GeoviewsDeprecationWarning",
+    "GeoviewsUserWarning",
+    "Graph",
+    "GridSpace",
+    "HexTiles",
+    "HoloMap",
+    "Image",
+    "ImageStack",
+    "Labels",
+    "Layout",
+    "LineContours",
+    "NdLayout",
+    "NdOverlay",
+    "Nodes",
+    "Overlay",
+    "Palette",
+    "Path",
+    "Points",
+    "Polygons",
+    "QuadMesh",
+    "RGB",
+    "Rectangles",
+    "Segments",
+    "Shape",
+    "Store",
+    "Text",
+    "Tiles",
+    "TriMesh",
+    "VectorField",
+    "WMTS",
+    "WindBarbs",
+    "__version__",
+    "data",
+    "dim",
+    "extension",
+    "feature",
+    "from_xarray",
+    "help",
+    "opts",
+    "output",
+    "plotting",
+    "render",
+    "renderer",
+    "save",
+    "tile_sources",
+    # Lazy modules
+    "annotate",
+    "project",
+    "operation",
+)
 
 # Ensure opts utility is initialized with GeoViews elements
 if Store._options:
     Store.set_current_backend(Store.current_backend)
 
 # make pyct's example/data commands available if possible
-from functools import partial
 try:
-    from pyct.cmd import copy_examples as _copy, fetch_data as _fetch, examples as _examples
+    from pyct.cmd import (
+        copy_examples as _copy,
+        examples as _examples,
+        fetch_data as _fetch,
+    )
     copy_examples = partial(_copy, 'geoviews')
     fetch_data = partial(_fetch, 'geoviews')
     examples = partial(_examples, 'geoviews')
@@ -54,8 +161,6 @@ def __getattr__(attr):
         return operation
     raise AttributeError(f"module {__name__} has no attribute {attr!r}")
 
-__all__ = [k for k in locals() if not k.startswith('_')]
-__all__ += ['annotate', 'project', 'operation', '__version__']
 
 def __dir__():
     return __all__
@@ -63,6 +168,6 @@ def __dir__():
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from . import operation
     from .annotators import annotate
     from .operation import project
-    from . import operation

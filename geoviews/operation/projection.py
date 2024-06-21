@@ -1,24 +1,41 @@
 import logging
 import sys
 
-import param
 import numpy as np
 import pandas as pd
-
+import param
 from cartopy import crs as ccrs
 from holoviews.core.data import MultiInterface
 from holoviews.core.util import cartesian_product, get_param_values
 from holoviews.operation import Operation
-from shapely.geometry import Polygon, MultiPolygon
+from shapely.geometry import MultiPolygon, Polygon
 from shapely.geometry.collection import GeometryCollection
 
 from ..data import GeoPandasInterface
-from ..element import (Image, Shape, Polygons, Path, Points, Contours,
-                       RGB, Graph, Nodes, EdgePaths, QuadMesh, VectorField,
-                       HexTiles, Labels, Rectangles, Segments, WindBarbs)
+from ..element import (
+    RGB,
+    Contours,
+    EdgePaths,
+    Graph,
+    HexTiles,
+    Image,
+    Labels,
+    Nodes,
+    Path,
+    Points,
+    Polygons,
+    QuadMesh,
+    Rectangles,
+    Segments,
+    Shape,
+    VectorField,
+    WindBarbs,
+)
 from ..util import (
-    project_extents, path_to_geom_dicts, polygons_to_geom_dicts,
-    geom_dict_to_array_dict
+    geom_dict_to_array_dict,
+    path_to_geom_dicts,
+    polygons_to_geom_dicts,
+    project_extents,
 )
 
 

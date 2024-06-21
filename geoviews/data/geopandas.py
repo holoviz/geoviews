@@ -1,20 +1,23 @@
 import sys
 import warnings
-
 from collections import defaultdict
 
 import numpy as np
 import pandas as pd
-
-from holoviews.core.util import isscalar, unique_iterator, unique_array
-from holoviews.core.data import Dataset, Interface, MultiInterface, PandasAPI
+from holoviews.core.data import (
+    Dataset,
+    Interface,
+    MultiInterface,
+    PandasAPI,
+    PandasInterface,
+)
 from holoviews.core.data.interface import DataError
-from holoviews.core.data import PandasInterface
 from holoviews.core.data.spatialpandas import get_value_array
 from holoviews.core.dimension import dimension_name
+from holoviews.core.util import isscalar, unique_array, unique_iterator
 from holoviews.element import Path
 
-from ..util import asarray, geom_to_array, geom_types, geom_length
+from ..util import asarray, geom_length, geom_to_array, geom_types
 from .geom_dict import geom_from_dict
 
 
@@ -69,7 +72,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
                 data = from_multi(eltype, data, kdims, vdims)
         elif not isinstance(data, GeoDataFrame):
             raise ValueError("GeoPandasInterface only support geopandas "
-                             "DataFrames not %s." % type(data))
+                             f"DataFrames not {type(data)}.")
         elif 'geometry' not in data:
             cls.geo_column(data)
 
@@ -95,7 +98,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
             shp_types = []
         if len(shp_types) > 1:
             raise DataError('The GeopandasInterface can only read dataframes which '
-                            'share a common geometry type, found %s types.' % shp_types,
+                            f'share a common geometry type, found {shp_types} types.',
                             cls)
 
         return data, {'kdims': kdims, 'vdims': vdims}, {}
@@ -115,7 +118,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
         if not_found:
             raise DataError("Supplied data does not contain specified "
                              "dimensions, the following dimensions were "
-                             "not found: %s" % repr(not_found), cls)
+                             f"not found: {not_found!r}", cls)
 
     @classmethod
     def dtype(cls, dataset, dimension):
@@ -126,7 +129,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
 
     @classmethod
     def has_holes(cls, dataset):
-        from shapely.geometry import Polygon, MultiPolygon
+        from shapely.geometry import MultiPolygon, Polygon
         col = cls.geo_column(dataset.data)
         for geom in dataset.data[col]:
             if isinstance(geom, Polygon) and geom.interiors:
@@ -139,7 +142,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
 
     @classmethod
     def holes(cls, dataset):
-        from shapely.geometry import Polygon, MultiPolygon
+        from shapely.geometry import MultiPolygon, Polygon
         holes = []
         col = cls.geo_column(dataset.data)
         for geom in dataset.data[col]:
@@ -521,7 +524,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
             elif datatype is None:
                 obj = ds.clone()
             else:
-                raise ValueError("%s datatype not support" % datatype)
+                raise ValueError(f"{datatype} datatype not support")
             objs.append(obj)
         return objs
 
@@ -536,7 +539,13 @@ def get_geom_type(geom):
         A string representing type of the geometry.
     """
     from shapely.geometry import (
-        Point, LineString, Polygon, Ring, MultiPoint, MultiPolygon, MultiLineString
+        LineString,
+        MultiLineString,
+        MultiPoint,
+        MultiPolygon,
+        Point,
+        Polygon,
+        Ring,
     )
     if isinstance(geom, (Point, MultiPoint)):
         return 'Point'
@@ -562,7 +571,12 @@ def to_geopandas(data, xdim, ydim, columns=None, geom='point'):
     """
     from geopandas import GeoDataFrame
     from shapely.geometry import (
-        Point, LineString, Polygon, MultiPoint, MultiPolygon, MultiLineString
+        LineString,
+        MultiLineString,
+        MultiPoint,
+        MultiPolygon,
+        Point,
+        Polygon,
     )
     if columns is None:
         columns = []

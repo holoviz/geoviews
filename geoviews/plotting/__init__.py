@@ -5,30 +5,20 @@ from holoviews.operation.element import contours
 from ..element import Contours, Polygons
 
 
-if hasattr(extension, 'register_backend_callback'):
-    def _load_bokeh():
-        from . import bokeh # noqa
-    extension.register_backend_callback('bokeh', _load_bokeh)
+def _load_bokeh():
+    from geoviews.plotting import bokeh  # noqa: F401
 
-    def _load_mpl():
-        from . import mpl # noqa
-    extension.register_backend_callback('matplotlib', _load_mpl)
+extension.register_backend_callback('bokeh', _load_bokeh)
 
-    backends = Store.loaded_backends()
-    if 'bokeh' in backends:
-        _load_bokeh()
-    if 'matplotlib' in backends:
-        _load_mpl()
-else:
-    try:
-        from . import mpl # noqa
-    except ImportError:
-        pass
+def _load_mpl():
+    from geoviews.plotting import mpl  # noqa: F401
+extension.register_backend_callback('matplotlib', _load_mpl)
 
-    try:
-        from . import bokeh # noqa
-    except ImportError:
-        pass
+backends = Store.loaded_backends()
+if 'bokeh' in backends:
+    _load_bokeh()
+if 'matplotlib' in backends:
+    _load_mpl()
 
 Compositor.register(Compositor("LineContours", contours, None,
                                'data', transfer_options=True,

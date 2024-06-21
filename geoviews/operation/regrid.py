@@ -1,11 +1,10 @@
 import os
 
-import param
 import numpy as np
+import param
 import xarray as xr
-
-from holoviews.core.util import get_param_values
 from holoviews.core.data import XArrayInterface
+from holoviews.core.util import get_param_values
 from holoviews.element import Image as HvImage, QuadMesh as HvQuadMesh
 from holoviews.operation.datashader import regrid
 
@@ -88,8 +87,8 @@ class weighted_regrid(regrid):
         ds = xr.Dataset(arrays)
         ds = ds.rename({x.name: 'lon', y.name: 'lat'})
 
-        x_range = str(tuple('%.3f' % r for r in x_range)).replace("'", '')
-        y_range = str(tuple('%.3f' % r for r in y_range)).replace("'", '')
+        x_range = str(tuple(f'{r:.3f}' for r in x_range)).replace("'", '')
+        y_range = str(tuple(f'{r:.3f}' for r in y_range)).replace("'", '')
         filename = self.p.file_pattern.format(
             method=self.p.interpolation, width=width, height=height,
             x_range=x_range, y_range=y_range

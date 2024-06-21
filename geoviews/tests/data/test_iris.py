@@ -4,18 +4,18 @@ import numpy as np
 
 try:
     import iris
-    from iris.tests.stock import lat_lon_cube
     from iris.exceptions import MergeError
+    from iris.tests.stock import lat_lon_cube
 except ImportError:
     raise SkipTest("Could not import iris, skipping IrisInterface tests.") from None
 
 from holoviews.core.data import Dataset, concat
-from geoviews.data.iris import coord_to_dimension
 from holoviews.core.spaces import HoloMap
 from holoviews.element import Image
-
-from holoviews.tests.core.data.test_imageinterface import BaseImageElementInterfaceTests
 from holoviews.tests.core.data.test_gridinterface import BaseGridInterfaceTests
+from holoviews.tests.core.data.test_imageinterface import BaseImageElementInterfaceTests
+
+from geoviews.data.iris import coord_to_dimension
 
 
 class IrisInterfaceTests(BaseGridInterfaceTests):

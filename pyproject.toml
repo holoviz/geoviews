@@ -2,7 +2,7 @@
 requires = [
     "hatchling",
     "hatch-vcs",
-    "bokeh ==3.4",
+    'bokeh >=3.4.0,<3.5.0',
 ]
 build-backend = "hatchling.build"
 
@@ -18,7 +18,6 @@ maintainers = [{ name = "HoloViz developers", email = "developers@holoviz.org" }
 classifiers = [
     "License :: OSI Approved :: BSD License",
     "Development Status :: 5 - Production/Stable",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",

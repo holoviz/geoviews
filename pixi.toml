@@ -19,7 +19,7 @@ test-311 = ["py311", "test-core", "test", "example", "test-example", "download-d
 test-312 = ["py312", "test-core", "test", "example", "test-example", "download-data"]
 test-core = ["py312", "test-core"]
 docs = ["py311", "example", "doc", "download-data"]
-# build = ["py311", "build"]
+build = ["py311", "build"]
 lint = ["py311", "lint"]
 download-data = ["download-data"]
 
@@ -131,13 +131,13 @@ depends_on = ['_docs-generate-rst', '_docs-generate']
 # =============================================
 # ================== BUILD ====================
 # =============================================
-# [feature.build.dependencies]
-# python-build = "*"
-# conda-build = "*"
-#
-# [feature.build.tasks]
-# build-conda = 'bash scripts/conda/build.sh'
-# build-pip = 'python -m build .'
+[feature.build.dependencies]
+python-build = "*"
+conda-build = "*"
+
+[feature.build.tasks]
+build-conda = 'bash scripts/conda/build.sh'
+build-pip = 'python -m build .'
 
 # =============================================
 # =================== LINT ====================

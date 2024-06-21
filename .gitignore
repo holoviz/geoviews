@@ -81,3 +81,7 @@ geoviews/.version
 node_modules/
 .bokeh
 examples/data
+
+# Pixi
+pixi.lock
+.pixi

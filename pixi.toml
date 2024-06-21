@@ -20,7 +20,7 @@ test-312 = ["py312", "test-core", "test", "example", "test-example", "download-d
 test-core = ["py312", "test-core"]
 docs = ["py311", "example", "doc", "download-data"]
 # build = ["py311", "build"]
-# lint = ["py311", "lint"]
+lint = ["py311", "lint"]
 download-data = ["download-data"]
 
 [dependencies]
@@ -142,9 +142,9 @@ depends_on = ['_docs-generate-rst', '_docs-generate']
 # =============================================
 # =================== LINT ====================
 # =============================================
-# [feature.lint.dependencies]
-# pre-commit = "*"
-#
-# [feature.lint.tasks]
-# lint = 'pre-commit run --all-files'
-# lint-install = 'pre-commit install'
+[feature.lint.dependencies]
+pre-commit = "*"
+
+[feature.lint.tasks]
+lint = 'pre-commit run --all-files'
+lint-install = 'pre-commit install'

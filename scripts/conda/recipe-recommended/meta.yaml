@@ -20,13 +20,9 @@ requirements:
   run:
     - python {{ project['requires-python'] }}
     - geoviews-core =={{ VERSION }}
-    {% for dep in sdata['extras_require']['recommended'] %}
+    {% for dep in project['optional-dependencies']['recommended'] %}
     - {{ dep.replace("geopandas", "geopandas-base").replace("matplotlib", "matplotlib-base") }}
     {% endfor %}
-
-test:
-  imports:
-    - {{ project["name"] }}
 
 about:
   home: {{ project['urls']['Homepage'] }}

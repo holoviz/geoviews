@@ -13,11 +13,11 @@ USE_PYGEOS = "0"
 DASK_DATAFRAME__QUERY_PLANNING = "False"
 
 [environments]
-test-310 = ["py310", "test-core", "test", "example", "test-example", "download-data"]
-test-311 = ["py311", "test-core", "test", "example", "test-example", "download-data"]
-test-312 = ["py312", "test-core", "test", "example", "test-example", "download-data"]
+test-310 = ["py310", "test-core", "test", "example", "test-example"]
+test-311 = ["py311", "test-core", "test", "example", "test-example"]
+test-312 = ["py312", "test-core", "test", "example", "test-example"]
 test-core = ["py312", "test-core"]
-docs = ["py311", "example", "doc", "download-data"]
+docs = ["py311", "example", "doc"]
 build = ["py311", "build"]
 lint = ["py311", "lint"]
 download-data = ["download-data"]

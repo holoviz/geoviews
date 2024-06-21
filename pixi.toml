@@ -27,6 +27,7 @@ download-data = ["download-data"]
 bokeh = ">=3.4.0,<3.5.0"
 cartopy = ">=0.18.0"
 holoviews = ">=1.16.0"
+nodejs = "20.9.*" # 20.12.2 breaks bokeh build on Windows: https://github.com/bokeh/bokeh/pull/13851, removed with Bokeh 3.5
 numpy = "*"
 packaging = "*"
 panel = ">=1.0.0"

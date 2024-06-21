@@ -1,29 +1,34 @@
-{% set sdata = load_setup_py_data(setup_file="../../../setup.py", from_recipe_dir=True) %}
+{% set pyproject = load_file_data('../../../pyproject.toml', from_recipe_dir=True) %}
+{% set project = pyproject['project'] %}
 
 package:
-  name: {{ sdata['name'] }}
+  name: {{ project["name"] }}
   version: {{ VERSION }}
 
 source:
-  url: ../../../dist/{{ sdata['name'] }}-{{ VERSION }}-py3-none-any.whl
+  url: ../../../dist/{{ project["name"] }}-{{ VERSION }}-py3-none-any.whl
 
 build:
   noarch: python
 
 requirements:
   host:
-    - python {{ sdata['python_requires'] }}
-    {% for dep in sdata['extras_require']['build'] %}
+    - python {{ project['requires-python'] }}
+    {% for dep in pyproject['build-system']['requires'] %}
     - {{ dep }}
     {% endfor %}
   run:
-    - python {{ sdata['python_requires'] }}
-    - geoviews-core =={{ sdata['version'] }}
+    - python {{ project['requires-python'] }}
+    - {{ pin_subpackage('geoviews-core', exact=True) }}
     {% for dep in sdata['extras_require']['recommended'] %}
-    - {{ dep if dep != 'geopandas' else 'geopandas-base'}}
+    - {{ dep.replace("geopandas", "geopandas-base").replace("matplotlib", "matplotlib-base" }}
     {% endfor %}
 
+test:
+  imports:
+    - {{ project["name"] }}
+
 about:
-  home: {{ sdata['url'] }}
-  summary: {{ sdata['description'] }}
-  license: {{ sdata['license'] }}
+  home: {{ project['urls']['Homepage'] }}
+  summary: {{ project['description'] }}
+  license: {{ project['license']['text'] }}

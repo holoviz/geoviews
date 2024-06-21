@@ -14,10 +14,10 @@ USE_PYGEOS = "0"
 DASK_DATAFRAME__QUERY_PLANNING = "False"
 
 [environments]
-test-310 = ["py310", "test-core", "test", "example", "test-example", "test-unit-task"]
-test-311 = ["py311", "test-core", "test", "example", "test-example", "test-unit-task"]
-test-312 = ["py312", "test-core", "test", "example", "test-example", "test-unit-task"]
-test-core = ["py312", "test-core", "test-unit-task"]
+test-310 = ["py310", "test-core", "test", "example", "test-example", "download-data"]
+test-311 = ["py311", "test-core", "test", "example", "test-example", "download-data"]
+test-312 = ["py312", "test-core", "test", "example", "test-example", "download-data"]
+test-core = ["py312", "test-core"]
 # docs = ["py311", "example", "doc"]
 # build = ["py311", "build"]
 # lint = ["py311", "lint"]
@@ -83,7 +83,7 @@ pytest-github-actions-annotate-failures = "*"
 pytest-rerunfailures = "*"
 pytest-xdist = "*"
 
-[feature.test-unit-task.tasks] # So it is not showing up in the test-ui environment
+[feature.test-core.tasks]
 test-unit = 'pytest geoviews/tests -n logical --dist loadgroup'
 
 [feature.test.dependencies]

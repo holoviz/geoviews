@@ -137,6 +137,7 @@ conda-build = "*"
 [feature.build.tasks]
 build-conda = 'bash scripts/conda/build.sh'
 build-pip = 'python -m build .'
+build-npm = { cmd = "npm pack .", cwd = "geoviews" }
 
 # =============================================
 # =================== LINT ====================

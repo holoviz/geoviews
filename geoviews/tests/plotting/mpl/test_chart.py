@@ -1,6 +1,5 @@
 import numpy as np
 import pytest
-import xarray as xr
 from holoviews.tests.plotting.utils import ParamLogStream
 from test_plot import TestMPLPlot
 
@@ -33,6 +32,8 @@ class TestWindBarbsPlot(TestMPLPlot):
         np.testing.assert_almost_equal(mpl_barbs.v.data, V.T.flatten())
 
     def test_windbarbs_dataset(self):
+        xr = pytest.importorskip("xarray")
+
         x = np.linspace(-1, 1, 4)
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 1 * Y
@@ -71,6 +72,8 @@ class TestWindBarbsPlot(TestMPLPlot):
         np.testing.assert_almost_equal(gv_barbs.data["Magnitude"].T.flatten(), gv_barbs_uv.data["Magnitude"])
 
     def test_windbarbs_dataset_from_uv_other_dim(self):
+        xr = pytest.importorskip("xarray")
+
         x = np.linspace(-1, 1, 4)
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 3 * Y

@@ -1,8 +1,9 @@
 import pytest
-import xarray as xr
 from holoviews.operation import contours
 
 import geoviews as gv
+
+xr = pytest.importorskip("xarray")
 
 
 @pytest.mark.filterwarnings(

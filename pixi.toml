@@ -68,7 +68,7 @@ geodatasets = "*"
 pooch = "*"
 pyct = "*"
 scipy = "*"
-setuptools = "*"  # Because of pyct
+setuptools = "*" # Because of pyct
 xarray = "*"
 
 # =============================================

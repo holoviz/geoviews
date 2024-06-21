@@ -13,11 +13,11 @@ USE_PYGEOS = "0"
 DASK_DATAFRAME__QUERY_PLANNING = "False"
 
 [environments]
-test-310 = ["py310", "test-core", "test", "example", "test-example"]
-test-311 = ["py311", "test-core", "test", "example", "test-example"]
-test-312 = ["py312", "test-core", "test", "example", "test-example"]
+test-310 = ["py310", "test-core", "test", "example", "test-example", "download-data"]
+test-311 = ["py311", "test-core", "test", "example", "test-example", "download-data"]
+test-312 = ["py312", "test-core", "test", "example", "test-example", "download-data"]
 test-core = ["py312", "test-core"]
-docs = ["py311", "example", "doc"]
+docs = ["py311", "example", "doc", "download-data"]
 build = ["py311", "build"]
 lint = ["py311", "lint"]
 download-data = ["download-data"]
@@ -54,7 +54,6 @@ matplotlib-base = ">2.2"
 mock = "*"
 netcdf4 = "*"
 pandas = "*"
-pooch = "*"
 scipy = "*"
 shapely = "*"
 xarray = "*"
@@ -86,6 +85,7 @@ pytest-xdist = "*"
 test-unit = 'pytest geoviews/tests -n logical --dist loadgroup'
 
 [feature.test.dependencies]
+cftime = "*"
 datashader = "*"
 fiona = "*"
 geopandas-base = "*"
@@ -94,7 +94,6 @@ matplotlib-base = ">2.2"
 nbval = "*"
 netcdf4 = "*"
 pandas = "*"
-pooch = "*"
 pyviz_comms = "*"
 rioxarray = "*"
 scipy = "*"

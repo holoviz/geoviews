@@ -13,6 +13,7 @@ try:
 except ImportError:
     geopandas = None
 
+from holoviews import render
 from holoviews.core.data import Dataset
 from holoviews.core.data.interface import DataError
 from holoviews.element import Path, Points, Polygons
@@ -201,3 +202,15 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
         ds = Dataset(gdf, kdims=['Longitude', 'Latitude'], datatype=[self.datatype])
         self.assertEqual(ds.dimension_values('Longitude'), np.array([0, 1]))
         self.assertEqual(ds.dimension_values('Latitude'), np.array([1, 2]))
+
+    def test_geopandas_dataframe_with_different_dtype_column(self):
+        # Fix for https://github.com/holoviz/geoviews/issues/721
+        df = pd.DataFrame(
+            {
+                "x": [1, 2, 3, 4, 5],
+                "y": [1, 2, 3, 4, 5],
+                "value": [5, '4', 3, 2, 1],
+            }
+        )
+        gdf = geopandas.GeoDataFrame(df, geometry=geopandas.points_from_xy(df.x, df.y))
+        render(Points(gdf))

@@ -87,6 +87,7 @@ test-unit = 'pytest geoviews/tests -n logical --dist loadgroup'
 [feature.test.dependencies]
 cftime = "*"
 datashader = "*"
+filelock = "*"
 fiona = "*"
 geopandas-base = "*"
 iris = ">=3.5"

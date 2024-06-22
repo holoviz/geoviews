@@ -2,7 +2,7 @@
 
 PACKAGE="geoviews"
 
-python -m build -w .
+python -m build . # Can add -w when this is solved: https://github.com/pypa/hatch/issues/1305
 
 VERSION=$(python -c "import $PACKAGE; print($PACKAGE._version.__version__)")
 export VERSION

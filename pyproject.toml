@@ -73,10 +73,11 @@ include = ["geoviews"]
 "geoviews/dist" = "geoviews/dist"
 
 [tool.hatch.build.targets.sdist]
-include = ["geoviews", "scripts", "examples"]
+include = ["geoviews", "scripts"]
 
 [tool.hatch.build.targets.sdist.force-include]
 "geoviews/dist" = "geoviews/dist"
+examples = "geoviews/examples"
 
 [tool.hatch.build.hooks.vcs]
 version-file = "geoviews/_version.py"

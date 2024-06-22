@@ -287,7 +287,10 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
                 return bounds.miny.min(), bounds.maxy.max()
         else:
             vals = dataset.data[dim.name]
-            return vals.min(), vals.max()
+            try:
+                return vals.min(), vals.max()
+            except TypeError:
+                return np.nan, np.nan
 
     @classmethod
     def aggregate(cls, columns, dimensions, function, **kwargs):

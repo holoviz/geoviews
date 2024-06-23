@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euxo pipefail
+
 PACKAGE="geoviews"
 
 python -m build . # Can add -w when this is solved: https://github.com/pypa/hatch/issues/1305

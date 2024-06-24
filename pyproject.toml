@@ -1,11 +1,89 @@
 [build-system]
-requires = [
-    "param >=1.9.2",
-    "pyct >=0.4.4",
-    "bokeh ==3.4",
-    "setuptools",
+requires = ["hatchling", "hatch-vcs", 'bokeh ==3.4']
+build-backend = "hatchling.build"
+
+[project]
+name = "geoviews"
+dynamic = ["version"]
+description = 'GeoViews is a Python library that makes it easy to explore and visualize geographical, meteorological, and oceanographic datasets, such as those used in weather, climate, and remote sensing research.'
+readme = "README.md"
+license = { text = "BSD 3-Clause" }
+requires-python = ">=3.10"
+authors = [{ name = "HoloViz developers", email = "developers@holoviz.org" }]
+maintainers = [{ name = "HoloViz developers", email = "developers@holoviz.org" }]
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Framework :: Matplotlib",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries",
 ]
-build-backend = "setuptools.build_meta"
+
+dependencies = [
+    'bokeh >=3.4.0,<3.5.0',
+    'cartopy >=0.18.0',
+    'holoviews >=1.16.0',
+    'numpy',
+    'packaging',
+    'panel >=1.0.0',
+    'param',
+    'pyproj',
+    'shapely',
+    'xyzservices',
+]
+
+[project.urls]
+Homepage = "https://geoviews.org"
+Source = "https://github.com/holoviz/geoviews"
+HoloViz = "https://holoviz.org/"
+
+[project.optional-dependencies]
+recommended = [
+    'datashader',
+    'geopandas',
+    'matplotlib >2.2',
+    'netcdf4',
+    'pandas',
+    'pooch',
+    'pyct',
+    'scipy',
+    'shapely',
+    'xarray',
+]
+tests = ['psutil', 'pytest', 'pytest-xdist']
+
+[project.scripts]
+geoviews = "geoviews.command:main"
+
+[tool.hatch.version]
+source = "vcs"
+raw-options = { version_scheme = "no-guess-dev" }
+
+[tool.hatch.build.targets.wheel]
+include = ["geoviews"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"geoviews/dist" = "geoviews/dist"
+
+[tool.hatch.build.targets.sdist]
+include = ["geoviews", "scripts"]
+
+[tool.hatch.build.targets.sdist.force-include]
+"geoviews/dist" = "geoviews/dist"
+examples = "geoviews/examples"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "geoviews/_version.py"
+
+[tool.hatch.build.hooks.custom]
+path = 'hatch_build.py'
 
 [tool.ruff]
 fix = true
@@ -30,20 +108,22 @@ select = [
 ]
 
 ignore = [
-    "E402",     # Module level import not at top of file
-    "E501",     # Line too long
-    "E701",     # Multiple statements on one line
-    "E712",     # Comparison to true should be is
-    "E731",     # Do not assign a lambda expression, use a def
-    "E741",     # Ambiguous variable name
-    "F405",     # From star imports
-    "PLE0604",  # Invalid object in `__all__`, must contain only strings
-    "PLE0605",  # Invalid format for `__all__`
-    "PLR091",   # Too many arguments/branches/statements
-    "PLR2004",  # Magic value used in comparison
-    "PLW2901",  # `for` loop variable is overwritten
-    "RUF005",   # Consider {expr} instead of concatenation
-    "RUF012",   # Mutable class attributes should use `typing.ClassVar`
+    "E402", # Module level import not at top of file
+    "E501", # Line too long
+    "E701", # Multiple statements on one line
+    "E712", # Comparison to true should be is
+    "E731", # Do not assign a lambda expression, use a def
+    "E741", # Ambiguous variable name
+    "F405", # From star imports
+    "PLE0604", # Invalid object in `__all__`, must contain only strings
+    "PLE0605", # Invalid format for `__all__`
+    "PLR091", # Too many arguments/branches/statements
+    "PLR2004", # Magic value used in comparison
+    "PLW2901", # `for` loop variable is overwritten
+    "RUF005", # Consider {expr} instead of concatenation
+    "RUF012", # Mutable class attributes should use `typing.ClassVar`
+    'B905', # `zip()` without an explicit `strict=` parameter
+    'UP038', # Use `X | Y` in `isinstance` call instead of `(X, Y)`
 ]
 
 extend-unsafe-fixes = [
@@ -54,8 +134,10 @@ extend-unsafe-fixes = [
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F403"]
 "geoviews/tests/*" = [
-    "RUF001", "RUF002", "RUF003",  # Ambiguous unicode character
-    "NPY002",  # Replace legacy `np.random.rand` call with Generator
+    "RUF001", # Ambiguous unicode character
+    "RUF002", # Ambiguous unicode character
+    "RUF003", # Ambiguous unicode character
+    "NPY002", # Replace legacy `np.random.rand` call with Generator
 ]
 
 [tool.ruff.lint.isort]
@@ -68,7 +150,13 @@ skip = "doc/generate_modules.py,*.json,*.csv"
 write-changes = true
 
 [tool.pytest.ini_options]
-addopts = ["--pyargs", "--doctest-ignore-import-errors", "--strict-config", "--strict-markers", "--color=yes"]
+addopts = [
+    "--pyargs",
+    "--doctest-ignore-import-errors",
+    "--strict-config",
+    "--strict-markers",
+    "--color=yes",
+]
 norecursedirs = "doc .git dist build _build .ipynb_checkpoints"
 minversion = 7
 xfail_strict = true
@@ -84,12 +172,12 @@ filterwarnings = [
     # 2023-09: See https://github.com/Unidata/MetPy/pull/3117
     "ignore:'xdrlib' is deprecated and slated for removal in Python 3.13:DeprecationWarning:metpy.io.nexrad",
     # 2024-01
-    "ignore:\\s*Pyarrow will become a required dependency of pandas:DeprecationWarning",  # Will go away by itself in Pandas 3.0
-    "ignore:Passing a (SingleBlockManager|BlockManager) to (Series|GeoSeries|DataFrame|GeoDataFrame) is deprecated:DeprecationWarning",  # https://github.com/holoviz/spatialpandas/issues/137
-    "ignore:datetime.datetime.utcfromtimestamp():DeprecationWarning:dateutil.tz.tz",  # https://github.com/dateutil/dateutil/pull/1285
+    "ignore:\\s*Pyarrow will become a required dependency of pandas:DeprecationWarning", # Will go away by itself in Pandas 3.0
+    "ignore:Passing a (SingleBlockManager|BlockManager) to (Series|GeoSeries|DataFrame|GeoDataFrame) is deprecated:DeprecationWarning", # https://github.com/holoviz/spatialpandas/issues/137
+    "ignore:datetime.datetime.utcfromtimestamp():DeprecationWarning:dateutil.tz.tz", # https://github.com/dateutil/dateutil/pull/1285
     # 2024-02
-    "ignore:The current Dask DataFrame implementation is deprecated:DeprecationWarning",  # https://github.com/dask/dask/issues/10917
+    "ignore:The current Dask DataFrame implementation is deprecated:DeprecationWarning", # https://github.com/dask/dask/issues/10917
     # 2024-03
     "ignore:\\s*Dask dataframe query planning is disabled because dask-expr is not installed:FutureWarning",
-    "ignore:numpy.ndarray size changed, may indicate binary incompatibility:RuntimeWarning",  # https://github.com/pydata/xarray/issues/7259
+    "ignore:numpy.ndarray size changed, may indicate binary incompatibility:RuntimeWarning", # https://github.com/pydata/xarray/issues/7259
 ]

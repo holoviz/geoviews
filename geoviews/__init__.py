@@ -1,6 +1,5 @@
 from functools import partial
 
-import param
 from holoviews import (
     Cycle,
     Dimension,
@@ -23,12 +22,8 @@ from holoviews import (
     save,
 )
 
-from . import (
-    data,
-    feature,
-    plotting,
-    tile_sources,
-)
+from . import data, feature, plotting, tile_sources
+from .__version import __version__
 from ._warnings import GeoviewsDeprecationWarning, GeoviewsUserWarning
 from .element import (
     RGB,
@@ -59,12 +54,6 @@ from .element import (
     WindBarbs,
 )
 from .util import from_xarray
-
-__version__ = str(
-    param.version.Version(
-        fpath=__file__, archive_commit="$Format:%h$", reponame="geoviews"
-    )
-)
 
 __all__ = (
     "Contours",

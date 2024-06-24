@@ -96,5 +96,6 @@ or have set up your system to be able to build them.
    User Guide <user_guide/index>
    Gallery <gallery/index>
    Topics <topics>
+   Developer Guide <developer_guide/index>
    Releases <releases>
    About <about>

@@ -46,6 +46,9 @@ extensions += [
     'nbsite.gallery',
     'nbsite.analytics',
 ]
+
+myst_enable_extensions = ["colon_fence", "deflist"]
+
 napoleon_numpy_docstring = True
 
 nbsite_analytics = {

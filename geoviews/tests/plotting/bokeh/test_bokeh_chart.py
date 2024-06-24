@@ -1,5 +1,5 @@
-
 import numpy as np
+import pytest
 
 import geoviews as gv
 
@@ -7,6 +7,8 @@ import geoviews as gv
 class TestImageStackPlot:
 
     def test_image_stack_crs(self):
+        pytest.importorskip("scipy")
+
         x = np.arange(-120, -115)
         y = np.arange(40, 43)
         a = np.random.rand(len(y), len(x))

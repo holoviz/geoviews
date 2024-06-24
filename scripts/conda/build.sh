@@ -2,16 +2,25 @@
 
 set -euxo pipefail
 
-git status
+PACKAGE="geoviews"
 
-export SETUPTOOLS_ENABLE_FEATURES="legacy-editable"
-python -m build -w .
+python -m build . # Can add -w when this is solved: https://github.com/pypa/hatch/issues/1305
 
-git diff --exit-code
-
-VERSION=$(find dist -name "*.whl" -exec basename {} \; | cut -d- -f2)
+VERSION=$(python -c "import $PACKAGE; print($PACKAGE._version.__version__)")
 export VERSION
 
-# Note: pyct is needed in the same environment as conda-build!
-conda build scripts/conda/recipe-core --no-anaconda-upload --no-verify -c pyviz -c bokeh
-conda build scripts/conda/recipe-recommended --no-anaconda-upload --no-verify -c pyviz -c bokeh
+BK_CHANNEL=$(python -c "
+import bokeh
+from packaging.version import Version
+
+if Version(bokeh.__version__).is_devrelease:
+    print('bokeh/label/dev')
+else:
+    print('bokeh')
+")
+
+conda build scripts/conda/recipe-core --no-anaconda-upload --no-verify -c "$BK_CHANNEL"
+conda build scripts/conda/recipe-recommended --no-anaconda-upload --no-verify  -c "$BK_CHANNEL"
+
+mv "$CONDA_PREFIX/conda-bld/noarch/$PACKAGE-core-$VERSION-py_0.tar.bz2" dist
+mv "$CONDA_PREFIX/conda-bld/noarch/$PACKAGE-$VERSION-py_0.tar.bz2" dist

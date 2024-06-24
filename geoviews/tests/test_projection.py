@@ -1,5 +1,6 @@
 import cartopy.crs as ccrs
 import numpy as np
+import pytest
 
 from geoviews.element import Image, VectorField, WindBarbs
 from geoviews.element.comparison import ComparisonTestCase
@@ -9,6 +10,7 @@ from geoviews.operation import project
 class TestProjection(ComparisonTestCase):
 
     def test_image_latlon360_wrapping(self):
+        pytest.importorskip("scipy")
         xs = np.linspace(72, 360, 5)
         ys = np.linspace(-60, 60, 3)
         img = Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))
@@ -21,6 +23,7 @@ class TestProjection(ComparisonTestCase):
         ]))
 
     def test_image_project_latlon_to_mercator(self):
+        pytest.importorskip("scipy")
         xs = np.linspace(72, 360, 5)
         ys = np.linspace(-60, 60, 3)
         img = Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))

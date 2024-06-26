@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import cartopy.crs as ccrs
 import pytest
 
@@ -9,6 +11,7 @@ try:
 except ImportError:
     rxr = None
 
+ASSETS_DIR = Path(__file__).parent / "assets"
 
 @pytest.mark.parametrize(
     "raw_crs",
@@ -45,3 +48,13 @@ def test_from_xarray():
     assert isinstance(output, gv.RGB)
     assert sorted(map(str, output.kdims)) == ["x", "y"]
     assert isinstance(output.crs, ccrs.CRS)
+
+
+@pytest.mark.skipif(rxr is None, reason="Needs rioxarray to be installed")
+def test_from_xarray_with_alpha():
+    file = str(ASSETS_DIR / "test_alpha.tif")
+    output = from_xarray(rxr.open_rasterio(file))
+
+    assert isinstance(output, gv.RGB)
+    assert sorted(map(str, output.kdims)) == ["x", "y"]
+    assert set(map(str, output.vdims)) == set(["R", "G", "B", "A"])

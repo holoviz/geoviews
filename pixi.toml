@@ -47,6 +47,7 @@ python = "3.11.*"
 python = "3.12.*"
 
 [feature.example.dependencies]
+bokeh_sampledata = "*"
 datashader = "*"
 fiona = "*"
 geopandas-base = "*"

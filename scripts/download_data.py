@@ -1,11 +1,8 @@
 from contextlib import suppress
 from pathlib import Path
 
-import bokeh.sampledata
-
 BASE_PATH = Path(__file__).resolve().parents[1]
 
-bokeh.sampledata.download()
 
 with suppress(ImportError):
     import pyct.cmd

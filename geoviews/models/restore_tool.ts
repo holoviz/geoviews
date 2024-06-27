@@ -44,8 +44,8 @@ export class RestoreTool extends ActionTool {
   static {
     this.prototype.default_view = RestoreToolView
 
-    this.define<RestoreTool.Props>(({Array, Ref}) => ({
-      sources: [ Array(Ref(ColumnDataSource)), [] ],
+    this.define<RestoreTool.Props>(({List, Ref}) => ({
+      sources: [ List(Ref(ColumnDataSource)), [] ],
     }))
   }
 

@@ -26,7 +26,7 @@ download-data = ["download-data"]
 bokeh = "3.5.*"
 cartopy = ">=0.18.0"
 holoviews = ">=1.16.0"
-nodejs = "*"
+nodejs = ">=20"
 numpy = "*"
 packaging = "*"
 panel = ">=1.0.0"

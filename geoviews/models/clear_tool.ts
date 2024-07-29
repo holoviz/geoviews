@@ -34,8 +34,8 @@ export class ClearTool extends ActionTool {
   static {
     this.prototype.default_view = ClearToolView
 
-    this.define<ClearTool.Props>(({Array, Ref}) => ({
-      sources: [ Array(Ref(ColumnDataSource)), [] ],
+    this.define<ClearTool.Props>(({List, Ref}) => ({
+      sources: [ List(Ref(ColumnDataSource)), [] ],
     }))
   }
 

@@ -125,7 +125,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     def update_frame(self, key, ranges=None, element=None):
         if element is not None:
             self._set_unwrap_lons(element)
-        super().update_frame(key, ranges, element)
+        super().update_frame(key, ranges=ranges, element=element)
 
     def _postprocess_hover(self, renderer, source):
         super()._postprocess_hover(renderer, source)

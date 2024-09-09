@@ -7,6 +7,8 @@ This release includes various bug fixes and maintenance updates. Many thanks to 
 
 Enhancements:
 
+- Add default `max_zoom` for OSM, ESRI, EsriImagery, EsriNatGeo, and EsriWorldHillshade ([#745](https://github.com/holoviz/geoviews/pull/745))
+
 Bug Fixes:
 
 - Return NaNs for range if column can't find min and max ([#723](https://github.com/holoviz/geoviews/pull/723))

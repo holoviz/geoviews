@@ -49,7 +49,14 @@ from ...operation import (
     project_quadmesh,
     project_vectorfield,
 )
-from ...tile_sources import _ATTRIBUTIONS
+from ...tile_sources import (
+    _ATTRIBUTIONS,
+    ESRI,
+    OSM,
+    EsriImagery,
+    EsriNatGeo,
+    EsriWorldHillshade,
+)
 from ...util import line_types, poly_types
 from . import callbacks  # noqa
 from .plot import GeoOverlayPlot, GeoPlot
@@ -59,6 +66,15 @@ try:
 except ImportError:
     class ImageStackPlot:
         ...
+
+_TILE_MAX_ZOOM = {
+    OSM: 19,
+    ESRI: 19,
+    EsriImagery: 19,
+    EsriNatGeo: 16,
+    EsriWorldHillshade: 16,
+}
+
 
 class TilePlot(GeoPlot):
 
@@ -102,6 +118,8 @@ class TilePlot(GeoPlot):
                                 'Must contain {X}/{Y}/{Z}, {XMIN}/{XMAX}/{YMIN}/{YMAX} '
                                 'or {Q} template strings.')
             params = {'url': element.data}
+            if element in _TILE_MAX_ZOOM:
+                params['max_zoom'] = _TILE_MAX_ZOOM[element]
             for zoom in ('min_zoom', 'max_zoom'):
                 if zoom in style:
                     params[zoom] = style[zoom]

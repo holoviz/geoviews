@@ -3,6 +3,7 @@ import pytest
 from holoviews.tests.plotting.bokeh.test_plot import TestBokehPlot, bokeh_renderer
 
 from geoviews.element import WMTS
+from geoviews.plotting.bokeh import TilePlot
 from geoviews.tile_sources import OSM
 
 
@@ -20,4 +21,5 @@ class TestWMTSPlot(TestBokehPlot):
         assert glyph.max_zoom == osm.max_zoom
 
     def test_max_zoom_default(self):
-        assert OSM.opts["max_zoom"] == 19
+        tile_source = TilePlot(OSM).get_data(OSM, (0, 0, 0, 0), {})[1]["tile_source"]
+        assert tile_source.max_zoom == 19

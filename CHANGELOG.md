@@ -1,7 +1,7 @@
 Version 1.13.0
 ==============
 
-Date: August 1, 2024
+Date: September 16, 2024
 
 This release includes various bug fixes and maintenance updates. Many thanks to @hoxbro and @ahuang11 for their ongoing contributions.
 

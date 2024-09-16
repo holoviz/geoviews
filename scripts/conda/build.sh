@@ -19,8 +19,8 @@ else:
     print('bokeh')
 ")
 
-conda build scripts/conda/recipe-core --no-anaconda-upload --no-verify -c "$BK_CHANNEL" -c pyviz/label/dev
-conda build scripts/conda/recipe-recommended --no-anaconda-upload --no-verify  -c "$BK_CHANNEL" -c pyviz/label/dev
+conda build scripts/conda/recipe-core --no-anaconda-upload --no-verify -c "$BK_CHANNEL" -c pyviz
+conda build scripts/conda/recipe-recommended --no-anaconda-upload --no-verify  -c "$BK_CHANNEL" -c pyviz
 
 mv "$CONDA_PREFIX/conda-bld/noarch/$PACKAGE-core-$VERSION-py_0.tar.bz2" dist
 mv "$CONDA_PREFIX/conda-bld/noarch/$PACKAGE-$VERSION-py_0.tar.bz2" dist

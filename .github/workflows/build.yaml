@@ -120,7 +120,7 @@ jobs:
           name: pip
           path: dist/
       - name: Install package
-        run: python -m pip install dist/*.whl --pre
+        run: python -m pip install dist/*.whl
       - name: Test package
         run: python -c "import $PACKAGE; print($PACKAGE.__version__)"
 

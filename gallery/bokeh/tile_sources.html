@@ -1,0 +1,1467 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Tile Sources &#8212; GeoViews v1.13.0</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsite.css?v=d9d93254" />
+    <link rel="stylesheet" type="text/css" href="../../_static/notebook.css?v=19946987" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css?v=0a3248cd" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alert.css?v=c26666be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/dataframe.css?v=a0f274c1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scroller.css?v=2dcde208" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=2e948e39" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=8f5b6f32"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>
+    window.goatcounter = {
+        path: function(p) { return location.host + p }
+    }
+</script>
+    <script async="async" data-goatcounter="https://holoviz.goatcounter.com/count" src="../../_static/js/goatcounter.js?v=f53f84b8"></script>
+    <script>
+    window.goatcounter = {
+        path: function(p) { return location.host + p }
+    }
+</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gallery/bokeh/tile_sources';</script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="2024-09-16"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../_static/logo_horizontal.png" class="logo__image only-light" alt="GeoViews v1.13.0 - Home"/>
+    <script>document.write(`<img src="../../_static/logo_horizontal.png" class="logo__image only-dark" alt="GeoViews v1.13.0 - Home"/>`);</script>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Home
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../index.html">
+    Gallery
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../topics.html">
+    Topics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../developer_guide/index.html">
+    Developer Guide
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+    About
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/holoviz/geoviews" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/HoloViews" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-twitter-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.holoviz.org/c/geoviews" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/AXRHnJU6sP" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Home
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../index.html">
+    Gallery
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../topics.html">
+    Topics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../developer_guide/index.html">
+    Developer Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../about.html">
+    About
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/holoviz/geoviews" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/HoloViews" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-twitter-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.holoviz.org/c/geoviews" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/AXRHnJU6sP" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><!-- Adapted from sidebar-nav-bs.html (1.15.2) with the following changes
+
+  - Commented out the tag that adds the "Section Navigation" title
+  - Call generate_toctree_html with startdepth=0
+
+Please update this file when required when bumping the max pin of pydata-sphinx-theme.
+-->
+
+
+<nav class="bd-docs-nav bd-links"
+      aria-label="Section Navigation">
+  <!-- <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p> -->
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../user_guide/index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Projections.html">Projections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Geometries.html">Geometries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Gridded_Datasets_I.html">Gridded Datasets I</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Gridded_Datasets_II.html">Gridded Datasets II</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Working_with_Bokeh.html">Working with Bokeh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Resampling_Grids.html">Resampling Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Annotators.html">Annotating Geographic Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Using_Features_Offline.html">Using Features Offline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Using_WMTS_Offline.html">Using WMTS Offline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../index.html">Gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="simple">
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../topics.html">Topics</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference external" href="https://examples.holoviz.org/bay_trimesh/bay_trimesh.html">Bay Trimesh</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://examples.holoviz.org/census/census.html">Census</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://examples.holoviz.org/gerrymandering/gerrymandering.html">Gerrymandering</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://examples.holoviz.org/glaciers/glaciers.html">Glaciers</a></li>
+<li class="toctree-l2"><a class="reference external" href="https://examples.holoviz.org/landsat/landsat.html">LandSat</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Tile Sources</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="tile-sources">
+<h1>Tile Sources<a class="headerlink" href="#tile-sources" title="Link to this heading">#</a></h1>
+<p><a class="reference external" href="https://raw.githubusercontent.com/holoviz/geoviews/main/examples/gallery/bokeh/tile_sources.ipynb">Download this notebook from GitHub (right-click to download).</a></p>
+<hr class="docutils" />
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">geoviews</span> <span class="k">as</span> <span class="nn">gv</span>
+
+<span class="kn">from</span> <span class="nn">geoviews</span> <span class="kn">import</span> <span class="n">opts</span><span class="p">,</span> <span class="n">tile_sources</span> <span class="k">as</span> <span class="n">gvts</span>
+
+<span class="n">gv</span><span class="o">.</span><span class="n">extension</span><span class="p">(</span><span class="s1">&#39;bokeh&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><script type="esms-options">{"shimMode": true}</script><style>*[data-root-id],
+*[data-root-id] > * {
+  box-sizing: border-box;
+  font-family: var(--jp-ui-font-family);
+  font-size: var(--jp-ui-font-size1);
+  color: var(--vscode-editor-foreground, var(--jp-ui-font-color1));
+}
+
+/* Override VSCode background color */
+.cell-output-ipywidget-background:has(
+    > .cell-output-ipywidget-background > .lm-Widget > *[data-root-id]
+  ),
+.cell-output-ipywidget-background:has(> .lm-Widget > *[data-root-id]) {
+  background-color: transparent !important;
+}
+</style></div><script type="application/javascript">(function(root) {
+  function now() {
+    return new Date();
+  }
+
+  var force = true;
+  var py_version = '3.5.2'.replace('rc', '-rc.').replace('.dev', '-dev.');
+  var reloading = false;
+  var Bokeh = root.Bokeh;
+
+  if (typeof (root._bokeh_timeout) === "undefined" || force) {
+    root._bokeh_timeout = Date.now() + 5000;
+    root._bokeh_failed_load = false;
+  }
+
+  function run_callbacks() {
+    try {
+      root._bokeh_onload_callbacks.forEach(function(callback) {
+        if (callback != null)
+          callback();
+      });
+    } finally {
+      delete root._bokeh_onload_callbacks;
+    }
+    console.debug("Bokeh: all callbacks have finished");
+  }
+
+  function load_libs(css_urls, js_urls, js_modules, js_exports, callback) {
+    if (css_urls == null) css_urls = [];
+    if (js_urls == null) js_urls = [];
+    if (js_modules == null) js_modules = [];
+    if (js_exports == null) js_exports = {};
+
+    root._bokeh_onload_callbacks.push(callback);
+
+    if (root._bokeh_is_loading > 0) {
+      console.debug("Bokeh: BokehJS is being loaded, scheduling callback at", now());
+      return null;
+    }
+    if (js_urls.length === 0 && js_modules.length === 0 && Object.keys(js_exports).length === 0) {
+      run_callbacks();
+      return null;
+    }
+    if (!reloading) {
+      console.debug("Bokeh: BokehJS not loaded, scheduling load and callback at", now());
+    }
+
+    function on_load() {
+      root._bokeh_is_loading--;
+      if (root._bokeh_is_loading === 0) {
+        console.debug("Bokeh: all BokehJS libraries/stylesheets loaded");
+        run_callbacks()
+      }
+    }
+    window._bokeh_on_load = on_load
+
+    function on_error() {
+      console.error("failed to load " + url);
+    }
+
+    var skip = [];
+    if (window.requirejs) {
+      window.requirejs.config({'packages': {}, 'paths': {}, 'shim': {}});
+      root._bokeh_is_loading = css_urls.length + 0;
+    } else {
+      root._bokeh_is_loading = css_urls.length + js_urls.length + js_modules.length + Object.keys(js_exports).length;
+    }
+
+    var existing_stylesheets = []
+    var links = document.getElementsByTagName('link')
+    for (var i = 0; i < links.length; i++) {
+      var link = links[i]
+      if (link.href != null) {
+	existing_stylesheets.push(link.href)
+      }
+    }
+    for (var i = 0; i < css_urls.length; i++) {
+      var url = css_urls[i];
+      if (existing_stylesheets.indexOf(url) !== -1) {
+	on_load()
+	continue;
+      }
+      const element = document.createElement("link");
+      element.onload = on_load;
+      element.onerror = on_error;
+      element.rel = "stylesheet";
+      element.type = "text/css";
+      element.href = url;
+      console.debug("Bokeh: injecting link tag for BokehJS stylesheet: ", url);
+      document.body.appendChild(element);
+    }    var existing_scripts = []
+    var scripts = document.getElementsByTagName('script')
+    for (var i = 0; i < scripts.length; i++) {
+      var script = scripts[i]
+      if (script.src != null) {
+	existing_scripts.push(script.src)
+      }
+    }
+    for (var i = 0; i < js_urls.length; i++) {
+      var url = js_urls[i];
+      if (skip.indexOf(url) !== -1 || existing_scripts.indexOf(url) !== -1) {
+	if (!window.requirejs) {
+	  on_load();
+	}
+	continue;
+      }
+      var element = document.createElement('script');
+      element.onload = on_load;
+      element.onerror = on_error;
+      element.async = false;
+      element.src = url;
+      console.debug("Bokeh: injecting script tag for BokehJS library: ", url);
+      document.head.appendChild(element);
+    }
+    for (var i = 0; i < js_modules.length; i++) {
+      var url = js_modules[i];
+      if (skip.indexOf(url) !== -1 || existing_scripts.indexOf(url) !== -1) {
+	if (!window.requirejs) {
+	  on_load();
+	}
+	continue;
+      }
+      var element = document.createElement('script');
+      element.onload = on_load;
+      element.onerror = on_error;
+      element.async = false;
+      element.src = url;
+      element.type = "module";
+      console.debug("Bokeh: injecting script tag for BokehJS library: ", url);
+      document.head.appendChild(element);
+    }
+    for (const name in js_exports) {
+      var url = js_exports[name];
+      if (skip.indexOf(url) >= 0 || root[name] != null) {
+	if (!window.requirejs) {
+	  on_load();
+	}
+	continue;
+      }
+      var element = document.createElement('script');
+      element.onerror = on_error;
+      element.async = false;
+      element.type = "module";
+      console.debug("Bokeh: injecting script tag for BokehJS library: ", url);
+      element.textContent = `
+      import ${name} from "${url}"
+      window.${name} = ${name}
+      window._bokeh_on_load()
+      `
+      document.head.appendChild(element);
+    }
+    if (!js_urls.length && !js_modules.length) {
+      on_load()
+    }
+  };
+
+  function inject_raw_css(css) {
+    const element = document.createElement("style");
+    element.appendChild(document.createTextNode(css));
+    document.body.appendChild(element);
+  }
+
+  var js_urls = ["https://cdn.bokeh.org/bokeh/release/bokeh-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.5.2.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.5.2.min.js", "https://cdn.holoviz.org/panel/1.5.0-rc.2/dist/panel.min.js", "https://cdn.jsdelivr.net/npm/@holoviz/geoviews@1.13.0/dist/geoviews.min.js"];
+  var js_modules = ["https://cdn.holoviz.org/panel/1.5.0-rc.2/dist/bundled/reactiveesm/es-module-shims@^1.10.0/dist/es-module-shims.min.js"];
+  var js_exports = {};
+  var css_urls = [];
+  var inline_js = [    function(Bokeh) {
+      Bokeh.set_log_level("info");
+    },
+function(Bokeh) {} // ensure no trailing comma for IE
+  ];
+
+  function run_inline_js() {
+    if ((root.Bokeh !== undefined) || (force === true)) {
+      for (var i = 0; i < inline_js.length; i++) {
+	try {
+          inline_js[i].call(root, root.Bokeh);
+	} catch(e) {
+	  if (!reloading) {
+	    throw e;
+	  }
+	}
+      }
+      // Cache old bokeh versions
+      if (Bokeh != undefined && !reloading) {
+	var NewBokeh = root.Bokeh;
+	if (Bokeh.versions === undefined) {
+	  Bokeh.versions = new Map();
+	}
+	if (NewBokeh.version !== Bokeh.version) {
+	  Bokeh.versions.set(NewBokeh.version, NewBokeh)
+	}
+	root.Bokeh = Bokeh;
+      }} else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(run_inline_js, 100);
+    } else if (!root._bokeh_failed_load) {
+      console.log("Bokeh: BokehJS failed to load within specified timeout.");
+      root._bokeh_failed_load = true;
+    }
+    root._bokeh_is_initializing = false
+  }
+
+  function load_or_wait() {
+    // Implement a backoff loop that tries to ensure we do not load multiple
+    // versions of Bokeh and its dependencies at the same time.
+    // In recent versions we use the root._bokeh_is_initializing flag
+    // to determine whether there is an ongoing attempt to initialize
+    // bokeh, however for backward compatibility we also try to ensure
+    // that we do not start loading a newer (Panel>=1.0 and Bokeh>3) version
+    // before older versions are fully initialized.
+    if (root._bokeh_is_initializing && Date.now() > root._bokeh_timeout) {
+      root._bokeh_is_initializing = false;
+      root._bokeh_onload_callbacks = undefined;
+      console.log("Bokeh: BokehJS was loaded multiple times but one version failed to initialize.");
+      load_or_wait();
+    } else if (root._bokeh_is_initializing || (typeof root._bokeh_is_initializing === "undefined" && root._bokeh_onload_callbacks !== undefined)) {
+      setTimeout(load_or_wait, 100);
+    } else {
+      root._bokeh_is_initializing = true
+      root._bokeh_onload_callbacks = []
+      var bokeh_loaded = Bokeh != null && (Bokeh.version === py_version || (Bokeh.versions !== undefined && Bokeh.versions.has(py_version)));
+      if (!reloading && !bokeh_loaded) {
+	root.Bokeh = undefined;
+      }
+      load_libs(css_urls, js_urls, js_modules, js_exports, function() {
+	console.debug("Bokeh: BokehJS plotting callback run at", now());
+	run_inline_js();
+      });
+    }
+  }
+  // Give older versions of the autoload script a head-start to ensure
+  // they initialize before we start loading newer version.
+  setTimeout(load_or_wait, 100)
+}(window));</script><script type="application/javascript">
+if ((window.PyViz === undefined) || (window.PyViz instanceof HTMLElement)) {
+  window.PyViz = {comms: {}, comm_status:{}, kernels:{}, receivers: {}, plot_index: []}
+}
+
+
+    function JupyterCommManager() {
+    }
+
+    JupyterCommManager.prototype.register_target = function(plot_id, comm_id, msg_handler) {
+      if (window.comm_manager || ((window.Jupyter !== undefined) && (Jupyter.notebook.kernel != null))) {
+        var comm_manager = window.comm_manager || Jupyter.notebook.kernel.comm_manager;
+        comm_manager.register_target(comm_id, function(comm) {
+          comm.on_msg(msg_handler);
+        });
+      } else if ((plot_id in window.PyViz.kernels) && (window.PyViz.kernels[plot_id])) {
+        window.PyViz.kernels[plot_id].registerCommTarget(comm_id, function(comm) {
+          comm.onMsg = msg_handler;
+        });
+      } else if (typeof google != 'undefined' && google.colab.kernel != null) {
+        google.colab.kernel.comms.registerTarget(comm_id, (comm) => {
+          var messages = comm.messages[Symbol.asyncIterator]();
+          function processIteratorResult(result) {
+            var message = result.value;
+            console.log(message)
+            var content = {data: message.data, comm_id};
+            var buffers = []
+            for (var buffer of message.buffers || []) {
+              buffers.push(new DataView(buffer))
+            }
+            var metadata = message.metadata || {};
+            var msg = {content, buffers, metadata}
+            msg_handler(msg);
+            return messages.next().then(processIteratorResult);
+          }
+          return messages.next().then(processIteratorResult);
+        })
+      }
+    }
+
+    JupyterCommManager.prototype.get_client_comm = function(plot_id, comm_id, msg_handler) {
+      if (comm_id in window.PyViz.comms) {
+        return window.PyViz.comms[comm_id];
+      } else if (window.comm_manager || ((window.Jupyter !== undefined) && (Jupyter.notebook.kernel != null))) {
+        var comm_manager = window.comm_manager || Jupyter.notebook.kernel.comm_manager;
+        var comm = comm_manager.new_comm(comm_id, {}, {}, {}, comm_id);
+        if (msg_handler) {
+          comm.on_msg(msg_handler);
+        }
+      } else if ((plot_id in window.PyViz.kernels) && (window.PyViz.kernels[plot_id])) {
+        var comm = window.PyViz.kernels[plot_id].connectToComm(comm_id);
+        comm.open();
+        if (msg_handler) {
+          comm.onMsg = msg_handler;
+        }
+      } else if (typeof google != 'undefined' && google.colab.kernel != null) {
+        var comm_promise = google.colab.kernel.comms.open(comm_id)
+        comm_promise.then((comm) => {
+          window.PyViz.comms[comm_id] = comm;
+          if (msg_handler) {
+            var messages = comm.messages[Symbol.asyncIterator]();
+            function processIteratorResult(result) {
+              var message = result.value;
+              var content = {data: message.data};
+              var metadata = message.metadata || {comm_id};
+              var msg = {content, metadata}
+              msg_handler(msg);
+              return messages.next().then(processIteratorResult);
+            }
+            return messages.next().then(processIteratorResult);
+          }
+        }) 
+        var sendClosure = (data, metadata, buffers, disposeOnDone) => {
+          return comm_promise.then((comm) => {
+            comm.send(data, metadata, buffers, disposeOnDone);
+          });
+        };
+        var comm = {
+          send: sendClosure
+        };
+      }
+      window.PyViz.comms[comm_id] = comm;
+      return comm;
+    }
+    window.PyViz.comm_manager = new JupyterCommManager();
+    
+
+
+var JS_MIME_TYPE = 'application/javascript';
+var HTML_MIME_TYPE = 'text/html';
+var EXEC_MIME_TYPE = 'application/vnd.holoviews_exec.v0+json';
+var CLASS_NAME = 'output';
+
+/**
+ * Render data to the DOM node
+ */
+function render(props, node) {
+  var div = document.createElement("div");
+  var script = document.createElement("script");
+  node.appendChild(div);
+  node.appendChild(script);
+}
+
+/**
+ * Handle when a new output is added
+ */
+function handle_add_output(event, handle) {
+  var output_area = handle.output_area;
+  var output = handle.output;
+  if ((output.data == undefined) || (!output.data.hasOwnProperty(EXEC_MIME_TYPE))) {
+    return
+  }
+  var id = output.metadata[EXEC_MIME_TYPE]["id"];
+  var toinsert = output_area.element.find("." + CLASS_NAME.split(' ')[0]);
+  if (id !== undefined) {
+    var nchildren = toinsert.length;
+    var html_node = toinsert[nchildren-1].children[0];
+    html_node.innerHTML = output.data[HTML_MIME_TYPE];
+    var scripts = [];
+    var nodelist = html_node.querySelectorAll("script");
+    for (var i in nodelist) {
+      if (nodelist.hasOwnProperty(i)) {
+        scripts.push(nodelist[i])
+      }
+    }
+
+    scripts.forEach( function (oldScript) {
+      var newScript = document.createElement("script");
+      var attrs = [];
+      var nodemap = oldScript.attributes;
+      for (var j in nodemap) {
+        if (nodemap.hasOwnProperty(j)) {
+          attrs.push(nodemap[j])
+        }
+      }
+      attrs.forEach(function(attr) { newScript.setAttribute(attr.name, attr.value) });
+      newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+      oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+    if (JS_MIME_TYPE in output.data) {
+      toinsert[nchildren-1].children[1].textContent = output.data[JS_MIME_TYPE];
+    }
+    output_area._hv_plot_id = id;
+    if ((window.Bokeh !== undefined) && (id in Bokeh.index)) {
+      window.PyViz.plot_index[id] = Bokeh.index[id];
+    } else {
+      window.PyViz.plot_index[id] = null;
+    }
+  } else if (output.metadata[EXEC_MIME_TYPE]["server_id"] !== undefined) {
+    var bk_div = document.createElement("div");
+    bk_div.innerHTML = output.data[HTML_MIME_TYPE];
+    var script_attrs = bk_div.children[0].attributes;
+    for (var i = 0; i < script_attrs.length; i++) {
+      toinsert[toinsert.length - 1].childNodes[1].setAttribute(script_attrs[i].name, script_attrs[i].value);
+    }
+    // store reference to server id on output_area
+    output_area._bokeh_server_id = output.metadata[EXEC_MIME_TYPE]["server_id"];
+  }
+}
+
+/**
+ * Handle when an output is cleared or removed
+ */
+function handle_clear_output(event, handle) {
+  var id = handle.cell.output_area._hv_plot_id;
+  var server_id = handle.cell.output_area._bokeh_server_id;
+  if (((id === undefined) || !(id in PyViz.plot_index)) && (server_id !== undefined)) { return; }
+  var comm = window.PyViz.comm_manager.get_client_comm("hv-extension-comm", "hv-extension-comm", function () {});
+  if (server_id !== null) {
+    comm.send({event_type: 'server_delete', 'id': server_id});
+    return;
+  } else if (comm !== null) {
+    comm.send({event_type: 'delete', 'id': id});
+  }
+  delete PyViz.plot_index[id];
+  if ((window.Bokeh !== undefined) & (id in window.Bokeh.index)) {
+    var doc = window.Bokeh.index[id].model.document
+    doc.clear();
+    const i = window.Bokeh.documents.indexOf(doc);
+    if (i > -1) {
+      window.Bokeh.documents.splice(i, 1);
+    }
+  }
+}
+
+/**
+ * Handle kernel restart event
+ */
+function handle_kernel_cleanup(event, handle) {
+  delete PyViz.comms["hv-extension-comm"];
+  window.PyViz.plot_index = {}
+}
+
+/**
+ * Handle update_display_data messages
+ */
+function handle_update_output(event, handle) {
+  handle_clear_output(event, {cell: {output_area: handle.output_area}})
+  handle_add_output(event, handle)
+}
+
+function register_renderer(events, OutputArea) {
+  function append_mime(data, metadata, element) {
+    // create a DOM node to render to
+    var toinsert = this.create_output_subarea(
+    metadata,
+    CLASS_NAME,
+    EXEC_MIME_TYPE
+    );
+    this.keyboard_manager.register_events(toinsert);
+    // Render to node
+    var props = {data: data, metadata: metadata[EXEC_MIME_TYPE]};
+    render(props, toinsert[0]);
+    element.append(toinsert);
+    return toinsert
+  }
+
+  events.on('output_added.OutputArea', handle_add_output);
+  events.on('output_updated.OutputArea', handle_update_output);
+  events.on('clear_output.CodeCell', handle_clear_output);
+  events.on('delete.Cell', handle_clear_output);
+  events.on('kernel_ready.Kernel', handle_kernel_cleanup);
+
+  OutputArea.prototype.register_mime_type(EXEC_MIME_TYPE, append_mime, {
+    safe: true,
+    index: 0
+  });
+}
+
+if (window.Jupyter !== undefined) {
+  try {
+    var events = require('base/js/events');
+    var OutputArea = require('notebook/js/outputarea').OutputArea;
+    if (OutputArea.prototype.mime_types().indexOf(EXEC_MIME_TYPE) == -1) {
+      register_renderer(events, OutputArea);
+    }
+  } catch(err) {
+  }
+}
+</script><div class="output text_html"><div id='p1011'>
+  <div id="ac10c55b-8af5-4004-8de5-7a425530e3f4" data-root-id="p1011" style="display: contents;"></div>
+</div>
+<script type="application/javascript">(function(root) {
+  var docs_json = {"f3396245-90a4-4bf3-9aa2-ff2887bc6024":{"version":"3.5.2","title":"Bokeh Application","roots":[{"type":"object","name":"panel.models.browser.BrowserInfo","id":"p1011"},{"type":"object","name":"panel.models.comm_manager.CommManager","id":"p1012","attributes":{"plot_id":"p1011","comm_id":"c092f363989b432a87d458cb113df7c5","client_comm_id":"0651f6e3a4a4451ca5ce4141c5ea53d5"}}],"defs":[{"type":"model","name":"ReactiveHTML1"},{"type":"model","name":"FlexBox1","properties":[{"name":"align_content","kind":"Any","default":"flex-start"},{"name":"align_items","kind":"Any","default":"flex-start"},{"name":"flex_direction","kind":"Any","default":"row"},{"name":"flex_wrap","kind":"Any","default":"wrap"},{"name":"gap","kind":"Any","default":""},{"name":"justify_content","kind":"Any","default":"flex-start"}]},{"type":"model","name":"FloatPanel1","properties":[{"name":"config","kind":"Any","default":{"type":"map"}},{"name":"contained","kind":"Any","default":true},{"name":"position","kind":"Any","default":"right-top"},{"name":"offsetx","kind":"Any","default":null},{"name":"offsety","kind":"Any","default":null},{"name":"theme","kind":"Any","default":"primary"},{"name":"status","kind":"Any","default":"normalized"}]},{"type":"model","name":"GridStack1","properties":[{"name":"mode","kind":"Any","default":"warn"},{"name":"ncols","kind":"Any","default":null},{"name":"nrows","kind":"Any","default":null},{"name":"allow_resize","kind":"Any","default":true},{"name":"allow_drag","kind":"Any","default":true},{"name":"state","kind":"Any","default":[]}]},{"type":"model","name":"drag1","properties":[{"name":"slider_width","kind":"Any","default":5},{"name":"slider_color","kind":"Any","default":"black"},{"name":"value","kind":"Any","default":50}]},{"type":"model","name":"click1","properties":[{"name":"terminal_output","kind":"Any","default":""},{"name":"debug_name","kind":"Any","default":""},{"name":"clears","kind":"Any","default":0}]},{"type":"model","name":"FastWrapper1","properties":[{"name":"object","kind":"Any","default":null},{"name":"style","kind":"Any","default":null}]},{"type":"model","name":"NotificationAreaBase1","properties":[{"name":"js_events","kind":"Any","default":{"type":"map"}},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0}]},{"type":"model","name":"NotificationArea1","properties":[{"name":"js_events","kind":"Any","default":{"type":"map"}},{"name":"notifications","kind":"Any","default":[]},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0},{"name":"types","kind":"Any","default":[{"type":"map","entries":[["type","warning"],["background","#ffc107"],["icon",{"type":"map","entries":[["className","fas fa-exclamation-triangle"],["tagName","i"],["color","white"]]}]]},{"type":"map","entries":[["type","info"],["background","#007bff"],["icon",{"type":"map","entries":[["className","fas fa-info-circle"],["tagName","i"],["color","white"]]}]]}]}]},{"type":"model","name":"Notification","properties":[{"name":"background","kind":"Any","default":null},{"name":"duration","kind":"Any","default":3000},{"name":"icon","kind":"Any","default":null},{"name":"message","kind":"Any","default":""},{"name":"notification_type","kind":"Any","default":null},{"name":"_destroyed","kind":"Any","default":false}]},{"type":"model","name":"TemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"BootstrapTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"TemplateEditor1","properties":[{"name":"layout","kind":"Any","default":[]}]},{"type":"model","name":"MaterialTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"ReactiveESM1"},{"type":"model","name":"JSComponent1"},{"type":"model","name":"ReactComponent1"},{"type":"model","name":"AnyWidgetComponent1"},{"type":"model","name":"request_value1","properties":[{"name":"fill","kind":"Any","default":"none"},{"name":"_synced","kind":"Any","default":null},{"name":"_request_sync","kind":"Any","default":0}]}]}};
+  var render_items = [{"docid":"f3396245-90a4-4bf3-9aa2-ff2887bc6024","roots":{"p1011":"ac10c55b-8af5-4004-8de5-7a425530e3f4"},"root_ids":["p1011"]}];
+  var docs = Object.values(docs_json)
+  if (!docs) {
+    return
+  }
+  const py_version = docs[0].version.replace('rc', '-rc.').replace('.dev', '-dev.')
+  async function embed_document(root) {
+    var Bokeh = get_bokeh(root)
+    await Bokeh.embed.embed_items_notebook(docs_json, render_items);
+    for (const render_item of render_items) {
+      for (const root_id of render_item.root_ids) {
+	const id_el = document.getElementById(root_id)
+	if (id_el.children.length && id_el.children[0].hasAttribute('data-root-id')) {
+	  const root_el = id_el.children[0]
+	  root_el.id = root_el.id + '-rendered'
+	  for (const child of root_el.children) {
+            // Ensure JupyterLab does not capture keyboard shortcuts
+            // see: https://jupyterlab.readthedocs.io/en/4.1.x/extension/notebook.html#keyboard-interaction-model
+	    child.setAttribute('data-lm-suppress-shortcuts', 'true')
+	  }
+	}
+      }
+    }
+  }
+  function get_bokeh(root) {
+    if (root.Bokeh === undefined) {
+      return null
+    } else if (root.Bokeh.version !== py_version) {
+      if (root.Bokeh.versions === undefined || !root.Bokeh.versions.has(py_version)) {
+	return null
+      }
+      return root.Bokeh.versions.get(py_version);
+    } else if (root.Bokeh.version === py_version) {
+      return root.Bokeh
+    }
+    return null
+  }
+  function is_loaded(root) {
+    var Bokeh = get_bokeh(root)
+    return (Bokeh != null && Bokeh.Panel !== undefined)
+  }
+  if (is_loaded(root)) {
+    embed_document(root);
+  } else {
+    var attempts = 0;
+    var timer = setInterval(function(root) {
+      if (is_loaded(root)) {
+        clearInterval(timer);
+        embed_document(root);
+      } else if (document.readyState == "complete") {
+        attempts++;
+        if (attempts > 200) {
+          clearInterval(timer);
+	  var Bokeh = get_bokeh(root)
+	  if (Bokeh == null || Bokeh.Panel == null) {
+            console.warn("Panel: ERROR: Unable to run Panel code because Bokeh or Panel library is missing");
+	  } else {
+	    console.warn("Panel: WARNING: Attempting to render but not all required libraries could be resolved.")
+	    embed_document(root)
+	  }
+        }
+      }
+    }, 25, root)
+  }
+})(window);</script></div><div class="output text_html">
+<div class="logo-block">
+<img src='data:image/png;base64,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
+roTBs2RqAAAAAElFTkSuQmCC'
+     style='height:25px; border-radius:12px; display: inline-block; float: left; vertical-align: middle'></img>
+
+
+  <img src='data:image/png;base64,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'
+       style='height:15px; border-radius:12px; display: inline-block; float: left'></img>
+  
+
+
+
+
+</div>
+</div></div>
+</div>
+<section id="list">
+<h2>List<a class="headerlink" href="#list" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gvts</span><span class="o">.</span><span class="n">tile_sources</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;CartoDark&#39;: :WMTS   [Longitude,Latitude],
+ &#39;CartoEco&#39;: :WMTS   [Longitude,Latitude],
+ &#39;CartoLight&#39;: :WMTS   [Longitude,Latitude],
+ &#39;CartoMidnight&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriImagery&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriNatGeo&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriUSATopo&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriTerrain&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriReference&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriOceanBase&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriOceanReference&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldPhysical&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldShadedRelief&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldTopo&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldDarkGrayBase&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldDarkGrayReference&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldLightGrayBase&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldLightGrayReference&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldHillshadeDark&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldHillshade&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriAntarcticImagery&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriArcticImagery&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriArcticOceanBase&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriArcticOceanReference&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldBoundariesAndPlaces&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldBoundariesAndPlacesAlternate&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldTransportation&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriDelormeWorldBaseMap&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldNavigationCharts&#39;: :WMTS   [Longitude,Latitude],
+ &#39;EsriWorldStreetMap&#39;: :WMTS   [Longitude,Latitude],
+ &#39;OSM&#39;: :WMTS   [Longitude,Latitude],
+ &#39;OpenTopoMap&#39;: :WMTS   [Longitude,Latitude]}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="plot">
+<h2>Plot<a class="headerlink" href="#plot" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">opts</span><span class="o">.</span><span class="n">defaults</span><span class="p">(</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">WMTS</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">xaxis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yaxis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s1">&#39;annotation&#39;</span><span class="p">))</span>
+
+<span class="n">gv</span><span class="o">.</span><span class="n">NdLayout</span><span class="p">(</span><span class="n">gvts</span><span class="o">.</span><span class="n">tile_sources</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id='p1013'>
+  <div id="eec49e2f-62de-4d5e-a225-c920b2869064" data-root-id="p1013" style="display: contents;"></div>
+</div>
+<script type="application/javascript">(function(root) {
+  var docs_json = {"b06df5e4-82dc-4703-8bb8-66f1afb13cf2":{"version":"3.5.2","title":"Bokeh Application","roots":[{"type":"object","name":"Row","id":"p1013","attributes":{"name":"Row00371","tags":["embedded"],"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 400px));\n  -webkit-mask-size: auto calc(min(50%, 400px));\n}",{"type":"object","name":"ImportedStyleSheet","id":"p1016","attributes":{"url":"https://cdn.holoviz.org/panel/1.5.0-rc.2/dist/css/loading.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p2887","attributes":{"url":"https://cdn.holoviz.org/panel/1.5.0-rc.2/dist/css/listpanel.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1014","attributes":{"url":"https://cdn.holoviz.org/panel/1.5.0-rc.2/dist/bundled/theme/default.css"}},{"type":"object","name":"ImportedStyleSheet","id":"p1015","attributes":{"url":"https://cdn.holoviz.org/panel/1.5.0-rc.2/dist/bundled/theme/native.css"}}],"margin":0,"sizing_mode":"stretch_width","align":"start","children":[{"type":"object","name":"Spacer","id":"p1017","attributes":{"name":"HSpacer00375","stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 400px));\n  -webkit-mask-size: auto calc(min(50%, 400px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"margin":0,"sizing_mode":"stretch_width","align":"start"}},{"type":"object","name":"GridPlot","id":"p2877","attributes":{"rows":null,"cols":null,"toolbar":{"type":"object","name":"Toolbar","id":"p2883","attributes":{"tools":[{"type":"object","name":"ToolProxy","id":"p2879","attributes":{"tools":[{"type":"object","name":"WheelZoomTool","id":"p1182","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1235","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1288","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1341","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1394","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1447","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1500","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1553","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1606","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1659","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1712","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1765","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1818","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1871","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1924","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p1977","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2030","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2083","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2136","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2189","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2242","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2295","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2348","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2401","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2454","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2507","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2560","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2613","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2666","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2719","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2772","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"WheelZoomTool","id":"p2825","attributes":{"renderers":"auto","zoom_on_axis":false}}]}},{"type":"object","name":"ToolProxy","id":"p2880","attributes":{"tools":[{"type":"object","name":"BoxZoomTool","id":"p1190","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1183","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1243","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1236","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1296","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1289","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1349","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1342","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1402","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1395","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1455","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1448","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1508","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1501","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1561","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1554","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1614","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1607","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1667","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1660","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1720","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1713","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1773","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1766","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1826","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1819","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1879","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1872","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1932","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1925","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p1985","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1978","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2038","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2031","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2091","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2084","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2144","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2137","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2197","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2190","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2250","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2243","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2303","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2296","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2356","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2349","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2409","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2402","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2462","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2455","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2515","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2508","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2568","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2561","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2621","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2614","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2674","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2667","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2727","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2720","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2780","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2773","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"BoxZoomTool","id":"p2833","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p2826","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1010","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1009","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}}]}},{"type":"object","name":"ToolProxy","id":"p2881","attributes":{"tools":[{"type":"object","name":"PanTool","id":"p1221"},{"type":"object","name":"PanTool","id":"p1274"},{"type":"object","name":"PanTool","id":"p1327"},{"type":"object","name":"PanTool","id":"p1380"},{"type":"object","name":"PanTool","id":"p1433"},{"type":"object","name":"PanTool","id":"p1486"},{"type":"object","name":"PanTool","id":"p1539"},{"type":"object","name":"PanTool","id":"p1592"},{"type":"object","name":"PanTool","id":"p1645"},{"type":"object","name":"PanTool","id":"p1698"},{"type":"object","name":"PanTool","id":"p1751"},{"type":"object","name":"PanTool","id":"p1804"},{"type":"object","name":"PanTool","id":"p1857"},{"type":"object","name":"PanTool","id":"p1910"},{"type":"object","name":"PanTool","id":"p1963"},{"type":"object","name":"PanTool","id":"p2016"},{"type":"object","name":"PanTool","id":"p2069"},{"type":"object","name":"PanTool","id":"p2122"},{"type":"object","name":"PanTool","id":"p2175"},{"type":"object","name":"PanTool","id":"p2228"},{"type":"object","name":"PanTool","id":"p2281"},{"type":"object","name":"PanTool","id":"p2334"},{"type":"object","name":"PanTool","id":"p2387"},{"type":"object","name":"PanTool","id":"p2440"},{"type":"object","name":"PanTool","id":"p2493"},{"type":"object","name":"PanTool","id":"p2546"},{"type":"object","name":"PanTool","id":"p2599"},{"type":"object","name":"PanTool","id":"p2652"},{"type":"object","name":"PanTool","id":"p2705"},{"type":"object","name":"PanTool","id":"p2758"},{"type":"object","name":"PanTool","id":"p2811"},{"type":"object","name":"PanTool","id":"p2864"}]}},{"type":"object","name":"ToolProxy","id":"p2882","attributes":{"tools":[{"type":"object","name":"ResetTool","id":"p1222"},{"type":"object","name":"ResetTool","id":"p1275"},{"type":"object","name":"ResetTool","id":"p1328"},{"type":"object","name":"ResetTool","id":"p1381"},{"type":"object","name":"ResetTool","id":"p1434"},{"type":"object","name":"ResetTool","id":"p1487"},{"type":"object","name":"ResetTool","id":"p1540"},{"type":"object","name":"ResetTool","id":"p1593"},{"type":"object","name":"ResetTool","id":"p1646"},{"type":"object","name":"ResetTool","id":"p1699"},{"type":"object","name":"ResetTool","id":"p1752"},{"type":"object","name":"ResetTool","id":"p1805"},{"type":"object","name":"ResetTool","id":"p1858"},{"type":"object","name":"ResetTool","id":"p1911"},{"type":"object","name":"ResetTool","id":"p1964"},{"type":"object","name":"ResetTool","id":"p2017"},{"type":"object","name":"ResetTool","id":"p2070"},{"type":"object","name":"ResetTool","id":"p2123"},{"type":"object","name":"ResetTool","id":"p2176"},{"type":"object","name":"ResetTool","id":"p2229"},{"type":"object","name":"ResetTool","id":"p2282"},{"type":"object","name":"ResetTool","id":"p2335"},{"type":"object","name":"ResetTool","id":"p2388"},{"type":"object","name":"ResetTool","id":"p2441"},{"type":"object","name":"ResetTool","id":"p2494"},{"type":"object","name":"ResetTool","id":"p2547"},{"type":"object","name":"ResetTool","id":"p2600"},{"type":"object","name":"ResetTool","id":"p2653"},{"type":"object","name":"ResetTool","id":"p2706"},{"type":"object","name":"ResetTool","id":"p2759"},{"type":"object","name":"ResetTool","id":"p2812"},{"type":"object","name":"ResetTool","id":"p2865"}]}}]}},"children":[[{"type":"object","name":"Figure","id":"p1198","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"type":"object","name":"Range1d","id":"p1178","attributes":{"tags":[[["Longitude",null]],[]],"start":-20037508.342789244,"end":20037508.342789244,"reset_start":-20037508.342789244,"reset_end":20037508.342789244,"min_interval":5}},"y_range":{"type":"object","name":"Range1d","id":"p1179","attributes":{"tags":[[["Latitude",null]],{"type":"map","entries":[["invert_yaxis",false],["autorange",false]]}],"start":-20037508.342789248,"end":20037508.342789248,"reset_start":-20037508.342789248,"reset_end":20037508.342789248,"min_interval":5}},"x_scale":{"type":"object","name":"LinearScale","id":"p1208"},"y_scale":{"type":"object","name":"LinearScale","id":"p1209"},"title":{"type":"object","name":"Title","id":"p1201","attributes":{"text":"Default: CartoDark","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1227","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1223","attributes":{"url":"https://cartodb-basemaps-4.global.ssl.fastly.net/dark_all/{Z}/{X}/{Y}.png","attribution":"&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, &copy; <a href=\"https://cartodb.com/attributions\">CartoDB</a>"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1207","attributes":{"tools":[{"id":"p1182"},{"id":"p1190"},{"id":"p1221"},{"id":"p1222"}],"active_drag":{"id":"p1221"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1215","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1231","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1232","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1218"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1210","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1229","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1230","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1213"}}}],"center":[{"type":"object","name":"Grid","id":"p1214","attributes":{"axis":{"id":"p1210"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1219","attributes":{"dimension":1,"axis":{"id":"p1215"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},0,0],[{"type":"object","name":"Figure","id":"p1251","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1261"},"y_scale":{"type":"object","name":"LinearScale","id":"p1262"},"title":{"type":"object","name":"Title","id":"p1254","attributes":{"text":"Default: CartoEco","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1280","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1276","attributes":{"url":"http://3.api.cartocdn.com/base-eco/{Z}/{X}/{Y}.png","attribution":"&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, &copy; <a href=\"https://cartodb.com/attributions\">CartoDB</a>"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1260","attributes":{"tools":[{"id":"p1235"},{"id":"p1243"},{"id":"p1274"},{"id":"p1275"}],"active_drag":{"id":"p1274"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1268","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1284","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1285","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1271"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1263","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1282","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1283","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1266"}}}],"center":[{"type":"object","name":"Grid","id":"p1267","attributes":{"axis":{"id":"p1263"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1272","attributes":{"dimension":1,"axis":{"id":"p1268"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},0,1],[{"type":"object","name":"Figure","id":"p1304","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1314"},"y_scale":{"type":"object","name":"LinearScale","id":"p1315"},"title":{"type":"object","name":"Title","id":"p1307","attributes":{"text":"Default: CartoLight","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1333","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1329","attributes":{"url":"https://cartodb-basemaps-4.global.ssl.fastly.net/light_all/{Z}/{X}/{Y}.png","attribution":"&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, &copy; <a href=\"https://cartodb.com/attributions\">CartoDB</a>"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1313","attributes":{"tools":[{"id":"p1288"},{"id":"p1296"},{"id":"p1327"},{"id":"p1328"}],"active_drag":{"id":"p1327"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1321","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1337","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1338","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1324"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1316","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1335","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1336","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1319"}}}],"center":[{"type":"object","name":"Grid","id":"p1320","attributes":{"axis":{"id":"p1316"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1325","attributes":{"dimension":1,"axis":{"id":"p1321"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},0,2],[{"type":"object","name":"Figure","id":"p1357","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1367"},"y_scale":{"type":"object","name":"LinearScale","id":"p1368"},"title":{"type":"object","name":"Title","id":"p1360","attributes":{"text":"Default: CartoMidnight","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1386","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1382","attributes":{"url":"http://3.api.cartocdn.com/base-midnight/{Z}/{X}/{Y}.png","attribution":"&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, &copy; <a href=\"https://cartodb.com/attributions\">CartoDB</a>"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1366","attributes":{"tools":[{"id":"p1341"},{"id":"p1349"},{"id":"p1380"},{"id":"p1381"}],"active_drag":{"id":"p1380"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1374","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1390","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1391","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1377"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1369","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1388","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1389","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1372"}}}],"center":[{"type":"object","name":"Grid","id":"p1373","attributes":{"axis":{"id":"p1369"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1378","attributes":{"dimension":1,"axis":{"id":"p1374"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},0,3],[{"type":"object","name":"Figure","id":"p1410","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1420"},"y_scale":{"type":"object","name":"LinearScale","id":"p1421"},"title":{"type":"object","name":"Title","id":"p1413","attributes":{"text":"Default: EsriAntarcticImagery","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1439","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1435","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Polar/Antarctic_Imagery/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a> Earthstar Geographics"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1419","attributes":{"tools":[{"id":"p1394"},{"id":"p1402"},{"id":"p1433"},{"id":"p1434"}],"active_drag":{"id":"p1433"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1427","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1443","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1444","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1430"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1422","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1441","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1442","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1425"}}}],"center":[{"type":"object","name":"Grid","id":"p1426","attributes":{"axis":{"id":"p1422"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1431","attributes":{"dimension":1,"axis":{"id":"p1427"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},1,0],[{"type":"object","name":"Figure","id":"p1463","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1473"},"y_scale":{"type":"object","name":"LinearScale","id":"p1474"},"title":{"type":"object","name":"Title","id":"p1466","attributes":{"text":"Default: EsriArcticImagery","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1492","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1488","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Polar/Arctic_Imagery/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a> Earthstar Geographics"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1472","attributes":{"tools":[{"id":"p1447"},{"id":"p1455"},{"id":"p1486"},{"id":"p1487"}],"active_drag":{"id":"p1486"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1480","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1496","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1497","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1483"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1475","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1494","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1495","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1478"}}}],"center":[{"type":"object","name":"Grid","id":"p1479","attributes":{"axis":{"id":"p1475"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1484","attributes":{"dimension":1,"axis":{"id":"p1480"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},1,1],[{"type":"object","name":"Figure","id":"p1516","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1526"},"y_scale":{"type":"object","name":"LinearScale","id":"p1527"},"title":{"type":"object","name":"Title","id":"p1519","attributes":{"text":"Default: EsriArcticOceanBase","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1545","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1541","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Polar/Arctic_Ocean_Base/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a> Esri, Garmin, GEBCO, NOAA NGDC, and other contributors"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1525","attributes":{"tools":[{"id":"p1500"},{"id":"p1508"},{"id":"p1539"},{"id":"p1540"}],"active_drag":{"id":"p1539"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1533","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1549","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1550","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1536"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1528","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1547","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1548","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1531"}}}],"center":[{"type":"object","name":"Grid","id":"p1532","attributes":{"axis":{"id":"p1528"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1537","attributes":{"dimension":1,"axis":{"id":"p1533"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},1,2],[{"type":"object","name":"Figure","id":"p1569","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1579"},"y_scale":{"type":"object","name":"LinearScale","id":"p1580"},"title":{"type":"object","name":"Title","id":"p1572","attributes":{"text":"Default: EsriArcticOceanReference","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1598","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1594","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Polar/Arctic_Ocean_Reference/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a> Esri, GEBCO, NOAA, National Geographic, Garmin, HERE, Geonames.org, and other contributors"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1578","attributes":{"tools":[{"id":"p1553"},{"id":"p1561"},{"id":"p1592"},{"id":"p1593"}],"active_drag":{"id":"p1592"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1586","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1602","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1603","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1589"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1581","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1600","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1601","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1584"}}}],"center":[{"type":"object","name":"Grid","id":"p1585","attributes":{"axis":{"id":"p1581"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1590","attributes":{"dimension":1,"axis":{"id":"p1586"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},1,3],[{"type":"object","name":"Figure","id":"p1622","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1632"},"y_scale":{"type":"object","name":"LinearScale","id":"p1633"},"title":{"type":"object","name":"Title","id":"p1625","attributes":{"text":"Default: EsriDelormeWorldBaseMap","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1651","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1647","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Specialty/DeLorme_World_Base_Map/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a> Garmin"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1631","attributes":{"tools":[{"id":"p1606"},{"id":"p1614"},{"id":"p1645"},{"id":"p1646"}],"active_drag":{"id":"p1645"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1639","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1655","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1656","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1642"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1634","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1653","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1654","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1637"}}}],"center":[{"type":"object","name":"Grid","id":"p1638","attributes":{"axis":{"id":"p1634"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1643","attributes":{"dimension":1,"axis":{"id":"p1639"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},2,0],[{"type":"object","name":"Figure","id":"p1675","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1685"},"y_scale":{"type":"object","name":"LinearScale","id":"p1686"},"title":{"type":"object","name":"Title","id":"p1678","attributes":{"text":"Default: EsriImagery","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1704","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1700","attributes":{"url":"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{Z}/{Y}/{X}.jpg","max_zoom":19,"attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, Earthstar Geographics"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1684","attributes":{"tools":[{"id":"p1659"},{"id":"p1667"},{"id":"p1698"},{"id":"p1699"}],"active_drag":{"id":"p1698"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1692","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1708","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1709","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1695"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1687","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1706","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1707","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1690"}}}],"center":[{"type":"object","name":"Grid","id":"p1691","attributes":{"axis":{"id":"p1687"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1696","attributes":{"dimension":1,"axis":{"id":"p1692"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},2,1],[{"type":"object","name":"Figure","id":"p1728","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1738"},"y_scale":{"type":"object","name":"LinearScale","id":"p1739"},"title":{"type":"object","name":"Title","id":"p1731","attributes":{"text":"Default: EsriNatGeo","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1757","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1753","attributes":{"url":"https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{Z}/{Y}/{X}","max_zoom":16,"attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, NatGeo, Garmin, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, Increment P"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1737","attributes":{"tools":[{"id":"p1712"},{"id":"p1720"},{"id":"p1751"},{"id":"p1752"}],"active_drag":{"id":"p1751"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1745","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1761","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1762","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1748"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1740","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1759","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1760","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1743"}}}],"center":[{"type":"object","name":"Grid","id":"p1744","attributes":{"axis":{"id":"p1740"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1749","attributes":{"dimension":1,"axis":{"id":"p1745"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},2,2],[{"type":"object","name":"Figure","id":"p1781","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1791"},"y_scale":{"type":"object","name":"LinearScale","id":"p1792"},"title":{"type":"object","name":"Title","id":"p1784","attributes":{"text":"Default: EsriOceanBase","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1810","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1806","attributes":{"url":"https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{Z}/{Y}/{X}"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1790","attributes":{"tools":[{"id":"p1765"},{"id":"p1773"},{"id":"p1804"},{"id":"p1805"}],"active_drag":{"id":"p1804"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1798","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1814","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1815","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1801"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1793","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1812","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1813","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1796"}}}],"center":[{"type":"object","name":"Grid","id":"p1797","attributes":{"axis":{"id":"p1793"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1802","attributes":{"dimension":1,"axis":{"id":"p1798"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},2,3],[{"type":"object","name":"Figure","id":"p1834","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1844"},"y_scale":{"type":"object","name":"LinearScale","id":"p1845"},"title":{"type":"object","name":"Title","id":"p1837","attributes":{"text":"Default: EsriOceanReference","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1863","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1859","attributes":{"url":"https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Reference/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, Esri, Garmin, GEBCO, NOAA, USGS, and other contributors"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1843","attributes":{"tools":[{"id":"p1818"},{"id":"p1826"},{"id":"p1857"},{"id":"p1858"}],"active_drag":{"id":"p1857"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1851","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1867","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1868","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1854"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1846","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1865","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1866","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1849"}}}],"center":[{"type":"object","name":"Grid","id":"p1850","attributes":{"axis":{"id":"p1846"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1855","attributes":{"dimension":1,"axis":{"id":"p1851"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},3,0],[{"type":"object","name":"Figure","id":"p1887","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1897"},"y_scale":{"type":"object","name":"LinearScale","id":"p1898"},"title":{"type":"object","name":"Title","id":"p1890","attributes":{"text":"Default: EsriReference","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1916","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1912","attributes":{"url":"https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Reference_Overlay/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, Esri, Garmin, GEBCO, NOAA, USGS, and other contributors"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1896","attributes":{"tools":[{"id":"p1871"},{"id":"p1879"},{"id":"p1910"},{"id":"p1911"}],"active_drag":{"id":"p1910"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1904","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1920","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1921","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1907"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1899","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1918","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1919","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1902"}}}],"center":[{"type":"object","name":"Grid","id":"p1903","attributes":{"axis":{"id":"p1899"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1908","attributes":{"dimension":1,"axis":{"id":"p1904"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},3,1],[{"type":"object","name":"Figure","id":"p1940","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p1950"},"y_scale":{"type":"object","name":"LinearScale","id":"p1951"},"title":{"type":"object","name":"Title","id":"p1943","attributes":{"text":"Default: EsriTerrain","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p1969","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p1965","attributes":{"url":"https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, USGS, NOAA"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1949","attributes":{"tools":[{"id":"p1924"},{"id":"p1932"},{"id":"p1963"},{"id":"p1964"}],"active_drag":{"id":"p1963"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p1957","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1973","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1974","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1960"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p1952","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p1971","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p1972","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p1955"}}}],"center":[{"type":"object","name":"Grid","id":"p1956","attributes":{"axis":{"id":"p1952"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1961","attributes":{"dimension":1,"axis":{"id":"p1957"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},3,2],[{"type":"object","name":"Figure","id":"p1993","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2003"},"y_scale":{"type":"object","name":"LinearScale","id":"p2004"},"title":{"type":"object","name":"Title","id":"p1996","attributes":{"text":"Default: EsriUSATopo","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2022","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2018","attributes":{"url":"https://server.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, NatGeo, i-cubed"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2002","attributes":{"tools":[{"id":"p1977"},{"id":"p1985"},{"id":"p2016"},{"id":"p2017"}],"active_drag":{"id":"p2016"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2010","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2026","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2027","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2013"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2005","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2024","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2025","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2008"}}}],"center":[{"type":"object","name":"Grid","id":"p2009","attributes":{"axis":{"id":"p2005"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2014","attributes":{"dimension":1,"axis":{"id":"p2010"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},3,3],[{"type":"object","name":"Figure","id":"p2046","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2056"},"y_scale":{"type":"object","name":"LinearScale","id":"p2057"},"title":{"type":"object","name":"Title","id":"p2049","attributes":{"text":"Default: EsriWorldBoundariesAndPlaces","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2075","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2071","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a> Esri, HERE, Garmin, (c) OpenStreetMap contributors, and the GIS user community"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2055","attributes":{"tools":[{"id":"p2030"},{"id":"p2038"},{"id":"p2069"},{"id":"p2070"}],"active_drag":{"id":"p2069"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2063","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2079","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2080","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2066"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2058","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2077","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2078","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2061"}}}],"center":[{"type":"object","name":"Grid","id":"p2062","attributes":{"axis":{"id":"p2058"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2067","attributes":{"dimension":1,"axis":{"id":"p2063"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},4,0],[{"type":"object","name":"Figure","id":"p2099","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2109"},"y_scale":{"type":"object","name":"LinearScale","id":"p2110"},"title":{"type":"object","name":"Title","id":"p2102","attributes":{"text":"Default: EsriWorldBoundariesAndPlacesAlternate","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2128","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2124","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a> Esri, HERE, Garmin, (c) OpenStreetMap contributors, and the GIS user community"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2108","attributes":{"tools":[{"id":"p2083"},{"id":"p2091"},{"id":"p2122"},{"id":"p2123"}],"active_drag":{"id":"p2122"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2116","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2132","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2133","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2119"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2111","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2130","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2131","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2114"}}}],"center":[{"type":"object","name":"Grid","id":"p2115","attributes":{"axis":{"id":"p2111"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2120","attributes":{"dimension":1,"axis":{"id":"p2116"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},4,1],[{"type":"object","name":"Figure","id":"p2152","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2162"},"y_scale":{"type":"object","name":"LinearScale","id":"p2163"},"title":{"type":"object","name":"Title","id":"p2155","attributes":{"text":"Default: EsriWorldDarkGrayBase","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2181","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2177","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, Esri, HERE, Garmin, (c) OpenStreetMap contributors, and the GIS user community"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2161","attributes":{"tools":[{"id":"p2136"},{"id":"p2144"},{"id":"p2175"},{"id":"p2176"}],"active_drag":{"id":"p2175"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2169","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2185","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2186","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2172"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2164","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2183","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2184","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2167"}}}],"center":[{"type":"object","name":"Grid","id":"p2168","attributes":{"axis":{"id":"p2164"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2173","attributes":{"dimension":1,"axis":{"id":"p2169"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},4,2],[{"type":"object","name":"Figure","id":"p2205","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2215"},"y_scale":{"type":"object","name":"LinearScale","id":"p2216"},"title":{"type":"object","name":"Title","id":"p2208","attributes":{"text":"Default: EsriWorldDarkGrayReference","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2234","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2230","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, Esri, HERE, Garmin, (c) OpenStreetMap contributors, and the GIS user community"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2214","attributes":{"tools":[{"id":"p2189"},{"id":"p2197"},{"id":"p2228"},{"id":"p2229"}],"active_drag":{"id":"p2228"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2222","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2238","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2239","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2225"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2217","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2236","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2237","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2220"}}}],"center":[{"type":"object","name":"Grid","id":"p2221","attributes":{"axis":{"id":"p2217"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2226","attributes":{"dimension":1,"axis":{"id":"p2222"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},4,3],[{"type":"object","name":"Figure","id":"p2258","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2268"},"y_scale":{"type":"object","name":"LinearScale","id":"p2269"},"title":{"type":"object","name":"Title","id":"p2261","attributes":{"text":"Default: EsriWorldHillshade","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2287","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2283","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade/MapServer/tile/{Z}/{Y}/{X}","max_zoom":16,"attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a> Esri, Airbus DS, USGS, NGA, NASA, CGIAR, N Robinson, NCEAS, NLS, OS, NMA, Geodatastyrelsen, Rijkswaterstaat, GSA, Geoland, FEMA, Intermap and the GIS user community"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2267","attributes":{"tools":[{"id":"p2242"},{"id":"p2250"},{"id":"p2281"},{"id":"p2282"}],"active_drag":{"id":"p2281"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2275","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2291","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2292","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2278"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2270","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2289","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2290","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2273"}}}],"center":[{"type":"object","name":"Grid","id":"p2274","attributes":{"axis":{"id":"p2270"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2279","attributes":{"dimension":1,"axis":{"id":"p2275"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},5,0],[{"type":"object","name":"Figure","id":"p2311","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2321"},"y_scale":{"type":"object","name":"LinearScale","id":"p2322"},"title":{"type":"object","name":"Title","id":"p2314","attributes":{"text":"Default: EsriWorldHillshadeDark","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2340","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2336","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Elevation/World_Hillshade_Dark/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a> Esri, Airbus DS, USGS, NGA, NASA, CGIAR, N Robinson, NCEAS, NLS, OS, NMA, Geodatastyrelsen, Rijkswaterstaat, GSA, Geoland, FEMA, Intermap and the GIS user community"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2320","attributes":{"tools":[{"id":"p2295"},{"id":"p2303"},{"id":"p2334"},{"id":"p2335"}],"active_drag":{"id":"p2334"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2328","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2344","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2345","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2331"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2323","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2342","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2343","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2326"}}}],"center":[{"type":"object","name":"Grid","id":"p2327","attributes":{"axis":{"id":"p2323"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2332","attributes":{"dimension":1,"axis":{"id":"p2328"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},5,1],[{"type":"object","name":"Figure","id":"p2364","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2374"},"y_scale":{"type":"object","name":"LinearScale","id":"p2375"},"title":{"type":"object","name":"Title","id":"p2367","attributes":{"text":"Default: EsriWorldLightGrayBase","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2393","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2389","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, Esri, HERE, Garmin, (c) OpenStreetMap contributors, and the GIS user community"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2373","attributes":{"tools":[{"id":"p2348"},{"id":"p2356"},{"id":"p2387"},{"id":"p2388"}],"active_drag":{"id":"p2387"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2381","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2397","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2398","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2384"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2376","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2395","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2396","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2379"}}}],"center":[{"type":"object","name":"Grid","id":"p2380","attributes":{"axis":{"id":"p2376"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2385","attributes":{"dimension":1,"axis":{"id":"p2381"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},5,2],[{"type":"object","name":"Figure","id":"p2417","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2427"},"y_scale":{"type":"object","name":"LinearScale","id":"p2428"},"title":{"type":"object","name":"Title","id":"p2420","attributes":{"text":"Default: EsriWorldLightGrayReference","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2446","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2442","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, Esri, HERE, Garmin, (c) OpenStreetMap contributors, and the GIS user community"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2426","attributes":{"tools":[{"id":"p2401"},{"id":"p2409"},{"id":"p2440"},{"id":"p2441"}],"active_drag":{"id":"p2440"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2434","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2450","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2451","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2437"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2429","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2448","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2449","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2432"}}}],"center":[{"type":"object","name":"Grid","id":"p2433","attributes":{"axis":{"id":"p2429"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2438","attributes":{"dimension":1,"axis":{"id":"p2434"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},5,3],[{"type":"object","name":"Figure","id":"p2470","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2480"},"y_scale":{"type":"object","name":"LinearScale","id":"p2481"},"title":{"type":"object","name":"Title","id":"p2473","attributes":{"text":"Default: EsriWorldNavigationCharts","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2499","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2495","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Specialty/World_Navigation_Charts/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a> East View Cartographic"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2479","attributes":{"tools":[{"id":"p2454"},{"id":"p2462"},{"id":"p2493"},{"id":"p2494"}],"active_drag":{"id":"p2493"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2487","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2503","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2504","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2490"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2482","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2501","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2502","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2485"}}}],"center":[{"type":"object","name":"Grid","id":"p2486","attributes":{"axis":{"id":"p2482"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2491","attributes":{"dimension":1,"axis":{"id":"p2487"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},6,0],[{"type":"object","name":"Figure","id":"p2523","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2533"},"y_scale":{"type":"object","name":"LinearScale","id":"p2534"},"title":{"type":"object","name":"Title","id":"p2526","attributes":{"text":"Default: EsriWorldPhysical","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2552","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2548","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/World_Physical_Map/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, US National Park Service"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2532","attributes":{"tools":[{"id":"p2507"},{"id":"p2515"},{"id":"p2546"},{"id":"p2547"}],"active_drag":{"id":"p2546"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2540","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2556","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2557","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2543"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2535","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2554","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2555","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2538"}}}],"center":[{"type":"object","name":"Grid","id":"p2539","attributes":{"axis":{"id":"p2535"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2544","attributes":{"dimension":1,"axis":{"id":"p2540"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},6,1],[{"type":"object","name":"Figure","id":"p2576","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2586"},"y_scale":{"type":"object","name":"LinearScale","id":"p2587"},"title":{"type":"object","name":"Title","id":"p2579","attributes":{"text":"Default: EsriWorldShadedRelief","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2605","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2601","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, Esri"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2585","attributes":{"tools":[{"id":"p2560"},{"id":"p2568"},{"id":"p2599"},{"id":"p2600"}],"active_drag":{"id":"p2599"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2593","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2609","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2610","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2596"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2588","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2607","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2608","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2591"}}}],"center":[{"type":"object","name":"Grid","id":"p2592","attributes":{"axis":{"id":"p2588"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2597","attributes":{"dimension":1,"axis":{"id":"p2593"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},6,2],[{"type":"object","name":"Figure","id":"p2629","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2639"},"y_scale":{"type":"object","name":"LinearScale","id":"p2640"},"title":{"type":"object","name":"Title","id":"p2632","attributes":{"text":"Default: EsriWorldStreetMap","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2658","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2654","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a> Esri, HERE, Garmin, USGS, Intermap, INCREMENT P, NRCan, Esri Japan, METI, Esri China (Hong Kong), Esri Korea, Esri (Thailand), NGCC, (c) OpenStreetMap contributors, and the GIS User Community"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2638","attributes":{"tools":[{"id":"p2613"},{"id":"p2621"},{"id":"p2652"},{"id":"p2653"}],"active_drag":{"id":"p2652"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2646","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2662","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2663","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2649"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2641","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2660","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2661","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2644"}}}],"center":[{"type":"object","name":"Grid","id":"p2645","attributes":{"axis":{"id":"p2641"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2650","attributes":{"dimension":1,"axis":{"id":"p2646"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},6,3],[{"type":"object","name":"Figure","id":"p2682","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2692"},"y_scale":{"type":"object","name":"LinearScale","id":"p2693"},"title":{"type":"object","name":"Title","id":"p2685","attributes":{"text":"Default: EsriWorldTopo","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2711","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2707","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a>, Esri, HERE, Garmin, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), (c) OpenStreetMap contributors, and the GIS User Community"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2691","attributes":{"tools":[{"id":"p2666"},{"id":"p2674"},{"id":"p2705"},{"id":"p2706"}],"active_drag":{"id":"p2705"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2699","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2715","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2716","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2702"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2694","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2713","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2714","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2697"}}}],"center":[{"type":"object","name":"Grid","id":"p2698","attributes":{"axis":{"id":"p2694"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2703","attributes":{"dimension":1,"axis":{"id":"p2699"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},7,0],[{"type":"object","name":"Figure","id":"p2735","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2745"},"y_scale":{"type":"object","name":"LinearScale","id":"p2746"},"title":{"type":"object","name":"Title","id":"p2738","attributes":{"text":"Default: EsriWorldTransportation","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2764","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2760","attributes":{"url":"https://server.arcgisonline.com/arcgis/rest/services/Reference/World_Transportation/MapServer/tile/{Z}/{Y}/{X}","attribution":"&copy; <a href=\"http://downloads.esri.com/ArcGISOnline/docs/tou_summary.pdf\">Esri</a> Esri, HERE, Garmin, (c) OpenStreetMap contributors"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2744","attributes":{"tools":[{"id":"p2719"},{"id":"p2727"},{"id":"p2758"},{"id":"p2759"}],"active_drag":{"id":"p2758"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2752","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2768","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2769","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2755"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2747","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2766","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2767","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2750"}}}],"center":[{"type":"object","name":"Grid","id":"p2751","attributes":{"axis":{"id":"p2747"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2756","attributes":{"dimension":1,"axis":{"id":"p2752"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},7,1],[{"type":"object","name":"Figure","id":"p2788","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2798"},"y_scale":{"type":"object","name":"LinearScale","id":"p2799"},"title":{"type":"object","name":"Title","id":"p2791","attributes":{"text":"Default: OSM","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2817","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2813","attributes":{"url":"https://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png","max_zoom":19,"attribution":"&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2797","attributes":{"tools":[{"id":"p2772"},{"id":"p2780"},{"id":"p2811"},{"id":"p2812"}],"active_drag":{"id":"p2811"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2805","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2821","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2822","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2808"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2800","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2819","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2820","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2803"}}}],"center":[{"type":"object","name":"Grid","id":"p2804","attributes":{"axis":{"id":"p2800"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2809","attributes":{"dimension":1,"axis":{"id":"p2805"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},7,2],[{"type":"object","name":"Figure","id":"p2841","attributes":{"width":200,"height":200,"sizing_mode":"fixed","align":"start","x_range":{"id":"p1178"},"y_range":{"id":"p1179"},"x_scale":{"type":"object","name":"LinearScale","id":"p2851"},"y_scale":{"type":"object","name":"LinearScale","id":"p2852"},"title":{"type":"object","name":"Title","id":"p2844","attributes":{"text":"Default: OpenTopoMap","text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"p2870","attributes":{"level":"annotation","tile_source":{"type":"object","name":"WMTSTileSource","id":"p2866","attributes":{"url":"https://a.tile.opentopomap.org/{Z}/{X}/{Y}.png"}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p2850","attributes":{"tools":[{"id":"p2825"},{"id":"p2833"},{"id":"p2864"},{"id":"p2865"}],"active_drag":{"id":"p2864"}}},"toolbar_location":null,"left":[{"type":"object","name":"LinearAxis","id":"p2858","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2874","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2875","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2861"}}}],"below":[{"type":"object","name":"LinearAxis","id":"p2853","attributes":{"visible":false,"ticker":{"type":"object","name":"MercatorTicker","id":"p2872","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"p2873","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"p2856"}}}],"center":[{"type":"object","name":"Grid","id":"p2857","attributes":{"axis":{"id":"p2853"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p2862","attributes":{"dimension":1,"axis":{"id":"p2858"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},7,3]]}},{"type":"object","name":"Spacer","id":"p2885","attributes":{"name":"HSpacer00376","stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  mask-size: auto calc(min(50%, 400px));\n  -webkit-mask-size: auto calc(min(50%, 400px));\n}",{"id":"p1016"},{"id":"p1014"},{"id":"p1015"}],"margin":0,"sizing_mode":"stretch_width","align":"start"}}]}}],"defs":[{"type":"model","name":"ReactiveHTML1"},{"type":"model","name":"FlexBox1","properties":[{"name":"align_content","kind":"Any","default":"flex-start"},{"name":"align_items","kind":"Any","default":"flex-start"},{"name":"flex_direction","kind":"Any","default":"row"},{"name":"flex_wrap","kind":"Any","default":"wrap"},{"name":"gap","kind":"Any","default":""},{"name":"justify_content","kind":"Any","default":"flex-start"}]},{"type":"model","name":"FloatPanel1","properties":[{"name":"config","kind":"Any","default":{"type":"map"}},{"name":"contained","kind":"Any","default":true},{"name":"position","kind":"Any","default":"right-top"},{"name":"offsetx","kind":"Any","default":null},{"name":"offsety","kind":"Any","default":null},{"name":"theme","kind":"Any","default":"primary"},{"name":"status","kind":"Any","default":"normalized"}]},{"type":"model","name":"GridStack1","properties":[{"name":"mode","kind":"Any","default":"warn"},{"name":"ncols","kind":"Any","default":null},{"name":"nrows","kind":"Any","default":null},{"name":"allow_resize","kind":"Any","default":true},{"name":"allow_drag","kind":"Any","default":true},{"name":"state","kind":"Any","default":[]}]},{"type":"model","name":"drag1","properties":[{"name":"slider_width","kind":"Any","default":5},{"name":"slider_color","kind":"Any","default":"black"},{"name":"value","kind":"Any","default":50}]},{"type":"model","name":"click1","properties":[{"name":"terminal_output","kind":"Any","default":""},{"name":"debug_name","kind":"Any","default":""},{"name":"clears","kind":"Any","default":0}]},{"type":"model","name":"FastWrapper1","properties":[{"name":"object","kind":"Any","default":null},{"name":"style","kind":"Any","default":null}]},{"type":"model","name":"NotificationAreaBase1","properties":[{"name":"js_events","kind":"Any","default":{"type":"map"}},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0}]},{"type":"model","name":"NotificationArea1","properties":[{"name":"js_events","kind":"Any","default":{"type":"map"}},{"name":"notifications","kind":"Any","default":[]},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0},{"name":"types","kind":"Any","default":[{"type":"map","entries":[["type","warning"],["background","#ffc107"],["icon",{"type":"map","entries":[["className","fas fa-exclamation-triangle"],["tagName","i"],["color","white"]]}]]},{"type":"map","entries":[["type","info"],["background","#007bff"],["icon",{"type":"map","entries":[["className","fas fa-info-circle"],["tagName","i"],["color","white"]]}]]}]}]},{"type":"model","name":"Notification","properties":[{"name":"background","kind":"Any","default":null},{"name":"duration","kind":"Any","default":3000},{"name":"icon","kind":"Any","default":null},{"name":"message","kind":"Any","default":""},{"name":"notification_type","kind":"Any","default":null},{"name":"_destroyed","kind":"Any","default":false}]},{"type":"model","name":"TemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"BootstrapTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"TemplateEditor1","properties":[{"name":"layout","kind":"Any","default":[]}]},{"type":"model","name":"MaterialTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"ReactiveESM1"},{"type":"model","name":"JSComponent1"},{"type":"model","name":"ReactComponent1"},{"type":"model","name":"AnyWidgetComponent1"},{"type":"model","name":"request_value1","properties":[{"name":"fill","kind":"Any","default":"none"},{"name":"_synced","kind":"Any","default":null},{"name":"_request_sync","kind":"Any","default":0}]}]}};
+  var render_items = [{"docid":"b06df5e4-82dc-4703-8bb8-66f1afb13cf2","roots":{"p1013":"eec49e2f-62de-4d5e-a225-c920b2869064"},"root_ids":["p1013"]}];
+  var docs = Object.values(docs_json)
+  if (!docs) {
+    return
+  }
+  const py_version = docs[0].version.replace('rc', '-rc.').replace('.dev', '-dev.')
+  async function embed_document(root) {
+    var Bokeh = get_bokeh(root)
+    await Bokeh.embed.embed_items_notebook(docs_json, render_items);
+    for (const render_item of render_items) {
+      for (const root_id of render_item.root_ids) {
+	const id_el = document.getElementById(root_id)
+	if (id_el.children.length && id_el.children[0].hasAttribute('data-root-id')) {
+	  const root_el = id_el.children[0]
+	  root_el.id = root_el.id + '-rendered'
+	  for (const child of root_el.children) {
+            // Ensure JupyterLab does not capture keyboard shortcuts
+            // see: https://jupyterlab.readthedocs.io/en/4.1.x/extension/notebook.html#keyboard-interaction-model
+	    child.setAttribute('data-lm-suppress-shortcuts', 'true')
+	  }
+	}
+      }
+    }
+  }
+  function get_bokeh(root) {
+    if (root.Bokeh === undefined) {
+      return null
+    } else if (root.Bokeh.version !== py_version) {
+      if (root.Bokeh.versions === undefined || !root.Bokeh.versions.has(py_version)) {
+	return null
+      }
+      return root.Bokeh.versions.get(py_version);
+    } else if (root.Bokeh.version === py_version) {
+      return root.Bokeh
+    }
+    return null
+  }
+  function is_loaded(root) {
+    var Bokeh = get_bokeh(root)
+    return (Bokeh != null && Bokeh.Panel !== undefined)
+  }
+  if (is_loaded(root)) {
+    embed_document(root);
+  } else {
+    var attempts = 0;
+    var timer = setInterval(function(root) {
+      if (is_loaded(root)) {
+        clearInterval(timer);
+        embed_document(root);
+      } else if (document.readyState == "complete") {
+        attempts++;
+        if (attempts > 200) {
+          clearInterval(timer);
+	  var Bokeh = get_bokeh(root)
+	  if (Bokeh == null || Bokeh.Panel == null) {
+            console.warn("Panel: ERROR: Unable to run Panel code because Bokeh or Panel library is missing");
+	  } else {
+	    console.warn("Panel: WARNING: Attempting to render but not all required libraries could be resolved.")
+	    embed_document(root)
+	  }
+        }
+      }
+    }, 25, root)
+  }
+})(window);</script></div></div>
+</div>
+</section>
+<div id="scroller-right">This web page was generated from a Jupyter notebook and not all interactivity will work on this website. <a href="https://raw.githubusercontent.com/holoviz/geoviews/main/examples/gallery/bokeh/tile_sources.ipynb">Right click to download and run locally</a> for full Python-backed interactivity.</div><hr class="docutils" />
+<p><a class="reference external" href="https://raw.githubusercontent.com/holoviz/geoviews/main/examples/gallery/bokeh/tile_sources.ipynb">Download this notebook from GitHub (right-click to download).</a></p>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#list">List</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot">Plot</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/gallery/bokeh/tile_sources.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2018 HoloViz Developers.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.4.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

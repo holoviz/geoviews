@@ -1,3 +1,27 @@
+Version 1.13.0
+==============
+
+Date: August 1, 2024
+
+This release includes various bug fixes and maintenance updates. Many thanks to @hoxbro and @ahuang11 for their ongoing contributions.
+
+Enhancements:
+
+- Add default `max_zoom` for OSM, ESRI, EsriImagery, EsriNatGeo, and EsriWorldHillshade ([#745](https://github.com/holoviz/geoviews/pull/745))
+
+Bug Fixes:
+
+- Return NaNs for range if column can't find min and max ([#723](https://github.com/holoviz/geoviews/pull/723))
+- Fix output disappearing when using geographic features alongside datashader ([#722](https://github.com/holoviz/geoviews/pull/722), [#738](https://github.com/holoviz/geoviews/pull/738))
+- Fix 'Parameterized' object has no attribute 'warning' error ([#729](https://github.com/holoviz/geoviews/pull/729))
+
+Maintenance:
+
+- Update to Bokeh 3.5 ([#735](https://github.com/holoviz/geoviews/pull/735), [#740](https://github.com/holoviz/geoviews/pull/740))
+- Switch to Pixi for development / CI and hatchling for build system ([#733](https://github.com/holoviz/geoviews/pull/733))
+- General maintenance ([#731](https://github.com/holoviz/geoviews/pull/731), [#732](https://github.com/holoviz/geoviews/pull/732), [#734](https://github.com/holoviz/geoviews/pull/734))
+
+
 Version 1.12.0
 ==============
 

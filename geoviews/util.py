@@ -64,8 +64,8 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
 
     # Limit latitudes
     cy1, cy2 = src_proj.y_limits
-    if y1 < cy1: y1 = cy1
-    if y2 > cy2:  y2 = cy2
+    y1 = max(y1, cy1)
+    y2 = min(y2, cy2)
 
     # Offset with tolerances
     x1 += tol
@@ -79,8 +79,8 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
         lons = wrap_lons(np.linspace(x1, x2, 10000), -180., 360.)
         x1, x2 = lons.min(), lons.max()
     else:
-        if x1 < cx1: x1 = cx1
-        if x2 > cx2: x2 = cx2
+        x1 = max(x1, cx1)
+        x2 = min(x2, cx2)
 
     domain_in_src_proj = Polygon([[x1, y1], [x2, y1],
                                   [x2, y2], [x1, y2],

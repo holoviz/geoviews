@@ -33,7 +33,7 @@ dependencies = [
     'numpy',
     'packaging',
     'panel >=1.0.0',
-    'param',
+    'param >=1.9.3,<3.0',
     'pyproj',
     'shapely',
     'xyzservices',

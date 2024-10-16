@@ -96,7 +96,7 @@ def project_ranges(cb, msg, attributes):
     extents = x0, y0, x1, y1
     x0, y0, x1, y1 = project_extents(extents, plot.projection,
                                      plot.current_frame.crs)
-    if plot._unwrap_lons and -180 <= x0 < 0 or -180 <= x1 < 0:
+    if plot._unwrap_lons and (-180 <= x0 < 0 or -180 <= x1 < 0):
         x0, x1 = x0 + 360, x1 + 360
         if x0 > x1:
             x0, x1 = x1, x0

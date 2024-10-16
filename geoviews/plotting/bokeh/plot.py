@@ -6,7 +6,7 @@ from bokeh.models import CustomJSHover, MercatorTicker, MercatorTickFormatter
 from bokeh.models.tools import BoxZoomTool, WheelZoomTool
 from cartopy.crs import GOOGLE_MERCATOR, Mercator, PlateCarree, _CylindricalProjection
 from holoviews.core.dimension import Dimension
-from holoviews.core.util import dimension_sanitizer
+from holoviews.core.util import dimension_sanitizer, match_spec
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 
 from ...element import Shape, _Element, is_geographic
@@ -104,14 +104,21 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                     ax_range.end = mid + min_interval/2.
                 ax_range.min_interval = min_interval
 
-    def _set_unwrap_lons(self, element):
+    def _set_unwrap_lons(self, element, ranges):
         if isinstance(self.geographic, _CylindricalProjection):
-            x1, x2 = element.range(0)
-            self._unwrap_lons = 0 <= x1 <= 360 and 180 <= x2 <= 360
+            xdim = element.get_dimension(0)
+            x_range = ranges.get(xdim.name, {}).get('data')
+            if x_range:
+                x0, x1 = x_range
+            else:
+                x0, x1 = element.range(0)
+            self._unwrap_lons = 0 <= x0 <= 360 and 180 <= x1 <= 360
 
     def initialize_plot(self, ranges=None, plot=None, plots=None, source=None):
         opts = {} if isinstance(self, HvOverlayPlot) else {'source': source}
         fig = super().initialize_plot(ranges, plot, plots, **opts)
+        style_element = self.current_frame.last if self.batched else self.current_frame
+        el_ranges = match_spec(style_element, ranges)
         if self.geographic and self.show_bounds and not self.overlaid:
             from . import GeoShapePlot
             shape = Shape(self.projection.boundary, crs=self.projection).options(fill_alpha=0)
@@ -119,12 +126,14 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                                      overlaid=True, renderer=self.renderer)
             shapeplot.geographic = False
             shapeplot.initialize_plot(plot=fig)
-        self._set_unwrap_lons(self.current_frame)
+        self._set_unwrap_lons(self.current_frame, el_ranges)
         return fig
 
     def update_frame(self, key, ranges=None, element=None):
         if element is not None:
-            self._set_unwrap_lons(element)
+            style_element = element.last if self.batched else element
+            el_ranges = match_spec(style_element, ranges)
+            self._set_unwrap_lons(element, el_ranges)
         super().update_frame(key, ranges=ranges, element=element)
 
     def _postprocess_hover(self, renderer, source):

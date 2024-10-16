@@ -100,7 +100,6 @@ def project_ranges(cb, msg, attributes):
         x1 += 360
         if x0 > x1:
             x0, x1 = x1, x0
-        print(x0, x1)
     coords = {'x_range': (x0, x1), 'y_range': (y0, y1)}
     return {k: v for k, v in coords.items() if k in attributes}
 

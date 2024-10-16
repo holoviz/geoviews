@@ -118,7 +118,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         opts = {} if isinstance(self, HvOverlayPlot) else {'source': source}
         fig = super().initialize_plot(ranges, plot, plots, **opts)
         style_element = self.current_frame.last if self.batched else self.current_frame
-        el_ranges = match_spec(style_element, ranges)
+        el_ranges = match_spec(style_element, self.current_ranges)
         if self.geographic and self.show_bounds and not self.overlaid:
             from . import GeoShapePlot
             shape = Shape(self.projection.boundary, crs=self.projection).options(fill_alpha=0)
@@ -126,15 +126,14 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                                      overlaid=True, renderer=self.renderer)
             shapeplot.geographic = False
             shapeplot.initialize_plot(plot=fig)
-        self._set_unwrap_lons(self.current_frame, el_ranges)
+        self._set_unwrap_lons(style_element, el_ranges)
         return fig
 
     def update_frame(self, key, ranges=None, element=None):
-        if element is not None:
-            style_element = element.last if self.batched else element
-            el_ranges = match_spec(style_element, ranges)
-            self._set_unwrap_lons(element, el_ranges)
         super().update_frame(key, ranges=ranges, element=element)
+        style_element = self.current_frame.last if self.batched else self.current_frame
+        el_ranges = match_spec(style_element, self.current_ranges)
+        self._set_unwrap_lons(style_element, el_ranges)
 
     def _postprocess_hover(self, renderer, source):
         super()._postprocess_hover(renderer, source)

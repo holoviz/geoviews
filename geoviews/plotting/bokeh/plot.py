@@ -112,7 +112,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 x0, x1 = x_range
             else:
                 x0, x1 = element.range(0)
-            self._unwrap_lons = 0 <= x0 <= 360 and 180 <= x1 <= 360
+            self._unwrap_lons = -1.25 <= x0 <= 360 and 180 <= x1 <= 360
 
     def initialize_plot(self, ranges=None, plot=None, plots=None, source=None):
         opts = {} if isinstance(self, HvOverlayPlot) else {'source': source}

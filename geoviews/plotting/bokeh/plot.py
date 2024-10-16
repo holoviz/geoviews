@@ -118,7 +118,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         opts = {} if isinstance(self, HvOverlayPlot) else {'source': source}
         fig = super().initialize_plot(ranges, plot, plots, **opts)
         style_element = self.current_frame.last if self.batched else self.current_frame
-        el_ranges = match_spec(style_element, self.current_ranges)
+        el_ranges = match_spec(style_element, self.current_ranges) if self.current_ranges else {}
         if self.geographic and self.show_bounds and not self.overlaid:
             from . import GeoShapePlot
             shape = Shape(self.projection.boundary, crs=self.projection).options(fill_alpha=0)

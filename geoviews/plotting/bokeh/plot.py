@@ -105,6 +105,9 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 ax_range.min_interval = min_interval
 
     def _set_unwrap_lons(self, element, ranges):
+        """
+        Check whether the lons should be transformed from 0, 360 to -180, 180
+        """
         if isinstance(self.geographic, _CylindricalProjection):
             xdim = element.get_dimension(0)
             x_range = ranges.get(xdim.name, {}).get('data')
@@ -112,7 +115,10 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 x0, x1 = x_range
             else:
                 x0, x1 = element.range(0)
-            self._unwrap_lons = -1.25 <= x0 <= 360 and 180 <= x1 <= 360
+            # x0, depending on the step/interval, can be slightly less than 0,
+            # e.g. lon=np.arange(0, 360, 10) -> x0 = -5 from (step 10 / 2)
+            # other projections likely will not fall within this range
+            self._unwrap_lons = -90 <= x0 <= 360 and 180 <= x1 <= 540
 
     def initialize_plot(self, ranges=None, plot=None, plots=None, source=None):
         opts = {} if isinstance(self, HvOverlayPlot) else {'source': source}

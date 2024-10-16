@@ -132,7 +132,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     def update_frame(self, key, ranges=None, element=None):
         super().update_frame(key, ranges=ranges, element=element)
         style_element = self.current_frame.last if self.batched else self.current_frame
-        el_ranges = match_spec(style_element, self.current_ranges)  if self.current_ranges else {}
+        el_ranges = match_spec(style_element, self.current_ranges) if self.current_ranges else {}
         self._set_unwrap_lons(style_element, el_ranges)
 
     def _postprocess_hover(self, renderer, source):

@@ -91,7 +91,6 @@ cftime = "*"
 datashader = "*"
 filelock = "*"
 fiona = "*"
-gdal = "!=3.9.3"  # Crashes CI
 geopandas-base = "*"
 iris = ">=3.5"
 matplotlib-base = ">2.2"

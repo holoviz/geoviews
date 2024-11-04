@@ -1,6 +1,7 @@
+import sys
+
 import numpy as np
 import param
-from bokeh.models import MercatorTileSource
 from cartopy import crs as ccrs
 from cartopy.feature import Feature as cFeature
 from cartopy.io.img_tiles import GoogleTiles
@@ -79,6 +80,12 @@ from ..util import (
 )
 
 geographic_types = (GoogleTiles, cFeature, BaseGeometry)
+
+def _check_bokeh_mercator(data) -> bool:
+    if "bokeh.models" in sys.modules:
+        from bokeh.models import MercatorTileSource
+        return isinstance(data, MercatorTileSource)
+    return False
 
 def is_geographic(element, kdims=None):
     """
@@ -267,8 +274,7 @@ class WMTS(_GeoFeature):
     layer = param.String(doc="The layer on the tile service")
 
     def __init__(self, data, kdims=None, vdims=None, **params):
-        if ((MercatorTileSource and isinstance(data, MercatorTileSource)) or
-            (GoogleTiles and isinstance(data, GoogleTiles))):
+        if _check_bokeh_mercator(data) or isinstance(data, GoogleTiles):
             data = data.url
         elif WebMapTileService and isinstance(data, WebMapTileService):
             pass

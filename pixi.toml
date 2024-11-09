@@ -101,6 +101,8 @@ rioxarray = "*"
 scipy = "*"
 shapely = "*"
 xarray = "*"
+dask-core = "*"
+dask-expr = "*"
 
 [feature.test-example.tasks]
 test-example = 'pytest -n logical --dist loadscope --nbval-lax examples'

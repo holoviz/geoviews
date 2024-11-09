@@ -14,8 +14,11 @@ with suppress(ImportError):
     plt.switch_backend("agg")
 
 with suppress(Exception):
+    # From Dask 2023.7.1 they now automatically convert strings
+    # https://docs.dask.org/en/stable/changelog.html#v2023-7-1
     # From Dask 2024.3.0 they now use `dask_expr` by default
     # https://github.com/dask/dask/issues/10995
     import dask
 
+    dask.config.set({"dataframe.convert-string": False})
     dask.config.set({"dataframe.query-planning": False})

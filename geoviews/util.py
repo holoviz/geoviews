@@ -655,9 +655,11 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
     elif hasattr(da, 'rio') and da.rio.crs is not None:
         # rioxarray.open_rasterio
         crs = None
-        for n in ("to_epsg", "to_proj4"):
+        # to handle rasterio 1.4.1 vs 1.4.2 differences
+        # https://github.com/holoviz/geoviews/pull/763
+        for method_name in ("to_epsg", "to_proj4"):
             with suppress(Exception):
-                crs = process_crs(getattr(da.rio.crs, n)())
+                crs = process_crs(getattr(da.rio.crs, method_name)())
                 break
         if crs:
             kwargs['crs'] = crs

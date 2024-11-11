@@ -1,7 +1,5 @@
 from contextlib import suppress
 
-from holoviews.tests.conftest import bokeh_backend, port, serve_hv  # noqa: F401
-
 import geoviews as gv
 
 CUSTOM_MARKS = ("ui",)

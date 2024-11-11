@@ -10,7 +10,6 @@ sync-git-tags = 'python scripts/sync_git_tags.py geoviews'
 [activation.env]
 PYTHONIOENCODING = "utf-8"
 USE_PYGEOS = "0"
-DASK_DATAFRAME__QUERY_PLANNING = "False"
 
 [environments]
 test-310 = ["py310", "test-core", "test-unit-task", "test", "example", "test-example", "download-data"]
@@ -102,8 +101,6 @@ rioxarray = "*"
 scipy = "*"
 shapely = "*"
 xarray = "*"
-dask-core = "*"
-dask-expr = "*"
 
 [feature.test-example.tasks]
 test-example = 'pytest -n logical --dist loadscope --nbval-lax examples'

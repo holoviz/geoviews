@@ -24,7 +24,7 @@ class WindBarbsPlot(ColorbarPlot):
 
     padding = param.ClassSelector(default=0.05, class_=(int, float, tuple))
 
-    convention = param.ObjectSelector(objects=["from", "to"], doc="""
+    convention = param.Selector(objects=["from", "to"], doc="""
         Convention to return direction; 'from' returns the direction the wind is coming from
         (meteorological convention), 'to' returns the direction the wind is going towards
         (oceanographic convention).""")

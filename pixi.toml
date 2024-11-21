@@ -23,7 +23,7 @@ lint = ["py311", "lint"]
 download-data = ["download-data"]
 
 [dependencies]
-bokeh = "3.5.*"
+bokeh = "3.6.*"
 cartopy = ">=0.18.0"
 holoviews = ">=1.16.0"
 nodejs = ">=20"

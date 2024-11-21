@@ -9,7 +9,6 @@ import {PolyDrawTool, PolyDrawToolView} from "@bokehjs/models/tools/edit/poly_dr
 
 import type {MultiLine} from "@bokehjs/models/glyphs/multi_line"
 import type {Patches} from "@bokehjs/models/glyphs/patches"
-import type {GlyphRenderer} from "@bokehjs/models/renderers/glyph_renderer"
 
 export class PolyVertexDrawToolView extends PolyDrawToolView {
   declare model: PolyVertexDrawTool
@@ -208,8 +207,6 @@ export interface HasPolyGlyph {
 
 export class PolyVertexDrawTool extends PolyDrawTool {
   declare properties: PolyVertexDrawTool.Props
-
-  override renderers: (GlyphRenderer & HasPolyGlyph)[]
 
   constructor(attrs?: Partial<PolyVertexDrawTool.Attrs>) {
     super(attrs)

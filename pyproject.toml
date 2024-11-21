@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs", 'bokeh ==3.6.0']
+requires = ["hatchling", "hatch-vcs", 'bokeh ==3.6']
 build-backend = "hatchling.build"
 
 [project]

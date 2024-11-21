@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs", 'bokeh >=3.5.0,<3.7.0']
+requires = ["hatchling", "hatch-vcs", 'bokeh ==3.6.0']
 build-backend = "hatchling.build"
 
 [project]
@@ -27,7 +27,7 @@ classifiers = [
 ]
 
 dependencies = [
-    'bokeh >=3.5.0,<3.7.0',
+    'bokeh >=3.6.0,<3.7.0',
     'cartopy >=0.18.0',
     'holoviews >=1.16.0',
     'numpy',

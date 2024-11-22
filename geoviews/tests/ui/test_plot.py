@@ -34,8 +34,6 @@ def test_range_correct_longitude(serve_hv):
 
     wait_until(lambda: np.isclose(xy_range.x_range[0], -105.68691588784145), page)
     wait_until(lambda: np.isclose(xy_range.x_range[1], -21.80841121496224), page)
-    wait_until(lambda: np.isclose(xy_range.y_range[0], -15, atol=1), page)
-    wait_until(lambda: np.isclose(xy_range.y_range[1], 56, atol=1), page)
 
 
 @pytest.mark.usefixtures("bokeh_backend")

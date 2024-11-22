@@ -1,6 +1,11 @@
 from contextlib import suppress
 
-from holoviews.tests.conftest import bokeh_backend, port, serve_hv  # noqa: F401
+from holoviews.tests.conftest import (  # noqa: F401
+    bokeh_backend,
+    port,
+    serve_hv,
+    server_cleanup,
+)
 
 import geoviews as gv
 

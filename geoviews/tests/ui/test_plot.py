@@ -2,13 +2,13 @@ import cartopy.crs as ccrs
 import holoviews as hv
 import numpy as np
 import pytest
-from holoviews.operation.datashader import rasterize
 from holoviews.tests.ui import expect, wait_until
 
 import geoviews as gv
 
-xr = pytest.importorskip("xarray")
 pytestmark = pytest.mark.ui
+
+xr = pytest.importorskip("xarray")
 
 
 @pytest.mark.usefixtures("bokeh_backend")
@@ -45,8 +45,7 @@ def test_rasterize_with_coastline_not_blank_on_zoom(serve_hv, lon_start, lon_end
     """
     Regression test for https://github.com/holoviz/geoviews/issues/726
     """
-
-    gv.extension("bokeh")
+    from holoviews.operation.datashader import rasterize
 
     lon = np.linspace(lon_start, lon_end, 360)
     lat = np.linspace(-90, 90, 180)

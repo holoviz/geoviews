@@ -28,3 +28,8 @@ with suppress(ImportError):
 
     xr.tutorial.open_dataset("air_temperature")
     xr.tutorial.open_dataset("rasm")
+
+with suppress(ImportError):
+    from cartopy.feature import shapereader
+
+    shapereader.natural_earth()

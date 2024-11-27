@@ -6,7 +6,7 @@ package:
   version: {{ VERSION }}
 
 source:
-  url: ../../../dist/{{ project["name"] }}-{{ VERSION }}-py3-none-any.whl
+  url: ../../../dist/{{ project["name"] }}-{{ VERSION }}.tar.gz
 
 build:
   noarch: python

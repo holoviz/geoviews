@@ -56,6 +56,8 @@ from .element import (
 from .util import from_xarray
 
 __all__ = (
+    "RGB",
+    "WMTS",
     "Contours",
     "Cycle",
     "Dataset",
@@ -84,7 +86,6 @@ __all__ = (
     "Points",
     "Polygons",
     "QuadMesh",
-    "RGB",
     "Rectangles",
     "Segments",
     "Shape",
@@ -93,26 +94,24 @@ __all__ = (
     "Tiles",
     "TriMesh",
     "VectorField",
-    "WMTS",
     "WindBarbs",
     "__version__",
+    "annotate", # Lazy modules
     "data",
     "dim",
     "extension",
     "feature",
     "from_xarray",
     "help",
+    "operation", # Lazy modules
     "opts",
     "output",
     "plotting",
+    "project", # Lazy modules
     "render",
     "renderer",
     "save",
     "tile_sources",
-    # Lazy modules
-    "annotate",
-    "project",
-    "operation",
 )
 
 # Ensure opts utility is initialized with GeoViews elements

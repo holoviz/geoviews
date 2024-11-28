@@ -8,7 +8,7 @@ def test_no_blocklist_imports():
     import sys
     import geoviews as gv
 
-    blocklist = {"panel", "IPython", "datashader", "iris", "dask"}
+    blocklist = {"panel", "IPython", "datashader", "iris", "dask", "bokeh.models"}
     mods = blocklist & set(sys.modules)
 
     if mods:

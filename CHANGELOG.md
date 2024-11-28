@@ -1,3 +1,19 @@
+Version 1.13.1
+==============
+
+Date: November 28, 2024
+
+This release contains a bug fix for unwrapping longitudes and compatibility updates. Many thanks to @ahuang11, @philippjfr, and @hoxbro for their ongoing contributions.
+
+Bug fixes:
+
+- Fix issues with unwrapping longitudes in RangeXY stream ([#756](https://github.com/holoviz/geoviews/pull/756))
+
+Compatibility:
+
+- rasterio 1.4.2 ([#763](https://github.com/holoviz/geoviews/pull/763))
+- Change ObjectSelector to Selector for Param ([#768](https://github.com/holoviz/geoviews/pull/768))
+
 Version 1.13.0
 ==============
 

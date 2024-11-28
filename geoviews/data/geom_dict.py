@@ -99,11 +99,10 @@ class GeomDictInterface(DictInterface):
         from shapely.geometry.base import BaseGeometry
         geom_dims = cls.geom_dims(dataset)
         if len(geom_dims) != 2:
-            raise DataError('Expected %s instance to declare two key '
+            raise DataError(f'Expected {type(dataset).__name__} instance to declare two key '
                             'dimensions corresponding to the geometry '
-                            'coordinates but %d dimensions were found '
-                            'which did not refer to any columns.'
-                            % (type(dataset).__name__, len(geom_dims)), cls)
+                            f'coordinates but {len(geom_dims)} dimensions were found '
+                            'which did not refer to any columns.', cls)
         elif 'geometry' not in dataset.data:
             raise DataError("Could not find a 'geometry' column in the data.")
         elif not isinstance(dataset.data['geometry'], BaseGeometry):

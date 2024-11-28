@@ -7,10 +7,10 @@ import param
 from packaging.version import Version
 
 __all__ = (
-    "deprecated",
-    "find_stack_level",
     "GeoviewsDeprecationWarning",
     "GeoviewsUserWarning",
+    "deprecated",
+    "find_stack_level",
     "warn",
 )
 

@@ -135,5 +135,5 @@ class weighted_regrid(regrid):
                 deleted.append(f)
             except FileNotFoundError:
                 pass
-        print('Deleted %d weight files' % len(deleted))
+        print(f'Deleted {len(deleted)} weight files')
         cls._files = []

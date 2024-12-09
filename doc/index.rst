@@ -95,7 +95,7 @@ or have set up your system to be able to build them.
    Home <self>
    User Guide <user_guide/index>
    Gallery <gallery/index>
-   Topics <topics>
+   Examples <https://examples.holoviz.org>
    Developer Guide <developer_guide/index>
    Releases <releases>
    About <about>

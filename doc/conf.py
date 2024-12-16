@@ -45,6 +45,7 @@ html_theme_options = {
 extensions += [
     'nbsite.gallery',
     'nbsite.analytics',
+    'sphinx_reredirects',
 ]
 
 myst_enable_extensions = ["colon_fence", "deflist"]
@@ -53,6 +54,10 @@ napoleon_numpy_docstring = True
 
 nbsite_analytics = {
     'goatcounter_holoviz': True,
+}
+
+redirects = {
+    'topics/index': 'https://examples.holoviz.org',
 }
 
 nbsite_gallery_conf = {

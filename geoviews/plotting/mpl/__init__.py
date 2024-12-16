@@ -499,7 +499,7 @@ class FeaturePlot(GeoPlot):
     Draws a feature from a Features Element.
     """
 
-    scale = param.ObjectSelector(default='110m',
+    scale = param.Selector(default='110m',
                                  objects=['10m', '50m', '110m'],
                                  doc="The scale of the Feature in meters.")
 

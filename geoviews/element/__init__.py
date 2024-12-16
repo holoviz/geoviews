@@ -37,6 +37,8 @@ from .geo import (
 )
 
 __all__ = (
+    "RGB",
+    "WMTS",
     "Contours",
     "Dataset",
     "EdgePaths",
@@ -54,7 +56,6 @@ __all__ = (
     "Points",
     "Polygons",
     "QuadMesh",
-    "RGB",
     "Rectangles",
     "Segments",
     "Shape",
@@ -62,7 +63,6 @@ __all__ = (
     "Tiles",
     "TriMesh",
     "VectorField",
-    "WMTS",
     "WindBarbs",
     "is_geographic",
 )

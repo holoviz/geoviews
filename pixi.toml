@@ -10,13 +10,13 @@ sync-git-tags = 'python scripts/sync_git_tags.py geoviews'
 [activation.env]
 PYTHONIOENCODING = "utf-8"
 USE_PYGEOS = "0"
-DASK_DATAFRAME__QUERY_PLANNING = "False"
 
 [environments]
-test-310 = ["py310", "test-core", "test", "example", "test-example", "download-data"]
-test-311 = ["py311", "test-core", "test", "example", "test-example", "download-data"]
-test-312 = ["py312", "test-core", "test", "example", "test-example", "download-data"]
-test-core = ["py312", "test-core"]
+test-310 = ["py310", "test-core", "test-unit-task", "test", "example", "test-example", "download-data"]
+test-311 = ["py311", "test-core", "test-unit-task", "test", "example", "test-example", "download-data"]
+test-312 = ["py312", "test-core", "test-unit-task", "test", "example", "test-example", "download-data"]
+test-core = ["py312", "test-unit-task", "test-core"]
+test-ui = ["py312", "test-core", "test", "test-ui", "download-data"]
 docs = ["py311", "example", "doc", "download-data"]
 build = ["py311", "build"]
 lint = ["py311", "lint"]
@@ -82,7 +82,7 @@ pytest-cov = "*"
 pytest-github-actions-annotate-failures = "*"
 pytest-xdist = "*"
 
-[feature.test-core.tasks]
+[feature.test-unit-task.tasks] # So it is not showing up in the test-ui environment
 test-unit = 'pytest geoviews/tests -n logical --dist loadgroup'
 
 [feature.test.dependencies]
@@ -107,6 +107,20 @@ test-example = 'pytest -n logical --dist loadscope --nbval-lax examples'
 
 [feature.test-example.dependencies]
 nbval = "*"
+
+[feature.test-ui]
+channels = ["microsoft"]
+
+[feature.test-ui.dependencies]
+playwright = { version = "*", channel = "microsoft" }
+pytest-playwright = { version = "*", channel = "microsoft" }
+
+[feature.test-ui.tasks]
+_install-ui = 'playwright install chromium'
+
+[feature.test-ui.tasks.test-ui]
+cmd = 'pytest geoviews/tests/ui --ui --browser chromium'
+depends_on = ["_install-ui"]
 
 # =============================================
 # =================== DOCS ====================

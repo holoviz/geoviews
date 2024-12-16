@@ -22,7 +22,7 @@ class weighted_regrid(regrid):
     operation.
     """
 
-    interpolation = param.ObjectSelector(default='bilinear',
+    interpolation = param.Selector(default='bilinear',
         objects=['bilinear', 'conservative', 'nearest_s2d', 'nearest_d2s'], doc="""
         Interpolation method""")
 
@@ -135,5 +135,5 @@ class weighted_regrid(regrid):
                 deleted.append(f)
             except FileNotFoundError:
                 pass
-        print('Deleted %d weight files' % len(deleted))
+        print(f'Deleted {len(deleted)} weight files')
         cls._files = []

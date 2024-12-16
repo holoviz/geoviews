@@ -1,3 +1,5 @@
+from contextlib import suppress
+
 import numpy as np
 import shapely
 import shapely.geometry as sgeom
@@ -652,9 +654,16 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
                   'defaulting to non-geographic element.')
     elif hasattr(da, 'rio') and da.rio.crs is not None:
         # rioxarray.open_rasterio
-        try:
-            kwargs['crs'] = process_crs(da.rio.crs.to_proj4())
-        except Exception:
+        crs = None
+        # to handle rasterio 1.4.1 vs 1.4.2 differences
+        # https://github.com/holoviz/geoviews/pull/763
+        for method_name in ("to_epsg", "to_proj4"):
+            with suppress(Exception):
+                crs = process_crs(getattr(da.rio.crs, method_name)())
+                break
+        if crs:
+            kwargs['crs'] = crs
+        else:
             warn(f'Could not decode projection from crs string {da.rio.crs}, '
                   'defaulting to non-geographic element.')
 

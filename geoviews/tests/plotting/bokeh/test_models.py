@@ -1,14 +1,14 @@
 from pathlib import Path
 
-from geoviews.models.custom_tools import _BokehCheck
+import pytest
 
-try:
-    import tomllib
-except ModuleNotFoundError:
-    import tomli as tomllib
+from geoviews.models.custom_tools import _BokehCheck
 
 
 def test_bokeh_version():
+    # Can be removed when minimum Python version is 3.11
+    tomllib = pytest.importorskip("tomllib")
+
     pyproject = Path(__file__).parents[4] / "pyproject.toml"
     pyproject.resolve(strict=True)
     requires = tomllib.loads(pyproject.read_text())["build-system"]["requires"]

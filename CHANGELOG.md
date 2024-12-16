@@ -1,3 +1,24 @@
+Version 1.14.0
+==============
+
+Date: December 16, 2024
+
+This release includes compatibility with Bokeh 3.6 and Python 3.13. Many thanks to @maximlt, @mattpap, and @hoxbro for their ongoing contributions.
+
+Documentation:
+
+- Replace topics page with a link to examples.holoviz.org ([#773](https://github.com/holoviz/geoviews/pull/773))
+
+Performance:
+
+- Postpone `bokeh.models` import ([#764](https://github.com/holoviz/geoviews/pull/764))
+
+Compatibility:
+
+- Bokeh 3.6 ([#750](https://github.com/holoviz/geoviews/pull/750))
+- Python 3.13 ([#775](https://github.com/holoviz/geoviews/pull/775))
+- Remove Bokeh upper pin policy ([#776](https://github.com/holoviz/geoviews/pull/776))
+
 Version 1.13.1
 ==============
 

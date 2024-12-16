@@ -3,15 +3,13 @@ import type {Dict} from "@bokehjs/core/types"
 import type {GestureEvent, UIEvent, TapEvent} from "@bokehjs/core/ui_events"
 import {entries} from "@bokehjs/core/util/object"
 import {isArray} from "@bokehjs/core/util/types"
+import type {XYGlyph} from "@bokehjs/models/glyphs/xy_glyph"
 import type {MultiLine} from "@bokehjs/models/glyphs/multi_line"
 import type {Patches} from "@bokehjs/models/glyphs/patches"
 import type {GlyphRenderer} from "@bokehjs/models/renderers/glyph_renderer"
-import type {HasXYGlyph} from "@bokehjs/models/tools/edit/edit_tool"
 import {PolyEditTool, PolyEditToolView} from "@bokehjs/models/tools/edit/poly_edit_tool"
 
-export interface HasPolyGlyph {
-  glyph: MultiLine | Patches
-}
+export type XsYsGlyph = MultiLine | Patches
 
 export class PolyVertexEditToolView extends PolyEditToolView {
   declare model: PolyVertexEditTool
@@ -55,7 +53,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     this._basepoint = null
   }
 
-  override _drag_points(ev: UIEvent, renderers: (GlyphRenderer & HasXYGlyph)[]): number[][] {
+  override _drag_points(ev: UIEvent, renderers: GlyphRenderer<XYGlyph>[]): number[][] {
     if (this._basepoint == null) {
       return []
     }
@@ -262,7 +260,7 @@ export interface PolyVertexEditTool extends PolyVertexEditTool.Attrs {}
 export class PolyVertexEditTool extends PolyEditTool {
   declare properties: PolyVertexEditTool.Props
 
-  override renderers: (GlyphRenderer & HasPolyGlyph)[]
+  override renderers: GlyphRenderer<XsYsGlyph>[]
 
   constructor(attrs?: Partial<PolyVertexEditTool.Attrs>) {
     super(attrs)

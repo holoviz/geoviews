@@ -8,7 +8,7 @@
     "url": "https://github.com/holoviz/geoviews.git"
   },
   "dependencies": {
-    "@bokeh/bokehjs": "~3.5.0",
+    "@bokeh/bokehjs": "~3.6.0",
     "@stylistic/eslint-plugin": "^1.6.3",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",

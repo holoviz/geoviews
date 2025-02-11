@@ -15,7 +15,7 @@ USE_PYGEOS = "0"
 test-310 = ["py310", "test-core", "test-unit-task", "test", "example", "test-example", "download-data"]
 test-311 = ["py311", "test-core", "test-unit-task", "test", "example", "test-example", "download-data"]
 test-312 = ["py312", "test-core", "test-unit-task", "test", "example", "test-example", "download-data"]
-test-313 = ["py313", "test-core", "test-unit-task", "test-3.13", "example-3.13", "test-example", "download-data"]
+test-313 = ["py313", "test-core", "test-unit-task", "test", "example", "test-example", "download-data"]
 test-core = ["py313", "test-unit-task", "test-core"]
 test-ui = ["py312", "test-core", "test", "test-ui", "download-data"]
 docs = ["py311", "example", "doc", "download-data"]
@@ -70,21 +70,6 @@ shapely = "*"
 xarray = "*"
 xesmf = "*"
 
-[feature."example-3.13".dependencies]
-bokeh_sampledata = "*"
-# datashader = "*"
-fiona = "*"
-geopandas-base = "*"
-iris = ">=3.5"
-matplotlib-base = ">2.2"
-mock = "*"
-netcdf4 = "*"
-pandas = "*"
-scipy = "*"
-shapely = "*"
-xarray = "*"
-xesmf = "*"
-
 [feature.download-data.tasks]
 download-data = 'python scripts/download_data.py'
 
@@ -113,23 +98,6 @@ test-unit = 'pytest geoviews/tests -n logical --dist loadgroup'
 [feature.test.dependencies]
 cftime = "*"
 datashader = "*"
-filelock = "*"
-fiona = "*"
-geopandas-base = "*"
-iris = ">=3.5"
-matplotlib-base = ">2.2"
-nbval = "*"
-netcdf4 = "*"
-pandas = "*"
-pyviz_comms = "*"
-rioxarray = "*"
-scipy = "*"
-shapely = "*"
-xarray = "*"
-
-[feature."test-3.13".dependencies]
-cftime = "*"
-# datashader = "*"
 filelock = "*"
 fiona = "*"
 geopandas-base = "*"

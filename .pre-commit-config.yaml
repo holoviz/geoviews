@@ -17,7 +17,7 @@ repos:
       - id: check-json
       - id: detect-private-key
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.3
+    rev: v0.10.0
     hooks:
       - id: ruff
         files: geoviews/
@@ -26,7 +26,7 @@ repos:
     hooks:
       - id: clean-notebook
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.3.0
+    rev: v2.4.1
     hooks:
     - id: codespell
       additional_dependencies:

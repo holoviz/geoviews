@@ -32,4 +32,6 @@ with suppress(ImportError):
 with suppress(ImportError):
     from cartopy.feature import shapereader
 
-    shapereader.natural_earth()
+    shapereader.natural_earth(name="coastline")
+    shapereader.natural_earth(name="land")
+    shapereader.natural_earth(name="ocean")

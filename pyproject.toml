@@ -161,7 +161,7 @@ addopts = [
     "--color=yes",
 ]
 norecursedirs = "doc .git dist build _build .ipynb_checkpoints"
-minversion = 7
+minversion = "7"
 xfail_strict = true
 log_cli_level = "INFO"
 filterwarnings = [
@@ -181,4 +181,6 @@ filterwarnings = [
     # 2024-03
     "ignore:\\s*Dask dataframe query planning is disabled because dask-expr is not installed:FutureWarning",
     "ignore:numpy.ndarray size changed, may indicate binary incompatibility:RuntimeWarning", # https://github.com/pydata/xarray/issues/7259
+    # 2025-04
+    "ignore:The 'shapely.geos' module is deprecated, and will be removed in a future version:DeprecationWarning", # https://github.com/geopandas/geopandas/pull/3453
 ]

@@ -2,8 +2,7 @@ from holoviews.streams import PolyDraw, PolyEdit
 
 
 class PolyVertexEdit(PolyEdit):
-    """
-    Attaches a PolyVertexEditTool and syncs the datasource.
+    """Attaches a PolyVertexEditTool and syncs the datasource.
 
     shared: boolean
         Whether PolyEditTools should be shared between multiple elements
@@ -26,8 +25,7 @@ class PolyVertexEdit(PolyEdit):
 
 
 class PolyVertexDraw(PolyDraw):
-    """
-    Attaches a PolyVertexDrawTool and syncs the datasource.
+    """Attaches a PolyVertexDrawTool and syncs the datasource.
 
     shared: boolean
         Whether PolyEditTools should be shared between multiple elements

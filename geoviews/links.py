@@ -8,8 +8,7 @@ from holoviews.plotting.links import Link, RectanglesTableLink as HvRectanglesTa
 
 
 class PointTableLink(Link):
-    """
-    Defines a Link between a Points type and a Table which will
+    """Defines a Link between a Points type and a Table which will
     display the projected coordinates.
     """
 
@@ -25,8 +24,7 @@ class PointTableLink(Link):
 
 
 class VertexTableLink(Link):
-    """
-    Defines a Link between a Path type and a Table which will
+    """Defines a Link between a Path type and a Table which will
     display the vertices of selected path.
     """
 
@@ -42,9 +40,7 @@ class VertexTableLink(Link):
 
 
 class RectanglesTableLink(HvRectanglesTableLink):
-    """
-    Links a Rectangles element to a Table.
-    """
+    """Links a Rectangles element to a Table."""
 
 
 class PointTableLinkCallback(LinkCallback):

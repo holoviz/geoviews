@@ -23,8 +23,7 @@ def warn(message, category=None, stacklevel=None):
 
 
 def find_stack_level():
-    """
-    Find the first place in the stack that is not inside
+    """Find the first place in the stack that is not inside
     Geoviews, Holoviews, or Param.
 
     Inspired by: pandas.util._exceptions.find_stack_level
@@ -79,12 +78,14 @@ def deprecated(remove_version, old, new=None, extra=None):
 
 class GeoviewsDeprecationWarning(DeprecationWarning):
     """A Geoviews-specific ``DeprecationWarning`` subclass.
+
     Used to selectively filter Geoviews deprecations for unconditional display.
     """
 
 
 class GeoviewsUserWarning(UserWarning):
     """A Geoviews-specific ``UserWarning`` subclass.
+
     Used to selectively filter Geoviews warnings for unconditional display.
     """
 

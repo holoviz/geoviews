@@ -33,16 +33,14 @@ shapely_v2 = shapely_version >= Version("2")
 
 
 def wrap_lons(lons, base, period):
-    """
-    Wrap longitude values into the range between base and base+period.
+    """Wrap longitude values into the range between base and base+period.
     """
     lons = lons.astype(np.float64)
     return ((lons - base + period * 2) % period) + base
 
 
 def expand_geoms(geoms):
-    """
-    Expands multi-part geometries in a list of geometries.
+    """Expands multi-part geometries in a list of geometries.
     """
     expanded = []
     for geom in geoms:
@@ -118,8 +116,7 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
 
 
 def zoom_level(bounds, width, height):
-    """
-    Compute zoom level given bounds and the plot size.
+    """Compute zoom level given bounds and the plot size.
     """
     w, s, e, n = bounds
     max_width, max_height = 256, 256
@@ -146,8 +143,7 @@ def zoom_level(bounds, width, height):
 
 
 def geom_dict_to_array_dict(geom_dict, coord_names=None):
-    """
-    Converts a dictionary containing an geometry key to a dictionary
+    """Converts a dictionary containing an geometry key to a dictionary
     of x- and y-coordinate arrays and if present a list-of-lists of
     hole array.
     """
@@ -178,8 +174,7 @@ def geom_dict_to_array_dict(geom_dict, coord_names=None):
 
 
 def unpack_geoms(geom_el):
-    """
-    Unpacks the data in a geometry element if it is already in a
+    """Unpacks the data in a geometry element if it is already in a
     geometry format.
     """
     interface = geom_el.interface
@@ -202,8 +197,7 @@ def unpack_geoms(geom_el):
 
 
 def polygons_to_geom_dicts(polygons, skip_invalid=True):
-    """
-    Converts a Polygons element into a list of geometry dictionaries,
+    """Converts a Polygons element into a list of geometry dictionaries,
     preserving all value dimensions.
 
     For array conversion the following conventions are applied:
@@ -275,8 +269,7 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
 
 
 def path_to_geom_dicts(fullpath, skip_invalid=True):
-    """
-    Converts a Path element into a list of geometry dictionaries,
+    """Converts a Path element into a list of geometry dictionaries,
     preserving all value dimensions.
     """
     geoms = unpack_geoms(fullpath)
@@ -321,8 +314,7 @@ def path_to_geom_dicts(fullpath, skip_invalid=True):
 
 
 def to_ccw(geom):
-    """
-    Reorients polygon to be wound counter-clockwise.
+    """Reorients polygon to be wound counter-clockwise.
     """
     if isinstance(geom, sgeom.Polygon) and not geom.exterior.is_ccw:
         geom = sgeom.polygon.orient(geom)
@@ -330,8 +322,7 @@ def to_ccw(geom):
 
 
 def geom_to_arr(geom):
-    """
-    LineString, LinearRing and Polygon (exterior only?)
+    """LineString, LinearRing and Polygon (exterior only?)
     """
     # LineString and LinearRing geoms have an xy attribute
     try:
@@ -359,8 +350,7 @@ def geom_to_arr(geom):
 
 
 def geom_length(geom):
-    """
-    Calculates the length of coordinates in a shapely geometry.
+    """Calculates the length of coordinates in a shapely geometry.
     """
     if geom.geom_type == 'Point':
         return 1
@@ -385,8 +375,7 @@ def geom_length(geom):
 
 
 def geom_to_array(geom):
-    """
-    Convert the coords of a shapely Geometry to a numpy array.
+    """Convert the coords of a shapely Geometry to a numpy array.
     """
     if geom.geom_type == 'Point':
         return np.array([[geom.x, geom.y]])
@@ -417,8 +406,7 @@ def geom_to_array(geom):
 
 
 def geo_mesh(element):
-    """
-    Get mesh data from a 2D Element ensuring that if the data is
+    """Get mesh data from a 2D Element ensuring that if the data is
     on a cylindrical coordinate system and wraps globally that data
     actually wraps around.
     """
@@ -438,15 +426,13 @@ def geo_mesh(element):
 
 
 def is_multi_geometry(geom):
-    """
-    Whether the shapely geometry is a Multi or Collection type.
+    """Whether the shapely geometry is a Multi or Collection type.
     """
     return 'Multi' in geom.geom_type or 'Collection' in geom.geom_type
 
 
 def check_crs(crs):
-    """
-    Checks if the crs represents a valid grid, projection or ESPG string.
+    """Checks if the crs represents a valid grid, projection or ESPG string.
 
     (Code copied from https://github.com/fmaussion/salem)
 
@@ -480,8 +466,7 @@ def check_crs(crs):
 
 
 def proj_to_cartopy(proj):
-    """
-    Converts a pyproj.Proj to a cartopy.crs.Projection
+    """Converts a pyproj.Proj to a cartopy.crs.Projection
 
     (Code copied from https://github.com/fmaussion/salem)
 
@@ -577,8 +562,7 @@ def is_pyproj(crs):
 
 
 def process_crs(crs):
-    """
-    Parses cartopy CRS definitions defined in one of a few formats:
+    """Parses cartopy CRS definitions defined in one of a few formats:
 
       1. EPSG codes:   Defined as string of the form "EPSG: {code}" or an integer
       2. proj.4 string: Defined as string of the form "{proj.4 string}"
@@ -618,8 +602,7 @@ def process_crs(crs):
 
 
 def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
-    """
-    Returns an RGB or Image element given an xarray DataArray
+    """Returns an RGB or Image element given an xarray DataArray
     loaded using xr.open_rasterio.
 
     If a crs attribute is present on the loaded data it will
@@ -630,7 +613,7 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
     ----------
     da: xarray.DataArray
       DataArray to convert to element
-    crs: Cartopy CRS or EPSG string (optional)
+    crs: Cartopy CRS or EPSG string, optional
       Overrides CRS inferred from the data
     apply_transform: boolean
       Whether to apply affine transform if defined on the data
@@ -641,7 +624,8 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
 
     Returns
     -------
-    element: Image/RGB/QuadMesh element
+    element
+        Image/RGB/QuadMesh element
     """
     if crs:
         kwargs['crs'] = crs
@@ -725,8 +709,7 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
 
 
 def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=None):
-    """
-    Returns an RGB element given a tile_source, bounding box and zoom level.
+    """Returns an RGB element given a tile_source, bounding box and zoom level.
 
     Parameters
     ----------

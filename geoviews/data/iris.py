@@ -26,9 +26,7 @@ def get_date_format(coord):
 
 
 def coord_to_dimension(coord):
-    """
-    Converts an iris coordinate to a HoloViews dimension.
-    """
+    """Converts an iris coordinate to a HoloViews dimension."""
     kwargs = {}
     if coord.units.is_time_reference():
         kwargs['value_format'] = get_date_format(coord)
@@ -38,8 +36,7 @@ def coord_to_dimension(coord):
 
 
 def sort_coords(coord):
-    """
-    Sorts a list of DimCoords trying to ensure that
+    """Sorts a list of DimCoords trying to ensure that
     dates and pressure levels appear first and the
     longitude and latitude appear last in the correct
     order.
@@ -52,8 +49,7 @@ def sort_coords(coord):
 
 
 class CubeInterface(GridInterface):
-    """
-    The CubeInterface provides allows HoloViews to interact with iris
+    """The CubeInterface provides allows HoloViews to interact with iris
     Cube data. When passing an iris Cube to a HoloViews Element the
     init method will infer the dimensions of the Cube from its
     coordinates. Currently the interface only provides the basic
@@ -222,9 +218,7 @@ class CubeInterface(GridInterface):
 
     @classmethod
     def values(cls, dataset, dim, expanded=True, flat=True, compute=True, keep_index=False):
-        """
-        Returns an array of the values along the supplied dimension.
-        """
+        """Returns an array of the values along the supplied dimension."""
         dim = dataset.get_dimension(dim, strict=True)
         if dim in dataset.vdims:
             coord_names = [c.name() for c in dataset.data.dim_coords]
@@ -260,8 +254,7 @@ class CubeInterface(GridInterface):
 
     @classmethod
     def groupby(cls, dataset, dims, container_type=HoloMap, group_type=None, **kwargs):
-        """
-        Groups the data by one or more dimensions returning a container
+        """Groups the data by one or more dimensions returning a container
         indexed by the grouped dimensions containing slices of the
         cube wrapped in the group_type. This makes it very easy to
         break up a high-dimensional dataset into smaller viewable chunks.
@@ -302,9 +295,7 @@ class CubeInterface(GridInterface):
 
     @classmethod
     def concat_dim(cls, datasets, dim, vdims):
-        """
-        Concatenates datasets along one dimension
-        """
+        """Concatenates datasets along one dimension."""
         import iris
         try:
             from iris.util import equalise_attributes
@@ -323,9 +314,7 @@ class CubeInterface(GridInterface):
 
     @classmethod
     def range(cls, dataset, dimension):
-        """
-        Computes the range along a particular dimension.
-        """
+        """Computes the range along a particular dimension."""
         dim = dataset.get_dimension(dimension, strict=True)
         values = dataset.dimension_values(dim.name, False)
         return (np.nanmin(values), np.nanmax(values))
@@ -333,9 +322,7 @@ class CubeInterface(GridInterface):
 
     @classmethod
     def redim(cls, dataset, dimensions):
-        """
-        Rename coords on the Cube.
-        """
+        """Rename coords on the Cube."""
         new_dataset = dataset.data.copy()
         for name, new_dim in dimensions.items():
             if name == new_dataset.name():
@@ -348,17 +335,13 @@ class CubeInterface(GridInterface):
 
     @classmethod
     def length(cls, dataset):
-        """
-        Returns the total number of samples in the dataset.
-        """
+        """Returns the total number of samples in the dataset."""
         return np.prod([len(d.points) for d in dataset.data.coords(dim_coords=True)], dtype=np.intp)
 
 
     @classmethod
     def sort(cls, columns, by=None, reverse=False):
-        """
-        Cubes are assumed to be sorted by default.
-        """
+        """Cubes are assumed to be sorted by default."""
         if by is None:
             by = []
         return columns
@@ -366,17 +349,13 @@ class CubeInterface(GridInterface):
 
     @classmethod
     def aggregate(cls, columns, kdims, function, **kwargs):
-        """
-        Aggregation currently not implemented.
-        """
+        """Aggregation currently not implemented."""
         raise NotImplementedError
 
 
     @classmethod
     def sample(cls, dataset, samples=None):
-        """
-        Sampling currently not implemented.
-        """
+        """Sampling currently not implemented."""
         if samples is None:
             samples = []
         raise NotImplementedError
@@ -384,8 +363,8 @@ class CubeInterface(GridInterface):
 
     @classmethod
     def add_dimension(cls, columns, dimension, dim_pos, values, vdim):
-        """
-        Adding value dimensions not currently supported by iris interface.
+        """Adding value dimensions not currently supported by iris interface.
+
         Adding key dimensions not possible on dense interfaces.
         """
         if not vdim:
@@ -395,9 +374,7 @@ class CubeInterface(GridInterface):
 
     @classmethod
     def select_to_constraint(cls, dataset, selection):
-        """
-        Transform a selection dictionary to an iris Constraint.
-        """
+        """Transform a selection dictionary to an iris Constraint."""
         import iris
 
         def get_slicer(start, end):
@@ -419,9 +396,7 @@ class CubeInterface(GridInterface):
 
     @classmethod
     def select(cls, dataset, selection_mask=None, **selection):
-        """
-        Apply a selection to the data.
-        """
+        """Apply a selection to the data."""
         import iris
         constraint = cls.select_to_constraint(dataset, selection)
         pre_dim_coords = [c.name() for c in dataset.data.dim_coords]

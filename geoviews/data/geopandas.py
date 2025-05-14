@@ -534,10 +534,14 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
 def get_geom_type(geom):
     """Returns the HoloViews geometry type.
 
-    Args:
-        geom: A shapely geometry
+    Parameters
+    ----------
+    geom
+        A shapely geometry
 
-    Returns:
+    Returns
+    -------
+    str
         A string representing type of the geometry.
     """
     from shapely.geometry import (
@@ -562,14 +566,20 @@ def get_geom_type(geom):
 def to_geopandas(data, xdim, ydim, columns=None, geom='point'):
     """Converts list of dictionary format geometries to spatialpandas line geometries.
 
-    Args:
-        data: List of dictionaries representing individual geometries
-        xdim: Name of x-coordinates column
-        ydim: Name of y-coordinates column
-        ring: Whether the data represents a closed ring
+    Parameters
+    ----------
+    data
+        List of dictionaries representing individual geometries
+    xdim
+        Name of x-coordinates column
+    ydim
+        Name of y-coordinates column
+    ring
+        Whether the data represents a closed ring
 
-    Returns:
-        A spatialpandas.GeoDataFrame version of the data
+    Returns
+    -------
+    A spatialpandas.GeoDataFrame version of the data
     """
     from geopandas import GeoDataFrame
     from shapely.geometry import (
@@ -604,14 +614,20 @@ def to_geopandas(data, xdim, ydim, columns=None, geom='point'):
 def from_multi(eltype, data, kdims, vdims):
     """Converts list formats into geopandas.GeoDataFrame.
 
-    Args:
-        eltype: Element type to convert
-        data: The original data
-        kdims: The declared key dimensions
-        vdims: The declared value dimensions
+    Parameters
+    ----------
+    eltype
+        Element type to convert
+    data
+        The original data
+    kdims
+        The declared key dimensions
+    vdims
+        The declared value dimensions
 
-    Returns:
-        A GeoDataFrame containing the data in the list based format.
+    Returns
+    -------
+    A GeoDataFrame containing the data in the list based format.
     """
 
     from geopandas import GeoDataFrame

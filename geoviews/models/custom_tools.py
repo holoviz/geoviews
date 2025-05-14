@@ -25,8 +25,7 @@ class _BokehCheck(Tool):
 
 
 class CheckpointTool(_BokehCheck, Tool):
-    """
-    Checkpoints the data on the supplied ColumnDataSources, allowing
+    """Checkpoints the data on the supplied ColumnDataSources, allowing
     the RestoreTool to restore the data to a previous state.
     """
 
@@ -34,8 +33,7 @@ class CheckpointTool(_BokehCheck, Tool):
 
 
 class RestoreTool(_BokehCheck, Tool):
-    """
-    Restores the data on the supplied ColumnDataSources to a previous
+    """Restores the data on the supplied ColumnDataSources to a previous
     checkpoint created by the CheckpointTool
     """
 
@@ -43,9 +41,7 @@ class RestoreTool(_BokehCheck, Tool):
 
 
 class ClearTool(_BokehCheck, Tool):
-    """
-    Clears the data on the supplied ColumnDataSources.
-    """
+    """Clears the data on the supplied ColumnDataSources."""
 
     sources = List(Instance(ColumnDataSource))
 

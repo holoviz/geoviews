@@ -94,6 +94,7 @@ fix = true
 [tool.ruff.lint]
 select = [
     "B",
+    "D",
     "E",
     "F",
     "FLY",
@@ -127,6 +128,12 @@ ignore = [
     "RUF012", # Mutable class attributes should use `typing.ClassVar`
     'B905', # `zip()` without an explicit `strict=` parameter
     'UP038', # Use `X | Y` in `isinstance` call instead of `(X, Y)`
+    "D1", # Undocumented code
+    "D200", # Unnecessary-multiline-docstring
+    "D205", # Missing-blank-line-after-summary
+    "D400", # Missing-trailing-period
+    "D401", # Non-imperative-mood
+    "D404", # Docstring-starts-with-this
 ]
 
 extend-unsafe-fixes = [
@@ -141,11 +148,15 @@ extend-unsafe-fixes = [
     "RUF002", # Ambiguous unicode character
     "RUF003", # Ambiguous unicode character
     "NPY002", # Replace legacy `np.random.rand` call with Generator
+    "D", # pydocstyle
 ]
 
 [tool.ruff.lint.isort]
 known-first-party = ["geoviews"]
 combine-as-imports = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
 
 [tool.codespell]
 ignore-words-list = "lod,nd"

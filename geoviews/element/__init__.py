@@ -69,8 +69,7 @@ __all__ = (
 
 
 class GeoConversion(ElementConversion):
-    """
-    GeoConversion is a very simple container object which can
+    """GeoConversion is a very simple container object which can
     be given an existing Dataset and provides methods to convert
     the Dataset into most other Element types. If the requested
     key dimensions correspond to geographical coordinates the

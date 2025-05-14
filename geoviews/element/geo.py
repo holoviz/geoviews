@@ -88,8 +88,7 @@ def _check_bokeh_mercator(data) -> bool:
     return False
 
 def is_geographic(element, kdims=None):
-    """
-    Utility to determine whether the supplied element optionally
+    """Utility to determine whether the supplied element optionally
     a subset of its key dimensions represent a geographic coordinate
     system.
     """
@@ -112,8 +111,7 @@ def is_geographic(element, kdims=None):
 
 
 class _Element(Element2D):
-    """
-    Baseclass for Element2D types with associated cartopy
+    """Baseclass for Element2D types with associated cartopy
     coordinate reference system.
     """
 
@@ -160,8 +158,7 @@ class _Element(Element2D):
 
 
 class _GeoFeature(_Element):
-    """
-    Baseclass for geographic types without their own data.
+    """Baseclass for geographic types without their own data.
     """
 
     _auxiliary_component = True
@@ -174,8 +171,7 @@ class _GeoFeature(_Element):
 
 
 class Feature(_GeoFeature):
-    """
-    A Feature represents a geographical feature
+    """A Feature represents a geographical feature
     specified as a cartopy Feature type.
     """
 
@@ -190,8 +186,7 @@ class Feature(_GeoFeature):
         return self.clone().opts(*args, **kwargs)
 
     def geoms(self, scale=None, bounds=None, as_element=True):
-        """
-        Returns the geometries held by the Feature.
+        """Returns the geometries held by the Feature.
 
         Parameters
         ----------
@@ -247,8 +242,7 @@ class Feature(_GeoFeature):
 
 
 class WMTS(_GeoFeature):
-    """
-    The WMTS Element represents a Web Map Tile Service specified as URL
+    """The WMTS Element represents a Web Map Tile Service specified as URL
     containing different template variables or xyzservices.TileProvider.
 
     These variables correspond to three different formats for specifying the spatial
@@ -290,8 +284,7 @@ class WMTS(_GeoFeature):
 
 
 class Tiles(WMTS):
-    """
-    Tiles represents an image tile source to dynamically
+    """Tiles represents an image tile source to dynamically
     load data from depending on the zoom level.
     """
 
@@ -299,8 +292,7 @@ class Tiles(WMTS):
 
 
 class Dataset(_Element, HvDataset):
-    """
-    Coordinate system aware version of a HoloViews dataset.
+    """Coordinate system aware version of a HoloViews dataset.
     """
 
     kdims = param.List(default=[Dimension('Longitude'), Dimension('Latitude')],
@@ -311,20 +303,18 @@ class Dataset(_Element, HvDataset):
 
 
 class Points(_Element, HvPoints):
-    """
-    Points represent a collection of points with
+    """Points represent a collection of points with
     an associated cartopy coordinate-reference system.
     """
 
     group = param.String(default='Points')
 
     def geom(self, union=False, projection=None):
-        """
-        Converts the Points to a shapely geometry.
+        """Converts the Points to a shapely geometry.
 
         Parameters
         ----------
-        union: boolean (default=False)
+        union: boolean, default=False
             Whether to compute a union between the geometries
         projection : EPSG string | Cartopy CRS | None
             Whether to project the geometry to other coordinate system
@@ -347,8 +337,7 @@ class Points(_Element, HvPoints):
 
 
 class HexTiles(_Element, HvHexTiles):
-    """
-    Points represent a collection of points with
+    """Points represent a collection of points with
     an associated cartopy coordinate-reference system.
     """
 
@@ -357,8 +346,7 @@ class HexTiles(_Element, HvHexTiles):
 
 
 class Labels(_Element, HvLabels):
-    """
-    Points represent a collection of points with
+    """Points represent a collection of points with
     an associated cartopy coordinate-reference system.
     """
 
@@ -366,8 +354,7 @@ class Labels(_Element, HvLabels):
 
 
 class VectorField(_Element, HvVectorField):
-    """
-    A VectorField contains is a collection of vectors where each
+    """A VectorField contains is a collection of vectors where each
     vector has an associated position. The vectors should be specified
     by defining an angle in radians and a magnitude.
     """
@@ -417,8 +404,7 @@ class WindBarbs(_Element, Selection2DExpr, HvGeometry):
 
 
 class Image(_Element, HvImage):
-    """
-    Image represents a 2D array of some quantity with
+    """Image represents a 2D array of some quantity with
     some associated coordinates.
     """
 
@@ -433,8 +419,7 @@ class Image(_Element, HvImage):
 
 
 class ImageStack(_Element, HvImageStack):
-    """
-    ImageStack expands the capabilities of Image to by supporting
+    """ImageStack expands the capabilities of Image to by supporting
     multiple layers of images.
 
     As there is many ways to represent multiple layers of images,
@@ -472,8 +457,7 @@ class ImageStack(_Element, HvImageStack):
 
 
 class QuadMesh(_Element, HvQuadMesh):
-    """
-    QuadMesh is a Raster type to hold x- and y- bin values
+    """QuadMesh is a Raster type to hold x- and y- bin values
     with associated values. The x- and y-values of the QuadMesh
     may be supplied either as the edges of each bin allowing
     uneven sampling or as the bin centers, which will be converted
@@ -508,8 +492,7 @@ class QuadMesh(_Element, HvQuadMesh):
 
 
 class LineContours(QuadMesh):
-    """
-    LineContours represents a 2D array of some quantity with
+    """LineContours represents a 2D array of some quantity with
     some associated coordinates, which may be discretized
     into one or more line contours.
     """
@@ -518,8 +501,7 @@ class LineContours(QuadMesh):
 
 
 class FilledContours(QuadMesh):
-    """
-    Contours represents a 2D array of some quantity with
+    """Contours represents a 2D array of some quantity with
     some associated coordinates, which may be discretized
     into one or more filled contours.
     """
@@ -528,8 +510,7 @@ class FilledContours(QuadMesh):
 
 
 class RGB(_Element, HvRGB):
-    """
-    An RGB element is a Image containing channel data for the the
+    """An RGB element is a Image containing channel data for the the
     red, green, blue and (optionally) the alpha channels. The values
     of each channel must be in the range 0.0 to 1.0.
 
@@ -552,8 +533,7 @@ class RGB(_Element, HvRGB):
     @classmethod
     def from_xarray(cls, da, crs=None, apply_transform=False,
                     nan_nodata=False, **kwargs):
-        """
-        Returns an RGB or Image element given an xarray DataArray
+        """Returns an RGB or Image element given an xarray DataArray
         loaded using xr.open_rasterio.
 
         If a crs attribute is present on the loaded data it will
@@ -575,15 +555,15 @@ class RGB(_Element, HvRGB):
 
         Returns
         -------
-        element: Image/RGB/QuadMesh element
+        element
+            Image/RGB/QuadMesh element
         """
         return from_xarray(da, crs, apply_transform, **kwargs)
 
 
 
 class Nodes(_Element, HvNodes):
-    """
-    Nodes is a simple Element representing Graph nodes as a set of
+    """Nodes is a simple Element representing Graph nodes as a set of
     Points.  Unlike regular Points, Nodes must define a third key
     dimension corresponding to the node index.
     """
@@ -596,27 +576,24 @@ class Nodes(_Element, HvNodes):
 
 
 class Text(HvText, _Element):
-    """
-    An annotation containing some text at an x, y coordinate
+    """An annotation containing some text at an x, y coordinate
     along with a coordinate reference system.
     """
 
 
 class Path(_Element, HvPath):
-    """
-    The Path Element contains a list of Paths stored as Nx2 numpy
+    """The Path Element contains a list of Paths stored as Nx2 numpy
     arrays along with a coordinate reference system.
     """
 
     group = param.String(default='Path', constant=True)
 
     def geom(self, union=False, projection=None):
-        """
-        Converts the Path to a shapely geometry.
+        """Converts the Path to a shapely geometry.
 
         Parameters
         ----------
-        union: boolean (default=False)
+        union: boolean, default=False
             Whether to compute a union between the geometries
         projection : EPSG string | Cartopy CRS | None
             Whether to project the geometry to other coordinate system
@@ -639,8 +616,7 @@ class Path(_Element, HvPath):
 
 
 class EdgePaths(Path):
-    """
-    EdgePaths is a simple Element representing the paths of edges
+    """EdgePaths is a simple Element representing the paths of edges
     connecting nodes in a graph.
     """
 
@@ -689,8 +665,7 @@ class Graph(_Element, HvGraph):
 
     @property
     def edgepaths(self):
-        """
-        Returns the fixed EdgePaths or computes direct connections
+        """Returns the fixed EdgePaths or computes direct connections
         between supplied nodes.
         """
         edgepaths = super().edgepaths
@@ -741,8 +716,7 @@ class TriMesh(HvTriMesh, Graph):
 
     @property
     def edgepaths(self):
-        """
-        Returns the fixed EdgePaths or computes direct connections
+        """Returns the fixed EdgePaths or computes direct connections
         between supplied nodes.
         """
         edgepaths = super().edgepaths
@@ -751,8 +725,7 @@ class TriMesh(HvTriMesh, Graph):
 
 
 class Contours(_Element, HvContours):
-    """
-    Contours is a Path Element type that may contain any number of
+    """Contours is a Path Element type that may contain any number of
     closed paths with an associated value and a coordinate reference
     system.
     """
@@ -760,12 +733,11 @@ class Contours(_Element, HvContours):
     group = param.String(default='Contours', constant=True)
 
     def geom(self, union=False, projection=None):
-        """
-        Converts the Contours to a shapely geometry.
+        """Converts the Contours to a shapely geometry.
 
         Parameters
         ----------
-        union: boolean (default=False)
+        union: boolean, default=False
             Whether to compute a union between the geometries
         projection : EPSG string | Cartopy CRS | None
             Whether to project the geometry to other coordinate system
@@ -788,8 +760,7 @@ class Contours(_Element, HvContours):
 
 
 class Polygons(_Element, HvPolygons):
-    """
-    Polygons is a Path Element type that may contain any number of
+    """Polygons is a Path Element type that may contain any number of
     closed paths with an associated value and a coordinate reference
     system.
     """
@@ -797,12 +768,11 @@ class Polygons(_Element, HvPolygons):
     group = param.String(default='Polygons', constant=True)
 
     def geom(self, union=False, projection=None):
-        """
-        Converts the Path to a shapely geometry.
+        """Converts the Path to a shapely geometry.
 
         Parameters
         ----------
-        union: boolean (default=False)
+        union: boolean, default=False
             Whether to compute a union between the geometries
         projection : EPSG string | Cartopy CRS | None
             Whether to project the geometry to other coordinate system
@@ -825,8 +795,7 @@ class Polygons(_Element, HvPolygons):
 
 
 class Rectangles(_Element, HvRectangles):
-    """
-    Rectangles represent a collection of axis-aligned rectangles in 2D space.
+    """Rectangles represent a collection of axis-aligned rectangles in 2D space.
     """
 
     group = param.String(default='Rectangles', constant=True)
@@ -839,12 +808,11 @@ class Rectangles(_Element, HvRectangles):
         of each box.""")
 
     def geom(self, union=False, projection=None):
-        """
-        Converts the Rectangles to a shapely geometry.
+        """Converts the Rectangles to a shapely geometry.
 
         Parameters
         ----------
-        union: boolean (default=False)
+        union: boolean, default=False
             Whether to compute a union between the geometries
         projection : EPSG string | Cartopy CRS | None
             Whether to project the geometry to other coordinate system
@@ -867,8 +835,7 @@ class Rectangles(_Element, HvRectangles):
 
 
 class Segments(_Element, HvSegments):
-    """
-    Segments represent a collection of lines in 2D space.
+    """Segments represent a collection of lines in 2D space.
     """
 
     group = param.String(default='Segments', constant=True)
@@ -881,8 +848,7 @@ class Segments(_Element, HvSegments):
         of each segment.""")
 
     def geom(self, union=False, projection=None):
-        """
-        Converts the Segments to a shapely geometry.
+        """Converts the Segments to a shapely geometry.
         """
         lines = [LineString([(x0, y0), (x1, y1)]) for (x0, y0, x1, y1)
                  in self.array([0, 1, 2, 3])]
@@ -899,8 +865,7 @@ class Segments(_Element, HvSegments):
 
 
 class Shape(Dataset):
-    """
-    Shape wraps any shapely geometry type.
+    """Shape wraps any shapely geometry type.
     """
 
     group = param.String(default='Shape')
@@ -929,8 +894,7 @@ class Shape(Dataset):
 
     @classmethod
     def from_shapefile(cls, shapefile, *args, **kwargs):
-        """
-        Loads a shapefile from disk and optionally merges
+        """Loads a shapefile from disk and optionally merges
         it with a dataset. See ``from_records`` for full
         signature.
 
@@ -965,8 +929,7 @@ class Shape(Dataset):
     @classmethod
     def from_records(cls, records, dataset=None, on=None, value=None,
                      index=None, drop_missing=False, element=None, **kwargs):
-        """
-        Load data from a collection of `cartopy.io.shapereader.Record`
+        """Load data from a collection of `cartopy.io.shapereader.Record`
         objects and optionally merge it with a dataset to assign
         values to each polygon and form a chloropleth. Supplying just
         records will return an NdOverlayof Shape Elements with a
@@ -1080,12 +1043,11 @@ class Shape(Dataset):
 
 
     def geom(self, union=False, projection=None):
-        """
-        Returns the Shape as a shapely geometry
+        """Returns the Shape as a shapely geometry
 
         Parameters
         ----------
-        union: boolean (default=False)
+        union: boolean, default=False
             Whether to compute a union between the geometries
         projection : EPSG string | Cartopy CRS | None
             Whether to project the geometry to other coordinate system

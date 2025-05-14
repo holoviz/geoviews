@@ -20,9 +20,7 @@ class Comparison(HvComparison):
 
 
 class ComparisonTestCase(Comparison, TestCase):
-    """
-    Class to integrate the Comparison class with unittest.TestCase.
-    """
+    """Class to integrate the Comparison class with unittest.TestCase."""
 
     def __init__(self, *args, **kwargs):
         TestCase.__init__(self, *args, **kwargs)

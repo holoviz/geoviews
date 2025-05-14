@@ -134,6 +134,7 @@ ignore = [
     "D400", # Missing-trailing-period
     "D401", # Non-imperative-mood
     "D404", # Docstring-starts-with-this
+    "D419", # Docstring is empty
 ]
 
 extend-unsafe-fixes = [

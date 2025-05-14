@@ -474,6 +474,7 @@ def proj_to_cartopy(proj):
     ----------
     proj: pyproj.Proj
         the projection to convert
+
     Returns
     -------
     a cartopy.crs.Projection object
@@ -564,10 +565,10 @@ def is_pyproj(crs):
 def process_crs(crs):
     """Parses cartopy CRS definitions defined in one of a few formats:
 
-      1. EPSG codes:   Defined as string of the form "EPSG: {code}" or an integer
-      2. proj.4 string: Defined as string of the form "{proj.4 string}"
-      3. cartopy.crs.CRS instance
-      4. None defaults to crs.PlateCaree
+    1. EPSG codes:   Defined as string of the form "EPSG: {code}" or an integer
+    2. proj.4 string: Defined as string of the form "{proj.4 string}"
+    3. cartopy.crs.CRS instance
+    4. None defaults to crs.PlateCaree
     """
     try:
         import cartopy.crs as ccrs
@@ -727,7 +728,6 @@ def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=None):
     -------
     RGB element containing the tile data in the specified bbox
     """
-
     from .element import RGB, WMTS
     if bbox_crs is None:
         bbox_crs = ccrs.PlateCarree()

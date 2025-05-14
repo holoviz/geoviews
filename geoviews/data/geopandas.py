@@ -629,7 +629,6 @@ def from_multi(eltype, data, kdims, vdims):
     -------
     A GeoDataFrame containing the data in the list based format.
     """
-
     from geopandas import GeoDataFrame
 
     new_data = []

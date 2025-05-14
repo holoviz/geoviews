@@ -141,7 +141,7 @@ class CubeInterface(GridInterface):
 
     @classmethod
     def irregular(cls, dataset, dim):
-        "CubeInterface does not support irregular data"
+        """CubeInterface does not support irregular data"""
         return False
 
 

@@ -80,8 +80,7 @@ from .chart import WindBarbsPlot
 
 
 class LayoutPlot(ProjectionPlot, HvLayoutPlot):
-    """
-    Extends HoloViews LayoutPlot with functionality to determine
+    """Extends HoloViews LayoutPlot with functionality to determine
     the correct projection for each axis.
     """
 
@@ -94,8 +93,7 @@ class LayoutPlot(ProjectionPlot, HvLayoutPlot):
 
 
 class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
-    """
-    Extends HoloViews OverlayPlot with functionality to determine
+    """Extends HoloViews OverlayPlot with functionality to determine
     the correct projection for each axis.
     """
 
@@ -134,9 +132,7 @@ class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
 
 
 class GeoPlot(ProjectionPlot, ElementPlot):
-    """
-    Plotting baseclass for geographic plots with a cartopy projection.
-    """
+    """Plotting baseclass for geographic plots with a cartopy projection."""
 
     apply_ranges = param.Boolean(default=False, doc="""
         Do not use ranges to compute plot extents by default.""")
@@ -242,9 +238,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         return super().get_data(element, ranges, style)
 
     def teardown_handles(self):
-        """
-        Delete artist handle so it can be redrawn.
-        """
+        """Delete artist handle so it can be redrawn."""
         try:
             self.handles['artist'].remove()
         except ValueError:
@@ -253,9 +247,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
 
 class GeoImagePlot(GeoPlot, RasterPlot):
-    """
-    Draws a pcolormesh plot from the data in a Image Element.
-    """
+    """Draws a pcolormesh plot from the data in a Image Element."""
 
     style_opts = ['alpha', 'cmap', 'visible', 'filterrad', 'clims', 'norm']
 
@@ -276,9 +268,7 @@ class GeoImagePlot(GeoPlot, RasterPlot):
 
 
     def update_handles(self, *args):
-        """
-        Update the elements of the plot.
-        """
+        """Update the elements of the plot."""
         return GeoPlot.update_handles(self, *args)
 
 
@@ -294,9 +284,7 @@ class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):
 
 
 class GeoRGBPlot(GeoImagePlot):
-    """
-    Draws a imshow plot from the data in a RGB Element.
-    """
+    """Draws a imshow plot from the data in a RGB Element."""
 
     style_opts = ['alpha', 'visible', 'filterrad']
 
@@ -318,16 +306,12 @@ class GeoRGBPlot(GeoImagePlot):
 
 
     def update_handles(self, *args):
-        """
-        Update the elements of the plot.
-        """
+        """Update the elements of the plot."""
         return GeoPlot.update_handles(self, *args)
 
 
 class GeoPointPlot(GeoPlot, PointPlot):
-    """
-    Draws a scatter plot from the data in a Points Element.
-    """
+    """Draws a scatter plot from the data in a Points Element."""
 
     apply_ranges = param.Boolean(default=True)
 
@@ -335,9 +319,7 @@ class GeoPointPlot(GeoPlot, PointPlot):
 
 
 class GeoLabelsPlot(GeoPlot, LabelsPlot):
-    """
-    Draws a scatter plot from the data in a Labels Element.
-    """
+    """Draws a scatter plot from the data in a Labels Element."""
 
     apply_ranges = param.Boolean(default=True)
 
@@ -345,9 +327,7 @@ class GeoLabelsPlot(GeoPlot, LabelsPlot):
 
 
 class GeoHexTilesPlot(GeoPlot, HexTilesPlot):
-    """
-    Draws a scatter plot from the data in a Points Element.
-    """
+    """Draws a scatter plot from the data in a Points Element."""
 
     apply_ranges = param.Boolean(default=True)
 
@@ -355,9 +335,7 @@ class GeoHexTilesPlot(GeoPlot, HexTilesPlot):
 
 
 class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
-    """
-    Draws a vector field plot from the data in a VectorField Element.
-    """
+    """Draws a vector field plot from the data in a VectorField Element."""
 
     apply_ranges = param.Boolean(default=True)
 
@@ -365,9 +343,7 @@ class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
 
 
 class GeoWindBarbsPlot(GeoPlot, WindBarbsPlot):
-    """
-    Draws a wind barbs plot from the data in a WindBarbs Element.
-    """
+    """Draws a wind barbs plot from the data in a WindBarbs Element."""
 
     apply_ranges = param.Boolean(default=True)
 
@@ -385,9 +361,7 @@ class GeometryPlot(GeoPlot):
 
 
 class GeoPathPlot(GeoPlot, PathPlot):
-    """
-    Draws a Path plot from a Path Element.
-    """
+    """Draws a Path plot from a Path Element."""
 
     apply_ranges = param.Boolean(default=True)
 
@@ -395,9 +369,7 @@ class GeoPathPlot(GeoPlot, PathPlot):
 
 
 class GeoContourPlot(GeoPlot, ContourPlot):
-    """
-    Draws a contour plot from a Contours Element.
-    """
+    """Draws a contour plot from a Contours Element."""
 
     apply_ranges = param.Boolean(default=True)
 
@@ -405,9 +377,7 @@ class GeoContourPlot(GeoPlot, ContourPlot):
 
 
 class GeoPolygonPlot(GeoPlot, PolygonPlot):
-    """
-    Draws a scatter plot from the data in a Points Element.
-    """
+    """Draws a scatter plot from the data in a Points Element."""
 
     apply_ranges = param.Boolean(default=True)
 
@@ -415,9 +385,7 @@ class GeoPolygonPlot(GeoPlot, PolygonPlot):
 
 
 class GeoSegmentPlot(GeoPlot, SegmentPlot):
-    """
-    Draws segments from the data in a the Segments Element.
-    """
+    """Draws segments from the data in a the Segments Element."""
 
     apply_ranges = param.Boolean(default=True)
 
@@ -425,9 +393,7 @@ class GeoSegmentPlot(GeoPlot, SegmentPlot):
 
 
 class GeoRectanglesPlot(GeoPlot, RectanglesPlot):
-    """
-    Draws rectangles from the data in a Rectangles Element.
-    """
+    """Draws rectangles from the data in a Rectangles Element."""
 
     apply_ranges = param.Boolean(default=True)
 
@@ -435,27 +401,21 @@ class GeoRectanglesPlot(GeoPlot, RectanglesPlot):
 
 
 class LineContourPlot(GeoContourPlot):
-    """
-    Draws a contour plot.
-    """
+    """Draws a contour plot."""
 
     levels = param.ClassSelector(default=10, class_=(list, int), doc="""
         A list of scalar values used to specify the contour levels.""")
 
 
 class FilledContourPlot(GeoPolygonPlot):
-    """
-    Draws a filled contour plot.
-    """
+    """Draws a filled contour plot."""
 
     levels = param.ClassSelector(default=10, class_=(list, int), doc="""
         A list of scalar values used to specify the contour levels.""")
 
 
 class GeoShapePlot(GeometryPlot, PolygonPlot):
-    """
-    Draws a scatter plot from the data in a Points Element.
-    """
+    """Draws a scatter plot from the data in a Points Element."""
 
     apply_ranges = param.Boolean(default=True)
 
@@ -495,9 +455,7 @@ class GeoTriMeshPlot(GeoPlot, TriMeshPlot):
 
 
 class FeaturePlot(GeoPlot):
-    """
-    Draws a feature from a Features Element.
-    """
+    """Draws a feature from a Features Element."""
 
     scale = param.Selector(default='110m',
                                  objects=['10m', '50m', '110m'],
@@ -519,9 +477,7 @@ class FeaturePlot(GeoPlot):
 
 
 class WMTSPlot(GeoPlot):
-    """
-    Adds a Web Map Tile Service from a WMTS Element.
-    """
+    """Adds a Web Map Tile Service from a WMTS Element."""
 
     zoom = param.Integer(default=3, doc="""
         Controls the zoom level of the tile source.""")
@@ -549,8 +505,7 @@ class WMTSPlot(GeoPlot):
         return {'artist': ax.add_wmts(*plot_args, **plot_kwargs)}
 
     def teardown_handles(self):
-        """
-        If no custom update_handles method is supplied this method
+        """If no custom update_handles method is supplied this method
         is called to tear down any previous handles before replacing
         them.
         """
@@ -560,9 +515,7 @@ class WMTSPlot(GeoPlot):
 
 
 class GeoAnnotationPlot(AnnotationPlot):
-    """
-    AnnotationPlot handles the display of all annotation elements.
-    """
+    """AnnotationPlot handles the display of all annotation elements."""
 
     def initialize_plot(self, ranges=None):
         annotation = self.hmap.last
@@ -588,7 +541,7 @@ class GeoAnnotationPlot(AnnotationPlot):
 
 
 class GeoTextPlot(GeoAnnotationPlot, TextPlot):
-    "Draw the Text annotation object"
+    """Draw the Text annotation object"""
 
     def draw_annotation(self, axis, data, crs, opts):
         (x, y, text, fontsize,

@@ -6,8 +6,7 @@ from holoviews.util.transform import dim
 
 
 class WindBarbsPlot(ColorbarPlot):
-    """
-    Barbs are traditionally used in meteorology as a way to plot the speed and
+    """Barbs are traditionally used in meteorology as a way to plot the speed and
     direction of wind observations, but can technically be used to plot any two
     dimensional vector quantity. As opposed to arrows, which give vector
     magnitude by the length of the arrow, the barbs give more quantitative

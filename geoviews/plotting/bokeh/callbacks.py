@@ -59,9 +59,7 @@ from .plot import GeoOverlayPlot
 
 
 def get_cb_plot(cb, plot=None):
-    """
-    Finds the subplot with the corresponding stream.
-    """
+    """Finds the subplot with the corresponding stream."""
     plot = plot or cb.plot
     if isinstance(plot, GeoOverlayPlot):
         plots = [get_cb_plot(cb, p) for p in plot.subplots.values()]
@@ -73,9 +71,7 @@ def get_cb_plot(cb, plot=None):
 
 
 def skip(cb, msg, attributes):
-    """
-    Skips applying transforms if data is not geographic.
-    """
+    """Skips applying transforms if data is not geographic."""
     if not all(a in msg for a in attributes):
         return True
     plot = get_cb_plot(cb)
@@ -84,9 +80,7 @@ def skip(cb, msg, attributes):
 
 
 def project_ranges(cb, msg, attributes):
-    """
-    Projects ranges supplied by a callback.
-    """
+    """Projects ranges supplied by a callback."""
     if skip(cb, msg, attributes):
         return msg
 
@@ -105,9 +99,7 @@ def project_ranges(cb, msg, attributes):
 
 
 def project_point(cb, msg, attributes=('x', 'y')):
-    """
-    Projects a single point supplied by a callback
-    """
+    """Projects a single point supplied by a callback."""
     if skip(cb, msg, attributes): return msg
     plot = get_cb_plot(cb)
     x, y = msg.get('x', 0), msg.get('y', 0)
@@ -118,9 +110,7 @@ def project_point(cb, msg, attributes=('x', 'y')):
 
 
 def project_drawn(cb, msg):
-    """
-    Projects a drawn element to the declared coordinate system
-    """
+    """Projects a drawn element to the declared coordinate system."""
     stream = cb.streams[0]
     old_data = stream.data
     stream.update(data=msg['data'])

@@ -6,8 +6,8 @@ from ..util import project_extents
 
 
 def _get_projection(el):
-    """
-    Get coordinate reference system from non-auxiliary elements.
+    """Get coordinate reference system from non-auxiliary elements.
+
     Return value is a tuple of a precedence integer and the projection,
     to allow non-auxiliary components to take precedence.
     """
@@ -18,8 +18,7 @@ def _get_projection(el):
 
 
 class ProjectionPlot(param.Parameterized):
-    """
-    Implements custom _get_projection method to make the coordinate
+    """Implements custom _get_projection method to make the coordinate
     reference system available to HoloViews plots as a projection.
     """
 
@@ -54,8 +53,7 @@ class ProjectionPlot(param.Parameterized):
             return None
 
     def get_extents(self, element, ranges, range_type='combined', **kwargs):
-        """
-        Subclasses the get_extents method using the GeoAxes
+        """Subclasses the get_extents method using the GeoAxes
         set_extent method to project the extents to the
         Elements coordinate reference system.
         """

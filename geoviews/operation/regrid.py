@@ -12,8 +12,7 @@ from ..element import Image, QuadMesh, is_geographic
 
 
 class weighted_regrid(regrid):
-    """
-    Implements weighted regridding of rectilinear and curvilinear
+    """Implements weighted regridding of rectilinear and curvilinear
     grids using the xESMF library, supporting all the ESMF regridding
     algorithms including bilinear, conservative and nearest neighbour
     regridding. The operation will always store the sparse weight
@@ -125,9 +124,7 @@ class weighted_regrid(regrid):
 
     @classmethod
     def clean_weight_files(cls):
-        """
-        Cleans existing weight files.
-        """
+        """Cleans existing weight files."""
         deleted = []
         for f in cls._files:
             try:

@@ -9,8 +9,7 @@ from ..util import path_to_geom_dicts, polygons_to_geom_dicts, shapely_v2
 
 
 def find_geom(geom, geoms):
-    """
-    Returns the index of a geometry in a list of geometries avoiding
+    """Returns the index of a geometry in a list of geometries avoiding
     expensive equality checks of `in` operator.
     """
     for i, g in enumerate(geoms):
@@ -18,8 +17,7 @@ def find_geom(geom, geoms):
             return i
 
 def compute_zoom_level(bounds, domain, levels):
-    """
-    Computes a zoom level given a bounds polygon, a polygon of the
+    """Computes a zoom level given a bounds polygon, a polygon of the
     overall domain and the number of zoom levels to divide the data
     into.
 
@@ -42,8 +40,7 @@ def compute_zoom_level(bounds, domain, levels):
 
 
 def bounds_to_poly(bounds):
-    """
-    Constructs a shapely Polygon from the provided bounds tuple.
+    """Constructs a shapely Polygon from the provided bounds tuple.
 
     Parameters
     ----------
@@ -60,8 +57,7 @@ def bounds_to_poly(bounds):
 
 
 class resample_geometry(Operation):
-    """
-    This operation dynamically culls and resamples Path or Polygons
+    """This operation dynamically culls and resamples Path or Polygons
     elements based on the current zoom level. On first execution a
     RTree is created using the Sort-Tile-Recursive algorithm, which is
     used to query for geometries within the current viewport (defined

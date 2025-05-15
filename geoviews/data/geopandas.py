@@ -564,22 +564,30 @@ def get_geom_type(geom):
 
 
 def to_geopandas(data, xdim, ydim, columns=None, geom='point'):
-    """Converts list of dictionary format geometries to spatialpandas line geometries.
+    """Converts a list of geometry dictionaries into a GeoPandas GeoDataFrame.
 
     Parameters
     ----------
-    data
+    data : list of dict
         List of dictionaries representing individual geometries
-    xdim
+    xdim : str
         Name of x-coordinates column
-    ydim
+    ydim : str
         Name of y-coordinates column
-    ring
-        Whether the data represents a closed ring
+    columns : list of str, optional
+        List of additional column names to include in the resulting GeoDataFrame,
+        apart from the geometry. Defaults to an empty list.
+    geom : {'point', 'Line', 'Polygon'}, default='point'
+        Specifies the geometry type to construct. Supports:
+        - 'point': Point or MultiPoint
+        - 'Line' : LineString or MultiLineString
+        - 'Polygon': Polygon or MultiPolygon
 
     Returns
     -------
-    A spatialpandas.GeoDataFrame version of the data
+    geopandas.GeoDataFrame
+        A GeoDataFrame containing the parsed geometries in a 'geometry' column
+        along with any specified attribute columns.
     """
     from geopandas import GeoDataFrame
     from shapely.geometry import (

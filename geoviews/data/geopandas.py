@@ -579,9 +579,9 @@ def to_geopandas(data, xdim, ydim, columns=None, geom='point'):
         apart from the geometry. Defaults to an empty list.
     geom : {'point', 'Line', 'Polygon'}, default='point'
         Specifies the geometry type to construct. Supports:
-        - 'point': Point or MultiPoint
+        - 'point' : Point or MultiPoint
         - 'Line' : LineString or MultiLineString
-        - 'Polygon': Polygon or MultiPolygon
+        - 'Polygon' : Polygon or MultiPolygon
 
     Returns
     -------

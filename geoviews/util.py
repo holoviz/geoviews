@@ -472,7 +472,7 @@ def proj_to_cartopy(proj):
 
     Parameters
     ----------
-    proj: pyproj.Proj
+    proj : pyproj.Proj
         the projection to convert
 
     Returns
@@ -565,8 +565,8 @@ def is_pyproj(crs):
 def process_crs(crs):
     """Parses cartopy CRS definitions defined in one of a few formats:
 
-    1. EPSG codes:   Defined as string of the form "EPSG: {code}" or an integer
-    2. proj.4 string: Defined as string of the form "{proj.4 string}"
+    1. EPSG codes :    Defined as string of the form "EPSG: {code}" or an integer
+    2. proj.4 string : Defined as string of the form "{proj.4 string}"
     3. cartopy.crs.CRS instance
     4. None defaults to crs.PlateCaree
     """
@@ -612,15 +612,15 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
 
     Parameters
     ----------
-    da: xarray.DataArray
+    da : xarray.DataArray
       DataArray to convert to element
-    crs: Cartopy CRS or EPSG string, optional
+    crs : Cartopy CRS or EPSG string, optional
       Overrides CRS inferred from the data
-    apply_transform: boolean
+    apply_transform : boolean
       Whether to apply affine transform if defined on the data
-    nan_nodata: boolean
+    nan_nodata : boolean
       If data contains nodata values convert them to NaNs
-    **kwargs:
+    **kwargs :
       Keyword arguments passed to the HoloViews/GeoViews element
 
     Returns
@@ -714,14 +714,14 @@ def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=None):
 
     Parameters
     ----------
-    tile_source: WMTS element or string URL
+    tile_source : WMTS element or string URL
       The tile source to download the tiles from.
-    bbox: tuple
+    bbox : tuple
       A four tuple specifying the (left, bottom, right, top) corners of the
       domain to download the tiles for.
-    zoom_level: int
+    zoom_level : int
       The zoom level at which to download the tiles
-    bbox_crs: ccrs.CRs
+    bbox_crs : ccrs.CRs
       cartopy CRS defining the coordinate system of the supplied bbox
 
     Returns

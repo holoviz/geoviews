@@ -190,7 +190,7 @@ class Feature(_GeoFeature):
 
         Parameters
         ----------
-        scale: str
+        scale : str
           Scale of the geometry to return expressed as string.
           Available scales depends on the Feature type.
 
@@ -200,14 +200,14 @@ class Feature(_GeoFeature):
           GSHHSFeature:
            'auto', 'coarse', 'low', 'intermediate', 'high', 'full'
 
-        bounds: tuple
+        bounds : tuple
           Tuple of a bounding region to query for geometries in
-        as_element: boolean
+        as_element : boolean
           Whether to wrap the geometries in an element
 
         Returns
         -------
-        geometries: Polygons/Path
+        geometries : Polygons/Path
           Polygons or Path object wrapping around returned geometries
         """
         feature = self.data
@@ -314,7 +314,7 @@ class Points(_Element, HvPoints):
 
         Parameters
         ----------
-        union: boolean, default=False
+        union : boolean, default=False
             Whether to compute a union between the geometries
         projection : EPSG string | Cartopy CRS | None
             Whether to project the geometry to other coordinate system
@@ -542,15 +542,15 @@ class RGB(_Element, HvRGB):
 
         Parameters
         ----------
-        da: xarray.DataArray
+        da : xarray.DataArray
           DataArray to convert to element
-        crs: Cartopy CRS or EPSG string (optional)
+        crs : Cartopy CRS or EPSG string (optional)
           Overrides CRS inferred from the data
-        apply_transform: boolean
+        apply_transform : boolean
           Whether to apply affine transform if defined on the data
-        nan_nodata: boolean
+        nan_nodata : boolean
           If data contains nodata values convert them to NaNs
-        **kwargs:
+        **kwargs :
           Keyword arguments passed to the HoloViews/GeoViews element
 
         Returns
@@ -593,7 +593,7 @@ class Path(_Element, HvPath):
 
         Parameters
         ----------
-        union: boolean, default=False
+        union : boolean, default=False
             Whether to compute a union between the geometries
         projection : EPSG string | Cartopy CRS | None
             Whether to project the geometry to other coordinate system
@@ -737,7 +737,7 @@ class Contours(_Element, HvContours):
 
         Parameters
         ----------
-        union: boolean, default=False
+        union : boolean, default=False
             Whether to compute a union between the geometries
         projection : EPSG string | Cartopy CRS | None
             Whether to project the geometry to other coordinate system
@@ -772,7 +772,7 @@ class Polygons(_Element, HvPolygons):
 
         Parameters
         ----------
-        union: boolean, default=False
+        union : boolean, default=False
             Whether to compute a union between the geometries
         projection : EPSG string | Cartopy CRS | None
             Whether to project the geometry to other coordinate system
@@ -812,7 +812,7 @@ class Rectangles(_Element, HvRectangles):
 
         Parameters
         ----------
-        union: boolean, default=False
+        union : boolean, default=False
             Whether to compute a union between the geometries
         projection : EPSG string | Cartopy CRS | None
             Whether to project the geometry to other coordinate system
@@ -900,26 +900,26 @@ class Shape(Dataset):
 
         Parameters
         ----------
-        records: list of cartopy.io.shapereader.Record
+        records : list of cartopy.io.shapereader.Record
            Iterator containing Records.
-        dataset: holoviews.Dataset
+        dataset : holoviews.Dataset
            Any HoloViews Dataset type.
-        on: str or list or dict
+        on : str or list or dict
           A mapping between the attribute names in the records and the
           dimensions in the dataset.
-        value: str
+        value : str
           The value dimension in the dataset the values will be drawn
           from.
-        index: str or list
+        index : str or list
           One or more dimensions in the dataset the Shapes will be
           indexed by.
-        drop_missing: boolean
+        drop_missing : boolean
           Whether to drop shapes which are missing from the provides
           dataset.
 
         Returns
         -------
-        shapes: Polygons or Path object
+        shapes : Polygons or Path object
           A Polygons or Path object containing the geometries
         """
         reader = Reader(shapefile)
@@ -942,26 +942,26 @@ class Shape(Dataset):
 
         Parameters
         ----------
-        records: list of cartopy.io.shapereader.Record
+        records : list of cartopy.io.shapereader.Record
            Iterator containing Records.
-        dataset: holoviews.Dataset
+        dataset : holoviews.Dataset
            Any HoloViews Dataset type.
-        on: str or list or dict
+        on : str or list or dict
           A mapping between the attribute names in the records and the
           dimensions in the dataset.
-        value: str
+        value : str
           The value dimension in the dataset the values will be drawn
           from.
-        index: str or list
+        index : str or list
           One or more dimensions in the dataset the Shapes will be
           indexed by.
-        drop_missing: boolean
+        drop_missing : boolean
           Whether to drop shapes which are missing from the provides
           dataset.
 
         Returns
         -------
-        shapes: Polygons or Path object
+        shapes : Polygons or Path object
           A Polygons or Path object containing the geometries
         """
         if index is None:
@@ -1047,7 +1047,7 @@ class Shape(Dataset):
 
         Parameters
         ----------
-        union: boolean, default=False
+        union : boolean, default=False
             Whether to compute a union between the geometries
         projection : EPSG string | Cartopy CRS | None
             Whether to project the geometry to other coordinate system

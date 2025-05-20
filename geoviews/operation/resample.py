@@ -23,16 +23,16 @@ def compute_zoom_level(bounds, domain, levels):
 
     Parameters
     ----------
-    bounds: shapely.geometry.Polygon
+    bounds : shapely.geometry.Polygon
         Polygon representing the area of the current viewport
-    domain: shapely.geometry.Polygon
+    domain : shapely.geometry.Polygon
         Polygon representing the overall bounding region of the data
-    levels: int
+    levels : int
         Number of zoom levels to divide the domain into
 
     Returns
     -------
-    zoom_level: int
+    zoom_level : int
         Integer zoom level
     """
     area_fraction = min(bounds.area/domain.area, 1)
@@ -44,12 +44,12 @@ def bounds_to_poly(bounds):
 
     Parameters
     ----------
-    bounds: tuple
+    bounds : tuple
         Tuple representing the (left, bottom, right, top) coordinates
 
     Returns
     -------
-    polygon: shapely.geometry.Polygon
+    polygon : shapely.geometry.Polygon
         Shapely Polygon geometry of the bounds
     """
     x0, y0, x1, y1 = bounds

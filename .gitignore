@@ -58,6 +58,10 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+/doc/reference_Manual/*
+!/doc/reference_Manual/index.rst
+jupyter_execute/
+
 
 # PyBuilder
 target/

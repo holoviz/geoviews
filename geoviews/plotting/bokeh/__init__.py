@@ -137,9 +137,7 @@ class TilePlot(GeoPlot):
                            if k in renderer.properties()})
 
     def _init_glyph(self, plot, mapping, properties):
-        """
-        Returns a Bokeh glyph object.
-        """
+        """Returns a Bokeh glyph object."""
         tile_source = mapping['tile_source']
         level = properties.pop('level', 'underlay')
         renderer = plot.add_tile(tile_source, level=level)
@@ -207,18 +205,14 @@ class GeoContourPlot(GeoPlot, ContourPlot):
 
 
 class LineContourPlot(GeoContourPlot):
-    """
-    Draws a contour plot.
-    """
+    """Draws a contour plot."""
 
     levels = param.ClassSelector(default=10, class_=(list, int), doc="""
         A list of scalar values used to specify the contour levels.""")
 
 
 class FilledContourPlot(GeoPolygonPlot):
-    """
-    Draws a filled contour plot.
-    """
+    """Draws a filled contour plot."""
 
     levels = param.ClassSelector(default=10, class_=(list, int), doc="""
         A list of scalar values used to specify the contour levels.""")
@@ -319,8 +313,7 @@ class GeoLabelsPlot(GeoPlot, LabelsPlot):
 
 
 class geo_hex_binning(hex_binning, project_points):
-    """
-    Applies hex binning by computing aggregates on a hexagonal grid.
+    """Applies hex binning by computing aggregates on a hexagonal grid.
 
     Should not be user facing as the returned element is not directly
     usable.

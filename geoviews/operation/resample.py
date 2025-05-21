@@ -9,8 +9,7 @@ from ..util import path_to_geom_dicts, polygons_to_geom_dicts, shapely_v2
 
 
 def find_geom(geom, geoms):
-    """
-    Returns the index of a geometry in a list of geometries avoiding
+    """Returns the index of a geometry in a list of geometries avoiding
     expensive equality checks of `in` operator.
     """
     for i, g in enumerate(geoms):
@@ -18,23 +17,22 @@ def find_geom(geom, geoms):
             return i
 
 def compute_zoom_level(bounds, domain, levels):
-    """
-    Computes a zoom level given a bounds polygon, a polygon of the
+    """Computes a zoom level given a bounds polygon, a polygon of the
     overall domain and the number of zoom levels to divide the data
     into.
 
     Parameters
     ----------
-    bounds: shapely.geometry.Polygon
+    bounds : shapely.geometry.Polygon
         Polygon representing the area of the current viewport
-    domain: shapely.geometry.Polygon
+    domain : shapely.geometry.Polygon
         Polygon representing the overall bounding region of the data
-    levels: int
+    levels : int
         Number of zoom levels to divide the domain into
 
     Returns
     -------
-    zoom_level: int
+    zoom_level : int
         Integer zoom level
     """
     area_fraction = min(bounds.area/domain.area, 1)
@@ -42,17 +40,16 @@ def compute_zoom_level(bounds, domain, levels):
 
 
 def bounds_to_poly(bounds):
-    """
-    Constructs a shapely Polygon from the provided bounds tuple.
+    """Constructs a shapely Polygon from the provided bounds tuple.
 
     Parameters
     ----------
-    bounds: tuple
+    bounds : tuple
         Tuple representing the (left, bottom, right, top) coordinates
 
     Returns
     -------
-    polygon: shapely.geometry.Polygon
+    polygon : shapely.geometry.Polygon
         Shapely Polygon geometry of the bounds
     """
     x0, y0, x1, y1 = bounds
@@ -60,8 +57,7 @@ def bounds_to_poly(bounds):
 
 
 class resample_geometry(Operation):
-    """
-    This operation dynamically culls and resamples Path or Polygons
+    """This operation dynamically culls and resamples Path or Polygons
     elements based on the current zoom level. On first execution a
     RTree is created using the Sort-Tile-Recursive algorithm, which is
     used to query for geometries within the current viewport (defined

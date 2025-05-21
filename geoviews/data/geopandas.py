@@ -534,10 +534,14 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
 def get_geom_type(geom):
     """Returns the HoloViews geometry type.
 
-    Args:
-        geom: A shapely geometry
+    Parameters
+    ----------
+    geom
+        A shapely geometry
 
-    Returns:
+    Returns
+    -------
+    str
         A string representing type of the geometry.
     """
     from shapely.geometry import (
@@ -560,16 +564,30 @@ def get_geom_type(geom):
 
 
 def to_geopandas(data, xdim, ydim, columns=None, geom='point'):
-    """Converts list of dictionary format geometries to spatialpandas line geometries.
+    """Converts a list of geometry dictionaries into a GeoPandas GeoDataFrame.
 
-    Args:
-        data: List of dictionaries representing individual geometries
-        xdim: Name of x-coordinates column
-        ydim: Name of y-coordinates column
-        ring: Whether the data represents a closed ring
+    Parameters
+    ----------
+    data : list of dict
+        List of dictionaries representing individual geometries
+    xdim : str
+        Name of x-coordinates column
+    ydim : str
+        Name of y-coordinates column
+    columns : list of str, optional
+        List of additional column names to include in the resulting GeoDataFrame,
+        apart from the geometry. Defaults to an empty list.
+    geom : {'point', 'Line', 'Polygon'}, default='point'
+        Specifies the geometry type to construct. Supports:
+        - 'point' : Point or MultiPoint
+        - 'Line' : LineString or MultiLineString
+        - 'Polygon' : Polygon or MultiPolygon
 
-    Returns:
-        A spatialpandas.GeoDataFrame version of the data
+    Returns
+    -------
+    geopandas.GeoDataFrame
+        A GeoDataFrame containing the parsed geometries in a 'geometry' column
+        along with any specified attribute columns.
     """
     from geopandas import GeoDataFrame
     from shapely.geometry import (
@@ -604,16 +622,21 @@ def to_geopandas(data, xdim, ydim, columns=None, geom='point'):
 def from_multi(eltype, data, kdims, vdims):
     """Converts list formats into geopandas.GeoDataFrame.
 
-    Args:
-        eltype: Element type to convert
-        data: The original data
-        kdims: The declared key dimensions
-        vdims: The declared value dimensions
+    Parameters
+    ----------
+    eltype
+        Element type to convert
+    data
+        The original data
+    kdims
+        The declared key dimensions
+    vdims
+        The declared value dimensions
 
-    Returns:
-        A GeoDataFrame containing the data in the list based format.
+    Returns
+    -------
+    A GeoDataFrame containing the data in the list based format.
     """
-
     from geopandas import GeoDataFrame
 
     new_data = []

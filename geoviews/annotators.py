@@ -51,9 +51,7 @@ PathAnnotator._vertex_table_link = get_vertex_table_link
 PolyAnnotator._vertex_table_link = get_vertex_table_link
 
 def initialize_tools(plot, element):
-    """
-    Initializes the Checkpoint and Restore tools.
-    """
+    """Initializes the Checkpoint and Restore tools."""
     cds = plot.handles['source']
     checkpoint = plot.state.select(type=CheckpointTool)
     restore = plot.state.select(type=RestoreTool)

@@ -27,8 +27,7 @@ except ImportError:
     pass
 
 def convert_to_geotype(element, crs=None):
-    """
-    Converts a HoloViews element type to the equivalent GeoViews
+    """Converts a HoloViews element type to the equivalent GeoViews
     element if given a coordinate reference system.
     """
     geotype = getattr(gv_element, type(element).__name__, None)
@@ -38,8 +37,7 @@ def convert_to_geotype(element, crs=None):
 
 
 def find_crs(op, element):
-    """
-    Traverses the supplied object looking for coordinate reference
+    """Traverses the supplied object looking for coordinate reference
     systems (crs). If multiple clashing reference systems are found
     it will throw an error.
     """
@@ -55,8 +53,7 @@ def find_crs(op, element):
 
 
 def add_crs(op, element, **kwargs):
-    """
-    Converts any elements in the input to their equivalent geotypes
+    """Converts any elements in the input to their equivalent geotypes
     if given a coordinate reference system.
     """
     return element.map(lambda x: convert_to_geotype(x, kwargs.get('crs')), Element)

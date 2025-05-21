@@ -14,9 +14,7 @@ from ..plot import ProjectionPlot
 
 
 class GeoPlot(ProjectionPlot, ElementPlot):
-    """
-    Plotting baseclass for geographic plots with a cartopy projection.
-    """
+    """Plotting baseclass for geographic plots with a cartopy projection."""
 
     default_tools = param.List(default=['save', 'pan',
                                         WheelZoomTool(zoom_on_axis=False),
@@ -105,9 +103,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 ax_range.min_interval = min_interval
 
     def _set_unwrap_lons(self, element, ranges):
-        """
-        Check whether the lons should be transformed from 0, 360 to -180, 180
-        """
+        """Check whether the lons should be transformed from 0, 360 to -180, 180."""
         if isinstance(self.geographic, _CylindricalProjection):
             xdim = element.get_dimension(0)
             x_range = ranges.get(xdim.name, {}).get('data')
@@ -192,8 +188,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
 
 class GeoOverlayPlot(GeoPlot, HvOverlayPlot):
-    """
-    Subclasses the HoloViews OverlayPlot to add custom behavior
+    """Subclasses the HoloViews OverlayPlot to add custom behavior
     for geographic plots.
     """
 

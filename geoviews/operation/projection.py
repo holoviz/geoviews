@@ -40,8 +40,7 @@ from ..util import (
 
 
 class _project_operation(Operation):
-    """
-    Baseclass for projection operations, projecting elements from their
+    """Baseclass for projection operations, projecting elements from their
     source coordinate reference system to the supplied projection.
     """
 
@@ -58,8 +57,7 @@ class _project_operation(Operation):
 
 
 class project_path(_project_operation):
-    """
-    Projects Polygons and Path Elements from their source coordinate
+    """Projects Polygons and Path Elements from their source coordinate
     reference system to the supplied projection.
     """
 
@@ -153,8 +151,7 @@ class project_path(_project_operation):
 
 
 class project_shape(_project_operation):
-    """
-    Projects Shape Element from the source coordinate reference system
+    """Projects Shape Element from the source coordinate reference system
     to the supplied projection.
     """
 
@@ -368,8 +365,7 @@ class project_quadmesh(_project_operation):
 
 
 class project_image(_project_operation):
-    """
-    Projects an geoviews Image to the specified projection,
+    """Projects an geoviews Image to the specified projection,
     returning a regular HoloViews Image type. Works by
     regridding the data along projected bounds. Only supports
     rectangular projections.
@@ -500,9 +496,7 @@ class project_image(_project_operation):
 
 
 class project(Operation):
-    """
-    Projects GeoViews Element types to the specified projection.
-    """
+    """Projects GeoViews Element types to the specified projection."""
 
     projection = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR,
                                      class_=ccrs.Projection,

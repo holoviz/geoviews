@@ -139,19 +139,22 @@ depends-on = ["_install-ui"]
 graphviz = "*"
 lxml = "*"
 nbsite = ">=0.8.4,<0.9.0"
+numpydoc = "*"
 selenium = "*"
 sphinx-reredirects = "*"
 
 [feature.doc.activation.env]
 MOZ_HEADLESS = "1"
 MPLBACKEND = "Agg"
+SPHINX_APIDOC_OPTIONS = "members,show-inheritance"
 
 [feature.doc.tasks]
 _docs-generate-rst = 'nbsite generate-rst --org holoviz --project-name geoviews'
 _docs-generate = 'nbsite build --what=html --output=builtdocs --org holoviz --project-name geoviews'
+_docs-refmanual = 'sphinx-apidoc -e -o doc/reference_manual/ geoviews/ geoviews/tests --ext-autodoc --ext-intersphinx'
 
 [feature.doc.tasks.docs-build]
-depends-on = ['_docs-generate-rst', '_docs-generate']
+depends-on = ['_docs-generate-rst', '_docs-refmanual', '_docs-generate']
 
 # =============================================
 # ================== BUILD ====================

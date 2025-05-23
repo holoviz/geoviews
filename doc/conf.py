@@ -39,16 +39,27 @@ html_theme_options = {
             "icon": "fa-brands fa-discord",
         },
     ],
-    "pygment_dark_style": "material"
+    "pygments_dark_style": "material"
 }
 
 extensions += [
     'nbsite.gallery',
     'nbsite.analytics',
+    'numpydoc',
     'sphinx_reredirects',
 ]
 
+intersphinx_mapping = {
+    'panel':    ('https://panel.holoviz.org/', None),
+    'holoviews':('https://holoviews.org/', None),
+}
+
+numpydoc_xref_param_type = True
+numpydoc_xref_type       = True
+
 myst_enable_extensions = ["colon_fence", "deflist"]
+numpydoc_show_inherited_class_members = False
+numpydoc_class_members_toctree = False
 
 napoleon_numpy_docstring = True
 

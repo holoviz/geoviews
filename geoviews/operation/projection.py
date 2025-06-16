@@ -386,6 +386,11 @@ class project_image(_project_operation):
         when applying project_image, backends that support linked streams
         update RangeXY streams on the inputs of the operation.""")
 
+    mask_extrapolated = param.Boolean(default=True, doc="""
+        Assume that the source coordinate is rectilinear and so mask
+        the resulting target grid values which lie outside the source
+        grid domain.""")
+
     supported_types = [Image, RGB]
 
     def _process(self, img, key=None):
@@ -413,8 +418,11 @@ class project_image(_project_operation):
         for vd in img.vdims:
             arr = img.dimension_values(vd, flat=False)
             if arr.size:
-                projected, _ = warp_array(arr, proj, img.crs, (xn, yn),
-                                          src_extent, tgt_extent)
+                projected, _ = warp_array(
+                    arr, proj, img.crs, (xn, yn),
+                    src_extent, tgt_extent,
+                    mask_extrapolated=self.p.mask_extrapolated
+                )
             else:
                 projected = arr
             arrays.append(projected)

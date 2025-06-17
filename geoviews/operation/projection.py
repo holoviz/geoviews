@@ -386,7 +386,7 @@ class project_image(_project_operation):
         when applying project_image, backends that support linked streams
         update RangeXY streams on the inputs of the operation.""")
 
-    mask_extrapolated = param.Boolean(default=True, doc="""
+    mask_extrapolated = param.Boolean(default=False, doc="""
         Assume that the source coordinate is rectilinear and so mask
         the resulting target grid values which lie outside the source
         grid domain.""")

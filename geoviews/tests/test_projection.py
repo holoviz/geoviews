@@ -4,7 +4,7 @@ import pytest
 
 from geoviews.element import Image, VectorField, WindBarbs
 from geoviews.element.comparison import ComparisonTestCase
-from geoviews.operation import project
+from geoviews.operation import project, project_image
 
 
 class TestProjection(ComparisonTestCase):
@@ -76,3 +76,57 @@ class TestProjection(ComparisonTestCase):
 
         np.testing.assert_allclose(projected.dimension_values("Angle"), a.flatten())
         np.testing.assert_allclose(projected.dimension_values("Magnitude"), m.flatten())
+
+    def test_project_image_default_not_mask_extrapolated(self):
+        """
+        Test that mask_extrapolated defaults to False because
+        that was the original behavior before the parameter was added.
+        """
+        pytest.importorskip("scipy")
+        proj_op = project_image.instance(projection=ccrs.Mercator())
+        assert proj_op.mask_extrapolated is False, "mask_extrapolated should default to False"
+
+    def test_image_mask_extrapolated_longitude_wrapping(self):
+        """Test mask_extrapolated behavior with longitude data outside [-180, 180] range."""
+        pytest.importorskip("scipy")
+
+        # Create image with longitude data from 200 to 330 (outside standard range)
+        xs = np.linspace(200, 330, 5)
+        ys = np.linspace(-60, 60, 3)
+        zs = np.ones((3, 5))  # Fill with constant value
+        img = Image((xs, ys, zs), crs=ccrs.PlateCarree())
+
+        # Test with mask_extrapolated=True (default)
+        proj_op_masked = project_image.instance(projection=ccrs.PlateCarree())
+        proj_op_masked.mask_extrapolated = True
+        projected_masked = proj_op_masked(img)
+
+        masked_data = projected_masked.dimension_values('z', flat=False)
+        # Should be all masked when extrapolation is masked
+        assert np.all(masked_data.mask), "Expected all NaN values when mask_extrapolated=True with longitude 200-330"
+
+        # Test with mask_extrapolated=False
+        proj_op_unmasked = project_image.instance(projection=ccrs.PlateCarree())
+        proj_op_unmasked.mask_extrapolated = False
+        projected_unmasked = proj_op_unmasked(img)
+
+        # With mask_extrapolated=False, should get valid values via extrapolation
+        unmasked_data = projected_unmasked.dimension_values('z', flat=False)
+        # Should have valid values when extrapolation is allowed
+        assert np.all(np.isfinite(unmasked_data)), "Expected all finite values when mask_extrapolated=False with longitude 200-330"
+
+        # Now test with converted longitude range [-180, 180]
+        # Convert longitude: ((lon + 180) % 360) - 180
+        xs_converted = ((xs + 180) % 360) - 180  # Convert 200-330 to -160 to -30
+        img_converted = Image((xs_converted, ys, zs), crs=ccrs.PlateCarree())
+
+        # With converted coordinates, even mask_extrapolated=True should work
+        projected_converted = proj_op_masked(img_converted)
+        converted_data = projected_converted.dimension_values('z', flat=False)
+
+        # Should have valid values because no extrapolation is needed
+        assert np.all(np.isfinite(converted_data)), "Expected all finite values with converted longitude range [-180, 180]"
+
+        # The converted data should match the unmasked extrapolated data (approximately)
+        # since both should contain the same valid values
+        assert np.allclose(unmasked_data, converted_data, equal_nan=True), "Extrapolated and converted data should be similar"

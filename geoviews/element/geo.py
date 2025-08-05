@@ -183,7 +183,13 @@ class Feature(_GeoFeature):
         super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
     def __call__(self, *args, **kwargs):
-        return self.clone().opts(*args, **kwargs)
+        # First time calling geometries or intersecting_geometries
+        # cartopy.feature will read a .prj file and update crs based on it.
+        # Here we trigger this update and use it for cloning.
+        # This was introduced in Cartopy 0.25.0
+        # https://github.com/SciTools/cartopy/pull/2307
+        self.data.geometries()
+        return self.clone(crs=self.data.crs).opts(*args, **kwargs)
 
     def geoms(self, scale=None, bounds=None, as_element=True):
         """Returns the geometries held by the Feature.
@@ -228,22 +234,11 @@ class Feature(_GeoFeature):
         else:
             return Path(geoms, crs=feature.crs)
 
-    def _data_geometries(self):
-        # First time calling self.data.geometries will try to read
-        # a .prj file and update crs based on it.
-        # This was introduced in Cartopy 0.25.0
-        # https://github.com/SciTools/cartopy/pull/2307
-        before_crs = self.data.crs
-        geometries = self.data.geometries()
-        if self.data.crs != before_crs:
-            self.crs = self.data.crs
-        return geometries
-
     def range(self, dim, data_range=True, dimension_range=True):
         didx = self.get_dimension_index(dim)
         if didx in [0, 1] and data_range:
             dim = self.get_dimension(dim)
-            l, b, r, t = util.max_extents([geom.bounds for geom in self._data_geometries()])
+            l, b, r, t = util.max_extents([geom.bounds for geom in self.data.geometries()])
             lower, upper = (b, t) if didx else (l, r)
             if dimension_range:
                 return util.dimension_range(lower, upper, dim.range, dim.soft_range)

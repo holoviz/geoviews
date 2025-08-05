@@ -1,5 +1,6 @@
 import sys
 
+import cartopy
 import numpy as np
 import param
 from cartopy import crs as ccrs
@@ -34,6 +35,7 @@ from holoviews.element import (
     VectorField as HvVectorField,
 )
 from holoviews.element.selection import Selection2DExpr
+from packaging.version import Version
 from shapely.geometry import (
     GeometryCollection,
     LineString,
@@ -46,6 +48,7 @@ from shapely.geometry import (
 from shapely.geometry.base import BaseGeometry
 from shapely.ops import unary_union
 
+CARTOPY_GE_0_25_0 = Version(cartopy.__version__).release >= (0, 25, 0)
 
 def _get_iris_cube():
     try:
@@ -136,6 +139,12 @@ class _Element(Element2D):
             if hasattr(coord_sys, 'as_cartopy_projection'):
                 crs = coord_sys.as_cartopy_projection()
         elif isinstance(crs_data, (cFeature, GoogleTiles)):
+            if CARTOPY_GE_0_25_0:
+                # First time calling geometries or intersecting_geometries
+                # cartopy.feature will read a .prj file and update crs based on it.
+                # Here we trigger this update, by calling geometries if it exists.
+                # https://github.com/SciTools/cartopy/pull/2307
+                getattr(crs_data, "geometries", lambda: None)()
             crs = crs_data.crs
 
         supplied_crs = kwargs.get('crs', None)
@@ -183,13 +192,7 @@ class Feature(_GeoFeature):
         super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
     def __call__(self, *args, **kwargs):
-        # First time calling geometries or intersecting_geometries
-        # cartopy.feature will read a .prj file and update crs based on it.
-        # Here we trigger this update and use it for cloning.
-        # This was introduced in Cartopy 0.25.0
-        # https://github.com/SciTools/cartopy/pull/2307
-        self.data.geometries()
-        return self.clone(crs=self.data.crs).opts(*args, **kwargs)
+        return self.clone().opts(*args, **kwargs)
 
     def geoms(self, scale=None, bounds=None, as_element=True):
         """Returns the geometries held by the Feature.

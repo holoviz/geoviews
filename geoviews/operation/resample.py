@@ -5,7 +5,7 @@ from holoviews.streams import RangeXY
 from shapely.geometry import Polygon
 from shapely.strtree import STRtree
 
-from ..util import path_to_geom_dicts, polygons_to_geom_dicts, shapely_v2
+from ..util import SHAPELY_GE_2_0_0, path_to_geom_dicts, polygons_to_geom_dicts
 
 
 def find_geom(geom, geoms):
@@ -159,7 +159,7 @@ class resample_geometry(Operation):
         # Query RTree, then cull and simplify polygons
         new_geoms, gdict = [], {}
         for g in tree.query(bounds):
-            g = tree.geometries[g] if shapely_v2 else g
+            g = tree.geometries[g] if SHAPELY_GE_2_0_0 else g
             garea = area_cache.get(id(g))
             if garea is None:
                 is_poly = 'Polygon' in g.geom_type

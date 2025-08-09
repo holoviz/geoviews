@@ -46,6 +46,8 @@ from shapely.geometry import (
 from shapely.geometry.base import BaseGeometry
 from shapely.ops import unary_union
 
+from ..util import CARTOPY_VERSION
+
 
 def _get_iris_cube():
     try:
@@ -184,6 +186,14 @@ class Feature(_GeoFeature):
 
     def __call__(self, *args, **kwargs):
         return self.clone().opts(*args, **kwargs)
+
+    def clone(self, data=None, shared_data=True, new_type=None, *args, **overrides):
+        if CARTOPY_VERSION >= (0, 25, 0) and hasattr(self.data, "crs") and "crs" not in overrides:
+            # First time calling geometries or intersecting_geometries
+            # cartopy.feature will read a .prj file and update crs based on it.
+            # https://github.com/SciTools/cartopy/pull/2307
+            overrides["crs"] = self.data.crs
+        return super().clone(data, shared_data, new_type, *args, **overrides)
 
     def geoms(self, scale=None, bounds=None, as_element=True):
         """Returns the geometries held by the Feature.

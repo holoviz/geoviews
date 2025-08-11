@@ -39,13 +39,14 @@ def wrap_lons(lons, base, period):
     return ((lons - base + period * 2) % period) + base
 
 
-def wrap_cylindrical_projection_lons(src_proj, x1, x2):
+def wrap_cylindrical_projection_lons(src_proj, x1, x2, base=-180.0, period=360.0):
     # Wrap longitudes
     cx1, cx2 = src_proj.x_limits
     if isinstance(src_proj, ccrs._CylindricalProjection):
-        lons = wrap_lons(np.linspace(x1, x2, 10000), -180., 360.)
+        lons = wrap_lons(np.linspace(x1, x2, 10000), base, period)
         x1, x2 = lons.min(), lons.max()
     else:
+        print('hello')
         x1 = max(x1, cx1)
         x2 = min(x2, cx2)
     return x1, x2

@@ -101,9 +101,10 @@ class TestProjection(ComparisonTestCase):
         proj_op_masked.mask_extrapolated = True
         projected_masked = proj_op_masked(img)
 
-        masked_data = projected_masked.dimension_values('z', flat=False)
-        # Should be all masked when extrapolation is masked
-        assert np.all(masked_data.mask), "Expected all NaN values when mask_extrapolated=True with longitude 200-330"
+        new_data = projected_masked.dimension_values('z', flat=False)
+        # Should be all valid even with extrapolation
+        assert not hasattr(new_data, "mask"), "Expected all values when mask_extrapolated=True with longitude 200-330 because auto-wrapping of lons"
+        assert np.all(new_data == 1), "Expected all values to be valid when mask_extrapolated=True with longitude 200-330"
 
         # Test with mask_extrapolated=False
         proj_op_unmasked = project_image.instance(projection=ccrs.PlateCarree())

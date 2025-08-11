@@ -39,6 +39,18 @@ def wrap_lons(lons, base, period):
     return ((lons - base + period * 2) % period) + base
 
 
+def wrap_cylindrical_projection_lons(src_proj, x1, x2):
+    # Wrap longitudes
+    cx1, cx2 = src_proj.x_limits
+    if isinstance(src_proj, ccrs._CylindricalProjection):
+        lons = wrap_lons(np.linspace(x1, x2, 10000), -180., 360.)
+        x1, x2 = lons.min(), lons.max()
+    else:
+        x1 = max(x1, cx1)
+        x2 = min(x2, cx2)
+    return x1, x2
+
+
 def expand_geoms(geoms):
     """Expands multi-part geometries in a list of geometries.
     """
@@ -74,13 +86,7 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     y2 -= tol
 
     # Wrap longitudes
-    cx1, cx2 = src_proj.x_limits
-    if isinstance(src_proj, ccrs._CylindricalProjection):
-        lons = wrap_lons(np.linspace(x1, x2, 10000), -180., 360.)
-        x1, x2 = lons.min(), lons.max()
-    else:
-        x1 = max(x1, cx1)
-        x2 = min(x2, cx2)
+    x1, x2 = wrap_cylindrical_projection_lons(src_proj, x1, x2)
 
     domain_in_src_proj = Polygon([[x1, y1], [x2, y1],
                                   [x2, y2], [x1, y2],

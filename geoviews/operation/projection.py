@@ -36,6 +36,7 @@ from ..util import (
     path_to_geom_dicts,
     polygons_to_geom_dicts,
     project_extents,
+    wrap_cylindrical_projection_lons,
 )
 
 
@@ -418,6 +419,10 @@ class project_image(_project_operation):
         for vd in img.vdims:
             arr = img.dimension_values(vd, flat=False)
             if arr.size:
+                src_extent = (
+                    *wrap_cylindrical_projection_lons(img.crs, src_extent[0], src_extent[1]),
+                    src_extent[2], src_extent[3]
+                )
                 projected, _ = warp_array(
                     arr, proj, img.crs, (xn, yn),
                     src_extent, tgt_extent,

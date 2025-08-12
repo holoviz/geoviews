@@ -29,11 +29,11 @@ class TestProjection(ComparisonTestCase):
         img = Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))
         proj = project(img)
         zs = proj.dimension_values('z', flat=False)
-        self.assertEqual(zs, np.array(
-            [[-12960., -17280., -21600.,  -4320.,  -8640.],
-             [     0.,      0.,      0.,      0.,      0.],
-             [ 12960.,  17280.,  21600.,   4320.,   8640.]]
-        ))
+        self.assertEqual(zs, np.array([
+            [ -4320.,  -8640., -12960., -17280., -21600.],
+            [     0.,      0.,      0.,      0.,      0.],
+            [  4320.,   8640.,  12960.,  17280.,  21600.]
+        ]))
 
     def test_project_vectorfield(self):
         xs = np.linspace(10, 50, 2)

@@ -45,8 +45,6 @@ def wrap_cylindrical_projection_lons(src_proj, x1, x2, base=-180.0, period=360.0
     if isinstance(src_proj, ccrs._CylindricalProjection):
         lons = wrap_lons(np.linspace(x1, x2, 10000), base, period)
         x1, x2 = lons.min(), lons.max()
-    else:
-        print('hello')
         x1 = max(x1, cx1)
         x2 = min(x2, cx2)
     return x1, x2

@@ -369,7 +369,9 @@ class project_image(_project_operation):
     """Projects an geoviews Image to the specified projection,
     returning a regular HoloViews Image type. Works by
     regridding the data along projected bounds. Only supports
-    rectangular projections.
+    rectangular projections. If mask_extrapolated, will
+    additionally wrap longitudes from 0:360 to -180:180
+    if the source coordinate is cylindrical.
     """
 
     fast = param.Boolean(default=False, doc="""
@@ -420,8 +422,6 @@ class project_image(_project_operation):
             arr = img.dimension_values(vd, flat=False)
             if arr.size:
                 if self.p.mask_extrapolated:
-                    # Do not do additional computation if unnecessary
-                    # https://github.com/holoviz/geoviews/pull/792
                     src_extent = (
                         *wrap_cylindrical_projection_lons(
                             img.crs, src_extent[0], src_extent[1]

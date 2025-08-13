@@ -36,6 +36,7 @@ from ..util import (
     path_to_geom_dicts,
     polygons_to_geom_dicts,
     project_extents,
+    wrap_cylindrical_projection_lons,
 )
 
 
@@ -368,7 +369,9 @@ class project_image(_project_operation):
     """Projects an geoviews Image to the specified projection,
     returning a regular HoloViews Image type. Works by
     regridding the data along projected bounds. Only supports
-    rectangular projections.
+    rectangular projections. If mask_extrapolated, will
+    additionally wrap longitudes from 0:360 to -180:180
+    if the source coordinate is cylindrical.
     """
 
     fast = param.Boolean(default=False, doc="""
@@ -385,6 +388,11 @@ class project_image(_project_operation):
         By default, the link_inputs parameter is set to True so that
         when applying project_image, backends that support linked streams
         update RangeXY streams on the inputs of the operation.""")
+
+    mask_extrapolated = param.Boolean(default=True, doc="""
+        Assume that the source coordinate is rectilinear and so mask
+        the resulting target grid values which lie outside the source
+        grid domain.""")
 
     supported_types = [Image, RGB]
 
@@ -413,8 +421,17 @@ class project_image(_project_operation):
         for vd in img.vdims:
             arr = img.dimension_values(vd, flat=False)
             if arr.size:
-                projected, _ = warp_array(arr, proj, img.crs, (xn, yn),
-                                          src_extent, tgt_extent)
+                if self.p.mask_extrapolated:
+                    src_extent = (
+                        *wrap_cylindrical_projection_lons(
+                            img.crs, src_extent[0], src_extent[1]
+                        ), src_extent[2], src_extent[3]
+                    )
+                projected, _ = warp_array(
+                    arr, proj, img.crs, (xn, yn),
+                    src_extent, tgt_extent,
+                    mask_extrapolated=self.p.mask_extrapolated
+                )
             else:
                 projected = arr
             arrays.append(projected)

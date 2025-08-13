@@ -97,7 +97,6 @@ class TestProjection(ComparisonTestCase):
 
         # Test with mask_extrapolated=True (default)
         proj_op_masked = project_image.instance(projection=ccrs.PlateCarree())
-        proj_op_masked.mask_extrapolated = True
         projected_masked = proj_op_masked(img)
 
         new_data = projected_masked.dimension_values('z', flat=False)

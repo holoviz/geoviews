@@ -9,7 +9,7 @@ from .._warnings import warn
 
 
 class _BokehCheck(Tool):
-    _bokeh_require_version = "bokeh ==3.6.*"
+    _bokeh_require_version = "bokeh ==3.8.*"
     def __init__(self, *args, **kwargs):
         self._check_bokeh_version()
         super().__init__(*args, **kwargs)

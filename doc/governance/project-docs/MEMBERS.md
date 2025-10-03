@@ -10,6 +10,5 @@ The GeoViews Project’s equivalently named documents take precedence over any e
 | **NAME** | **Role** | **GitHub Handle** |
 | --- | --- | --- |
 | Philipp Rudiger | Project Director | [philippjfr](https://github.com/philippjfr) |
-| Maxime Liquet | Maintainer | [maximlt](https://github.com/maximlt) |
 | Simon Høxbro Hansen | Maintainer | [hoxbro](https://github.com/hoxbro) |
 | Andrew Huang | Maintainer | [ahuang11](https://github.com/ahuang11) |

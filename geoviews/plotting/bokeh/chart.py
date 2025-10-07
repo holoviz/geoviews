@@ -112,9 +112,13 @@ class WindBarbsPlot(ColorbarPlot):
             properties["name"] = properties.get("legend_label") or properties.get("legend_field")
         
         # Separate glyph properties from renderer properties
+        # Glyph properties are those that the WindBarb glyph understands
+        # Renderer properties are those that GlyphRenderer understands
+        glyph_prop_names = ['scale', 'line_color', 'line_alpha', 'line_width']
         glyph_props = {}
-        if 'scale' in properties:
-            glyph_props['scale'] = properties.pop('scale')
+        for prop in glyph_prop_names:
+            if prop in properties:
+                glyph_props[prop] = properties.pop(prop)
         
         # Remove 'source' if present (it's not a renderer property)
         properties.pop('source', None)

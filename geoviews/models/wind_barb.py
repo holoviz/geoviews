@@ -1,5 +1,6 @@
 """WindBarb glyph for rendering wind barbs in Bokeh."""
-from bokeh.core.properties import AngleSpec, Float, NumberSpec, field
+from bokeh.core.properties import AngleSpec, Float, Include, NumberSpec, field
+from bokeh.core.property_mixins import LineProps
 from bokeh.models import XYGlyph
 
 
@@ -38,4 +39,9 @@ class WindBarb(XYGlyph):
     # Scale factor for the barb size
     scale = Float(default=1.0, help="""
         A scaling factor to apply to the wind barb size.
+        """)
+    
+    # Line properties
+    line_props = Include(LineProps, help="""
+        The {prop} values for the wind barbs.
         """)

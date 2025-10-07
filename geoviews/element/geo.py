@@ -427,8 +427,7 @@ class WindBarbs(_Element, Selection2DExpr, HvGeometry):
         us, vs = (dataset.dimension_values(i) for i in range(2, 4))
 
         uv_magnitudes = np.hypot(us, vs)  # unscaled
-        # this follows mathematical conventions,
-        # unlike WindBarbs which follows meteorological conventions
+        # this follows mathematical conventions
         radians = np.arctan2(vs, us)
 
         # calculations on this data could mutate the original data

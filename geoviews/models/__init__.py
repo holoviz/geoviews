@@ -5,6 +5,7 @@ from .custom_tools import (
     PolyVertexEditTool,
     RestoreTool,
 )
+from .wind_barb import WindBarb
 
 __all__ = (
     "CheckpointTool",
@@ -12,4 +13,5 @@ __all__ = (
     "PolyVertexDrawTool",
     "PolyVertexEditTool",
     "RestoreTool",
+    "WindBarb",
 )

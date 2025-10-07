@@ -1,11 +1,10 @@
 
 import pytest
+from test_plot import TestBokehPlot, bokeh_renderer
 
 from geoviews.element import WMTS
 from geoviews.plotting.bokeh import TilePlot
 from geoviews.tile_sources import OSM
-
-from .test_plot import TestBokehPlot, bokeh_renderer
 
 
 class TestWMTSPlot(TestBokehPlot):

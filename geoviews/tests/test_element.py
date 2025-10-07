@@ -14,7 +14,7 @@ from shapely.geometry import (
     Polygon,
 )
 
-from geoviews.element import Path, Points, Polygons, Rectangles, Segments
+from geoviews.element import Path, Points, Polygons, Rectangles, Segments, VectorField
 
 
 class TestRectangles(ComparisonTestCase):
@@ -280,4 +280,79 @@ class TestSegments(ComparisonTestCase):
                 1.5, 2],
                 [3, 1]
             ])
+        )
+
+
+class TestVectorField(ComparisonTestCase):
+
+    def test_vectorfield_from_uv(self):
+        """Test VectorField.from_uv uses mathematical convention."""
+        x = np.linspace(-1, 1, 4)
+        X, Y = np.meshgrid(x, x)
+        U, V = 10 * X, 2 * Y
+
+        # Mathematical convention: angle = arctan2(v, u)
+        angle = np.arctan2(V, U)
+        mag = np.hypot(U, V)
+
+        gv_field = VectorField((X, Y, angle, mag))
+        gv_field_uv = VectorField.from_uv((X, Y, U, V))
+
+        np.testing.assert_almost_equal(
+            gv_field.data["Angle"].T.flatten(),
+            gv_field_uv.data["Angle"]
+        )
+        np.testing.assert_almost_equal(
+            gv_field.data["Magnitude"].T.flatten(),
+            gv_field_uv.data["Magnitude"]
+        )
+
+    def test_vectorfield_from_uv_horizontal(self):
+        """Test VectorField.from_uv with horizontal vectors (u=10, v=0)."""
+        x = np.linspace(-180, 180, 4)
+        y = np.linspace(-90, 90, 4)
+        X, Y = np.meshgrid(x, y)
+        
+        # Horizontal vectors pointing right (East)
+        U = 10 * np.ones_like(X)
+        V = np.zeros_like(Y)
+        
+        gv_field_uv = VectorField.from_uv((X, Y, U, V))
+        
+        # Mathematical convention: angle = arctan2(0, 10) = 0 (pointing East/Right)
+        expected_angle = np.arctan2(V, U)
+        expected_mag = np.hypot(U, V)
+        
+        np.testing.assert_almost_equal(
+            gv_field_uv.data["Angle"],
+            expected_angle.flatten()
+        )
+        np.testing.assert_almost_equal(
+            gv_field_uv.data["Magnitude"],
+            expected_mag.flatten()
+        )
+
+    def test_vectorfield_from_uv_vertical(self):
+        """Test VectorField.from_uv with vertical vectors (u=0, v=10)."""
+        x = np.linspace(-180, 180, 4)
+        y = np.linspace(-90, 90, 4)
+        X, Y = np.meshgrid(x, y)
+        
+        # Vertical vectors pointing up (North)
+        U = np.zeros_like(X)
+        V = 10 * np.ones_like(Y)
+        
+        gv_field_uv = VectorField.from_uv((X, Y, U, V))
+        
+        # Mathematical convention: angle = arctan2(10, 0) = π/2 (pointing North/Up)
+        expected_angle = np.arctan2(V, U)
+        expected_mag = np.hypot(U, V)
+        
+        np.testing.assert_almost_equal(
+            gv_field_uv.data["Angle"],
+            expected_angle.flatten()
+        )
+        np.testing.assert_almost_equal(
+            gv_field_uv.data["Magnitude"],
+            expected_mag.flatten()
         )

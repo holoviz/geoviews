@@ -56,6 +56,21 @@ class TestProjection(ComparisonTestCase):
         np.testing.assert_allclose(projected.dimension_values("Angle"), a.flatten())
         np.testing.assert_allclose(projected.dimension_values("Magnitude"), m.flatten())
 
+    def test_project_vectorfield_from_uv(self):
+        xs = np.linspace(10, 50, 2)
+        X, Y = np.meshgrid(xs, xs)
+        U, V = 5 * X, 1 * Y
+        crs = ccrs.PlateCarree()
+        vectorfield = VectorField.from_uv((X, Y, U, V), crs=crs)
+        projection = ccrs.Orthographic()
+        projected = project(vectorfield, projection=projection)
+        assert projected.crs == projection
+
+        # Verify that the angles are correct (mathematical convention)
+        angles = vectorfield.dimension_values("Angle")
+        expected_angles = np.arctan2(V, U).flatten()
+        np.testing.assert_allclose(angles, expected_angles)
+
     def test_project_windbarbs(self):
         xs = np.linspace(10, 50, 2)
         X, Y = np.meshgrid(xs, xs)

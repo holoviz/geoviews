@@ -374,6 +374,59 @@ class VectorField(_Element, HvVectorField):
     vdims = param.List(default=[Dimension('Angle', cyclic=True, range=(0,2*np.pi)),
                                 Dimension('Magnitude')], bounds=(1, None))
 
+    @classmethod
+    def from_uv(cls, data, kdims=None, vdims=None, **params):
+        """
+        Create a VectorField from u and v components.
+
+        Parameters
+        ----------
+        data : array-like or Dataset
+            Data containing x, y, u, v components
+        kdims : list, optional
+            Key dimensions (default: ['x', 'y'])
+        vdims : list, optional
+            Value dimensions (default: ['u', 'v'])
+        **params : dict
+            Additional parameters, including crs for coordinate reference system
+
+        Returns
+        -------
+        VectorField
+            A VectorField element with angle and magnitude computed from u,v
+
+        Notes
+        -----
+        Uses mathematical convention where angle = arctan2(v, u):
+        - 0 radians points East (positive x direction)
+        - π/2 radians points North (positive y direction)
+        """
+        if kdims is None:
+            kdims = ['x', 'y']
+        if vdims is None:
+            vdims = ['u', 'v']
+        dataset = Dataset(data, kdims=kdims, vdims=vdims, **params)
+        us, vs = (dataset.dimension_values(i) for i in (2, 3))
+
+        uv_magnitudes = np.hypot(us, vs)
+        # using mathematical convention (standard for vector fields)
+        radians = np.arctan2(vs, us)
+
+        # calculations on this data could mutate the original data
+        # here we do not do any calculations; we only store the data
+        repackaged_dataset = {}
+        for kdim in kdims:
+            repackaged_dataset[kdim] = dataset[kdim]
+        repackaged_dataset["Angle"] = radians
+        repackaged_dataset["Magnitude"] = uv_magnitudes
+        for vdim in vdims[2:]:
+            repackaged_dataset[vdim] = dataset[vdim]
+        vdims = [
+            Dimension('Angle', cyclic=True, range=(0, 2 * np.pi)),
+            Dimension('Magnitude')
+        ] + vdims[2:]
+        return cls(repackaged_dataset, kdims=kdims, vdims=vdims, **params)
+
 
 class WindBarbs(_Element, Selection2DExpr, HvGeometry):
     """

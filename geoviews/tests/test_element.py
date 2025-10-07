@@ -356,3 +356,36 @@ class TestVectorField(ComparisonTestCase):
             gv_field_uv.data["Magnitude"],
             expected_mag.flatten()
         )
+
+    def test_vectorfield_from_uv_issue_reproduction(self):
+        """
+        Test that reproduces the exact scenario from GitHub issue.
+        
+        Issue: User had u=10, v=0 and was using meteorological convention
+        which gave wrong results. This test verifies the fix.
+        """
+        x = np.linspace(-180, 180, 20)
+        y = np.linspace(-90, 90, 20)
+        X, Y = np.meshgrid(x, y)
+        
+        # The exact scenario from the issue
+        u = 10 * np.ones_like(X)
+        v = np.zeros_like(Y)
+        
+        # Create VectorField using from_uv
+        gv_field = VectorField.from_uv((X, Y, u, v))
+        
+        # Verify angles are correct (should be 0 for horizontal vectors pointing East)
+        # Mathematical convention: angle = arctan2(0, 10) = 0
+        expected_angles = np.zeros_like(u.flatten())
+        np.testing.assert_almost_equal(
+            gv_field.data["Angle"],
+            expected_angles
+        )
+        
+        # Verify magnitudes are correct
+        expected_magnitudes = 10 * np.ones_like(u.flatten())
+        np.testing.assert_almost_equal(
+            gv_field.data["Magnitude"],
+            expected_magnitudes
+        )

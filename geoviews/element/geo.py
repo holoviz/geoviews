@@ -374,6 +374,39 @@ class VectorField(_Element, HvVectorField):
     vdims = param.List(default=[Dimension('Angle', cyclic=True, range=(0,2*np.pi)),
                                 Dimension('Magnitude')], bounds=(1, None))
 
+    @classmethod
+    def from_uv(cls, data, kdims=None, vdims=None, **params):
+        """
+        Create a VectorField from u and v components.
+
+        Parameters
+        ----------
+        data : array-like or Dataset
+            Data containing x, y, u, v components
+        kdims : list, optional
+            Key dimensions (default: ['x', 'y'])
+        vdims : list, optional
+            Value dimensions (default: ['u', 'v'])
+        **params : dict
+            Additional parameters, including crs for coordinate reference system
+
+        Returns
+        -------
+        VectorField
+            A VectorField element with angle and magnitude computed from u,v
+
+        Notes
+        -----
+        Uses mathematical convention where angle = arctan2(v, u):
+        - 0 radians points East (positive x direction)
+        - π/2 radians points North (positive y direction)
+        """
+        crs = params.pop('crs', None)
+        vectorfield = super().from_uv(data, kdims=kdims, vdims=vdims, **params)
+        if crs is not None:
+            vectorfield.crs = crs
+        return vectorfield
+
 
 class WindBarbs(_Element, Selection2DExpr, HvGeometry):
     """

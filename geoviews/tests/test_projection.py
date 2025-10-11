@@ -48,13 +48,159 @@ class TestProjection(ComparisonTestCase):
         assert projected.crs == projection
 
         xs, ys, ang, ms = (vectorfield.dimension_values(i) for i in range(4))
-        us = np.sin(ang) * -ms
-        vs = np.cos(ang) * -ms
+        # Correct conversion: angle follows mathematical convention
+        # angle = arctan2(v, u), so u = mag*cos(angle), v = mag*sin(angle)
+        us = np.cos(ang) * ms
+        vs = np.sin(ang) * ms
         u, v = projection.transform_vectors(crs, xs, ys, us, vs)
         a, m = np.arctan2(v, u).T, np.hypot(u, v).T
 
         np.testing.assert_allclose(projected.dimension_values("Angle"), a.flatten())
         np.testing.assert_allclose(projected.dimension_values("Magnitude"), m.flatten())
+
+    def test_project_vectorfield_from_uv(self):
+        xs = np.linspace(10, 50, 2)
+        X, Y = np.meshgrid(xs, xs)
+        U, V = 5 * X, 1 * Y
+        crs = ccrs.PlateCarree()
+        vectorfield = VectorField.from_uv((X, Y, U, V), crs=crs)
+        projection = ccrs.Orthographic()
+        projected = project(vectorfield, projection=projection)
+        assert projected.crs == projection
+
+        # Verify that from_uv creates the correct angle/magnitude by roundtrip
+        angles = vectorfield.dimension_values("Angle")
+        mags = vectorfield.dimension_values("Magnitude")
+
+        # Convert back to u,v
+        u_converted = mags * np.cos(angles)
+        v_converted = mags * np.sin(angles)
+
+        # Create a new vectorfield from these u,v values
+        xs_values = vectorfield.dimension_values(0)
+        ys_values = vectorfield.dimension_values(1)
+        vectorfield2 = VectorField.from_uv(
+            (xs_values, ys_values, u_converted, v_converted), crs=crs
+        )
+
+        # The roundtrip should give us back the same angles and magnitudes
+        angles2 = vectorfield2.dimension_values("Angle")
+        mags2 = vectorfield2.dimension_values("Magnitude")
+
+        np.testing.assert_allclose(angles2, angles, rtol=1e-10)
+        np.testing.assert_allclose(mags2, mags, rtol=1e-10)
+
+    def test_project_vectorfield_angle_convention(self):
+        """Test that VectorField uses mathematical convention for angles.
+
+        In mathematical convention:
+        - angle = arctan2(v, u)
+        - 0 radians points East (positive x direction)
+        - π/2 radians points North (positive y direction)
+        """
+        # Create simple test cases with known angles
+        xs = np.array([0, 0, 0, 0])
+        ys = np.array([0, 0, 0, 0])
+
+        # Test cardinal directions
+        angles = np.array([0, np.pi/2, np.pi, 3*np.pi/2])  # E, N, W, S
+        magnitudes = np.array([10, 10, 10, 10])
+
+        crs = ccrs.PlateCarree()
+        vectorfield = VectorField((xs, ys, angles, magnitudes), crs=crs)
+
+        # Project to same CRS (should preserve angles)
+        projected = project(vectorfield, projection=crs)
+
+        # Verify angles are preserved by comparing u,v components (handles wrapping)
+        projected_angles = projected.dimension_values("Angle")
+        projected_mags = projected.dimension_values("Magnitude")
+
+        # Convert both to u,v components for comparison (handles angle wrapping)
+        orig_u = magnitudes * np.cos(angles)
+        orig_v = magnitudes * np.sin(angles)
+        proj_u = projected_mags * np.cos(projected_angles)
+        proj_v = projected_mags * np.sin(projected_angles)
+
+        # Use appropriate tolerance for floating point comparison
+        np.testing.assert_allclose(proj_u, orig_u, rtol=1e-10, atol=1e-14)
+        np.testing.assert_allclose(proj_v, orig_v, rtol=1e-10, atol=1e-14)
+
+        # Verify magnitudes are preserved
+        np.testing.assert_allclose(projected_mags, magnitudes, rtol=1e-10)
+
+    def test_project_vectorfield_from_uv_consistency(self):
+        """Test that VectorField created from u,v produces correct angles after projection."""
+        xs = np.linspace(-10, 10, 3)
+        ys = np.linspace(-10, 10, 3)
+        X, Y = np.meshgrid(xs, ys)
+
+        # Create uniform eastward flow
+        U = np.ones_like(X) * 10  # All vectors point East
+        V = np.zeros_like(Y)
+
+        crs = ccrs.PlateCarree()
+        vectorfield = VectorField.from_uv((X, Y, U, V), crs=crs)
+
+        # All angles should be 0 (pointing East)
+        angles = vectorfield.dimension_values("Angle")
+        np.testing.assert_allclose(angles, 0, atol=1e-10)
+
+        # Project to PlateCarree (identity projection)
+        projected = project(vectorfield, projection=crs)
+        projected_angles = projected.dimension_values("Angle")
+
+        # Angles should still be 0 after identity projection
+        np.testing.assert_allclose(projected_angles, 0, atol=1e-10)
+
+    def test_project_vectorfield_north_vectors(self):
+        """Test that northward vectors have angle π/2 after projection."""
+        xs = np.linspace(-10, 10, 3)
+        ys = np.linspace(-10, 10, 3)
+        X, Y = np.meshgrid(xs, ys)
+
+        # Create uniform northward flow
+        U = np.zeros_like(X)
+        V = np.ones_like(Y) * 10  # All vectors point North
+
+        crs = ccrs.PlateCarree()
+        vectorfield = VectorField.from_uv((X, Y, U, V), crs=crs)
+
+        # All angles should be π/2 (pointing North)
+        angles = vectorfield.dimension_values("Angle")
+        np.testing.assert_allclose(angles, np.pi/2, atol=1e-10)
+
+        # Project to PlateCarree (identity projection)
+        projected = project(vectorfield, projection=crs)
+        projected_angles = projected.dimension_values("Angle")
+
+        # Angles should still be π/2 after identity projection
+        np.testing.assert_allclose(projected_angles, np.pi/2, atol=1e-10)
+
+    def test_project_vectorfield_to_orthographic(self):
+        """Test VectorField projection to Orthographic maintains mathematical convention."""
+        # Create a simple grid near the equator
+        xs = np.array([0, 10, 20])
+        ys = np.array([0, 0, 0])
+
+        # Eastward vectors (angle = 0)
+        angles = np.zeros(3)
+        magnitudes = np.ones(3) * 10
+
+        crs = ccrs.PlateCarree()
+        vectorfield = VectorField((xs, ys, angles, magnitudes), crs=crs)
+
+        # Project to Orthographic
+        projection = ccrs.Orthographic(central_longitude=10, central_latitude=0)
+        projected = project(vectorfield, projection=projection)
+
+        # The projection should succeed
+        assert projected.crs == projection
+        assert len(projected) > 0
+
+        # Magnitudes should be positive
+        projected_mags = projected.dimension_values("Magnitude")
+        assert np.all(projected_mags > 0)
 
     def test_project_windbarbs(self):
         xs = np.linspace(10, 50, 2)
@@ -69,9 +215,11 @@ class TestProjection(ComparisonTestCase):
         assert projected.crs == projection
 
         xs, ys, ang, ms = (windbarbs.dimension_values(i) for i in range(4))
-        us = np.sin(ang) * -ms
-        vs = np.cos(ang) * -ms
+        # Correct conversion for mathematical convention first
+        us = np.cos(ang) * ms
+        vs = np.sin(ang) * ms
         u, v = projection.transform_vectors(crs, xs, ys, us, vs)
+        # Then convert to meteorological convention for windbarbs
         a, m = np.pi / 2 - np.arctan2(-v, -u).T, np.hypot(u, v).T
 
         np.testing.assert_allclose(projected.dimension_values("Angle"), a.flatten())

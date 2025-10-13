@@ -1,9 +1,10 @@
 import numpy as np
 import pytest
-from test_plot import TestBokehPlot, bokeh_renderer
 
 import geoviews as gv
 from geoviews.element import WindBarbs
+
+from .test_bokeh_plot import TestBokehPlot, bokeh_renderer
 
 try:
     import datashader

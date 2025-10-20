@@ -39,6 +39,7 @@ from ...element import (
     Text,
     TriMesh,
     VectorField,
+    WindBarbs,
 )
 from ...operation import (
     project_geom,
@@ -48,6 +49,7 @@ from ...operation import (
     project_points,
     project_quadmesh,
     project_vectorfield,
+    project_windbarbs,
 )
 from ...tile_sources import (
     _ATTRIBUTIONS,
@@ -59,6 +61,7 @@ from ...tile_sources import (
 )
 from ...util import line_types, poly_types
 from . import callbacks  # noqa
+from .chart import WindBarbsPlot
 from .plot import GeoOverlayPlot, GeoPlot
 
 try:
@@ -156,6 +159,14 @@ class GeoPointPlot(GeoPlot, PointPlot):
 class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
 
     _project_operation = project_vectorfield
+
+
+class GeoWindBarbsPlot(GeoPlot, WindBarbsPlot):
+    """Draws a wind barbs plot from the data in a WindBarbs Element."""
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_windbarbs
 
 
 class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):
@@ -335,6 +346,7 @@ Store.register({WMTS: TilePlot,
                 Points: GeoPointPlot,
                 Labels: GeoLabelsPlot,
                 VectorField: GeoVectorFieldPlot,
+                WindBarbs: GeoWindBarbsPlot,
                 Polygons: GeoPolygonPlot,
                 Contours: GeoContourPlot,
                 Rectangles: GeoRectanglesPlot,

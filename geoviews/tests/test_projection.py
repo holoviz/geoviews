@@ -206,24 +206,28 @@ class TestProjection(ComparisonTestCase):
         xs = np.linspace(10, 50, 2)
         X, Y = np.meshgrid(xs, xs)
         U, V = 5 * X, 1 * Y
-        A = np.arctan2(V, U)
+        A = np.pi / 2 - np.arctan2(-V, -U)
         M = np.hypot(U, V)
         crs = ccrs.PlateCarree()
         windbarbs = WindBarbs((X, Y, A, M), crs=crs)
-        projection = ccrs.Orthographic()
+        projection = ccrs.PlateCarree()
         projected = project(windbarbs, projection=projection)
         assert projected.crs == projection
 
         xs, ys, ang, ms = (windbarbs.dimension_values(i) for i in range(4))
-        # Correct conversion for mathematical convention first
-        us = np.cos(ang) * ms
-        vs = np.sin(ang) * ms
-        u, v = projection.transform_vectors(crs, xs, ys, us, vs)
-        # Then convert to meteorological convention for windbarbs
-        a, m = np.pi / 2 - np.arctan2(-v, -u).T, np.hypot(u, v).T
+        # Convert FROM meteorological convention to u,v components
+        us = -np.sin(ang) * ms
+        vs = -np.cos(ang) * ms
 
-        np.testing.assert_allclose(projected.dimension_values("Angle"), a.flatten())
-        np.testing.assert_allclose(projected.dimension_values("Magnitude"), m.flatten())
+        np.testing.assert_allclose(us, U.T.flatten())
+        np.testing.assert_allclose(vs, V.T.flatten())
+
+        # Convert to angle/magnitude in NORMALIZED meteorological convention
+        a = np.pi/2 - np.arctan2(-vs, -us) % (2*np.pi)
+        m = np.hypot(us, vs)
+
+        np.testing.assert_allclose(projected.dimension_values("Angle"), a.T.flatten())
+        np.testing.assert_allclose(projected.dimension_values("Magnitude"), m.T.flatten())
 
     def test_project_image_default_not_mask_extrapolated(self):
         """

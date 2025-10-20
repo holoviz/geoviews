@@ -139,8 +139,9 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
     def _postprocess_hover(self, renderer, source):
         super()._postprocess_hover(renderer, source)
-        hover = self.handles["plot"].hover
-        hover = hover[0] if hover else None
+        # Use self.handles["hover"] which contains the correct hover tool for this subplot
+        # rather than self.handles["plot"].hover which may refer to a different subplot's hover in overlays
+        hover = self.handles.get("hover", None)
         if (not self.geographic or hover is None or
             isinstance(hover.tooltips, str) or self.projection is not GOOGLE_MERCATOR
             or hover.tooltips is None or 'hv_created' not in hover.tags):

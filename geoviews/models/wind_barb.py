@@ -57,6 +57,42 @@ class WindBarb(XYGlyph):
         """,
     )
 
+    # Barb dimensions
+    barb_length = Float(
+        default=30.0,
+        help="""
+        Length of the main barb staff.
+        """,
+    )
+
+    barb_width = Float(
+        default=15.0,
+        help="""
+        Width of the barb lines.
+        """,
+    )
+
+    flag_width = Float(
+        default=15.0,
+        help="""
+        Width of the 50-knot flag triangles.
+        """,
+    )
+
+    spacing = Float(
+        default=6.0,
+        help="""
+        Vertical spacing between barbs and flags.
+        """,
+    )
+
+    calm_circle_radius = Float(
+        default=3.0,
+        help="""
+        Radius of the circle drawn for calm winds (< 5 knots).
+        """,
+    )
+
     # Line properties
     line_props = Include(
         LineProps,

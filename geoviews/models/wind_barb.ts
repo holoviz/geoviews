@@ -37,23 +37,18 @@ export class WindBarbView extends XYGlyphView {
     // angle is in meteorological convention (direction wind comes FROM)
     // barbs point in the direction the wind is coming FROM
 
-    const barb_length = 30 * scale
-    const barb_width = 15 * scale
-    const flag_width = 15 * scale
+    const barb_length = this.model.barb_length * scale
+    const barb_width = this.model.barb_width * scale
+    const flag_width = this.model.flag_width * scale
 
     ctx.save()
     ctx.translate(cx, cy)
     ctx.rotate(-angle)
 
     ctx.beginPath()
-    ctx.lineWidth = 1.5
 
-    if (this.visuals.line.doit) {
-      this.visuals.line.apply(ctx, idx)
-      ctx.strokeStyle = ctx.strokeStyle || "black"
-    } else {
-      ctx.strokeStyle = "black"
-    }
+    this.visuals.line.apply(ctx, idx)
+    ctx.strokeStyle = ctx.strokeStyle || "black"
 
     ctx.lineCap = "round"
     ctx.lineJoin = "round"
@@ -70,7 +65,7 @@ export class WindBarbView extends XYGlyphView {
 
       let remaining = mag_rounded
       let y_offset = -barb_length
-      const spacing = 6 * scale
+      const spacing = this.model.spacing * scale
 
       // Draw 50-knot flags (filled triangles)
       while (remaining >= 50) {
@@ -105,7 +100,7 @@ export class WindBarbView extends XYGlyphView {
     } else {
       // For calm winds (< 5 knots), draw only a circle (no staff line)
       ctx.beginPath()
-      ctx.arc(0, 0, 3 * scale, 0, 2 * Math.PI)
+      ctx.arc(0, 0, this.model.calm_circle_radius * scale, 0, 2 * Math.PI)
       ctx.stroke()
     }
 
@@ -121,7 +116,7 @@ export class WindBarbView extends XYGlyphView {
       const dx = this.sx[i] - sx
       const dy = this.sy[i] - sy
       const dist = Math.sqrt(dx * dx + dy * dy)
-      if (dist < 30 * this.model.scale) {  // Hit radius
+      if (dist < 10 * this.model.scale) {  // Hit radius
         candidates.push(i)
       }
     }
@@ -145,6 +140,11 @@ export namespace WindBarb {
     angle: p.AngleSpec
     magnitude: p.NumberSpec
     scale: p.Property<number>
+    barb_length: p.Property<number>
+    barb_width: p.Property<number>
+    flag_width: p.Property<number>
+    spacing: p.Property<number>
+    calm_circle_radius: p.Property<number>
   }
 
   export type Visuals = XYGlyph.Visuals & {line: visuals.LineVector}
@@ -168,9 +168,14 @@ export class WindBarb extends XYGlyph {
     this.prototype.default_view = WindBarbView
 
     this.define<WindBarb.Props>(({Float}) => ({
-      angle:     [p.AngleSpec, {value: 0}],
-      magnitude: [p.NumberSpec, {value: 0}],
-      scale:     [Float, 1.0],
+      angle:              [p.AngleSpec, {value: 0}],
+      magnitude:          [p.NumberSpec, {value: 0}],
+      scale:              [Float, 1.0],
+      barb_length:        [Float, 30.0],
+      barb_width:         [Float, 15.0],
+      flag_width:         [Float, 15.0],
+      spacing:            [Float, 6.0],
+      calm_circle_radius: [Float, 3.0],
     }))
 
     this.mixins<LineVector>(LineVector)

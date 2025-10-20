@@ -50,10 +50,23 @@ class WindBarbsPlot(ColorbarPlot):
         "line_alpha",
         "line_width",
         "scale",
+        "barb_length",
+        "barb_width",
+        "flag_width",
+        "spacing",
+        "calm_circle_radius",
         "visible",
     ]
 
-    _nonvectorized_styles = ["cmap", "scale"]
+    _nonvectorized_styles = [
+        "cmap",
+        "scale",
+        "barb_length",
+        "barb_width",
+        "flag_width",
+        "spacing",
+        "calm_circle_radius",
+    ]
 
     _plot_methods = dict(single="scatter")  # Placeholder, we override _init_glyph
 
@@ -98,6 +111,9 @@ class WindBarbsPlot(ColorbarPlot):
         if "scale" not in style:
             style["scale"] = self.scale
 
+        # Add hover data for tooltips
+        self._get_hover_data(data, element)
+
         return data, mapping, style
 
     def _init_glyph(self, plot, mapping, properties):
@@ -132,7 +148,17 @@ class WindBarbsPlot(ColorbarPlot):
         # Separate glyph properties from renderer properties
         # Glyph properties are those that the WindBarb glyph understands
         # Renderer properties are those that GlyphRenderer understands
-        glyph_prop_names = ["scale", "line_color", "line_alpha", "line_width"]
+        glyph_prop_names = [
+            "scale",
+            "line_color",
+            "line_alpha",
+            "line_width",
+            "barb_length",
+            "barb_width",
+            "flag_width",
+            "spacing",
+            "calm_circle_radius",
+        ]
         glyph_props = {}
         for prop in glyph_prop_names:
             if prop in properties:

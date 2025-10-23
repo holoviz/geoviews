@@ -280,6 +280,7 @@ class TestProjection(ComparisonTestCase):
         # since both should contain the same valid values
         assert np.allclose(unmasked_data, converted_data, equal_nan=True), "Extrapolated and converted data should be similar"
 
+    @pytest.mark.filterwarnings("ignore:Downloading:cartopy.io.DownloadWarning")
     def test_gf_borders(self):
         # Get borders at 110m scale using geoviews.feature, number of items can depend on cartopy version
         borders = gf.borders.geoms(scale='110m')

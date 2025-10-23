@@ -107,9 +107,13 @@ class project_path(_project_operation):
                 prev = logger.level
                 logger.setLevel(logging.ERROR)
                 if not proj_geom.is_valid:
-                    # Only apply buffer(0) fix for polygon types
+                    # Try make_valid() if available (shapely >= 2.0)
+                    # This properly fixes invalid geometries without destroying LineStrings
+                    if hasattr(proj_geom, 'make_valid'):
+                        proj_geom = proj_geom.make_valid()
+                    # Fall back to buffer(0) for polygon types only
                     # buffer(0) on LineStrings produces empty geometries
-                    if isinstance(geom, (Polygon, MultiPolygon)):
+                    elif isinstance(geom, (Polygon, MultiPolygon)):
                         proj_geom = proj.project_geometry(geom.buffer(0), element.crs)
             except Exception:
                 continue

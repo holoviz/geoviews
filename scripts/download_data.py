@@ -36,4 +36,4 @@ with suppress(ImportError):
     shapereader.natural_earth(name="coastline")
     shapereader.natural_earth(name="land")
     shapereader.natural_earth(name="ocean")
-    shapereader.natural_earth(resolution="50m", category="cultural", name="admin_0_boundary_lines_land")
+    shapereader.natural_earth(category="cultural", name="admin_0_boundary_lines_land")

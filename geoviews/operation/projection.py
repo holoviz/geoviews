@@ -107,7 +107,10 @@ class project_path(_project_operation):
                 prev = logger.level
                 logger.setLevel(logging.ERROR)
                 if not proj_geom.is_valid:
-                    proj_geom = proj.project_geometry(geom.buffer(0), element.crs)
+                    # Only apply buffer(0) fix for polygon types
+                    # buffer(0) on LineStrings produces empty geometries
+                    if isinstance(geom, (Polygon, MultiPolygon)):
+                        proj_geom = proj.project_geometry(geom.buffer(0), element.crs)
             except Exception:
                 continue
             finally:

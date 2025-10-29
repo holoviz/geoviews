@@ -18,7 +18,7 @@ test-312 = ["py312", "test-core", "test-unit-task", "optional", "test-example", 
 test-313 = ["py313", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
 test-314 = ["py314", "test-core", "test-unit-task", "optional-314", "test-example", "download-data"]
 test-core = ["py314", "test-unit-task", "test-core"]
-test-ui = ["py312", "test-core", "optional", "test-ui", "download-data"]
+test-ui = ["py313", "test-core", "optional", "test-ui", "download-data"]
 docs = ["py311", "optional", "doc", "download-data"]
 build = ["py311", "build"]
 lint = ["py311", "lint"]
@@ -135,7 +135,7 @@ nbval = "*"
 channels = ["microsoft"]
 
 [feature.test-ui.dependencies]
-playwright = { version = "!=1.51.0", channel = "microsoft" }  # https://github.com/microsoft/playwright-python/issues/2791
+playwright = { version = "*", channel = "microsoft" }
 pytest-playwright = { version = "*", channel = "microsoft" }
 
 [feature.test-ui.tasks]

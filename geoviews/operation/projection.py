@@ -255,8 +255,8 @@ class project_vectorfield(_project_operation):
         new_data[xdim.name] = coordinates[mask, 0]
         new_data[ydim.name] = coordinates[mask, 1]
         datatype = [element.interface.datatype]+element.datatype
-        us = np.sin(ang) * -ms
-        vs = np.cos(ang) * -ms
+        us = np.cos(ang) * ms
+        vs = np.sin(ang) * ms
         ut, vt = self.p.projection.transform_vectors(element.crs, xs, ys, us, vs)
         with np.errstate(divide='ignore', invalid='ignore'):
             angle = self._calc_angles(ut, vt)
@@ -281,10 +281,6 @@ class project_vectorfield(_project_operation):
 class project_windbarbs(project_vectorfield):
 
     supported_types = [WindBarbs]
-
-    def _calc_angles(self, ut, vt):
-        # meteorological convention; follows matplotlib
-        return np.pi / 2 - np.arctan2(-vt, -ut)
 
 
 class project_graph(_project_operation):

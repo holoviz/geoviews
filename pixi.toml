@@ -12,13 +12,14 @@ PYTHONIOENCODING = "utf-8"
 USE_PYGEOS = "0"
 
 [environments]
-test-310 = ["py310", "test-core", "test-unit-task", "test", "example", "test-example", "download-data"]
-test-311 = ["py311", "test-core", "test-unit-task", "test", "example", "test-example", "download-data"]
-test-312 = ["py312", "test-core", "test-unit-task", "test", "example", "test-example", "download-data"]
-test-313 = ["py313", "test-core", "test-unit-task", "test", "example", "test-example", "download-data"]
-test-core = ["py313", "test-unit-task", "test-core"]
-test-ui = ["py312", "test-core", "test", "test-ui", "download-data"]
-docs = ["py311", "example", "doc", "download-data"]
+test-310 = ["py310", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
+test-311 = ["py311", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
+test-312 = ["py312", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
+test-313 = ["py313", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
+test-314 = ["py314", "test-core", "test-unit-task", "optional-314", "test-example", "download-data"]
+test-core = ["py314", "test-unit-task", "test-core"]
+test-ui = ["py312", "test-core", "optional", "test-ui", "download-data"]
+docs = ["py311", "optional", "doc", "download-data"]
 build = ["py311", "build"]
 lint = ["py311", "lint"]
 download-data = ["download-data"]
@@ -55,20 +56,11 @@ python = "3.13.*"
 [feature.py313.activation.env]
 COVERAGE_CORE = "sysmon"
 
-[feature.example.dependencies]
-bokeh_sampledata = "*"
-datashader = "*"
-fiona = "*"
-geopandas-base = "*"
-iris = ">=3.5"
-matplotlib-base = ">2.2"
-mock = "*"
-netcdf4 = "*"
-pandas = "*"
-scipy = "*"
-shapely = "*"
-xarray = "*"
-xesmf = "*"
+[feature.py314.dependencies]
+python = "3.14.*"
+
+[feature.py314.activation.env]
+COVERAGE_CORE = "sysmon"
 
 [feature.download-data.tasks]
 download-data = 'python scripts/download_data.py'
@@ -95,7 +87,8 @@ pytest-xdist = "*"
 [feature.test-unit-task.tasks] # So it is not showing up in the test-ui environment
 test-unit = 'pytest geoviews/tests -n logical --dist loadgroup'
 
-[feature.test.dependencies]
+[feature.optional.dependencies]
+bokeh_sampledata = "*"
 cftime = "*"
 datashader = "*"
 filelock = "*"
@@ -111,6 +104,26 @@ rioxarray = "*"
 scipy = "*"
 shapely = "*"
 xarray = "*"
+xesmf = "*"
+
+[feature.optional-314.dependencies]
+bokeh_sampledata = "*"
+cftime = "*"
+# datashader = "*"
+filelock = "*"
+# fiona = "*"
+geopandas-base = "*"
+# iris = ">=3.5"
+matplotlib-base = ">2.2"
+nbval = "*"
+netcdf4 = "*"
+pandas = "*"
+pyviz_comms = "*"
+rioxarray = "*"
+scipy = "*"
+shapely = "*"
+xarray = "*"
+# xesmf = "*"
 
 [feature.test-example.tasks]
 test-example = 'pytest -n logical --dist loadscope --nbval-lax examples'

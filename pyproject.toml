@@ -160,10 +160,20 @@ combine-as-imports = true
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
-[tool.codespell]
-ignore-words-list = "lod,nd"
-skip = "doc/generate_modules.py,*.json,*.csv"
-write-changes = true
+[tool.typos.default]
+extend-ignore-re = [
+    ".*(?:#|--|//|/*).*(?:typos):\\s?ignore[^\\n]*\\n",
+    ".*(?:typos):\\s?ignore-next-line[^\\n]*\\n[^\\n]*",
+]
+
+[tool.typos.default.extend-words]
+arange = "arange"
+lod = "lod"
+nd = "nd"
+pn = "pn"
+
+[tool.typos.files]
+extend-exclude = ["*.csv", "*.json"]
 
 [tool.pytest.ini_options]
 addopts = [

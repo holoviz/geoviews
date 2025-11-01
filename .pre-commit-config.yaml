@@ -25,12 +25,10 @@ repos:
     rev: v0.1.17
     hooks:
       - id: clean-notebook
-  - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.39.0
     hooks:
-    - id: codespell
-      additional_dependencies:
-        - tomli
+      - id: typos
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0
     hooks:

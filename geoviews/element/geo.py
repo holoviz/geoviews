@@ -975,7 +975,7 @@ class Shape(Dataset):
                      index=None, drop_missing=False, element=None, **kwargs):
         """Load data from a collection of `cartopy.io.shapereader.Record`
         objects and optionally merge it with a dataset to assign
-        values to each polygon and form a chloropleth. Supplying just
+        values to each polygon and form a choropleth. Supplying just
         records will return an NdOverlayof Shape Elements with a
         numeric index. If a dataset is supplied, a mapping between the
         attribute names in the records and the dimension names in the

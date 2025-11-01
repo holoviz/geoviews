@@ -279,7 +279,7 @@ class GeomDictInterface(DictInterface):
     @classmethod
     def iloc(cls, dataset, index):
         from shapely.geometry import MultiPoint
-        rows, cols = index
+        rows, _cols = index
 
         data = dict(dataset.data)
         geom = data['geometry']

@@ -214,7 +214,7 @@ class TestProjection(ComparisonTestCase):
         projected = project(windbarbs, projection=projection)
         assert projected.crs == projection
 
-        xs, ys, ang, ms = (windbarbs.dimension_values(i) for i in range(4))
+        ang, ms = (windbarbs.dimension_values(i) for i in range(2, 4))
         # Convert FROM meteorological convention to u,v components
         us = -np.sin(ang) * ms
         vs = -np.cos(ang) * ms

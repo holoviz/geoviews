@@ -129,7 +129,6 @@ ignore = [
     "RUF005", # Consider {expr} instead of concatenation
     "RUF012", # Mutable class attributes should use `typing.ClassVar`
     'B905', # `zip()` without an explicit `strict=` parameter
-    'UP038', # Use `X | Y` in `isinstance` call instead of `(X, Y)`
     "D1", # Undocumented code
     "D200", # Unnecessary-multiline-docstring
     "D205", # Missing-blank-line-after-summary

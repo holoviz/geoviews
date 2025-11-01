@@ -169,7 +169,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         hover.formatters = formatters
 
     def _update_hover(self, element):
-        tooltips, hover_opts = self._hover_opts(element)
+        tooltips, _hover_opts = self._hover_opts(element)
         hover = self.handles['hover']
         if 'hv_created' in hover.tags:
             tooltips = [(ttp.pprint_label, f'@{{{dimension_sanitizer(ttp.name)}}}')

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs", 'bokeh ==3.6.*']
+requires = ["hatchling", "hatch-vcs", 'bokeh ==3.8.*']
 build-backend = "hatchling.build"
 
 [project]
@@ -7,12 +7,12 @@ name = "geoviews"
 dynamic = ["version"]
 description = 'GeoViews is a Python library that makes it easy to explore and visualize geographical, meteorological, and oceanographic datasets, such as those used in weather, climate, and remote sensing research.'
 readme = "README.md"
-license = { text = "BSD 3-Clause" }
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 authors = [{ name = "HoloViz developers", email = "developers@holoviz.org" }]
 maintainers = [{ name = "HoloViz developers", email = "developers@holoviz.org" }]
 classifiers = [
-    "License :: OSI Approved :: BSD License",
     "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -42,9 +42,16 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://geoviews.org"
-Source = "https://github.com/holoviz/geoviews"
+"Issue Tracker" = "https://github.com/holoviz/geoviews/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen"
+Blog = "https://blog.holoviz.org/"
+Changelog = "https://github.com/holoviz/geoviews/blob/main/CHANGELOG.md"
+Discord = "https://discord.gg/AXRHnJU6sP"
+Discourse = "https://discourse.holoviz.org"
+Documentation = "https://geoviews.org/"
+Funding = "https://opencollective.com/holoviz"
 HoloViz = "https://holoviz.org/"
+Homepage = "https://geoviews.org"
+Repository = "https://github.com/holoviz/geoviews"
 
 [project.optional-dependencies]
 recommended = [
@@ -58,6 +65,8 @@ recommended = [
     'scipy',
     'xarray',
 ]
+
+[dependency-groups]
 tests = ['psutil', 'pytest', 'pytest-xdist']
 
 [project.scripts]
@@ -128,7 +137,6 @@ ignore = [
     "RUF005", # Consider {expr} instead of concatenation
     "RUF012", # Mutable class attributes should use `typing.ClassVar`
     'B905', # `zip()` without an explicit `strict=` parameter
-    'UP038', # Use `X | Y` in `isinstance` call instead of `(X, Y)`
     "D1", # Undocumented code
     "D200", # Unnecessary-multiline-docstring
     "D205", # Missing-blank-line-after-summary
@@ -160,10 +168,20 @@ combine-as-imports = true
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
-[tool.codespell]
-ignore-words-list = "lod,nd"
-skip = "doc/generate_modules.py,*.json,*.csv"
-write-changes = true
+[tool.typos.default]
+extend-ignore-re = [
+    ".*(?:#|--|//|/*).*(?:typos):\\s?ignore[^\\n]*\\n",
+    ".*(?:typos):\\s?ignore-next-line[^\\n]*\\n[^\\n]*",
+]
+
+[tool.typos.default.extend-words]
+arange = "arange"
+lod = "lod"
+nd = "nd"
+pn = "pn"
+
+[tool.typos.files]
+extend-exclude = ["*.csv", "*.json"]
 
 [tool.pytest.ini_options]
 addopts = [

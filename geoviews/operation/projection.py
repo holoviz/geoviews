@@ -299,10 +299,6 @@ class project_windbarbs(project_vectorfield):
 
     supported_types = [WindBarbs]
 
-    def _calc_angles(self, ut, vt):
-        # meteorological convention; follows matplotlib
-        return np.pi / 2 - np.arctan2(-vt, -ut)
-
 
 class project_graph(_project_operation):
 

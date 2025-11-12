@@ -35,7 +35,7 @@ panel = ">=1.0.0"
 param = "*"
 pip = "*"
 pyproj = "*"
-shapely = "*"
+shapely = ">=1.8.0"
 xyzservices = "*"
 
 [feature.py310.dependencies]

@@ -1,5 +1,6 @@
 import logging
 import sys
+from contextlib import suppress
 
 import numpy as np
 import pandas as pd
@@ -38,6 +39,20 @@ from ..util import (
     project_extents,
     wrap_cylindrical_projection_lons,
 )
+
+
+def _make_valid(geom, proj_geom, crs):
+    from shapely.validation import make_valid
+
+    with suppress(Exception):
+        proj_geom_valid = make_valid(proj_geom)
+
+        if isinstance(proj_geom_valid, GeometryCollection):
+            proj_geom_list = [g for g in proj_geom_valid.geoms if isinstance(g, type(geom))]
+            if len(proj_geom_list) == 1:
+                proj_geom = proj_geom_list[0]
+
+    return proj_geom
 
 
 class _project_operation(Operation):
@@ -106,10 +121,10 @@ class project_path(_project_operation):
             try:
                 prev = logger.level
                 logger.setLevel(logging.ERROR)
-                if not proj_geom.is_valid and isinstance(geom, (Polygon, MultiPolygon)):
-                    # Only apply buffer(0) fix for polygon types
-                    # buffer(0) on LineStrings produces empty geometries
-                    proj_geom = proj.project_geometry(geom.buffer(0), element.crs)
+                if not proj_geom.is_valid:
+                    proj_geom = _make_valid(geom, proj_geom, crs)
+                    if not proj_geom.is_valid:
+                        proj_geom = proj.project_geometry(geom.buffer(0), element.crs)
             except Exception:
                 continue
             finally:

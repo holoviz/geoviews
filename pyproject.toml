@@ -37,7 +37,7 @@ dependencies = [
     'panel >=1.0.0',
     'param >=1.9.3,<3.0',
     'pyproj',
-    'shapely',
+    'shapely >=1.8.0',
     'xyzservices',
 ]
 
@@ -56,7 +56,6 @@ recommended = [
     'pooch',
     'pyct',
     'scipy',
-    'shapely',
     'xarray',
 ]
 tests = ['psutil', 'pytest', 'pytest-xdist']

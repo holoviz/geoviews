@@ -114,7 +114,7 @@ class project_path(_project_operation):
             elif (not geom or isinstance(geom, GeometryCollection)):
                 continue
 
-            proj_geom = proj.project_geometry(geom, element.crs)
+            proj_geom = proj.project_geometry(geom, crs)
 
             # Attempt to fix geometry without being noisy about it
             logger = logging.getLogger()
@@ -124,7 +124,7 @@ class project_path(_project_operation):
                 if not proj_geom.is_valid:
                     proj_geom = _make_valid(geom, proj_geom, crs)
                     if not proj_geom.is_valid:
-                        proj_geom = proj.project_geometry(geom.buffer(0), element.crs)
+                        proj_geom = proj.project_geometry(geom.buffer(0), crs)
             except Exception:
                 continue
             finally:
@@ -138,8 +138,8 @@ class project_path(_project_operation):
 
         if len(geoms) and len(projected) == 0:
             element_name = type(element).__name__
-            crs_name = type(element.crs).__name__
-            proj_name = type(self.p.projection).__name__
+            crs_name = type(crs).__name__
+            proj_name = type(proj).__name__
             self.param.warning(
                 f'While projecting a {element_name} element from a {crs_name} coordinate '
                 f'reference system (crs) to a {proj_name} projection none of '

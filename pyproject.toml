@@ -29,7 +29,7 @@ classifiers = [
 ]
 
 dependencies = [
-    'bokeh >=3.6.0',
+    'bokeh >=3.8.0',
     'cartopy >=0.18.0',
     'holoviews >=1.16.0',
     'numpy',
@@ -194,7 +194,7 @@ addopts = [
 ]
 norecursedirs = "doc .git dist build _build .ipynb_checkpoints"
 minversion = "7"
-xfail_strict = true
+xfail_strict = "true"
 log_cli_level = "INFO"
 filterwarnings = [
     "error",

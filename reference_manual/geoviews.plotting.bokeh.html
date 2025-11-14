@@ -1,0 +1,1126 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="../" data-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>geoviews.plotting.bokeh package — GeoViews v1.15.0</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=03e43079" rel="stylesheet" type="text/css"/>
+<link href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<link href="../_static/nbsite.css?v=d9d93254" rel="stylesheet" type="text/css"/>
+<link href="../_static/notebook.css?v=19946987" rel="stylesheet" type="text/css"/>
+<link href="../_static/gallery.css?v=0a3248cd" rel="stylesheet" type="text/css"/>
+<link href="../_static/alert.css?v=c26666be" rel="stylesheet" type="text/css"/>
+<link href="../_static/dataframe.css?v=a0f274c1" rel="stylesheet" type="text/css"/>
+<link href="../_static/scroller.css?v=2dcde208" rel="stylesheet" type="text/css"/>
+<link href="../_static/hv-sidebar-dropdown.css?v=3e2b0152" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=2e948e39" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=70d5d4a5"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>
+    window.goatcounter = {
+        path: function(p) { return location.host + p }
+    }
+</script>
+<script async="async" data-goatcounter="https://holoviz.goatcounter.com/count" src="../_static/js/goatcounter.js?v=f53f84b8"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'reference_manual/geoviews.plotting.bokeh';</script>
+<link href="../_static/favicon.ico" rel="icon"/>
+<link href="../about.html" rel="author" title="About these documents"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="geoviews.plotting.bokeh.callbacks.html" rel="next" title="geoviews.plotting.bokeh.callbacks module"/>
+<link href="geoviews.plotting.html" rel="prev" title="geoviews.plotting package"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+<meta content="1.15.0" name="docsearch:version"/>
+<meta content="2025-11-14" name="docbuild:last-update"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="light" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search the docs ..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search the docs ..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+<button aria-label="Site navigation" class="pst-navbar-icon sidebar-toggle primary-toggle">
+<span class="fa-solid fa-bars"></span>
+</button>
+<div class="col-lg-3 navbar-header-items__start">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="../index.html">
+<img alt="GeoViews v1.15.0 - Home" class="logo__image only-light" src="../_static/logo_horizontal.png"/>
+<img alt="GeoViews v1.15.0 - Home" class="logo__image only-dark pst-js-only" src="../_static/logo_horizontal.png"/>
+</a></div>
+</div>
+<div class="col-lg-9 navbar-header-items">
+<div class="me-auto navbar-header-items__center">
+<div class="navbar-item">
+<nav>
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../index.html">
+    Home
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../gallery/index.html">
+    Gallery
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://examples.holoviz.org">
+    Examples
+  </a>
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="index.html">
+    API
+  </a>
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
+                    More
+                </button>
+<ul class="dropdown-menu" id="pst-nav-more-links">
+<li class="">
+<a class="nav-link dropdown-item nav-internal" href="../developer_guide/index.html">
+    Developer Guide
+  </a>
+</li>
+<li class="">
+<a class="nav-link dropdown-item nav-internal" href="../releases.html">
+    Releases
+  </a>
+</li>
+<li class="">
+<a class="nav-link dropdown-item nav-internal" href="../about.html">
+    About
+  </a>
+</li>
+</ul>
+</li>
+</ul>
+</nav></div>
+</div>
+<div class="navbar-header-items__end">
+<div class="navbar-item navbar-persistent--container">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+</div>
+<div class="navbar-item">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button></div>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links">
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/holoviz/geoviews" rel="noopener" target="_blank" title="GitHub"><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i>
+<span class="sr-only">GitHub</span></a>
+</li>
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://twitter.com/HoloViews" rel="noopener" target="_blank" title="Twitter"><i aria-hidden="true" class="fa-brands fa-twitter-square fa-lg"></i>
+<span class="sr-only">Twitter</span></a>
+</li>
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://discourse.holoviz.org/c/geoviews" rel="noopener" target="_blank" title="Discourse"><i aria-hidden="true" class="fa-brands fa-discourse fa-lg"></i>
+<span class="sr-only">Discourse</span></a>
+</li>
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://discord.gg/AXRHnJU6sP" rel="noopener" target="_blank" title="Discord"><i aria-hidden="true" class="fa-brands fa-discord fa-lg"></i>
+<span class="sr-only">Discord</span></a>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="navbar-persistent--mobile">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+</div>
+<button aria-label="On this page" class="pst-navbar-icon sidebar-toggle secondary-toggle">
+<span class="fa-solid fa-outdent"></span>
+</button>
+</div>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<nav>
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../index.html">
+    Home
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../gallery/index.html">
+    Gallery
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://examples.holoviz.org">
+    Examples
+  </a>
+</li>
+<li class="nav-item current active">
+<a class="nav-link nav-internal" href="index.html">
+    API
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../developer_guide/index.html">
+    Developer Guide
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../releases.html">
+    Releases
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="../about.html">
+    About
+  </a>
+</li>
+</ul>
+</nav></div>
+</div>
+<div class="sidebar-header-items__end">
+<div class="navbar-item">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button></div>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links">
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/holoviz/geoviews" rel="noopener" target="_blank" title="GitHub"><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i>
+<span class="sr-only">GitHub</span></a>
+</li>
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://twitter.com/HoloViews" rel="noopener" target="_blank" title="Twitter"><i aria-hidden="true" class="fa-brands fa-twitter-square fa-lg"></i>
+<span class="sr-only">Twitter</span></a>
+</li>
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://discourse.holoviz.org/c/geoviews" rel="noopener" target="_blank" title="Discourse"><i aria-hidden="true" class="fa-brands fa-discourse fa-lg"></i>
+<span class="sr-only">Discourse</span></a>
+</li>
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://discord.gg/AXRHnJU6sP" rel="noopener" target="_blank" title="Discord"><i aria-hidden="true" class="fa-brands fa-discord fa-lg"></i>
+<span class="sr-only">Discord</span></a>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item"><!-- Adapted from sidebar-nav-bs.html (1.15.2) with the following changes
+
+  - Commented out the tag that adds the "Section Navigation" title
+  - Call generate_toctree_html with startdepth=0
+
+Please update this file when required when bumping the max pin of pydata-sphinx-theme.
+-->
+<nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
+<!-- <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p> -->
+<div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide/index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Projections.html">Projections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Geometries.html">Geometries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Gridded_Datasets_I.html">Gridded Datasets I</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Gridded_Datasets_II.html">Gridded Datasets II</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Working_with_Bokeh.html">Working with Bokeh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Resampling_Grids.html">Resampling Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Annotators.html">Annotating Geographic Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Using_Features_Offline.html">Using Features Offline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Using_WMTS_Offline.html">Using WMTS Offline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../gallery/index.html">Gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="simple">
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference external" href="https://examples.holoviz.org">Examples</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="geoviews.annotators.html">annotators</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="geoviews.data.html">data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.data.geom_dict.html">geoviews.data.geom_dict module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.data.geopandas.html">geoviews.data.geopandas module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.data.iris.html">geoviews.data.iris module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="geoviews.element.html">element</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.element.comparison.html">geoviews.element.comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.element.geo.html">geoviews.element.geo module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.links.html">links</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="geoviews.models.html">models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.models.custom_tools.html">geoviews.models.custom_tools module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.models.wind_barb.html">geoviews.models.wind_barb module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="geoviews.operation.html">operation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.operation.projection.html">geoviews.operation.projection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.operation.regrid.html">geoviews.operation.regrid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.operation.resample.html">geoviews.operation.resample module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="geoviews.plotting.html">plotting</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active has-children"><a class="current reference internal" href="#">geoviews.plotting.bokeh package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html">geoviews.plotting.bokeh.callbacks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="geoviews.plotting.bokeh.chart.html">geoviews.plotting.bokeh.chart module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="geoviews.plotting.bokeh.plot.html">geoviews.plotting.bokeh.plot module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="geoviews.plotting.mpl.html">geoviews.plotting.mpl package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="geoviews.plotting.mpl.chart.html">geoviews.plotting.mpl.chart module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.plot.html">geoviews.plotting.plot module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">plotting.bokeh</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html">geoviews.plotting.bokeh.callbacks module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.bokeh.chart.html">geoviews.plotting.bokeh.chart module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.bokeh.plot.html">geoviews.plotting.bokeh.plot module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="geoviews.plotting.mpl.html">plotting.matplotlib</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.mpl.chart.html">geoviews.plotting.mpl.chart module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.streams.html">streams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.util.html">util</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+</div>
+</nav></div>
+<div class="sidebar-primary-item">
+<div class="hv-sb-dd">
+<div class="btn-group">
+<a class="btn hv-sb-dd-value" href="https://holoviz.org" target="_blank">HoloViz.org<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a>
+<button aria-expanded="false" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" type="button">
+<span class="visually-hidden"></span>
+</button>
+<ul class="dropdown-menu">
+<li><a class="dropdown-item" href="https://param.holoviz.org" target="_blank" title="Assembling objects from many different libraries into a layout or app, whether in a Jupyter notebook or in a standalone servable dashboard">Panel<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://hvplot.holoviz.org" target="_blank" title="Quickly return interactive HoloViews, GeoViews, or Panel objects from Pandas, Xarray, or other data structures">hvPlot<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://holoviews.org" target="_blank" title="Declarative objects for instantly visualizable data, building Bokeh plots from convenient high-level specifications">HoloViews<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://datashader.org" target="_blank" title="Rasterizing huge datasets quickly as fixed-size images">Datashader<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://param.holoviz.org" target="_blank" title="Make your Python code clearer and more reliable by declaring Parameters">Param<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://lumen.holoviz.org" target="_blank" title="Framework for visual analytics that allows users to build data-driven dashboards from a simple YAML specification">Lumen<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://colorcet.holoviz.org" target="_blank" title="A wide range of perceptually uniform continuous colormaps and perceptually based categorical color sets for use with the other libraries">Colorcet<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><hr class="dropdown-divider"/></li>
+<li><a class="dropdown-item" href="https://examples.holoviz.org" target="_blank" title=" Visualization-focused examples using HoloViz for specific topics ">Examples Gallery<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://blog.holoviz.org" target="_blank" title="HoloViz blog">Blog<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+<div class="header-article-items__start">
+<div class="header-article-item">
+<nav aria-label="Breadcrumb" class="d-print-none">
+<ul class="bd-breadcrumbs">
+<li class="breadcrumb-item breadcrumb-home">
+<a aria-label="Home" class="nav-link" href="../index.html">
+<i class="fa-solid fa-home"></i>
+</a>
+</li>
+<li class="breadcrumb-item"><a class="nav-link" href="index.html">API Reference Manual</a></li>
+<li class="breadcrumb-item"><a class="nav-link" href="geoviews.plotting.html">geoviews.plotting package</a></li>
+<li aria-current="page" class="breadcrumb-item active"><span class="ellipsis">geoviews.plotting.bokeh package</span></li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+</div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<section id="geoviews-plotting-bokeh-package">
+<h1>geoviews.plotting.bokeh package<a class="headerlink" href="#geoviews-plotting-bokeh-package" title="Link to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html">geoviews.plotting.bokeh.callbacks module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoBoundsXCallback"><code class="docutils literal notranslate"><span class="pre">GeoBoundsXCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoBoundsXYCallback"><code class="docutils literal notranslate"><span class="pre">GeoBoundsXYCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoBoundsYCallback"><code class="docutils literal notranslate"><span class="pre">GeoBoundsYCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoBoxEditCallback"><code class="docutils literal notranslate"><span class="pre">GeoBoxEditCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoDoubleTapCallback"><code class="docutils literal notranslate"><span class="pre">GeoDoubleTapCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoFreehandDrawCallback"><code class="docutils literal notranslate"><span class="pre">GeoFreehandDrawCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoMouseEnterCallback"><code class="docutils literal notranslate"><span class="pre">GeoMouseEnterCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoMouseLeaveCallback"><code class="docutils literal notranslate"><span class="pre">GeoMouseLeaveCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoPointDrawCallback"><code class="docutils literal notranslate"><span class="pre">GeoPointDrawCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoPointerXCallback"><code class="docutils literal notranslate"><span class="pre">GeoPointerXCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoPointerXYCallback"><code class="docutils literal notranslate"><span class="pre">GeoPointerXYCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoPointerYCallback"><code class="docutils literal notranslate"><span class="pre">GeoPointerYCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoPolyDrawCallback"><code class="docutils literal notranslate"><span class="pre">GeoPolyDrawCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoPolyEditCallback"><code class="docutils literal notranslate"><span class="pre">GeoPolyEditCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoRangeXCallback"><code class="docutils literal notranslate"><span class="pre">GeoRangeXCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoRangeXYCallback"><code class="docutils literal notranslate"><span class="pre">GeoRangeXYCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoRangeYCallback"><code class="docutils literal notranslate"><span class="pre">GeoRangeYCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoSelectionXYCallback"><code class="docutils literal notranslate"><span class="pre">GeoSelectionXYCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoSingleTapCallback"><code class="docutils literal notranslate"><span class="pre">GeoSingleTapCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoTapCallback"><code class="docutils literal notranslate"><span class="pre">GeoTapCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.PolyVertexDrawCallback"><code class="docutils literal notranslate"><span class="pre">PolyVertexDrawCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.PolyVertexEditCallback"><code class="docutils literal notranslate"><span class="pre">PolyVertexEditCallback</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.get_cb_plot"><code class="docutils literal notranslate"><span class="pre">get_cb_plot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.project_drawn"><code class="docutils literal notranslate"><span class="pre">project_drawn()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.project_point"><code class="docutils literal notranslate"><span class="pre">project_point()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.project_ranges"><code class="docutils literal notranslate"><span class="pre">project_ranges()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.skip"><code class="docutils literal notranslate"><span class="pre">skip()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geoviews.plotting.bokeh.chart.html">geoviews.plotting.bokeh.chart module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.chart.html#geoviews.plotting.bokeh.chart.WindBarbsPlot"><code class="docutils literal notranslate"><span class="pre">WindBarbsPlot</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.bokeh.chart.html#geoviews.plotting.bokeh.chart.WindBarbsPlot.get_data"><code class="docutils literal notranslate"><span class="pre">WindBarbsPlot.get_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="geoviews.plotting.bokeh.plot.html">geoviews.plotting.bokeh.plot module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoOverlayPlot"><code class="docutils literal notranslate"><span class="pre">GeoOverlayPlot</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot"><code class="docutils literal notranslate"><span class="pre">GeoPlot</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot.get_data"><code class="docutils literal notranslate"><span class="pre">GeoPlot.get_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot.initialize_plot"><code class="docutils literal notranslate"><span class="pre">GeoPlot.initialize_plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot.update_frame"><code class="docutils literal notranslate"><span class="pre">GeoPlot.update_frame()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-geoviews.plotting.bokeh">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-geoviews.plotting.bokeh" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.FeaturePlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">FeaturePlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L273-L305"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.FeaturePlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoviews.plotting.bokeh.GeoPolygonPlot" title="geoviews.plotting.bokeh.GeoPolygonPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPolygonPlot</span></code></a></p>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#geoviews.plotting.bokeh.FeaturePlot.get_data" title="geoviews.plotting.bokeh.FeaturePlot.get_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_data</span></code></a>(element, ranges, style)</p></td>
+<td><p>Returns the data from an element in the appropriate format for initializing or updating a ColumnDataSource and a dictionary which maps the expected keywords arguments of a glyph to the column in the datasource.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#geoviews.plotting.bokeh.FeaturePlot.get_extents" title="geoviews.plotting.bokeh.FeaturePlot.get_extents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_extents</span></code></a>(element, ranges[, range_type])</p></td>
+<td><p>Subclasses the get_extents method using the GeoAxes set_extent method to project the extents to the Elements coordinate reference system.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils">
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.path.html#holoviews.plotting.bokeh.path.ContourPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.path.ContourPlot</span></code></a>: show_legend, selected, color_index</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+<p><a class="reference internal" href="#geoviews.plotting.bokeh.GeoPolygonPlot" title="geoviews.plotting.bokeh.GeoPolygonPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.GeoPolygonPlot</span></code></a>: show_frame</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">scale</span> <span class="pre">=</span> <span class="pre">Selector(default='110m',</span> <span class="pre">label='Scale',</span> <span class="pre">names={},</span> <span class="pre">objects=['10m',</span> <span class="pre">'50m',</span> <span class="pre">'110m'])</span></code></dt><dd><p>The scale of the Feature in meters.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.FeaturePlot.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L288-L305"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.FeaturePlot.get_data" title="Link to this definition">#</a></dt>
+<dd><p>Returns the data from an element in the appropriate format for
+initializing or updating a ColumnDataSource and a dictionary
+which maps the expected keywords arguments of a glyph to
+the column in the datasource.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.FeaturePlot.get_extents">
+<span class="sig-name descname"><span class="pre">get_extents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'combined'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L279-L286"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.FeaturePlot.get_extents" title="Link to this definition">#</a></dt>
+<dd><p>Subclasses the get_extents method using the GeoAxes
+set_extent method to project the extents to the
+Elements coordinate reference system.</p>
+</dd></dl>
+</hr></dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.FilledContourPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">FilledContourPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L225-L229"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.FilledContourPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoviews.plotting.bokeh.GeoPolygonPlot" title="geoviews.plotting.bokeh.GeoPolygonPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPolygonPlot</span></code></a></p>
+<p>Draws a filled contour plot.</p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.path.html#holoviews.plotting.bokeh.path.ContourPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.path.ContourPlot</span></code></a>: show_legend, selected, color_index</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+<p><a class="reference internal" href="#geoviews.plotting.bokeh.GeoPolygonPlot" title="geoviews.plotting.bokeh.GeoPolygonPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.GeoPolygonPlot</span></code></a>: show_frame</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">levels</span> <span class="pre">=</span> <span class="pre">ClassSelector(class_=(&lt;class</span> <span class="pre">'list'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'int'&gt;),</span> <span class="pre">default=10,</span> <span class="pre">label='Levels')</span></code></dt><dd><p>A list of scalar values used to specify the contour levels.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoContourPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoContourPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L213-L215"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoContourPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.path.html#holoviews.plotting.bokeh.path.ContourPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContourPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.path.html#holoviews.plotting.bokeh.path.ContourPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.path.ContourPlot</span></code></a>: show_legend, selected, color_index</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">show_frame</span> <span class="pre">=</span> <span class="pre">Boolean(default=True,</span> <span class="pre">label='Show</span> <span class="pre">frame')</span></code></dt><dd><p>Whether or not to show a complete frame around the plot.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoGraphPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoGraphPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L237-L239"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoGraphPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.graphs.html#holoviews.plotting.bokeh.graphs.GraphPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">GraphPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, show_legend, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, show_frame, shared_axes, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.graphs.html#holoviews.plotting.bokeh.graphs.GraphPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.graphs.GraphPlot</span></code></a>: tools, arrowhead_length, directed, selection_policy, inspection_policy, color_index, edge_color_index</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoImageStackPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoImageStackPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L203-L205"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoImageStackPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.raster.html#holoviews.plotting.bokeh.raster.ImageStackPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImageStackPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, colorbar, colorbar_position, colorbar_opts, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.raster.html#holoviews.plotting.bokeh.raster.ServerHoverMixin" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.raster.ServerHoverMixin</span></code></a>: selector_in_hovertool</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.raster.html#holoviews.plotting.bokeh.raster.RasterPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.raster.RasterPlot</span></code></a>: padding, show_legend, clipping_colors, nodata</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.raster.html#holoviews.plotting.bokeh.raster.ImageStackPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.raster.ImageStackPlot</span></code></a>: cnorm, start_alpha, end_alpha, num_colors</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">show_frame</span> <span class="pre">=</span> <span class="pre">Boolean(default=True,</span> <span class="pre">label='Show</span> <span class="pre">frame')</span></code></dt><dd><p>Whether or not to show a complete frame around the plot.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoLabelsPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoLabelsPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L321-L323"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoLabelsPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.annotation.html#holoviews.plotting.bokeh.annotation.LabelsPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">LabelsPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, show_frame, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.annotation.html#holoviews.plotting.bokeh.annotation.LabelsPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.annotation.LabelsPlot</span></code></a>: show_legend, xoffset, yoffset, color_index</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoPathPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoPathPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L232-L234"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoPathPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.path.html#holoviews.plotting.bokeh.path.PathPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">PathPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.path.html#holoviews.plotting.bokeh.path.PathPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.path.PathPlot</span></code></a>: show_legend, selected, color_index</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">show_frame</span> <span class="pre">=</span> <span class="pre">Boolean(default=True,</span> <span class="pre">label='Show</span> <span class="pre">frame')</span></code></dt><dd><p>Whether or not to show a complete frame around the plot.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoPointPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoPointPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L154-L156"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoPointPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.chart.html#holoviews.plotting.bokeh.chart.PointPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">PointPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, show_legend, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, show_frame, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.chart.html#holoviews.plotting.bokeh.chart.SizebarMixin" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.chart.SizebarMixin</span></code></a>: sizebar, sizebar_location, sizebar_orientation, sizebar_color, sizebar_alpha, sizebar_bounds, sizebar_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.chart.html#holoviews.plotting.bokeh.chart.PointPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.chart.PointPlot</span></code></a>: jitter, selected, color_index, size_index, scaling_method, scaling_factor, size_fn</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoPolygonPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoPolygonPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L208-L210"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoPolygonPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.path.html#holoviews.plotting.bokeh.path.PolygonPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolygonPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.path.html#holoviews.plotting.bokeh.path.ContourPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.path.ContourPlot</span></code></a>: show_legend, selected, color_index</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">show_frame</span> <span class="pre">=</span> <span class="pre">Boolean(default=True,</span> <span class="pre">label='Show</span> <span class="pre">frame')</span></code></dt><dd><p>Whether or not to show a complete frame around the plot.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoQuadMeshPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoQuadMeshPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L172-L174"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoQuadMeshPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.raster.html#holoviews.plotting.bokeh.raster.QuadMeshPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">QuadMeshPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.raster.html#holoviews.plotting.bokeh.raster.QuadMeshPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.raster.QuadMeshPlot</span></code></a>: padding, show_legend, clipping_colors, nodata</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">show_frame</span> <span class="pre">=</span> <span class="pre">Boolean(default=True,</span> <span class="pre">label='Show</span> <span class="pre">frame')</span></code></dt><dd><p>Whether or not to show a complete frame around the plot.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoRGBPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoRGBPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L198-L200"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoRGBPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.raster.html#holoviews.plotting.bokeh.raster.RGBPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RGBPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, show_legend, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.raster.html#holoviews.plotting.bokeh.raster.ServerHoverMixin" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.raster.ServerHoverMixin</span></code></a>: selector_in_hovertool</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.raster.html#holoviews.plotting.bokeh.raster.RGBPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.raster.RGBPlot</span></code></a>: padding</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">show_frame</span> <span class="pre">=</span> <span class="pre">Boolean(default=True,</span> <span class="pre">label='Show</span> <span class="pre">frame')</span></code></dt><dd><p>Whether or not to show a complete frame around the plot.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoRasterPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoRasterPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L177-L195"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoRasterPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.raster.html#holoviews.plotting.bokeh.raster.RasterPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RasterPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.raster.html#holoviews.plotting.bokeh.raster.ServerHoverMixin" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.raster.ServerHoverMixin</span></code></a>: selector_in_hovertool</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.raster.html#holoviews.plotting.bokeh.raster.RasterPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.raster.RasterPlot</span></code></a>: padding, show_legend, nodata</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">show_frame</span> <span class="pre">=</span> <span class="pre">Boolean(default=True,</span> <span class="pre">label='Show</span> <span class="pre">frame')</span></code></dt><dd><p>Whether or not to show a complete frame around the plot.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">clipping_colors</span> <span class="pre">=</span> <span class="pre">Dict(class_=&lt;class</span> <span class="pre">'dict'&gt;,</span> <span class="pre">default={'NaN':</span> <span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0)},</span> <span class="pre">label='Clipping</span> <span class="pre">colors')</span></code></dt><dd><p>Dictionary to specify colors for clipped values, allows
+        setting color for NaN values and for values above and below
+        the min and max value. The min, max or NaN color may specify
+        an RGB(A) color as a color hex string of the form #FFFFFF or
+        #FFFFFFFF or a length 3 or length 4 tuple specifying values in
+        the range 0-1 or a named HTML color.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoRectanglesPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoRectanglesPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L247-L249"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoRectanglesPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.geometry.html#holoviews.plotting.bokeh.geometry.RectanglesPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RectanglesPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, show_legend, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, show_frame, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.geometry.html#holoviews.plotting.bokeh.geometry.RectanglesPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.geometry.RectanglesPlot</span></code></a>: selected</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoSegmentsPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoSegmentsPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L252-L254"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoSegmentsPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.geometry.html#holoviews.plotting.bokeh.geometry.SegmentPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">SegmentPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, show_legend, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, show_frame, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.geometry.html#holoviews.plotting.bokeh.geometry.SegmentPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.geometry.SegmentPlot</span></code></a>: selected</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoShapePlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoShapePlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L257-L270"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoShapePlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoviews.plotting.bokeh.GeoPolygonPlot" title="geoviews.plotting.bokeh.GeoPolygonPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPolygonPlot</span></code></a></p>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#geoviews.plotting.bokeh.GeoShapePlot.get_data" title="geoviews.plotting.bokeh.GeoShapePlot.get_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_data</span></code></a>(element, ranges, style)</p></td>
+<td><p>Returns the data from an element in the appropriate format for initializing or updating a ColumnDataSource and a dictionary which maps the expected keywords arguments of a glyph to the column in the datasource.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.path.html#holoviews.plotting.bokeh.path.ContourPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.path.ContourPlot</span></code></a>: show_legend, selected, color_index</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+<p><a class="reference internal" href="#geoviews.plotting.bokeh.GeoPolygonPlot" title="geoviews.plotting.bokeh.GeoPolygonPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.GeoPolygonPlot</span></code></a>: show_frame</p>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoShapePlot.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L259-L270"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoShapePlot.get_data" title="Link to this definition">#</a></dt>
+<dd><p>Returns the data from an element in the appropriate format for
+initializing or updating a ColumnDataSource and a dictionary
+which maps the expected keywords arguments of a glyph to
+the column in the datasource.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoTextPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoTextPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L309-L318"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoTextPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.annotation.html#holoviews.plotting.bokeh.annotation.TextPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">TextPlot</span></code></a></p>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#geoviews.plotting.bokeh.GeoTextPlot.get_data" title="geoviews.plotting.bokeh.GeoTextPlot.get_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_data</span></code></a>(element, ranges, style)</p></td>
+<td><p>Returns the data from an element in the appropriate format for initializing or updating a ColumnDataSource and a dictionary which maps the expected keywords arguments of a glyph to the column in the datasource.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, show_legend, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, show_frame, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoTextPlot.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L311-L318"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoTextPlot.get_data" title="Link to this definition">#</a></dt>
+<dd><p>Returns the data from an element in the appropriate format for
+initializing or updating a ColumnDataSource and a dictionary
+which maps the expected keywords arguments of a glyph to
+the column in the datasource.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoTriMeshPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoTriMeshPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L242-L244"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoTriMeshPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.graphs.html#holoviews.plotting.bokeh.graphs.TriMeshPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">TriMeshPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, show_legend, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, show_frame, shared_axes, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.graphs.html#holoviews.plotting.bokeh.graphs.GraphPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.graphs.GraphPlot</span></code></a>: tools, arrowhead_length, directed, selection_policy, inspection_policy, color_index, edge_color_index</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.graphs.html#holoviews.plotting.bokeh.graphs.TriMeshPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.graphs.TriMeshPlot</span></code></a>: filled</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoVectorFieldPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoVectorFieldPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L159-L161"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoVectorFieldPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.chart.html#holoviews.plotting.bokeh.chart.VectorFieldPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorFieldPlot</span></code></a></p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, show_legend, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.chart.html#holoviews.plotting.bokeh.chart.VectorFieldPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.chart.VectorFieldPlot</span></code></a>: padding, arrow_heads, magnitude, pivot, rescale_lengths, color_index, size_index, normalize_lengths</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">show_frame</span> <span class="pre">=</span> <span class="pre">Boolean(default=True,</span> <span class="pre">label='Show</span> <span class="pre">frame')</span></code></dt><dd><p>Whether or not to show a complete frame around the plot.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.GeoWindBarbsPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">GeoWindBarbsPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L164-L169"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.GeoWindBarbsPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a>, <a class="reference internal" href="geoviews.plotting.bokeh.chart.html#geoviews.plotting.bokeh.chart.WindBarbsPlot" title="geoviews.plotting.bokeh.chart.WindBarbsPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">WindBarbsPlot</span></code></a></p>
+<p>Draws a wind barbs plot from the data in a WindBarbs Element.</p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, show_legend, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, show_frame, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.chart.html#geoviews.plotting.bokeh.chart.WindBarbsPlot" title="geoviews.plotting.bokeh.chart.WindBarbsPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.chart.WindBarbsPlot</span></code></a>: padding, convention, scale</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">apply_ranges</span> <span class="pre">=</span> <span class="pre">Boolean(default=True,</span> <span class="pre">label='Apply</span> <span class="pre">ranges')</span></code></dt><dd><p>Whether to compute the plot bounds from the data itself.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.LineContourPlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">LineContourPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L218-L222"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.LineContourPlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#geoviews.plotting.bokeh.GeoContourPlot" title="geoviews.plotting.bokeh.GeoContourPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoContourPlot</span></code></a></p>
+<p>Draws a contour plot.</p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ColorbarPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ColorbarPlot</span></code></a>: color_levels, cformatter, clabel, clim, clim_percentile, cnorm, colorbar, colorbar_position, colorbar_opts, clipping_colors, cticks, logz, rescale_discrete_levels, symmetric</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.LegendPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.LegendPlot</span></code></a>: legend_cols, legend_labels, legend_muted, legend_offset, legend_position, legend_opts</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.path.html#holoviews.plotting.bokeh.path.ContourPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.path.ContourPlot</span></code></a>: show_legend, selected, color_index</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+<p><a class="reference internal" href="#geoviews.plotting.bokeh.GeoContourPlot" title="geoviews.plotting.bokeh.GeoContourPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.GeoContourPlot</span></code></a>: show_frame</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">levels</span> <span class="pre">=</span> <span class="pre">ClassSelector(class_=(&lt;class</span> <span class="pre">'list'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'int'&gt;),</span> <span class="pre">default=10,</span> <span class="pre">label='Levels')</span></code></dt><dd><p>A list of scalar values used to specify the contour levels.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.TilePlot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">TilePlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L82-L151"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.TilePlot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeoPlot</span></code></a></p>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#geoviews.plotting.bokeh.TilePlot.get_data" title="geoviews.plotting.bokeh.TilePlot.get_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_data</span></code></a>(element, ranges, style)</p></td>
+<td><p>Returns the data from an element in the appropriate format for initializing or updating a ColumnDataSource and a dictionary which maps the expected keywords arguments of a glyph to the column in the datasource.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#geoviews.plotting.bokeh.TilePlot.get_extents" title="geoviews.plotting.bokeh.TilePlot.get_extents"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_extents</span></code></a>(element, ranges[, range_type])</p></td>
+<td><p>Subclasses the get_extents method using the GeoAxes set_extent method to project the extents to the Elements coordinate reference system.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.DimensionedPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.DimensionedPlot</span></code></a>: fontscale, show_title, normalize</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.plot.html#holoviews.plotting.plot.GenericElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.plot.GenericElementPlot</span></code></a>: apply_ranges, apply_extents, bgcolor, default_span, hooks, invert_axes, invert_xaxis, invert_yaxis, logx, logy, padding, show_legend, xaxis, yaxis, xlabel, ylabel, xlim, ylim, zlim, xrotation, yrotation</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.plot.html#holoviews.plotting.bokeh.plot.BokehPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.plot.BokehPlot</span></code></a>: title, shared_datasource, title_format, autohide_toolbar</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.element.html#holoviews.plotting.bokeh.element.ElementPlot" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.element.ElementPlot</span></code></a>: fontsize, xticks, yticks, toolbar, width, height, active_tools, align, apply_hard_bounds, autorange, border, aspect, backend_opts, data_aspect, frame_width, frame_height, min_width, min_height, max_width, max_height, margin, multi_y, scalebar, scalebar_range, scalebar_unit, scalebar_location, scalebar_label, scalebar_tool, scalebar_opts, subcoordinate_y, subcoordinate_scale, responsive, gridstyle, labelled, lod, show_frame, shared_axes, tools, hover_tooltips, hover_formatters, hover_mode, xformatter, yformatter</p>
+<p><a class="reference internal" href="geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot" title="geoviews.plotting.bokeh.plot.GeoPlot"><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.plotting.bokeh.plot.GeoPlot</span></code></a>: projection, show_grid, default_tools, infer_projection, fixed_bounds, global_extent, show_bounds</p>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.TilePlot.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L98-L133"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.TilePlot.get_data" title="Link to this definition">#</a></dt>
+<dd><p>Returns the data from an element in the appropriate format for
+initializing or updating a ColumnDataSource and a dictionary
+which maps the expected keywords arguments of a glyph to
+the column in the datasource.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.TilePlot.get_extents">
+<span class="sig-name descname"><span class="pre">get_extents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'combined'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L89-L96"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.TilePlot.get_extents" title="Link to this definition">#</a></dt>
+<dd><p>Subclasses the get_extents method using the GeoAxes
+set_extent method to project the extents to the
+Elements coordinate reference system.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.plotting.bokeh.geo_hex_binning">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">geoviews.plotting.bokeh.</span></span><span class="sig-name descname"><span class="pre">geo_hex_binning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invert_axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/v1.15.0/geoviews/plotting/bokeh/__init__.py#L326-L336"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.plotting.bokeh.geo_hex_binning" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.hex_tiles.html#holoviews.plotting.bokeh.hex_tiles.hex_binning" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">hex_binning</span></code></a>, <a class="reference internal" href="geoviews.operation.projection.html#geoviews.operation.projection.project_points" title="geoviews.operation.projection.project_points"><code class="xref py py-class docutils literal notranslate"><span class="pre">project_points</span></code></a></p>
+<p>Applies hex binning by computing aggregates on a hexagonal grid.</p>
+<p>Should not be user facing as the returned element is not directly
+usable.</p>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils"/>
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.core.html#holoviews.core.Operation" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.core.operation.Operation</span></code></a>: group, dynamic, input_ranges, link_inputs, streams</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">geoviews.operation.projection._project_operation</span></code>: projection</p>
+<p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.plotting.bokeh.hex_tiles.html#holoviews.plotting.bokeh.hex_tiles.hex_binning" title="(in HoloViews v1.22.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.plotting.bokeh.hex_tiles.hex_binning</span></code></a>: aggregator, gridsize, invert_axes, min_count, orientation</p>
+</div></blockquote>
+</dd></dl>
+</section>
+</section>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+<a class="left-prev" href="geoviews.plotting.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">previous</p>
+<p class="prev-next-title">geoviews.plotting package</p>
+</div>
+</a>
+<a class="right-next" href="geoviews.plotting.bokeh.callbacks.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">next</p>
+<p class="prev-next-title">geoviews.plotting.bokeh.callbacks module</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<dialog id="pst-secondary-sidebar-modal"></dialog>
+<div class="bd-sidebar-secondary bd-toc" id="pst-secondary-sidebar"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage" id="pst-page-navigation-heading-2">
+<i class="fa-solid fa-list"></i> On this page
+  </div>
+<nav aria-labelledby="pst-page-navigation-heading-2" class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-geoviews.plotting.bokeh">Module contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.FeaturePlot"><code class="docutils literal notranslate"><span class="pre">FeaturePlot</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.FeaturePlot.get_data"><code class="docutils literal notranslate"><span class="pre">FeaturePlot.get_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.FeaturePlot.get_extents"><code class="docutils literal notranslate"><span class="pre">FeaturePlot.get_extents()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.FilledContourPlot"><code class="docutils literal notranslate"><span class="pre">FilledContourPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoContourPlot"><code class="docutils literal notranslate"><span class="pre">GeoContourPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoGraphPlot"><code class="docutils literal notranslate"><span class="pre">GeoGraphPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoImageStackPlot"><code class="docutils literal notranslate"><span class="pre">GeoImageStackPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoLabelsPlot"><code class="docutils literal notranslate"><span class="pre">GeoLabelsPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoPathPlot"><code class="docutils literal notranslate"><span class="pre">GeoPathPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoPointPlot"><code class="docutils literal notranslate"><span class="pre">GeoPointPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoPolygonPlot"><code class="docutils literal notranslate"><span class="pre">GeoPolygonPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoQuadMeshPlot"><code class="docutils literal notranslate"><span class="pre">GeoQuadMeshPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoRGBPlot"><code class="docutils literal notranslate"><span class="pre">GeoRGBPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoRasterPlot"><code class="docutils literal notranslate"><span class="pre">GeoRasterPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoRectanglesPlot"><code class="docutils literal notranslate"><span class="pre">GeoRectanglesPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoSegmentsPlot"><code class="docutils literal notranslate"><span class="pre">GeoSegmentsPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoShapePlot"><code class="docutils literal notranslate"><span class="pre">GeoShapePlot</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoShapePlot.get_data"><code class="docutils literal notranslate"><span class="pre">GeoShapePlot.get_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoTextPlot"><code class="docutils literal notranslate"><span class="pre">GeoTextPlot</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoTextPlot.get_data"><code class="docutils literal notranslate"><span class="pre">GeoTextPlot.get_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoTriMeshPlot"><code class="docutils literal notranslate"><span class="pre">GeoTriMeshPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoVectorFieldPlot"><code class="docutils literal notranslate"><span class="pre">GeoVectorFieldPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.GeoWindBarbsPlot"><code class="docutils literal notranslate"><span class="pre">GeoWindBarbsPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.LineContourPlot"><code class="docutils literal notranslate"><span class="pre">LineContourPlot</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.TilePlot"><code class="docutils literal notranslate"><span class="pre">TilePlot</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.TilePlot.get_data"><code class="docutils literal notranslate"><span class="pre">TilePlot.get_data()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.TilePlot.get_extents"><code class="docutils literal notranslate"><span class="pre">TilePlot.get_extents()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.plotting.bokeh.geo_hex_binning"><code class="docutils literal notranslate"><span class="pre">geo_hex_binning</span></code></a></li>
+</ul>
+</li>
+</ul>
+</nav></div>
+<div class="sidebar-secondary-item">
+<div aria-label="source link" role="note">
+<h3>This Page</h3>
+<ul class="this-page-menu">
+<li><a href="../_sources/reference_manual/geoviews.plotting.bokeh.rst.txt" rel="nofollow">Show Source</a></li>
+</ul>
+</div></div>
+</div></div>
+</div>
+<footer class="bd-footer-content">
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+<div class="footer-items__start">
+<div class="footer-item">
+<p class="copyright">
+    
+      © Copyright 2018 HoloViz Developers.
+      <br/>
+</p>
+</div>
+<div class="footer-item">
+<p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+</p>
+</div>
+</div>
+<div class="footer-items__end">
+<div class="footer-item">
+<p class="theme-version">
+<!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+</div>
+</div>
+</footer>
+</body>
+</html>

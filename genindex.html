@@ -1,0 +1,2068 @@
+
+<!DOCTYPE html>
+
+<html data-content_root="./" data-theme="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Index — GeoViews v1.15.0</title>
+<script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+<!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+<noscript>
+<style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="_static/pygments.css?v=03e43079" rel="stylesheet" type="text/css"/>
+<link href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" rel="stylesheet" type="text/css"/>
+<link href="_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
+<link href="_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<link href="_static/nbsite.css?v=d9d93254" rel="stylesheet" type="text/css"/>
+<link href="_static/notebook.css?v=19946987" rel="stylesheet" type="text/css"/>
+<link href="_static/gallery.css?v=0a3248cd" rel="stylesheet" type="text/css"/>
+<link href="_static/alert.css?v=c26666be" rel="stylesheet" type="text/css"/>
+<link href="_static/dataframe.css?v=a0f274c1" rel="stylesheet" type="text/css"/>
+<link href="_static/scroller.css?v=2dcde208" rel="stylesheet" type="text/css"/>
+<link href="_static/hv-sidebar-dropdown.css?v=3e2b0152" rel="stylesheet" type="text/css"/>
+<link href="_static/custom.css?v=2e948e39" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="_static/documentation_options.js?v=70d5d4a5"></script>
+<script src="_static/doctools.js?v=9bcbadda"></script>
+<script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="_static/copybutton.js?v=f281be69"></script>
+<script src="_static/design-tabs.js?v=f930bc37"></script>
+<script>
+    window.goatcounter = {
+        path: function(p) { return location.host + p }
+    }
+</script>
+<script async="async" data-goatcounter="https://holoviz.goatcounter.com/count" src="_static/js/goatcounter.js?v=f53f84b8"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
+<link href="_static/favicon.ico" rel="icon"/>
+<link href="about.html" rel="author" title="About these documents"/>
+<link href="#" rel="index" title="Index"/>
+<link href="search.html" rel="search" title="Search"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+<meta content="1.15.0" name="docsearch:version"/>
+<meta content="2025-11-14" name="docbuild:last-update"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="light" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">Skip to main content</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>Back to top</button>
+<dialog id="pst-search-dialog">
+<form action="search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search the docs ..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search the docs ..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
+</div>
+<header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+<button aria-label="Site navigation" class="pst-navbar-icon sidebar-toggle primary-toggle">
+<span class="fa-solid fa-bars"></span>
+</button>
+<div class="col-lg-3 navbar-header-items__start">
+<div class="navbar-item">
+<a class="navbar-brand logo" href="index.html">
+<img alt="GeoViews v1.15.0 - Home" class="logo__image only-light" src="_static/logo_horizontal.png"/>
+<img alt="GeoViews v1.15.0 - Home" class="logo__image only-dark pst-js-only" src="_static/logo_horizontal.png"/>
+</a></div>
+</div>
+<div class="col-lg-9 navbar-header-items">
+<div class="me-auto navbar-header-items__center">
+<div class="navbar-item">
+<nav>
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="index.html">
+    Home
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="user_guide/index.html">
+    User Guide
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="gallery/index.html">
+    Gallery
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://examples.holoviz.org">
+    Examples
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="reference_manual/index.html">
+    API
+  </a>
+</li>
+<li class="nav-item dropdown">
+<button aria-controls="pst-nav-more-links" aria-expanded="false" class="btn dropdown-toggle nav-item" data-bs-toggle="dropdown" type="button">
+                    More
+                </button>
+<ul class="dropdown-menu" id="pst-nav-more-links">
+<li class="">
+<a class="nav-link dropdown-item nav-internal" href="developer_guide/index.html">
+    Developer Guide
+  </a>
+</li>
+<li class="">
+<a class="nav-link dropdown-item nav-internal" href="releases.html">
+    Releases
+  </a>
+</li>
+<li class="">
+<a class="nav-link dropdown-item nav-internal" href="about.html">
+    About
+  </a>
+</li>
+</ul>
+</li>
+</ul>
+</nav></div>
+</div>
+<div class="navbar-header-items__end">
+<div class="navbar-item navbar-persistent--container">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+</div>
+<div class="navbar-item">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button></div>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links">
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/holoviz/geoviews" rel="noopener" target="_blank" title="GitHub"><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i>
+<span class="sr-only">GitHub</span></a>
+</li>
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://twitter.com/HoloViews" rel="noopener" target="_blank" title="Twitter"><i aria-hidden="true" class="fa-brands fa-twitter-square fa-lg"></i>
+<span class="sr-only">Twitter</span></a>
+</li>
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://discourse.holoviz.org/c/geoviews" rel="noopener" target="_blank" title="Discourse"><i aria-hidden="true" class="fa-brands fa-discourse fa-lg"></i>
+<span class="sr-only">Discourse</span></a>
+</li>
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://discord.gg/AXRHnJU6sP" rel="noopener" target="_blank" title="Discord"><i aria-hidden="true" class="fa-brands fa-discord fa-lg"></i>
+<span class="sr-only">Discord</span></a>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="navbar-persistent--mobile">
+<button aria-label="Search" class="btn search-button-field search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass"></i>
+<span class="search-button__default-text">Search</span>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+</div>
+</div>
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+<div class="sidebar-header-items__center">
+<div class="navbar-item">
+<nav>
+<ul class="bd-navbar-elements navbar-nav">
+<li class="nav-item">
+<a class="nav-link nav-internal" href="index.html">
+    Home
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="user_guide/index.html">
+    User Guide
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="gallery/index.html">
+    Gallery
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-external" href="https://examples.holoviz.org">
+    Examples
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="reference_manual/index.html">
+    API
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="developer_guide/index.html">
+    Developer Guide
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="releases.html">
+    Releases
+  </a>
+</li>
+<li class="nav-item">
+<a class="nav-link nav-internal" href="about.html">
+    About
+  </a>
+</li>
+</ul>
+</nav></div>
+</div>
+<div class="sidebar-header-items__end">
+<div class="navbar-item">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button></div>
+<div class="navbar-item"><ul aria-label="Icon Links" class="navbar-icon-links">
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://github.com/holoviz/geoviews" rel="noopener" target="_blank" title="GitHub"><i aria-hidden="true" class="fa-brands fa-square-github fa-lg"></i>
+<span class="sr-only">GitHub</span></a>
+</li>
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://twitter.com/HoloViews" rel="noopener" target="_blank" title="Twitter"><i aria-hidden="true" class="fa-brands fa-twitter-square fa-lg"></i>
+<span class="sr-only">Twitter</span></a>
+</li>
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://discourse.holoviz.org/c/geoviews" rel="noopener" target="_blank" title="Discourse"><i aria-hidden="true" class="fa-brands fa-discourse fa-lg"></i>
+<span class="sr-only">Discourse</span></a>
+</li>
+<li class="nav-item">
+<a class="nav-link pst-navbar-icon" data-bs-placement="bottom" data-bs-toggle="tooltip" href="https://discord.gg/AXRHnJU6sP" rel="noopener" target="_blank" title="Discord"><i aria-hidden="true" class="fa-brands fa-discord fa-lg"></i>
+<span class="sr-only">Discord</span></a>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item"><!-- Adapted from sidebar-nav-bs.html (1.15.2) with the following changes
+
+  - Commented out the tag that adds the "Section Navigation" title
+  - Call generate_toctree_html with startdepth=0
+
+Please update this file when required when bumping the max pin of pydata-sphinx-theme.
+-->
+<nav aria-label="Section Navigation" class="bd-docs-nav bd-links">
+<!-- <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p> -->
+<div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Home</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="user_guide/index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/Projections.html">Projections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/Geometries.html">Geometries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/Gridded_Datasets_I.html">Gridded Datasets I</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/Gridded_Datasets_II.html">Gridded Datasets II</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/Working_with_Bokeh.html">Working with Bokeh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/Resampling_Grids.html">Resampling Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/Annotators.html">Annotating Geographic Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/Using_Features_Offline.html">Using Features Offline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/Using_WMTS_Offline.html">Using WMTS Offline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="gallery/index.html">Gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="simple">
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference external" href="https://examples.holoviz.org">Examples</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="reference_manual/index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference_manual/geoviews.annotators.html">annotators</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="reference_manual/geoviews.data.html">data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.data.geom_dict.html">geoviews.data.geom_dict module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.data.geopandas.html">geoviews.data.geopandas module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.data.iris.html">geoviews.data.iris module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="reference_manual/geoviews.element.html">element</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.element.comparison.html">geoviews.element.comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.element.geo.html">geoviews.element.geo module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_manual/geoviews.links.html">links</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="reference_manual/geoviews.models.html">models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.models.custom_tools.html">geoviews.models.custom_tools module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.models.wind_barb.html">geoviews.models.wind_barb module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="reference_manual/geoviews.operation.html">operation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.operation.projection.html">geoviews.operation.projection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.operation.regrid.html">geoviews.operation.regrid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.operation.resample.html">geoviews.operation.resample module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="reference_manual/geoviews.plotting.html">plotting</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="reference_manual/geoviews.plotting.bokeh.html">geoviews.plotting.bokeh package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference_manual/geoviews.plotting.bokeh.callbacks.html">geoviews.plotting.bokeh.callbacks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference_manual/geoviews.plotting.bokeh.chart.html">geoviews.plotting.bokeh.chart module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="reference_manual/geoviews.plotting.bokeh.plot.html">geoviews.plotting.bokeh.plot module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="reference_manual/geoviews.plotting.mpl.html">geoviews.plotting.mpl package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="reference_manual/geoviews.plotting.mpl.chart.html">geoviews.plotting.mpl.chart module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.plotting.plot.html">geoviews.plotting.plot module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="reference_manual/geoviews.plotting.bokeh.html">plotting.bokeh</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.plotting.bokeh.callbacks.html">geoviews.plotting.bokeh.callbacks module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.plotting.bokeh.chart.html">geoviews.plotting.bokeh.chart module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.plotting.bokeh.plot.html">geoviews.plotting.bokeh.plot module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="reference_manual/geoviews.plotting.mpl.html">plotting.matplotlib</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference_manual/geoviews.plotting.mpl.chart.html">geoviews.plotting.mpl.chart module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_manual/geoviews.streams.html">streams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference_manual/geoviews.util.html">util</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+</div>
+</nav></div>
+<div class="sidebar-primary-item">
+<div class="hv-sb-dd">
+<div class="btn-group">
+<a class="btn hv-sb-dd-value" href="https://holoviz.org" target="_blank">HoloViz.org<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a>
+<button aria-expanded="false" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" type="button">
+<span class="visually-hidden"></span>
+</button>
+<ul class="dropdown-menu">
+<li><a class="dropdown-item" href="https://param.holoviz.org" target="_blank" title="Assembling objects from many different libraries into a layout or app, whether in a Jupyter notebook or in a standalone servable dashboard">Panel<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://hvplot.holoviz.org" target="_blank" title="Quickly return interactive HoloViews, GeoViews, or Panel objects from Pandas, Xarray, or other data structures">hvPlot<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://holoviews.org" target="_blank" title="Declarative objects for instantly visualizable data, building Bokeh plots from convenient high-level specifications">HoloViews<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://datashader.org" target="_blank" title="Rasterizing huge datasets quickly as fixed-size images">Datashader<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://param.holoviz.org" target="_blank" title="Make your Python code clearer and more reliable by declaring Parameters">Param<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://lumen.holoviz.org" target="_blank" title="Framework for visual analytics that allows users to build data-driven dashboards from a simple YAML specification">Lumen<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://colorcet.holoviz.org" target="_blank" title="A wide range of perceptually uniform continuous colormaps and perceptually based categorical color sets for use with the other libraries">Colorcet<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><hr class="dropdown-divider"/></li>
+<li><a class="dropdown-item" href="https://examples.holoviz.org" target="_blank" title=" Visualization-focused examples using HoloViz for specific topics ">Examples Gallery<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+<li><a class="dropdown-item" href="https://blog.holoviz.org" target="_blank" title="HoloViz blog">Blog<i aria-hidden="true" class="fa fa-external-link hv-icon"></i></a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item">
+<div class="flat" data-ea-manual="true" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" id="ethical-ad-placement">
+</div></div>
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none"></div>
+<div id="searchbox"></div>
+<article class="bd-article">
+<h1 id="index">Index</h1>
+<div class="genindex-jumpbox">
+<a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#Q"><strong>Q</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ | <a href="#X"><strong>X</strong></a>
+ | <a href="#Y"><strong>Y</strong></a>
+ | <a href="#Z"><strong>Z</strong></a>
+</div>
+<h2 id="A">A</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.operation.html#geoviews.operation.add_crs">add_crs() (in module geoviews.operation)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.add_dimension">add_dimension() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.add_dimension">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.add_dimension">(geoviews.DynamicMap method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.add_style_opts">add_style_opts() (geoviews.Store class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.aggregate">aggregate() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.aggregate">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.angle">angle (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.angle">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.angle_units">angle_units (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.angle_units">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.annotate">annotate (class in geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.applies">applies() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.geom_dict.html#geoviews.data.geom_dict.GeomDictInterface.applies">(geoviews.data.geom_dict.GeomDictInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.GeomDictInterface.applies">(geoviews.data.GeomDictInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.GeoPandasInterface.applies">(geoviews.data.geopandas.GeoPandasInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.GeoPandasInterface.applies">(geoviews.data.GeoPandasInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.applies">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.dim.applies">(geoviews.dim method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.dim.apply">apply() (geoviews.dim method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.opts.apply_groups">apply_groups() (geoviews.opts class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.asarray">asarray() (in module geoviews.util)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="B">B</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.barb_length">barb_length (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.barb_length">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.barb_width">barb_width (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.barb_width">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.dim.bin">bin() (geoviews.dim method)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.resample.html#geoviews.operation.resample.bounds_to_poly">bounds_to_poly() (in module geoviews.operation.resample)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="C">C</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.calm_circle_radius">calm_circle_radius (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.calm_circle_radius">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.dim.categorize">categorize() (geoviews.dim method)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.check_crs">check_crs() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.CheckpointTool">CheckpointTool (class in geoviews.models)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.custom_tools.html#geoviews.models.custom_tools.CheckpointTool">(class in geoviews.models.custom_tools)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.operation.regrid.html#geoviews.operation.regrid.weighted_regrid.clean_weight_files">clean_weight_files() (geoviews.operation.regrid.weighted_regrid class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.ClearTool">ClearTool (class in geoviews.models)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.custom_tools.html#geoviews.models.custom_tools.ClearTool">(class in geoviews.models.custom_tools)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.dim.clone">clone() (geoviews.dim method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.Dimension.clone">(geoviews.Dimension method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.clone">(geoviews.DynamicMap method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Feature.clone">(geoviews.element.Feature method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Feature.clone">(geoviews.element.geo.Feature method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Feature.clone">(geoviews.Feature method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Layout.clone">(geoviews.Layout method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.NdLayout.clone">(geoviews.NdLayout method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Overlay.clone">(geoviews.Overlay method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.collate">collate() (geoviews.DynamicMap method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.HoloMap.collate">(geoviews.HoloMap method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Overlay.collate">(geoviews.Overlay method)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.Layout.cols">cols() (geoviews.Layout method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.NdLayout.cols">(geoviews.NdLayout method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.element.comparison.html#geoviews.element.comparison.Comparison">Comparison (class in geoviews.element.comparison)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.comparison.html#geoviews.element.comparison.ComparisonTestCase">ComparisonTestCase (class in geoviews.element.comparison)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.annotate.compose">compose() (geoviews.annotate class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.resample.html#geoviews.operation.resample.compute_zoom_level">compute_zoom_level() (in module geoviews.operation.resample)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.concat_dim">concat_dim() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.concat_dim">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Contours">Contours (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Contours">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Contours">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.operation.html#geoviews.operation.convert_to_geotype">convert_to_geotype() (in module geoviews.operation)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.coord_to_dimension">coord_to_dimension() (in module geoviews.data.iris)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.coords">coords() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.coords">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface">CubeInterface (class in geoviews.data)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface">(class in geoviews.data.iris)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.current_key">current_key (geoviews.DynamicMap property)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Cycle">Cycle (class in geoviews)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="D">D</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.Dataset">Dataset (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Dataset">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Dataset">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Overlay.ddims">ddims (geoviews.Overlay property)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.decollate">decollate() (geoviews.DynamicMap method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.GridSpace.decollate">(geoviews.GridSpace method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.HoloMap.decollate">(geoviews.HoloMap method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Layout.decollate">(geoviews.Layout method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.NdOverlay.decollate">(geoviews.NdOverlay method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Overlay.decollate">(geoviews.Overlay method)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.opts.defaults">defaults() (geoviews.opts class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.dim">dim (class in geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Dimension">Dimension (class in geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.drop_dimension">drop_dimension() (geoviews.DynamicMap method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.dump">dump() (geoviews.Store class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.dumps">dumps() (geoviews.Store class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap">DynamicMap (class in geoviews)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="E">E</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Graph.edge_type">edge_type (geoviews.element.geo.Graph attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.TriMesh.edge_type">(geoviews.element.geo.TriMesh attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Graph.edge_type">(geoviews.element.Graph attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.TriMesh.edge_type">(geoviews.element.TriMesh attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Graph.edge_type">(geoviews.Graph attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.TriMesh.edge_type">(geoviews.TriMesh attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.EdgePaths">EdgePaths (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.EdgePaths">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.EdgePaths">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Graph.edgepaths">edgepaths (geoviews.element.geo.Graph property)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.TriMesh.edgepaths">(geoviews.element.geo.TriMesh property)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Graph.edgepaths">(geoviews.element.Graph property)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.TriMesh.edgepaths">(geoviews.element.TriMesh property)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Graph.edgepaths">(geoviews.Graph property)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.TriMesh.edgepaths">(geoviews.TriMesh property)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.models.custom_tools.html#geoviews.models.custom_tools.PolyVertexDrawTool.end_style">end_style (geoviews.models.custom_tools.PolyVertexDrawTool attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.custom_tools.html#geoviews.models.custom_tools.PolyVertexEditTool.end_style">(geoviews.models.custom_tools.PolyVertexEditTool attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.PolyVertexDrawTool.end_style">(geoviews.models.PolyVertexDrawTool attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.PolyVertexEditTool.end_style">(geoviews.models.PolyVertexEditTool attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.event">event() (geoviews.DynamicMap method)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.expand_geoms">expand_geoms() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.extension">extension (class in geoviews)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="F">F</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.Feature">Feature (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Feature">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Feature">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.FeaturePlot">FeaturePlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.FeaturePlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.FilledContourPlot">FilledContourPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.FilledContourPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.FilledContours">FilledContours (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.FilledContours">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.FilledContours">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.operation.html#geoviews.operation.find_crs">find_crs() (in module geoviews.operation)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.resample.html#geoviews.operation.resample.find_geom">find_geom() (in module geoviews.operation.resample)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.flag_width">flag_width (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.flag_width">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.from_multi">from_multi() (in module geoviews.data.geopandas)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Shape.from_records">from_records() (geoviews.element.geo.Shape class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Shape.from_records">(geoviews.element.Shape class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Shape.from_records">(geoviews.Shape class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Shape.from_shapefile">from_shapefile() (geoviews.element.geo.Shape class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Shape.from_shapefile">(geoviews.element.Shape class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Shape.from_shapefile">(geoviews.Shape class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.VectorField.from_uv">from_uv() (geoviews.element.geo.VectorField class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.VectorField.from_uv">(geoviews.element.VectorField class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.VectorField.from_uv">(geoviews.VectorField class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.RGB.from_xarray">from_xarray() (geoviews.element.geo.RGB class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.RGB.from_xarray">(geoviews.element.RGB class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.RGB.from_xarray">(geoviews.RGB class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.from_xarray">(in module geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.from_xarray">(in module geoviews.util)</a>
+</li>
+</ul></li>
+</ul></td>
+</tr></table>
+<h2 id="G">G</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.geo_hex_binning">geo_hex_binning (class in geoviews.plotting.bokeh)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.geo_mesh">geo_mesh() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoAnnotationPlot">GeoAnnotationPlot (class in geoviews.plotting.mpl)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoBoundsXCallback">GeoBoundsXCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoBoundsXYCallback">GeoBoundsXYCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoBoundsYCallback">GeoBoundsYCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoBoxEditCallback">GeoBoxEditCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoContourPlot">GeoContourPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoContourPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.GeoConversion">GeoConversion (class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoDoubleTapCallback">GeoDoubleTapCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoFreehandDrawCallback">GeoFreehandDrawCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoGraphPlot">GeoGraphPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoGraphPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoHexTilesPlot">GeoHexTilesPlot (class in geoviews.plotting.mpl)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoImagePlot">GeoImagePlot (class in geoviews.plotting.mpl)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoImageStackPlot">GeoImageStackPlot (class in geoviews.plotting.bokeh)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoLabelsPlot">GeoLabelsPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoLabelsPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Contours.geom">geom() (geoviews.Contours method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Contours.geom">(geoviews.element.Contours method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Contours.geom">(geoviews.element.geo.Contours method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Path.geom">(geoviews.element.geo.Path method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Points.geom">(geoviews.element.geo.Points method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Polygons.geom">(geoviews.element.geo.Polygons method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Rectangles.geom">(geoviews.element.geo.Rectangles method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Segments.geom">(geoviews.element.geo.Segments method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Shape.geom">(geoviews.element.geo.Shape method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Path.geom">(geoviews.element.Path method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Points.geom">(geoviews.element.Points method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Polygons.geom">(geoviews.element.Polygons method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Rectangles.geom">(geoviews.element.Rectangles method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Segments.geom">(geoviews.element.Segments method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Shape.geom">(geoviews.element.Shape method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Path.geom">(geoviews.Path method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Points.geom">(geoviews.Points method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Polygons.geom">(geoviews.Polygons method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Rectangles.geom">(geoviews.Rectangles method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Segments.geom">(geoviews.Segments method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Shape.geom">(geoviews.Shape method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.geom_dict_to_array_dict">geom_dict_to_array_dict() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.geom_length">geom_length() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.geom_to_arr">geom_to_arr() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.geom_to_array">geom_to_array() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.GeomDictInterface">GeomDictInterface (class in geoviews.data)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.geom_dict.html#geoviews.data.geom_dict.GeomDictInterface">(class in geoviews.data.geom_dict)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeometryPlot">GeometryPlot (class in geoviews.plotting.mpl)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoMouseEnterCallback">GeoMouseEnterCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoMouseLeaveCallback">GeoMouseLeaveCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Feature.geoms">geoms() (geoviews.element.Feature method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Feature.geoms">(geoviews.element.geo.Feature method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Feature.geoms">(geoviews.Feature method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoOverlayPlot">GeoOverlayPlot (class in geoviews.plotting.bokeh.plot)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoOverlayPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.GeoPandasInterface">GeoPandasInterface (class in geoviews.data)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.GeoPandasInterface">(class in geoviews.data.geopandas)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoPathPlot">GeoPathPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoPathPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot">GeoPlot (class in geoviews.plotting.bokeh.plot)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoPointDrawCallback">GeoPointDrawCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoPointerXCallback">GeoPointerXCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoPointerXYCallback">GeoPointerXYCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoPointerYCallback">GeoPointerYCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoPointPlot">GeoPointPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoPointPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoPolyDrawCallback">GeoPolyDrawCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoPolyEditCallback">GeoPolyEditCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoPolygonPlot">GeoPolygonPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoPolygonPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoQuadMeshPlot">GeoQuadMeshPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoQuadMeshPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoRangeXCallback">GeoRangeXCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoRangeXYCallback">GeoRangeXYCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoRangeYCallback">GeoRangeYCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoRasterPlot">GeoRasterPlot (class in geoviews.plotting.bokeh)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoRectanglesPlot">GeoRectanglesPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoRectanglesPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoRGBPlot">GeoRGBPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoRGBPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoSegmentPlot">GeoSegmentPlot (class in geoviews.plotting.mpl)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoSegmentsPlot">GeoSegmentsPlot (class in geoviews.plotting.bokeh)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoSelectionXYCallback">GeoSelectionXYCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoShapePlot">GeoShapePlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoShapePlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoSingleTapCallback">GeoSingleTapCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.GeoTapCallback">GeoTapCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoTextPlot">GeoTextPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoTextPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoTriMeshPlot">GeoTriMeshPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoTriMeshPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoVectorFieldPlot">GeoVectorFieldPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoVectorFieldPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li>
+    geoviews
+
+      <ul>
+<li><a href="reference_manual/geoviews.html#module-geoviews">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.annotators
+
+      <ul>
+<li><a href="reference_manual/geoviews.annotators.html#module-geoviews.annotators">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.data
+
+      <ul>
+<li><a href="reference_manual/geoviews.data.html#module-geoviews.data">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.data.geom_dict
+
+      <ul>
+<li><a href="reference_manual/geoviews.data.geom_dict.html#module-geoviews.data.geom_dict">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.data.geopandas
+
+      <ul>
+<li><a href="reference_manual/geoviews.data.geopandas.html#module-geoviews.data.geopandas">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.data.iris
+
+      <ul>
+<li><a href="reference_manual/geoviews.data.iris.html#module-geoviews.data.iris">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.element
+
+      <ul>
+<li><a href="reference_manual/geoviews.element.html#module-geoviews.element">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.element.comparison
+
+      <ul>
+<li><a href="reference_manual/geoviews.element.comparison.html#module-geoviews.element.comparison">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.element.geo
+
+      <ul>
+<li><a href="reference_manual/geoviews.element.geo.html#module-geoviews.element.geo">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.feature
+
+      <ul>
+<li><a href="reference_manual/geoviews.feature.html#module-geoviews.feature">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.links
+
+      <ul>
+<li><a href="reference_manual/geoviews.links.html#module-geoviews.links">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.models
+
+      <ul>
+<li><a href="reference_manual/geoviews.models.html#module-geoviews.models">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.models.custom_tools
+
+      <ul>
+<li><a href="reference_manual/geoviews.models.custom_tools.html#module-geoviews.models.custom_tools">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.models.wind_barb
+
+      <ul>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#module-geoviews.models.wind_barb">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.operation
+
+      <ul>
+<li><a href="reference_manual/geoviews.operation.html#module-geoviews.operation">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.operation.projection
+
+      <ul>
+<li><a href="reference_manual/geoviews.operation.projection.html#module-geoviews.operation.projection">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.operation.regrid
+
+      <ul>
+<li><a href="reference_manual/geoviews.operation.regrid.html#module-geoviews.operation.regrid">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.operation.resample
+
+      <ul>
+<li><a href="reference_manual/geoviews.operation.resample.html#module-geoviews.operation.resample">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.plotting
+
+      <ul>
+<li><a href="reference_manual/geoviews.plotting.html#module-geoviews.plotting">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.plotting.bokeh
+
+      <ul>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#module-geoviews.plotting.bokeh">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.plotting.bokeh.callbacks
+
+      <ul>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#module-geoviews.plotting.bokeh.callbacks">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.plotting.bokeh.chart
+
+      <ul>
+<li><a href="reference_manual/geoviews.plotting.bokeh.chart.html#module-geoviews.plotting.bokeh.chart">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.plotting.bokeh.plot
+
+      <ul>
+<li><a href="reference_manual/geoviews.plotting.bokeh.plot.html#module-geoviews.plotting.bokeh.plot">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.plotting.mpl
+
+      <ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#module-geoviews.plotting.mpl">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.plotting.mpl.chart
+
+      <ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.chart.html#module-geoviews.plotting.mpl.chart">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.plotting.plot
+
+      <ul>
+<li><a href="reference_manual/geoviews.plotting.plot.html#module-geoviews.plotting.plot">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.streams
+
+      <ul>
+<li><a href="reference_manual/geoviews.streams.html#module-geoviews.streams">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.tile_sources
+
+      <ul>
+<li><a href="reference_manual/geoviews.tile_sources.html#module-geoviews.tile_sources">module</a>
+</li>
+</ul></li>
+<li>
+    geoviews.util
+
+      <ul>
+<li><a href="reference_manual/geoviews.util.html#module-geoviews.util">module</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.GeoviewsDeprecationWarning">GeoviewsDeprecationWarning</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.GeoviewsUserWarning">GeoviewsUserWarning</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoWindBarbsPlot">GeoWindBarbsPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoWindBarbsPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Overlay.get">get() (geoviews.Overlay method)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.get_cb_plot">get_cb_plot() (in module geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.chart.html#geoviews.plotting.bokeh.chart.WindBarbsPlot.get_data">get_data() (geoviews.plotting.bokeh.chart.WindBarbsPlot method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.FeaturePlot.get_data">(geoviews.plotting.bokeh.FeaturePlot method)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoShapePlot.get_data">(geoviews.plotting.bokeh.GeoShapePlot method)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.GeoTextPlot.get_data">(geoviews.plotting.bokeh.GeoTextPlot method)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot.get_data">(geoviews.plotting.bokeh.plot.GeoPlot method)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.TilePlot.get_data">(geoviews.plotting.bokeh.TilePlot method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.FeaturePlot.get_extents">get_extents() (geoviews.plotting.bokeh.FeaturePlot method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.TilePlot.get_extents">(geoviews.plotting.bokeh.TilePlot method)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.plot.html#geoviews.plotting.plot.ProjectionPlot.get_extents">(geoviews.plotting.plot.ProjectionPlot method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.get_geom_type">get_geom_type() (in module geoviews.data.geopandas)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.get_tile_rgb">get_tile_rgb() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Graph">Graph (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Graph">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Graph">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.grid">grid() (geoviews.DynamicMap method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.HoloMap.grid">(geoviews.HoloMap method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.NdLayout.grid_items">grid_items() (geoviews.NdLayout method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.GridSpace">GridSpace (class in geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Overlay.group">group (geoviews.Overlay property)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.groupby">groupby() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.groupby">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.groupby">(geoviews.DynamicMap method)</a>
+</li>
+</ul></li>
+</ul></td>
+</tr></table>
+<h2 id="H">H</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.help">help() (in module geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.HexTiles">HexTiles (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.HexTiles">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.HexTiles">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.hist">hist() (geoviews.DynamicMap method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.HoloMap.hist">(geoviews.HoloMap method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.HoloMap">HoloMap (class in geoviews)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="I">I</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.Image">Image (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Image">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Image">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.ImageStack">ImageStack (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.ImageStack">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.ImageStack">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.info">info() (geoviews.Store class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.FeaturePlot.init_artists">init_artists() (geoviews.plotting.mpl.FeaturePlot method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoImagePlot.init_artists">(geoviews.plotting.mpl.GeoImagePlot method)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeometryPlot.init_artists">(geoviews.plotting.mpl.GeometryPlot method)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoRGBPlot.init_artists">(geoviews.plotting.mpl.GeoRGBPlot method)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.WMTSPlot.init_artists">(geoviews.plotting.mpl.WMTSPlot method)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot.initialize_plot">initialize_plot() (geoviews.plotting.bokeh.plot.GeoPlot method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoAnnotationPlot.initialize_plot">(geoviews.plotting.mpl.GeoAnnotationPlot method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.annotators.html#geoviews.annotators.initialize_tools">initialize_tools() (in module geoviews.annotators)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.resample.html#geoviews.operation.resample.resample_geometry.instance">instance() (geoviews.operation.resample.resample_geometry method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.irregular">irregular() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.irregular">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.is_geographic">is_geographic() (in module geoviews.element)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.is_geographic">(in module geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.is_multi_geometry">is_multi_geometry() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.GeoPandasInterface.isscalar">isscalar() (geoviews.data.geopandas.GeoPandasInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.GeoPandasInterface.isscalar">(geoviews.data.GeoPandasInterface class method)</a>
+</li>
+</ul></li>
+</ul></td>
+</tr></table>
+<h2 id="K">K</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.GridSpace.keys">keys() (geoviews.GridSpace method)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="L">L</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.Overlay.label">label (geoviews.Overlay property)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Labels">Labels (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Labels">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Labels">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.GridSpace.last">last (geoviews.GridSpace property)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.NdLayout.last">(geoviews.NdLayout property)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Layout">Layout (class in geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.layout">layout() (geoviews.DynamicMap method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.HoloMap.layout">(geoviews.HoloMap method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.LayoutPlot">LayoutPlot (class in geoviews.plotting.mpl)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.length">length() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.GeoPandasInterface.length">(geoviews.data.geopandas.GeoPandasInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.GeoPandasInterface.length">(geoviews.data.GeoPandasInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.length">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.line_alpha">line_alpha (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.line_alpha">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.line_cap">line_cap (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.line_cap">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.line_color">line_color (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.line_color">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.line_dash">line_dash (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.line_dash">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.line_dash_offset">line_dash_offset (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.line_dash_offset">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.line_join">line_join (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.line_join">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.line_width">line_width (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.line_width">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.LineContourPlot">LineContourPlot (class in geoviews.plotting.bokeh)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.LineContourPlot">(class in geoviews.plotting.mpl)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.LineContours">LineContours (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.LineContours">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.LineContours">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.load">load() (geoviews.Store class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.loaded">loaded() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.GeoPandasInterface.loaded">(geoviews.data.geopandas.GeoPandasInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.GeoPandasInterface.loaded">(geoviews.data.GeoPandasInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.loaded">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.loaded_backends">loaded_backends() (geoviews.Store class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.loads">loads() (geoviews.Store class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.dim.lognorm">lognorm() (geoviews.dim method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.lookup">lookup() (geoviews.Store class method)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="M">M</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.magnitude">magnitude (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.magnitude">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.map">map() (geoviews.DynamicMap method)</a>
+</li>
+<li>
+    module
+
+      <ul>
+<li><a href="reference_manual/geoviews.html#module-geoviews">geoviews</a>
+</li>
+<li><a href="reference_manual/geoviews.annotators.html#module-geoviews.annotators">geoviews.annotators</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#module-geoviews.data">geoviews.data</a>
+</li>
+<li><a href="reference_manual/geoviews.data.geom_dict.html#module-geoviews.data.geom_dict">geoviews.data.geom_dict</a>
+</li>
+<li><a href="reference_manual/geoviews.data.geopandas.html#module-geoviews.data.geopandas">geoviews.data.geopandas</a>
+</li>
+<li><a href="reference_manual/geoviews.data.iris.html#module-geoviews.data.iris">geoviews.data.iris</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#module-geoviews.element">geoviews.element</a>
+</li>
+<li><a href="reference_manual/geoviews.element.comparison.html#module-geoviews.element.comparison">geoviews.element.comparison</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#module-geoviews.element.geo">geoviews.element.geo</a>
+</li>
+<li><a href="reference_manual/geoviews.feature.html#module-geoviews.feature">geoviews.feature</a>
+</li>
+<li><a href="reference_manual/geoviews.links.html#module-geoviews.links">geoviews.links</a>
+</li>
+<li><a href="reference_manual/geoviews.models.html#module-geoviews.models">geoviews.models</a>
+</li>
+<li><a href="reference_manual/geoviews.models.custom_tools.html#module-geoviews.models.custom_tools">geoviews.models.custom_tools</a>
+</li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#module-geoviews.models.wind_barb">geoviews.models.wind_barb</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.html#module-geoviews.operation">geoviews.operation</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.projection.html#module-geoviews.operation.projection">geoviews.operation.projection</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.regrid.html#module-geoviews.operation.regrid">geoviews.operation.regrid</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.resample.html#module-geoviews.operation.resample">geoviews.operation.resample</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.html#module-geoviews.plotting">geoviews.plotting</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#module-geoviews.plotting.bokeh">geoviews.plotting.bokeh</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#module-geoviews.plotting.bokeh.callbacks">geoviews.plotting.bokeh.callbacks</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.chart.html#module-geoviews.plotting.bokeh.chart">geoviews.plotting.bokeh.chart</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.plot.html#module-geoviews.plotting.bokeh.plot">geoviews.plotting.bokeh.plot</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#module-geoviews.plotting.mpl">geoviews.plotting.mpl</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.mpl.chart.html#module-geoviews.plotting.mpl.chart">geoviews.plotting.mpl.chart</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.plot.html#module-geoviews.plotting.plot">geoviews.plotting.plot</a>
+</li>
+<li><a href="reference_manual/geoviews.streams.html#module-geoviews.streams">geoviews.streams</a>
+</li>
+<li><a href="reference_manual/geoviews.tile_sources.html#module-geoviews.tile_sources">geoviews.tile_sources</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#module-geoviews.util">geoviews.util</a>
+</li>
+</ul></li>
+</ul></td>
+</tr></table>
+<h2 id="N">N</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.NdLayout">NdLayout (class in geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.NdOverlay">NdOverlay (class in geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.custom_tools.html#geoviews.models.custom_tools.PolyVertexDrawTool.node_style">node_style (geoviews.models.custom_tools.PolyVertexDrawTool attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.custom_tools.html#geoviews.models.custom_tools.PolyVertexEditTool.node_style">(geoviews.models.custom_tools.PolyVertexEditTool attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.PolyVertexDrawTool.node_style">(geoviews.models.PolyVertexDrawTool attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.PolyVertexEditTool.node_style">(geoviews.models.PolyVertexEditTool attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Graph.node_type">node_type (geoviews.element.geo.Graph attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.TriMesh.node_type">(geoviews.element.geo.TriMesh attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Graph.node_type">(geoviews.element.Graph attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.TriMesh.node_type">(geoviews.element.TriMesh attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Graph.node_type">(geoviews.Graph attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.TriMesh.node_type">(geoviews.TriMesh attribute)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.Nodes">Nodes (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Nodes">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Nodes">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.dim.norm">norm() (geoviews.dim method)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="O">O</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.options">options() (geoviews.DynamicMap method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.HoloMap.options">(geoviews.HoloMap method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.opts">opts (class in geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.output">output (class in geoviews)</a>
+</li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.output_settings">output_settings (geoviews.Store attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Overlay">Overlay (class in geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.overlay">overlay() (geoviews.DynamicMap method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.HoloMap.overlay">(geoviews.HoloMap method)</a>
+</li>
+</ul></li>
+</ul></td>
+</tr></table>
+<h2 id="P">P</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.Palette">Palette (class in geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Path">Path (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Path">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Path">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.path_to_geom_dicts">path_to_geom_dicts() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.annotators.html#geoviews.annotators.PathBreakingAnnotator">PathBreakingAnnotator (class in geoviews.annotators)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.dim.pipe">pipe() (geoviews.dim class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.TriMesh.point_type">point_type (geoviews.element.geo.TriMesh attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.TriMesh.point_type">(geoviews.element.TriMesh attribute)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.TriMesh.point_type">(geoviews.TriMesh attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Points">Points (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Points">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Points">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.links.html#geoviews.links.PointTableLink">PointTableLink (class in geoviews.links)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Polygons">Polygons (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Polygons">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Polygons">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.polygons_to_geom_dicts">polygons_to_geom_dicts() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.streams.html#geoviews.streams.PolyVertexDraw">PolyVertexDraw (class in geoviews.streams)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.PolyVertexDrawCallback">PolyVertexDrawCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.PolyVertexDrawTool">PolyVertexDrawTool (class in geoviews.models)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.custom_tools.html#geoviews.models.custom_tools.PolyVertexDrawTool">(class in geoviews.models.custom_tools)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.streams.html#geoviews.streams.PolyVertexEdit">PolyVertexEdit (class in geoviews.streams)</a>
+</li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.PolyVertexEditCallback">PolyVertexEditCallback (class in geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.PolyVertexEditTool">PolyVertexEditTool (class in geoviews.models)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.custom_tools.html#geoviews.models.custom_tools.PolyVertexEditTool">(class in geoviews.models.custom_tools)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Dimension.pprint_label">pprint_label (geoviews.Dimension property)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Dimension.pprint_value">pprint_value() (geoviews.Dimension method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Dimension.pprint_value_string">pprint_value_string() (geoviews.Dimension method)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.process_crs">process_crs() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.proj_to_cartopy">proj_to_cartopy() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.project">project (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.operation.projection.html#geoviews.operation.projection.project">(class in geoviews.operation.projection)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.project_drawn">project_drawn() (in module geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.projection.html#geoviews.operation.projection.project_geom">project_geom (class in geoviews.operation.projection)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.projection.html#geoviews.operation.projection.project_graph">project_graph (class in geoviews.operation.projection)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.projection.html#geoviews.operation.projection.project_image">project_image (class in geoviews.operation.projection)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.projection.html#geoviews.operation.projection.project_path">project_path (class in geoviews.operation.projection)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.project_point">project_point() (in module geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.projection.html#geoviews.operation.projection.project_points">project_points (class in geoviews.operation.projection)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.projection.html#geoviews.operation.projection.project_quadmesh">project_quadmesh (class in geoviews.operation.projection)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.project_ranges">project_ranges() (in module geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.projection.html#geoviews.operation.projection.project_shape">project_shape (class in geoviews.operation.projection)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.projection.html#geoviews.operation.projection.project_vectorfield">project_vectorfield (class in geoviews.operation.projection)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.projection.html#geoviews.operation.projection.project_windbarbs">project_windbarbs (class in geoviews.operation.projection)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.plot.html#geoviews.plotting.plot.ProjectionPlot">ProjectionPlot (class in geoviews.plotting.plot)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="Q">Q</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.QuadMesh">QuadMesh (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.QuadMesh">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.QuadMesh">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+</ul></td>
+</tr></table>
+<h2 id="R">R</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.range">range() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.range">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Feature.range">(geoviews.element.Feature method)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Feature.range">(geoviews.element.geo.Feature method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Feature.range">(geoviews.Feature method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Rectangles">Rectangles (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Rectangles">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Rectangles">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.links.html#geoviews.links.RectanglesTableLink">RectanglesTableLink (class in geoviews.links)</a>
+</li>
+<li><a href="reference_manual/geoviews.links.html#geoviews.links.RectanglesTableLinkCallback">RectanglesTableLinkCallback (class in geoviews.links)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.redim">redim() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.redim">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.dim.register">register() (geoviews.dim class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.register">(geoviews.Store class method)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.extension.register_backend_callback">register_backend_callback() (geoviews.extension class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.reindex">reindex() (geoviews.DynamicMap method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.relabel">relabel() (geoviews.DynamicMap method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.HoloMap.relabel">(geoviews.HoloMap method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Layout.relabel">(geoviews.Layout method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.render">render() (geoviews.Store class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.render">(in module geoviews)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.renderer">renderer() (in module geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.operation.resample.html#geoviews.operation.resample.resample_geometry">resample_geometry (class in geoviews.operation.resample)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.reset">reset() (geoviews.DynamicMap method)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.RestoreTool">RestoreTool (class in geoviews.models)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.custom_tools.html#geoviews.models.custom_tools.RestoreTool">(class in geoviews.models.custom_tools)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.RGB">RGB (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.RGB">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.RGB">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+</ul></td>
+</tr></table>
+<h2 id="S">S</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.sample">sample() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.sample">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Palette.sample_fn">sample_fn() (geoviews.Palette method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.save">save() (in module geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.scale">scale (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.scale">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Segments">Segments (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Segments">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Segments">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.select">select() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.GeoPandasInterface.select">(geoviews.data.geopandas.GeoPandasInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.GeoPandasInterface.select">(geoviews.data.GeoPandasInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.select">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.select">(geoviews.DynamicMap method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.GeoPandasInterface.select_mask">select_mask() (geoviews.data.geopandas.GeoPandasInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.GeoPandasInterface.select_mask">(geoviews.data.GeoPandasInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.select_to_constraint">select_to_constraint() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.select_to_constraint">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.set_current_backend">set_current_backend() (geoviews.Store class method)</a>
+</li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.set_display_hook">set_display_hook() (geoviews.Store class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Shape">Shape (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Shape">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Shape">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.GridSpace.shape">shape (geoviews.GridSpace property)</a>
+<ul>
+<li><a href="reference_manual/geoviews.html#geoviews.Layout.shape">(geoviews.Layout property)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.NdLayout.shape">(geoviews.NdLayout property)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.GeoPandasInterface.shape">shape() (geoviews.data.geopandas.GeoPandasInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.GeoPandasInterface.shape">(geoviews.data.GeoPandasInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.callbacks.html#geoviews.plotting.bokeh.callbacks.skip">skip() (in module geoviews.plotting.bokeh.callbacks)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.sort">sort() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.sort">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.sort_coords">sort_coords() (in module geoviews.data.iris)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.spacing">spacing (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.spacing">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Dimension.spec">spec (geoviews.Dimension property)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.GeoPandasInterface.split">split() (geoviews.data.geopandas.GeoPandasInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.GeoPandasInterface.split">(geoviews.data.GeoPandasInterface class method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Store">Store (class in geoviews)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.dim.str">str (geoviews.dim property)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="T">T</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoPlot.teardown_handles">teardown_handles() (geoviews.plotting.mpl.GeoPlot method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.WMTSPlot.teardown_handles">(geoviews.plotting.mpl.WMTSPlot method)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.Text">Text (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Text">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Text">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.html#geoviews.plotting.bokeh.TilePlot">TilePlot (class in geoviews.plotting.bokeh)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Tiles">Tiles (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.Tiles">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.Tiles">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.to_ccw">to_ccw() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.to_geopandas">to_geopandas() (in module geoviews.data.geopandas)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.Store.transfer_options">transfer_options() (geoviews.Store class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.TriMesh">TriMesh (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.TriMesh">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.TriMesh">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.QuadMesh.trimesh">trimesh() (geoviews.element.geo.QuadMesh method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.QuadMesh.trimesh">(geoviews.element.QuadMesh method)</a>
+</li>
+<li><a href="reference_manual/geoviews.html#geoviews.QuadMesh.trimesh">(geoviews.QuadMesh method)</a>
+</li>
+</ul></li>
+</ul></td>
+</tr></table>
+<h2 id="U">U</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.DynamicMap.unbounded">unbounded (geoviews.DynamicMap property)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.unpack_geoms">unpack_geoms() (in module geoviews.util)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.bokeh.plot.html#geoviews.plotting.bokeh.plot.GeoPlot.update_frame">update_frame() (geoviews.plotting.bokeh.plot.GeoPlot method)</a>
+</li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.chart.html#geoviews.plotting.mpl.chart.WindBarbsPlot.update_handles">update_handles() (geoviews.plotting.mpl.chart.WindBarbsPlot method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoAnnotationPlot.update_handles">(geoviews.plotting.mpl.GeoAnnotationPlot method)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoImagePlot.update_handles">(geoviews.plotting.mpl.GeoImagePlot method)</a>
+</li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.GeoRGBPlot.update_handles">(geoviews.plotting.mpl.GeoRGBPlot method)</a>
+</li>
+</ul></li>
+</ul></td>
+</tr></table>
+<h2 id="V">V</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.CubeInterface.values">values() (geoviews.data.CubeInterface class method)</a>
+<ul>
+<li><a href="reference_manual/geoviews.data.geopandas.html#geoviews.data.geopandas.GeoPandasInterface.values">(geoviews.data.geopandas.GeoPandasInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.html#geoviews.data.GeoPandasInterface.values">(geoviews.data.GeoPandasInterface class method)</a>
+</li>
+<li><a href="reference_manual/geoviews.data.iris.html#geoviews.data.iris.CubeInterface.values">(geoviews.data.iris.CubeInterface class method)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.html#geoviews.VectorField">VectorField (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.VectorField">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.VectorField">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.links.html#geoviews.links.VertexTableLink">VertexTableLink (class in geoviews.links)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="W">W</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.operation.regrid.html#geoviews.operation.regrid.weighted_regrid">weighted_regrid (class in geoviews.operation.regrid)</a>
+</li>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb">WindBarb (class in geoviews.models)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb">(class in geoviews.models.wind_barb)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.WindBarbs">WindBarbs (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.WindBarbs">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.WindBarbs">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+</ul></td>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.plotting.bokeh.chart.html#geoviews.plotting.bokeh.chart.WindBarbsPlot">WindBarbsPlot (class in geoviews.plotting.bokeh.chart)</a>
+<ul>
+<li><a href="reference_manual/geoviews.plotting.mpl.chart.html#geoviews.plotting.mpl.chart.WindBarbsPlot">(class in geoviews.plotting.mpl.chart)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.html#geoviews.WMTS">WMTS (class in geoviews)</a>
+<ul>
+<li><a href="reference_manual/geoviews.element.html#geoviews.element.WMTS">(class in geoviews.element)</a>
+</li>
+<li><a href="reference_manual/geoviews.element.geo.html#geoviews.element.geo.WMTS">(class in geoviews.element.geo)</a>
+</li>
+</ul></li>
+<li><a href="reference_manual/geoviews.plotting.mpl.html#geoviews.plotting.mpl.WMTSPlot">WMTSPlot (class in geoviews.plotting.mpl)</a>
+</li>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.wrap_lons">wrap_lons() (in module geoviews.util)</a>
+</li>
+</ul></td>
+</tr></table>
+<h2 id="X">X</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.x">x (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.x">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+</ul></td>
+</tr></table>
+<h2 id="Y">Y</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.models.wind_barb.html#geoviews.models.wind_barb.WindBarb.y">y (geoviews.models.wind_barb.WindBarb attribute)</a>
+<ul>
+<li><a href="reference_manual/geoviews.models.html#geoviews.models.WindBarb.y">(geoviews.models.WindBarb attribute)</a>
+</li>
+</ul></li>
+</ul></td>
+</tr></table>
+<h2 id="Z">Z</h2>
+<table class="indextable genindextable" style="width: 100%"><tr>
+<td style="width: 33%; vertical-align: top;"><ul>
+<li><a href="reference_manual/geoviews.util.html#geoviews.util.zoom_level">zoom_level() (in module geoviews.util)</a>
+</li>
+</ul></td>
+</tr></table>
+</article>
+<footer class="prev-next-footer d-print-none">
+<div class="prev-next-area">
+</div>
+</footer>
+</div>
+</div>
+<footer class="bd-footer-content">
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+<div class="footer-items__start">
+<div class="footer-item">
+<p class="copyright">
+    
+      © Copyright 2018 HoloViz Developers.
+      <br/>
+</p>
+</div>
+<div class="footer-item">
+<p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+</p>
+</div>
+</div>
+<div class="footer-items__end">
+<div class="footer-item">
+<p class="theme-version">
+<!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+</div>
+</div>
+</footer>
+</body>
+</html>

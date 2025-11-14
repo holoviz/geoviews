@@ -2,9 +2,11 @@ import cartopy.crs as ccrs
 import numpy as np
 import pytest
 
+import geoviews.feature as gf
 from geoviews.element import Image, VectorField, WindBarbs
 from geoviews.element.comparison import ComparisonTestCase
 from geoviews.operation import project, project_image
+from geoviews.operation.projection import project_path
 
 
 class TestProjection(ComparisonTestCase):
@@ -281,3 +283,12 @@ class TestProjection(ComparisonTestCase):
         # The converted data should match the unmasked extrapolated data (approximately)
         # since both should contain the same valid values
         assert np.allclose(unmasked_data, converted_data, equal_nan=True), "Extrapolated and converted data should be similar"
+
+    @pytest.mark.filterwarnings("ignore:Downloading:cartopy.io.DownloadWarning")
+    def test_gf_borders(self):
+        # Get borders at 110m scale using geoviews.feature, number of items can depend on cartopy version
+        borders = gf.borders.geoms(scale='110m')
+        assert len(borders.data) == 331
+
+        projected = project_path(borders, projection=ccrs.GOOGLE_MERCATOR)
+        assert len(projected.data) == 331

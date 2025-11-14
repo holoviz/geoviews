@@ -22,6 +22,7 @@ with suppress(ImportError):
 
 
 with suppress(ImportError):
+    import cftime  # noqa: F401
     import pooch  # noqa: F401
     import scipy  # noqa: F401
     import xarray as xr
@@ -35,3 +36,4 @@ with suppress(ImportError):
     shapereader.natural_earth(name="coastline")
     shapereader.natural_earth(name="land")
     shapereader.natural_earth(name="ocean")
+    shapereader.natural_earth(category="cultural", name="admin_0_boundary_lines_land")

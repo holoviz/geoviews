@@ -1,13 +1,11 @@
-from unittest import SkipTest
-
 import numpy as np
+import pytest
 
 try:
     import iris
 except ImportError:
-    raise SkipTest("Could not import iris, skipping IrisInterface tests.") from None
+    pytest.skip("Could not import iris, skipping IrisInterface tests.", allow_module_level=True)
 
-import pytest
 from holoviews.core.data import Dataset, concat
 from holoviews.core.spaces import HoloMap
 from holoviews.element import Image
@@ -45,65 +43,65 @@ class IrisInterfaceTests(BaseGridInterfaceTests):
 
     def test_dataset_array_init_hm(self):
         "Tests support for arrays (homogeneous)"
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     # Disabled tests for NotImplemented methods
     def test_dataset_add_dimensions_values_hm(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_add_dimensions_values_hm_alias(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_sort_hm(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_sort_reverse_hm(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_sort_vdim_hm(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_sort_reverse_vdim_hm(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_sort_vdim_hm_alias(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_1D_reduce_hm(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_1D_reduce_hm_alias(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_2D_reduce_hm(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_2D_reduce_hm_alias(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_2D_aggregate_partial_hm(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_2D_aggregate_partial_hm_alias(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_aggregate_2d_with_spreadfn(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_sample_hm(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_sample_hm_alias(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_groupby_drop_dims_with_vdim(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_groupby_drop_dims_dynamic_with_vdim(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dataset_ndloc_slice_two_vdims(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dim_to_coord(self):
         dim = coord_to_dimension(self.cube.coords()[0])
@@ -190,13 +188,13 @@ class IrisInterfaceTests(BaseGridInterfaceTests):
         assert cube[0, 0] == 5
 
     def test_irregular_grid_data_values(self):
-        raise SkipTest('Irregular mesh data not supported by IrisInterface')
+        pytest.skip('Irregular mesh data not supported by IrisInterface')
 
     def test_irregular_grid_data_values_inverted_y(self):
-        raise SkipTest('Irregular mesh data not supported by IrisInterface')
+        pytest.skip('Irregular mesh data not supported by IrisInterface')
 
     def test_dataset_transform_add_hm(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
 
 
@@ -216,58 +214,58 @@ class ImageElement_IrisInterfaceTests(BaseImageElementInterfaceTests):
         self.image_inv = Image((xs[::-1], ys[::-1], self.array[::-1, ::-1]))
 
     def test_init_data_datetime_xaxis(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_init_data_datetime_yaxis(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_init_bounds_datetime_xaxis(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_init_bounds_datetime_yaxis(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_init_densities_datetime_xaxis(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_init_densities_datetime_yaxis(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_range_datetime_xdim(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_range_datetime_ydim(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dimension_values_datetime_xcoords(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_dimension_values_datetime_ycoords(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_slice_datetime_xaxis(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_slice_datetime_yaxis(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_reduce_to_scalar(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_reduce_x_dimension(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_reduce_y_dimension(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_aggregate_with_spreadfn(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_sample_datetime_xaxis(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_sample_datetime_yaxis(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")
 
     def test_sample_coords(self):
-        raise SkipTest("Not supported")
+        pytest.skip("Not supported")

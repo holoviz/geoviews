@@ -1,8 +1,6 @@
 """
 Test for the GeoPandasInterface
 """
-from unittest import SkipTest
-
 import numpy as np
 import pandas as pd
 from shapely import geometry as sgeom
@@ -136,12 +134,12 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
 
     def setup_method(self):
         if geopandas is None:
-            raise SkipTest('GeoPandasInterface requires geopandas, skipping tests')
+            pytest.skip('GeoPandasInterface requires geopandas, skipping tests')
         super().setup_method()
 
     def test_df_dataset(self):
         if not pd:
-            raise SkipTest('Pandas not available')
+            pytest.skip('Pandas not available')
         dfs = [pd.DataFrame(np.column_stack([np.arange(i, i+2), np.arange(i, i+2)]), columns=['x', 'y'])
                   for i in range(2)]
         mds = Path(dfs, kdims=['x', 'y'], datatype=[self.datatype])

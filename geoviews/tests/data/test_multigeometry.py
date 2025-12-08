@@ -1,14 +1,14 @@
 """
 Test for the MultiInterface and GeomDictInterface
 """
-from unittest import SkipTest
-
 import numpy as np
 import pandas as pd
+import pytest
 from holoviews.core.data import Dataset, MultiInterface
 from holoviews.core.data.interface import DataError
 from holoviews.element import Path, Polygons
 from holoviews.element.comparison import ComparisonTestCase
+from holoviews.testing import assert_dict_equal
 from holoviews.tests.core.data.test_multiinterface import MultiBaseInterfaceTest
 
 try:
@@ -33,7 +33,7 @@ class GeomInterfaceTest(ComparisonTestCase):
 
     def setUp(self):
         if sgeom is None:
-            raise SkipTest('GeomInterfaceTest requires shapely, skipping tests')
+            pytest.skip('GeomInterfaceTest requires shapely, skipping tests')
         super().setUp()
 
     def test_multi_geom_dataset_geom_list_constructor(self):
@@ -136,7 +136,7 @@ class SpatialPandasGeomInterfaceTest(GeomInterfaceTest):
 
     def setUp(self):
         if spatialpandas is None:
-            raise SkipTest('SpatialPandasInterface requires spatialpandas, skipping tests')
+            pytest.skip('SpatialPandasInterface requires spatialpandas, skipping tests')
         super().setUp()
 
 
@@ -153,25 +153,25 @@ class MultiGeomDictInterfaceTest(MultiBaseInterfaceTest):
         mds = Path(dicts, kdims=['x', 'y'], datatype=[self.datatype])
         assert mds.interface is self.interface
         for i, cols in enumerate(mds.split(datatype='columns')):
-            self.assertEqual(dict(cols), dict(dicts[i], geom_type='Line',
-                                              geometry=mds.data[i]['geometry']))
+            output = dict(cols)
+            expected = dict(
+                dicts[i], geom_type='Line', geometry=mds.data[i]['geometry']
+            )
+            assert_dict_equal(output, expected)
 
     def test_polygon_dtype(self):
         poly = Polygons([{'x': [1, 2, 3], 'y': [2, 0, 7]}], datatype=[self.datatype])
         assert poly.interface is self.interface
-        self.assertEqual(poly.interface.dtype(poly, 'x'),
-                         'float64')
+        assert poly.interface.dtype(poly, 'x') == 'float64'
 
     def test_array_points_iloc_index_rows_index_cols(self):
         arrays = [np.array([(1+i, i), (2+i, i), (3+i, i)]) for i in range(2)]
         mds = Dataset(arrays, kdims=['x', 'y'], datatype=[self.datatype])
         assert mds.interface is self.interface
-        with self.assertRaises(DataError):
+        with pytest.raises(DataError):
             mds.iloc[3, 0]
 
     def test_df_dataset(self):
-        if not pd:
-            raise SkipTest('Pandas not available')
         dfs = [pd.DataFrame(np.column_stack([np.arange(i, i+2), np.arange(i, i+2)]), columns=['x', 'y'])
                   for i in range(2)]
         mds = Path(dfs, kdims=['x', 'y'], datatype=[self.datatype])
@@ -179,4 +179,4 @@ class MultiGeomDictInterfaceTest(MultiBaseInterfaceTest):
         for i, ds in enumerate(mds.split(datatype='dataframe')):
             ds['x'] = ds.x.astype(int)
             ds['y'] = ds.y.astype(int)
-            self.assertEqual(ds, dfs[i])
+            pd.testing.assert_frame_equal(ds, dfs[i])

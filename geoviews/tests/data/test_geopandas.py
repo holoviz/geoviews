@@ -149,14 +149,14 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
         for i, ds in enumerate(mds.split(datatype='dataframe')):
             ds['x'] = ds.x.astype(int)
             ds['y'] = ds.y.astype(int)
-            assert_element_equal(ds, dfs[i])
+            np.testing.assert_array_equal(ds, dfs[i])
 
     def test_multi_geom_point_coord_values(self):
         geoms = [{'geometry': sgeom.Point([(0, 1)])},
                  {'geometry': sgeom.Point([(3, 5)])}]
         mds = Dataset(geoms, kdims=['x', 'y'], datatype=[self.datatype])
-        assert_data_equal(mds.dimension_values('x'), np.array([0, 3]))
-        assert_data_equal(mds.dimension_values('y'), np.array([1, 5]))
+        np.testing.assert_array_equal(mds.dimension_values('x'), np.array([0, 3]))
+        np.testing.assert_array_equal(mds.dimension_values('y'), np.array([1, 5]))
 
     def test_multi_geom_point_length(self):
         geoms = [{'geometry': sgeom.Point([(0, 0)])},

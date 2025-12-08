@@ -37,7 +37,7 @@ class RoundTripTests(ComparisonTestCase):
         points = Points([{'x': 0, 'y': 1, 'z': 0},
                          {'x': 1, 'y': 0, 'z': 1}], ['x', 'y'],
                         'z', datatype=[self.datatype])
-        self.assertIsInstance(points.data.geometry.dtype, GeometryDtype)
+        assert isinstance(points.data.geometry.dtype, GeometryDtype)
         roundtrip = points.clone(datatype=['multitabular'])
         self.assertEqual(roundtrip.interface.datatype, 'multitabular')
         expected = Points([{'x': 0, 'y': 1, 'z': 0},
@@ -51,7 +51,7 @@ class RoundTripTests(ComparisonTestCase):
         points = Points([{'x': xs, 'y': ys, 'z': 0},
                          {'x': xs[::-1], 'y': ys[::-1], 'z': 1}],
                         ['x', 'y'], 'z', datatype=[self.datatype])
-        self.assertIsInstance(points.data.geometry.dtype, GeometryDtype)
+        assert isinstance(points.data.geometry.dtype, GeometryDtype)
         roundtrip = points.clone(datatype=['multitabular'])
         self.assertEqual(roundtrip.interface.datatype, 'multitabular')
         expected = Points([{'x': xs, 'y': ys, 'z': 0},
@@ -65,7 +65,7 @@ class RoundTripTests(ComparisonTestCase):
         path = Path([{'x': xs, 'y': ys, 'z': 1},
                      {'x': xs[::-1], 'y': ys[::-1], 'z': 2}],
                     ['x', 'y'], 'z', datatype=[self.datatype])
-        self.assertIsInstance(path.data.geometry.dtype, GeometryDtype)
+        assert isinstance(path.data.geometry.dtype, GeometryDtype)
         roundtrip = path.clone(datatype=['multitabular'])
         self.assertEqual(roundtrip.interface.datatype, 'multitabular')
         expected = Path([{'x': xs, 'y': ys, 'z': 1},
@@ -79,7 +79,7 @@ class RoundTripTests(ComparisonTestCase):
         path = Path([{'x': xs, 'y': ys, 'z': 0},
                      {'x': xs[::-1], 'y': ys[::-1], 'z': 1}],
                     ['x', 'y'], 'z', datatype=[self.datatype])
-        self.assertIsInstance(path.data.geometry.dtype, GeometryDtype)
+        assert isinstance(path.data.geometry.dtype, GeometryDtype)
         roundtrip = path.clone(datatype=['multitabular'])
         self.assertEqual(roundtrip.interface.datatype, 'multitabular')
         expected = Path([{'x': xs, 'y': ys, 'z': 0},
@@ -93,7 +93,7 @@ class RoundTripTests(ComparisonTestCase):
         poly = Polygons([{'x': xs, 'y': ys, 'z': 0},
                          {'x': xs[::-1], 'y': ys[::-1], 'z': 1}],
                         ['x', 'y'], 'z', datatype=[self.datatype])
-        self.assertIsInstance(poly.data.geometry.dtype, GeometryDtype)
+        assert isinstance(poly.data.geometry.dtype, GeometryDtype)
         roundtrip = poly.clone(datatype=['multitabular'])
         self.assertEqual(roundtrip.interface.datatype, 'multitabular')
         expected = Polygons([{'x': xs+[1], 'y': ys+[2], 'z': 0},
@@ -111,7 +111,7 @@ class RoundTripTests(ComparisonTestCase):
         poly = Polygons([{'x': xs, 'y': ys, 'holes': holes, 'z': 1},
                          {'x': xs[::-1], 'y': ys[::-1], 'z': 2}],
                         ['x', 'y'], 'z', datatype=[self.datatype])
-        self.assertIsInstance(poly.data.geometry.dtype, GeometryDtype)
+        assert isinstance(poly.data.geometry.dtype, GeometryDtype)
         roundtrip = poly.clone(datatype=['multitabular'])
         self.assertEqual(roundtrip.interface.datatype, 'multitabular')
         expected = Polygons([{'x': [1, 2, 3, 1, np.nan, 6, 7, 3, 6],
@@ -144,7 +144,7 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
         dfs = [pd.DataFrame(np.column_stack([np.arange(i, i+2), np.arange(i, i+2)]), columns=['x', 'y'])
                   for i in range(2)]
         mds = Path(dfs, kdims=['x', 'y'], datatype=[self.datatype])
-        self.assertIs(mds.interface, self.interface)
+        assert mds.interface is self.interface
         for i, ds in enumerate(mds.split(datatype='dataframe')):
             ds['x'] = ds.x.astype(int)
             ds['y'] = ds.y.astype(int)
@@ -166,13 +166,13 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
     def test_array_points_iloc_index_rows_index_cols(self):
         arrays = [np.array([(1+i, i), (2+i, i), (3+i, i)]) for i in range(2)]
         mds = Dataset(arrays, kdims=['x', 'y'], datatype=[self.datatype])
-        self.assertIs(mds.interface, self.interface)
+        assert mds.interface is self.interface
         with self.assertRaises(DataError):
             mds.iloc[3, 0]
 
     def test_polygon_dtype(self):
         poly = Polygons([{'x': [1, 2, 3], 'y': [2, 0, 7]}], datatype=[self.datatype])
-        self.assertIs(poly.interface, self.interface)
+        assert poly.interface is self.interface
         self.assertEqual(poly.interface.dtype(poly, 'x'),
                          'float64')
 

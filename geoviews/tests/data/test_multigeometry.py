@@ -151,21 +151,21 @@ class MultiGeomDictInterfaceTest(MultiBaseInterfaceTest):
     def test_dict_dataset(self):
         dicts = [{'x': np.arange(i, i+2), 'y': np.arange(i, i+2)} for i in range(2)]
         mds = Path(dicts, kdims=['x', 'y'], datatype=[self.datatype])
-        self.assertIs(mds.interface, self.interface)
+        assert mds.interface is self.interface
         for i, cols in enumerate(mds.split(datatype='columns')):
             self.assertEqual(dict(cols), dict(dicts[i], geom_type='Line',
                                               geometry=mds.data[i]['geometry']))
 
     def test_polygon_dtype(self):
         poly = Polygons([{'x': [1, 2, 3], 'y': [2, 0, 7]}], datatype=[self.datatype])
-        self.assertIs(poly.interface, self.interface)
+        assert poly.interface is self.interface
         self.assertEqual(poly.interface.dtype(poly, 'x'),
                          'float64')
 
     def test_array_points_iloc_index_rows_index_cols(self):
         arrays = [np.array([(1+i, i), (2+i, i), (3+i, i)]) for i in range(2)]
         mds = Dataset(arrays, kdims=['x', 'y'], datatype=[self.datatype])
-        self.assertIs(mds.interface, self.interface)
+        assert mds.interface is self.interface
         with self.assertRaises(DataError):
             mds.iloc[3, 0]
 
@@ -175,7 +175,7 @@ class MultiGeomDictInterfaceTest(MultiBaseInterfaceTest):
         dfs = [pd.DataFrame(np.column_stack([np.arange(i, i+2), np.arange(i, i+2)]), columns=['x', 'y'])
                   for i in range(2)]
         mds = Path(dfs, kdims=['x', 'y'], datatype=[self.datatype])
-        self.assertIs(mds.interface, self.interface)
+        assert mds.interface is self.interface
         for i, ds in enumerate(mds.split(datatype='dataframe')):
             ds['x'] = ds.x.astype(int)
             ds['y'] = ds.y.astype(int)

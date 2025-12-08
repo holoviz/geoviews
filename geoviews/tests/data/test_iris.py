@@ -11,6 +11,7 @@ import pytest
 from holoviews.core.data import Dataset, concat
 from holoviews.core.spaces import HoloMap
 from holoviews.element import Image
+from holoviews.testing import assert_data_equal
 from holoviews.tests.core.data.test_gridinterface import BaseGridInterfaceTests
 from holoviews.tests.core.data.test_imageinterface import BaseImageElementInterfaceTests
 from iris.exceptions import MergeError
@@ -106,38 +107,35 @@ class IrisInterfaceTests(BaseGridInterfaceTests):
 
     def test_dim_to_coord(self):
         dim = coord_to_dimension(self.cube.coords()[0])
-        self.assertEqual(dim.name, 'latitude')
-        self.assertEqual(dim.unit, 'degrees')
+        assert dim.name == 'latitude'
+        assert dim.unit == 'degrees'
 
     def test_initialize_cube(self):
         cube = Dataset(self.cube)
-        self.assertEqual(cube.dimensions(label=True),
-                         ['longitude', 'latitude', 'unknown'])
+        assert cube.dimensions(label=True) == ['longitude', 'latitude', 'unknown']
 
     def test_initialize_cube_with_kdims(self):
         cube = Dataset(self.cube, kdims=['longitude', 'latitude'])
-        self.assertEqual(cube.dimensions('key', True),
-                         ['longitude', 'latitude'])
+        assert cube.dimensions('key', True) == ['longitude', 'latitude']
 
     def test_initialize_cube_with_vdims(self):
         cube = Dataset(self.cube, vdims=['Quantity'])
-        self.assertEqual(cube.dimensions('value', True),
-                         ['Quantity'])
+        assert cube.dimensions('value', True) == ['Quantity']
 
     def test_dimension_values_kdim_expanded(self):
         cube = Dataset(self.cube, kdims=['longitude', 'latitude'])
-        self.assertEqual(cube.dimension_values('longitude'),
+        assert_data_equal(cube.dimension_values('longitude'),
                          np.array([-1, -1, -1, 0,  0,  0,
                                    1,  1,  1, 2,  2,  2], dtype=np.int32))
 
     def test_dimension_values_kdim(self):
         cube = Dataset(self.cube, kdims=['longitude', 'latitude'])
-        self.assertEqual(cube.dimension_values('longitude', expanded=False),
+        assert_data_equal(cube.dimension_values('longitude', expanded=False),
                          np.array([-1,  0,  1, 2], dtype=np.int32))
 
     def test_dimension_values_vdim(self):
         cube = Dataset(self.cube, kdims=['longitude', 'latitude'])
-        self.assertEqual(cube.dimension_values('unknown', flat=False),
+        assert_data_equal(cube.dimension_values('unknown', flat=False),
                          np.array([[ 0,  4,  8],
                                    [ 1,  5,  9],
                                    [ 2,  6, 10],
@@ -145,51 +143,51 @@ class IrisInterfaceTests(BaseGridInterfaceTests):
 
     def test_range_kdim(self):
         cube = Dataset(self.cube, kdims=['longitude', 'latitude'])
-        self.assertEqual(cube.range('longitude'), (-1, 2))
+        assert cube.range('longitude') == (-1, 2)
 
     def test_range_vdim(self):
         cube = Dataset(self.cube, kdims=['longitude', 'latitude'])
-        self.assertEqual(cube.range('unknown'), (0, 11))
+        assert cube.range('unknown') == (0, 11)
 
     def test_select_index(self):
         cube = Dataset(self.cube)
-        self.assertEqual(cube.select(longitude=0).data.data,
+        assert_data_equal(cube.select(longitude=0).data.data,
                          np.array([[1, 5, 9]], dtype=np.int32))
 
     def test_select_slice(self):
         cube = Dataset(self.cube)
-        self.assertEqual(cube.select(longitude=(0, 1.01)).data.data,
+        assert_data_equal(cube.select(longitude=(0, 1.01)).data.data,
                          np.array([[1,  2], [5,  6], [9, 10]], dtype=np.int32))
 
     def test_select_set(self):
         cube = Dataset(self.cube)
-        self.assertEqual(cube.select(longitude={0, 1}).data.data,
+        assert_data_equal(cube.select(longitude={0, 1}).data.data,
                          np.array([[1,  2], [5,  6], [9, 10]], dtype=np.int32))
 
     def test_select_multi_index(self):
         cube = Dataset(self.cube)
-        self.assertEqual(cube.select(longitude=0, latitude=0), 5)
+        assert cube.select(longitude=0, latitude=0) == 5
 
     def test_select_multi_slice1(self):
         cube = Dataset(self.cube)
-        self.assertEqual(cube.select(longitude=(0, 1.01),
+        assert_data_equal(cube.select(longitude=(0, 1.01),
                                      latitude=(0, 1.01)).data.data,
                          np.array([[5,  6], [9, 10]], dtype=np.int32))
 
     def test_select_multi_slice2(self):
         cube = Dataset(self.cube)
-        self.assertEqual(cube.select(longitude={0, 2},
+        assert_data_equal(cube.select(longitude={0, 2},
                                      latitude={0, 2}).data.data,
                          np.array([[5, 7]], dtype=np.int32))
 
     def test_getitem_index(self):
         cube = Dataset(self.cube)
-        self.assertEqual(cube[0].data.data,
+        assert_data_equal(cube[0].data.data,
                          np.array([[1, 5, 9]], dtype=np.int32))
 
     def test_getitem_scalar(self):
         cube = Dataset(self.cube)
-        self.assertEqual(cube[0, 0], 5)
+        assert cube[0, 0] == 5
 
     def test_irregular_grid_data_values(self):
         raise SkipTest('Irregular mesh data not supported by IrisInterface')

@@ -7,6 +7,7 @@ except ImportError:
 
 from holoviews.core import HoloMap
 from holoviews.element import Curve
+from holoviews.testing import assert_element_equal
 
 from geoviews.element import Dataset, Image, is_geographic
 
@@ -20,10 +21,10 @@ class TestConversions:
         assert is_geographic(Dataset(self.cube, kdims=['longitude', 'latitude']), ['longitude', 'latitude'])
 
     def test_geographic_conversion(self):
-        self.assertEqual(Dataset(self.cube, kdims=['longitude', 'latitude']).to.image(), Image(self.cube, kdims=['longitude', 'latitude']))
+        assert_element_equal(Dataset(self.cube, kdims=['longitude', 'latitude']).to.image(), Image(self.cube, kdims=['longitude', 'latitude']))
 
     def test_nongeographic_conversion(self):
         converted = Dataset(self.cube, kdims=['longitude', 'latitude']).to.curve(['longitude'])
         assert isinstance(converted, HoloMap)
-        self.assertEqual(converted.kdims, ['latitude'])
+        assert converted.kdims == ['latitude']
         assert isinstance(converted.last, Curve)

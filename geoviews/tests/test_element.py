@@ -2,7 +2,6 @@
 Unit tests of Path types.
 """
 import numpy as np
-from holoviews.element.comparison import ComparisonTestCase
 from shapely.geometry import (
     GeometryCollection,
     LinearRing,
@@ -17,7 +16,7 @@ from shapely.geometry import (
 from geoviews.element import Path, Points, Polygons, Rectangles, Segments
 
 
-class TestRectangles(ComparisonTestCase):
+class TestRectangles:
 
     def test_empty_geom_conversion(self):
         rects = Rectangles([])
@@ -96,7 +95,7 @@ class TestRectangles(ComparisonTestCase):
                 ])
             )
 
-class TestPath(ComparisonTestCase):
+class TestPath:
 
     def test_empty_geom_conversion(self):
         path = Path([])
@@ -137,7 +136,7 @@ class TestPath(ComparisonTestCase):
         )
 
 
-class TestPolygons(ComparisonTestCase):
+class TestPolygons:
 
     def test_empty_geom_conversion(self):
         polys = Polygons([])
@@ -223,7 +222,7 @@ class TestPolygons(ComparisonTestCase):
 
 
 
-class TestPoints(ComparisonTestCase):
+class TestPoints:
 
     def test_empty_geom_conversion(self):
         points = Points([])
@@ -244,7 +243,7 @@ class TestPoints(ComparisonTestCase):
         self.assertEqual(np.column_stack(geom.geoms[1].xy), np.array([[1, 2.5]]))
 
 
-class TestSegments(ComparisonTestCase):
+class TestSegments:
 
     def test_empty_geom_conversion(self):
         segs = Segments([])

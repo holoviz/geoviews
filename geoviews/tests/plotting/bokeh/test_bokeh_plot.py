@@ -3,14 +3,13 @@ from holoviews.plotting.bokeh.element import ElementPlot
 from param import concrete_descendents
 
 from geoviews import Store
-from geoviews.element.comparison import ComparisonTestCase
 
 bokeh_renderer = Store.renderers['bokeh']
 
 
-class TestBokehPlot(ComparisonTestCase):
+class TestBokehPlot:
 
-    def setUp(self):
+    def setup_method(self):
         self.previous_backend = Store.current_backend
         self.comm_manager = bokeh_renderer.comm_manager
         bokeh_renderer.comm_manager = comms.CommManager
@@ -20,7 +19,7 @@ class TestBokehPlot(ComparisonTestCase):
             self._padding[plot] = plot.padding
             plot.padding = 0
 
-    def tearDown(self):
+    def teardown_method(self):
         Store.current_backend = self.previous_backend
         bokeh_renderer.comm_manager = self.comm_manager
         for plot, padding in self._padding.items():

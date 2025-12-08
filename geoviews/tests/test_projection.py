@@ -4,12 +4,11 @@ import pytest
 
 import geoviews.feature as gf
 from geoviews.element import Image, VectorField, WindBarbs
-from geoviews.element.comparison import ComparisonTestCase
 from geoviews.operation import project, project_image
 from geoviews.operation.projection import project_path
 
 
-class TestProjection(ComparisonTestCase):
+class TestProjection:
 
     def test_image_latlon360_wrapping(self):
         pytest.importorskip("scipy")

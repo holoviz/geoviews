@@ -7,6 +7,7 @@ try:
 except ImportError:
     raise SkipTest("Could not import iris, skipping IrisInterface tests.") from None
 
+import pytest
 from holoviews.core.data import Dataset, concat
 from holoviews.core.spaces import HoloMap
 from holoviews.element import Image
@@ -38,7 +39,7 @@ class IrisInterfaceTests(BaseGridInterfaceTests):
         ds1 = Dataset(([0, 1], [1, 2, 3], arr1), ['x', 'y'], 'z')
         ds2 = Dataset(([0, 1, 2], [1, 2], arr2), ['x', 'y'], 'z')
         hmap = HoloMap({1: ds1, 2: ds2})
-        with self.assertRaises(MergeError):
+        with pytest.raises(MergeError):
             concat(hmap)
 
     def test_dataset_array_init_hm(self):

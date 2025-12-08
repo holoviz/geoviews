@@ -13,11 +13,11 @@ try:
 except ImportError:
     geopandas = None
 
+import pytest
 from holoviews import render
 from holoviews.core.data import Dataset
 from holoviews.core.data.interface import DataError
 from holoviews.element import Path, Points, Polygons
-from holoviews.element.comparison import ComparisonTestCase
 from holoviews.tests.core.data.test_multiinterface import GeomTests
 
 from geoviews.data import GeoPandasInterface
@@ -25,7 +25,7 @@ from geoviews.data import GeoPandasInterface
 from .test_multigeometry import GeomInterfaceTest
 
 
-class RoundTripTests(ComparisonTestCase):
+class RoundTripTests:
 
     datatype = None
 
@@ -133,10 +133,10 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
 
     __test__ = True
 
-    def setUp(self):
+    def setup_method(self):
         if geopandas is None:
             raise SkipTest('GeoPandasInterface requires geopandas, skipping tests')
-        super().setUp()
+        super().setup_method()
 
     def test_df_dataset(self):
         if not pd:
@@ -167,7 +167,7 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
         arrays = [np.array([(1+i, i), (2+i, i), (3+i, i)]) for i in range(2)]
         mds = Dataset(arrays, kdims=['x', 'y'], datatype=[self.datatype])
         assert mds.interface is self.interface
-        with self.assertRaises(DataError):
+        with pytest.raises(DataError):
             mds.iloc[3, 0]
 
     def test_polygon_dtype(self):

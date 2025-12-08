@@ -9,12 +9,11 @@ from holoviews.core import HoloMap
 from holoviews.element import Curve
 
 from geoviews.element import Dataset, Image, is_geographic
-from geoviews.element.comparison import ComparisonTestCase
 
 
-class TestConversions(ComparisonTestCase):
+class TestConversions:
 
-    def setUp(self):
+    def setup_method(self):
         self.cube = lat_lon_cube()
 
     def test_is_geographic_2d(self):

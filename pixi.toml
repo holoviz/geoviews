@@ -27,7 +27,7 @@ download-data = ["download-data"]
 [dependencies]
 bokeh = ">=3.8.0"
 cartopy = ">=0.18.0"
-holoviews = ">=1.16.0"
+holoviews = ">=1.23.0a0"  # Pinning because of tests
 nodejs = ">=20"
 numpy = "*"
 packaging = "*"
@@ -109,11 +109,11 @@ xesmf = "*"
 [feature.optional-314.dependencies]
 bokeh_sampledata = "*"
 cftime = "*"
-# datashader = "*"
+datashader = "*"
 filelock = "*"
-# fiona = "*"
+fiona = "*"
 geopandas-base = "*"
-# iris = ">=3.5"
+iris = ">=3.5"
 matplotlib-base = ">2.2"
 nbval = "*"
 netcdf4 = "*"

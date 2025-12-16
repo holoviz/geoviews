@@ -3,15 +3,14 @@ import pyviz_comms as comms
 from param import concrete_descendents
 
 from geoviews import Store
-from geoviews.element.comparison import ComparisonTestCase
 from geoviews.plotting.mpl import ElementPlot
 
 mpl_renderer = Store.renderers['matplotlib']
 
 
-class TestMPLPlot(ComparisonTestCase):
+class TestMPLPlot:
 
-    def setUp(self):
+    def setup_method(self):
         self.previous_backend = Store.current_backend
         self.comm_manager = mpl_renderer.comm_manager
         mpl_renderer.comm_manager = comms.CommManager
@@ -21,7 +20,7 @@ class TestMPLPlot(ComparisonTestCase):
             self._padding[plot] = plot.padding
             plot.padding = 0
 
-    def tearDown(self):
+    def teardown_method(self):
         Store.current_backend = self.previous_backend
         mpl_renderer.comm_manager = self.comm_manager
         plt.close(plt.gcf())

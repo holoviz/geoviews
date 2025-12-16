@@ -1,15 +1,15 @@
 import cartopy.crs as ccrs
 import numpy as np
 import pytest
+from holoviews.testing import assert_data_equal
 
 import geoviews.feature as gf
 from geoviews.element import Image, VectorField, WindBarbs
-from geoviews.element.comparison import ComparisonTestCase
 from geoviews.operation import project, project_image
 from geoviews.operation.projection import project_path
 
 
-class TestProjection(ComparisonTestCase):
+class TestProjection:
 
     def test_image_latlon360_wrapping(self):
         pytest.importorskip("scipy")
@@ -18,7 +18,7 @@ class TestProjection(ComparisonTestCase):
         img = Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))
         proj = project(img, projection=ccrs.PlateCarree())
         zs = proj.dimension_values('z', flat=False)
-        self.assertEqual(zs, np.array([
+        assert_data_equal(zs, np.array([
             [ -4320.,  -8640., -12960., -17280., -21600.],
             [     0.,      0.,      0.,      0.,      0.],
             [  4320.,   8640.,  12960.,  17280.,  21600.]
@@ -31,7 +31,7 @@ class TestProjection(ComparisonTestCase):
         img = Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))
         proj = project(img)
         zs = proj.dimension_values('z', flat=False)
-        self.assertEqual(zs, np.array([
+        assert_data_equal(zs, np.array([
             [ -4320.,  -8640., -12960., -17280., -21600.],
             [     0.,      0.,      0.,      0.,      0.],
             [  4320.,   8640.,  12960.,  17280.,  21600.]

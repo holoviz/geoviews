@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+from holoviews.testing import assert_data_equal
 from holoviews.tests.plotting.utils import ParamLogStream
 from test_plot import TestMPLPlot
 
@@ -101,7 +102,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         ).opts(color="color")
         plot = mpl_renderer.get_plot(barbs)
         artist = plot.handles["artist"]
-        self.assertEqual(
+        assert_data_equal(
             artist.get_facecolors(),
             np.array([[0, 0, 0, 1], [1, 0, 0, 1], [0, 1, 0, 1]]),
         )
@@ -200,7 +201,7 @@ class TestWindBarbsPlot(TestMPLPlot):
             "Cannot declare style mapping for 'color' option and either "
             "'flagcolor' and 'barbcolor'; ignoring 'flagcolor' and 'barbcolor'.\n"
         )
-        self.assertEqual(log_msg, warning)
+        assert log_msg == warning
 
 
 class TestImageStackPlot(TestMPLPlot):

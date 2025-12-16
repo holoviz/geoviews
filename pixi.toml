@@ -27,7 +27,7 @@ download-data = ["download-data"]
 [dependencies]
 bokeh = ">=3.8.0"
 cartopy = ">=0.18.0"
-holoviews = ">=1.16.0"
+holoviews = ">=1.23.0a0"  # Pinning because of tests
 nodejs = ">=20"
 numpy = "*"
 packaging = "*"

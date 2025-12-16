@@ -185,6 +185,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: 'https://registry.npmjs.org'
+      - name: Set environment variables
+        run: |
+          echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+          echo "TARBALL=$(ls *.tgz)" >> $GITHUB_ENV
       - name: npm dev deploy
         if: contains(env.TAG, 'a') || contains(env.TAG, 'b') || contains(env.TAG, 'rc')
         run: |

@@ -29,19 +29,38 @@ class TestMPLPlot:
         for plot, padding in self._padding.items():
             plot.padding = padding
 
-    # Regression test for https://github.com/holoviz/holoviews/pull/6762
     def test_polygons_categorical_color_with_geopandas(self):
+        # Test for https://github.com/holoviz/holoviews/pull/6762
 
-        hvsd = pytest.importorskip("hvsampledata")
+        gpd = pytest.importorskip("geopandas")
+        from shapely.geometry import MultiPolygon, Polygon
 
-        us_states = hvsd.us_states(engine="geopandas")
-        polygons = Polygons(us_states, vdims=["bea_region"]).opts(c="bea_region")
+        geometries = [
+            Polygon([(0, 0), (1, 0), (1, 1), (0, 1)]),
+            Polygon([(2, 0), (3, 0), (3, 1), (2, 1)]),
+            MultiPolygon([
+                Polygon([(4, 0), (4.5, 0), (4.5, 0.5), (4, 0.5)]),
+                Polygon([(5, 0), (5.5, 0), (5.5, 0.5), (5, 0.5)]),
+                Polygon([(6, 0), (6.5, 0), (6.5, 0.5), (6, 0.5)]),
+            ]),
+            Polygon([(0, 2), (1, 2), (1, 3), (0, 3)]),
+            MultiPolygon([
+                Polygon([(2, 2), (2.5, 2), (2.5, 2.5), (2, 2.5)]),
+                Polygon([(3, 2), (3.5, 2), (3.5, 2.5), (3, 2.5)]),
+            ]),
+        ]
+
+        # Assign regions - states in same region should get same color
+        regions = ['East', 'West', 'West', 'East', 'North']
+
+        gdf = gpd.GeoDataFrame({'geometry': geometries, 'region': regions})
+        polygons = Polygons(gdf, vdims=["region"]).opts(c="region")
 
         plot = mpl_renderer.get_plot(polygons)
         artist = plot.handles["artist"]
         array = np.asarray(artist.get_array())
 
-        unique_regions = np.unique(us_states["bea_region"].values)
+        unique_regions = np.unique(gdf["region"].values)
 
         assert array.dtype.kind in "uif"
         assert len(np.unique(array)) == len(unique_regions)
@@ -49,9 +68,9 @@ class TestMPLPlot:
         # CRITICAL TEST: Verify multi-polygon handling
         # Without the fix, multi-geometries only get scalar color values (one per state)
         # With the fix, each sub-polygon gets its own color value
-        num_states = len(us_states)
+        num_states = len(gdf)
 
         # The array should have MORE elements than states
-        # Without fix: len(array) = num_states (49)
-        # With fix: len(array) > num_states (one per sub-polygon)
+        # Without fix: len(array) = num_states (5)
+        # With fix: len(array) = 8 (one per sub-polygon)
         assert len(array) > num_states

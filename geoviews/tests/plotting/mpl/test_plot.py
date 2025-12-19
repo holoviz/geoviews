@@ -3,6 +3,7 @@ import numpy as np
 import pytest
 import pyviz_comms as comms
 from param import concrete_descendents
+from shapely.geometry import MultiPolygon, Polygon
 
 from geoviews import Polygons, Store
 from geoviews.plotting.mpl import ElementPlot
@@ -32,8 +33,8 @@ class TestMPLPlot:
     def test_polygons_categorical_color_with_geopandas(self):
         # Test for https://github.com/holoviz/holoviews/pull/6762
 
+        pytest.importorskip("holoviews", minversion="1.23.0a1")
         gpd = pytest.importorskip("geopandas")
-        from shapely.geometry import MultiPolygon, Polygon
 
         data = {
             'state': ['Texas', 'Hawaii', 'Michigan', 'Florida'],
@@ -54,18 +55,29 @@ class TestMPLPlot:
         }
 
         gdf = gpd.GeoDataFrame(data)
+
+        # Verify test data is structured correctly
+        expected_geom_types = {'Texas': 'Polygon', 'Hawaii': 'MultiPolygon',
+                               'Michigan': 'MultiPolygon', 'Florida': 'Polygon'}
+
+        for state, expected_type in expected_geom_types.items():
+            actual_type = gdf.loc[gdf['state'] == state, 'geometry'].iloc[0].geom_type
+            assert actual_type == expected_type
+
         polygons = Polygons(gdf, vdims=["bea_region"]).opts(c="bea_region")
 
         plot = mpl_renderer.get_plot(polygons)
-        artist = plot.handles["artist"]
-        array = np.asarray(artist.get_array())
+        array = plot.handles["artist"].get_array()
 
-        unique_regions = np.unique(gdf["bea_region"].values)
-
-        assert array.dtype.kind in "uif"
-        assert len(np.unique(array)) == len(unique_regions)
+        assert array.dtype.kind == 'i'
+        assert len(np.unique(array)) == len(gdf['bea_region'].values)
 
         # CRITICAL TEST: Verify multi-polygon handling
-        # Without the fix: len(array) = 4 (one color value per state)
-        # With the fix: len(array) = 7 (one color value per sub-polygon)
-        assert len(array) == 7
+        # Without the fix: len(array) = len(gdf) (4, one color value per state)
+        # With the fix: len(array) = total_subpolygons (7, one color value per sub-polygon)
+        total_subpolygons = sum(
+            len(geom.geoms) if geom.geom_type == 'MultiPolygon' else 1
+            for geom in gdf.geometry
+        )
+
+        assert len(array) == total_subpolygons

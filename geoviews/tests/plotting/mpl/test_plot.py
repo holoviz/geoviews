@@ -30,7 +30,7 @@ class TestMPLPlot:
             plot.padding = padding
 
     def test_polygons_categorical_color_with_geopandas(self):
-    # Test for https://github.com/holoviz/holoviews/pull/6762
+        # Test for https://github.com/holoviz/holoviews/pull/6762
 
         gpd = pytest.importorskip("geopandas")
         from shapely.geometry import MultiPolygon, Polygon
@@ -68,6 +68,4 @@ class TestMPLPlot:
         # CRITICAL TEST: Verify multi-polygon handling
         # Without the fix: len(array) = 4 (one color value per state)
         # With the fix: len(array) = 7 (one color value per sub-polygon)
-        num_states = len(gdf)
-
-        assert len(array) > num_states
+        assert len(array) == 7

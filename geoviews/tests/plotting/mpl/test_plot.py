@@ -30,47 +30,44 @@ class TestMPLPlot:
             plot.padding = padding
 
     def test_polygons_categorical_color_with_geopandas(self):
-        # Test for https://github.com/holoviz/holoviews/pull/6762
+    # Test for https://github.com/holoviz/holoviews/pull/6762
 
         gpd = pytest.importorskip("geopandas")
         from shapely.geometry import MultiPolygon, Polygon
 
-        geometries = [
-            Polygon([(0, 0), (1, 0), (1, 1), (0, 1)]),
-            Polygon([(2, 0), (3, 0), (3, 1), (2, 1)]),
-            MultiPolygon([
-                Polygon([(4, 0), (4.5, 0), (4.5, 0.5), (4, 0.5)]),
-                Polygon([(5, 0), (5.5, 0), (5.5, 0.5), (5, 0.5)]),
-                Polygon([(6, 0), (6.5, 0), (6.5, 0.5), (6, 0.5)]),
-            ]),
-            Polygon([(0, 2), (1, 2), (1, 3), (0, 3)]),
-            MultiPolygon([
-                Polygon([(2, 2), (2.5, 2), (2.5, 2.5), (2, 2.5)]),
-                Polygon([(3, 2), (3.5, 2), (3.5, 2.5), (3, 2.5)]),
-            ]),
-        ]
+        data = {
+            'state': ['Texas', 'Hawaii', 'Michigan', 'Florida'],
+            'bea_region': ['Southwest', 'Far West', 'Great Lakes', 'Southeast'],
+            'geometry': [
+                Polygon([(0, 0), (2, 0), (2, 2), (0, 2)]),
+                MultiPolygon([
+                    Polygon([(3, 0), (3.5, 0), (3.5, 0.5), (3, 0.5)]),
+                    Polygon([(4, 0), (4.5, 0), (4.5, 0.5), (4, 0.5)]),
+                    Polygon([(5, 0), (5.5, 0), (5.5, 0.5), (5, 0.5)]),
+                ]),
+                MultiPolygon([
+                    Polygon([(0, 3), (1.5, 3), (1.5, 4.5), (0, 4.5)]),
+                    Polygon([(2, 3), (3, 3), (3, 4), (2, 4)]),
+                ]),
+                Polygon([(6, 0), (8, 0), (8, 2), (6, 2)]),
+            ]
+        }
 
-        # Assign regions - states in same region should get same color
-        regions = ['East', 'West', 'West', 'East', 'North']
-
-        gdf = gpd.GeoDataFrame({'geometry': geometries, 'region': regions})
-        polygons = Polygons(gdf, vdims=["region"]).opts(c="region")
+        gdf = gpd.GeoDataFrame(data)
+        polygons = Polygons(gdf, vdims=["bea_region"]).opts(c="bea_region")
 
         plot = mpl_renderer.get_plot(polygons)
         artist = plot.handles["artist"]
         array = np.asarray(artist.get_array())
 
-        unique_regions = np.unique(gdf["region"].values)
+        unique_regions = np.unique(gdf["bea_region"].values)
 
         assert array.dtype.kind in "uif"
         assert len(np.unique(array)) == len(unique_regions)
 
         # CRITICAL TEST: Verify multi-polygon handling
-        # Without the fix, multi-geometries only get scalar color values (one per state)
-        # With the fix, each sub-polygon gets its own color value
+        # Without the fix: len(array) = 4 (one color value per state)
+        # With the fix: len(array) = 7 (one color value per sub-polygon)
         num_states = len(gdf)
 
-        # The array should have MORE elements than states
-        # Without fix: len(array) = num_states (5)
-        # With fix: len(array) = 8 (one per sub-polygon)
         assert len(array) > num_states

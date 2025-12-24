@@ -139,9 +139,22 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
     def _postprocess_hover(self, renderer, source):
         super()._postprocess_hover(renderer, source)
-        # Use self.handles["hover"] which contains the correct hover tool for this subplot
-        # rather than self.handles["plot"].hover which may refer to a different subplot's hover in overlays
         hover = self.handles.get("hover", None)
+        plot_hovers = self.handles["plot"].hover
+        if hover is None:
+            hovers = [
+                tool for tool in plot_hovers
+                if not tool.renderers or renderer in tool.renderers
+            ]
+        else:
+            hovers = [hover]
+            if hover not in plot_hovers:
+                self.handles["plot"].tools.append(hover)
+        for hover in hovers:
+            self._process_hover_geo(hover)
+
+    def _process_hover_geo(self, hover):
+        """Apply geographic coordinate formatting to hover tooltips."""
         if (not self.geographic or hover is None or
             isinstance(hover.tooltips, str) or self.projection is not GOOGLE_MERCATOR
             or hover.tooltips is None or 'hv_created' not in hover.tags):

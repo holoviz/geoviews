@@ -142,10 +142,12 @@ class GeoPlot(ProjectionPlot, ElementPlot):
         hover = self.handles.get("hover", None)
         plot_hovers = self.handles["plot"].hover
         if hover is None:
-            hovers = [
-                tool for tool in plot_hovers
-                if not tool.renderers or renderer in tool.renderers
-            ]
+            hovers = []
+            for tool in plot_hovers:
+                if not tool.renderers:
+                    hovers.append(tool)
+                elif isinstance(tool.renderers, (list, tuple)) and renderer in tool.renderers:
+                    hovers.append(tool)
         else:
             hovers = [hover]
             if hover not in plot_hovers:

@@ -424,11 +424,11 @@ class WindBarbs(_Element, Selection2DExpr, HvGeometry):
         if vdims is None:
             vdims = ['u', 'v']
         dataset = Dataset(data, kdims=kdims, vdims=vdims, **params)
-        us, vs = (dataset.dimension_values(i) for i in (2, 3))
+        us, vs = (dataset.dimension_values(i) for i in range(2, 4))
 
         uv_magnitudes = np.hypot(us, vs)  # unscaled
-        # using meteorological convention (direction FROM which wind blows)
-        radians = np.pi / 2 - np.arctan2(-vs, -us)
+        # Use meteorological convention
+        radians = np.pi/2 - np.arctan2(-vs, -us)
 
         # calculations on this data could mutate the original data
         # here we do not do any calculations; we only store the data
@@ -441,8 +441,9 @@ class WindBarbs(_Element, Selection2DExpr, HvGeometry):
             repackaged_dataset[vdim] = dataset[vdim]
         vdims = [
             Dimension('Angle', cyclic=True, range=(0, 2 * np.pi)),
-            Dimension('Magnitude')
-        ] + vdims[2:]
+            Dimension('Magnitude'),
+            *vdims[2:],
+        ]
         return cls(repackaged_dataset, kdims=kdims, vdims=vdims, **params)
 
 
@@ -974,7 +975,7 @@ class Shape(Dataset):
                      index=None, drop_missing=False, element=None, **kwargs):
         """Load data from a collection of `cartopy.io.shapereader.Record`
         objects and optionally merge it with a dataset to assign
-        values to each polygon and form a chloropleth. Supplying just
+        values to each polygon and form a choropleth. Supplying just
         records will return an NdOverlayof Shape Elements with a
         numeric index. If a dataset is supplied, a mapping between the
         attribute names in the records and the dimension names in the

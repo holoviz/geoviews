@@ -1,7 +1,7 @@
-[project]
+[workspace]
 name = "geoviews"
 channels = ["pyviz/label/dev", "conda-forge"]
-platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
+platforms = ["linux-64", "osx-arm64", "win-64"]
 
 [tasks]
 install = 'python -m pip install --no-deps --disable-pip-version-check -e .'
@@ -15,19 +15,19 @@ USE_PYGEOS = "0"
 test-310 = ["py310", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
 test-311 = ["py311", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
 test-312 = ["py312", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
-test-313 = ["py313", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
+test-313 = ["py313", "test-core", "test-unit-task", "optional", "test-example", "download-data", "pandas3"]
 test-314 = ["py314", "test-core", "test-unit-task", "optional-314", "test-example", "download-data"]
-test-core = ["py314", "test-unit-task", "test-core"]
-test-ui = ["py312", "test-core", "optional", "test-ui", "download-data"]
+test-core = ["py314", "test-unit-task", "test-core", "pandas3"]
+test-ui = ["py313", "test-core", "optional", "test-ui", "download-data"]
 docs = ["py311", "optional", "doc", "download-data"]
 build = ["py311", "build"]
 lint = ["py311", "lint"]
 download-data = ["download-data"]
 
 [dependencies]
-bokeh = ">=3.6.0"
+bokeh = ">=3.8.0"
 cartopy = ">=0.18.0"
-holoviews = ">=1.16.0"
+holoviews = ">=1.23.0a0"  # Pinning because of tests
 nodejs = ">=20"
 numpy = "*"
 packaging = "*"
@@ -35,7 +35,7 @@ panel = ">=1.0.0"
 param = "*"
 pip = "*"
 pyproj = "*"
-shapely = "*"
+shapely = ">=1.8.0"
 xyzservices = "*"
 
 [feature.py310.dependencies]
@@ -61,6 +61,12 @@ python = "3.14.*"
 
 [feature.py314.activation.env]
 COVERAGE_CORE = "sysmon"
+
+[feature.pandas3]
+channels = ["conda-forge/label/pandas_rc"]
+
+[feature.pandas3.dependencies]
+pandas = { version = "3.0.*", channel = "conda-forge/label/pandas_rc" }
 
 [feature.download-data.tasks]
 download-data = 'python scripts/download_data.py'
@@ -109,11 +115,11 @@ xesmf = "*"
 [feature.optional-314.dependencies]
 bokeh_sampledata = "*"
 cftime = "*"
-# datashader = "*"
+datashader = "*"
 filelock = "*"
-# fiona = "*"
+fiona = "*"
 geopandas-base = "*"
-# iris = ">=3.5"
+iris = ">=3.5"
 matplotlib-base = ">2.2"
 nbval = "*"
 netcdf4 = "*"
@@ -131,12 +137,9 @@ test-example = 'pytest -n logical --dist loadscope --nbval-lax examples'
 [feature.test-example.dependencies]
 nbval = "*"
 
-[feature.test-ui]
-channels = ["microsoft"]
-
 [feature.test-ui.dependencies]
-playwright = { version = "!=1.51.0", channel = "microsoft" }  # https://github.com/microsoft/playwright-python/issues/2791
-pytest-playwright = { version = "*", channel = "microsoft" }
+playwright = "*"
+pytest-playwright = "*"
 
 [feature.test-ui.tasks]
 _install-ui = 'playwright install chromium'

@@ -37,7 +37,7 @@ def test_range_correct_longitude(serve_hv):
 
 
 @pytest.mark.usefixtures("bokeh_backend")
-@pytest.mark.parametrize("lon_start,lon_end", [(-180, 180), (0, 360)])
+@pytest.mark.parametrize(("lon_start", "lon_end"), [(-180, 180), (0, 360)])
 @pytest.mark.parametrize("bbox_x", [100, 250])
 def test_rasterize_with_coastline_not_blank_on_zoom(serve_hv, lon_start, lon_end, bbox_x):
     """

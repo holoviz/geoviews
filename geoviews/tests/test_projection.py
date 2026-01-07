@@ -1,13 +1,15 @@
 import cartopy.crs as ccrs
 import numpy as np
 import pytest
+from holoviews.testing import assert_data_equal
 
+import geoviews.feature as gf
 from geoviews.element import Image, VectorField, WindBarbs
-from geoviews.element.comparison import ComparisonTestCase
 from geoviews.operation import project, project_image
+from geoviews.operation.projection import project_path
 
 
-class TestProjection(ComparisonTestCase):
+class TestProjection:
 
     def test_image_latlon360_wrapping(self):
         pytest.importorskip("scipy")
@@ -16,7 +18,7 @@ class TestProjection(ComparisonTestCase):
         img = Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))
         proj = project(img, projection=ccrs.PlateCarree())
         zs = proj.dimension_values('z', flat=False)
-        self.assertEqual(zs, np.array([
+        assert_data_equal(zs, np.array([
             [ -4320.,  -8640., -12960., -17280., -21600.],
             [     0.,      0.,      0.,      0.,      0.],
             [  4320.,   8640.,  12960.,  17280.,  21600.]
@@ -29,7 +31,7 @@ class TestProjection(ComparisonTestCase):
         img = Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))
         proj = project(img)
         zs = proj.dimension_values('z', flat=False)
-        self.assertEqual(zs, np.array([
+        assert_data_equal(zs, np.array([
             [ -4320.,  -8640., -12960., -17280., -21600.],
             [     0.,      0.,      0.,      0.,      0.],
             [  4320.,   8640.,  12960.,  17280.,  21600.]
@@ -206,24 +208,28 @@ class TestProjection(ComparisonTestCase):
         xs = np.linspace(10, 50, 2)
         X, Y = np.meshgrid(xs, xs)
         U, V = 5 * X, 1 * Y
-        A = np.arctan2(V, U)
+        A = np.pi / 2 - np.arctan2(-V, -U)
         M = np.hypot(U, V)
         crs = ccrs.PlateCarree()
         windbarbs = WindBarbs((X, Y, A, M), crs=crs)
-        projection = ccrs.Orthographic()
+        projection = ccrs.PlateCarree()
         projected = project(windbarbs, projection=projection)
         assert projected.crs == projection
 
-        xs, ys, ang, ms = (windbarbs.dimension_values(i) for i in range(4))
-        # Correct conversion for mathematical convention first
-        us = np.cos(ang) * ms
-        vs = np.sin(ang) * ms
-        u, v = projection.transform_vectors(crs, xs, ys, us, vs)
-        # Then convert to meteorological convention for windbarbs
-        a, m = np.pi / 2 - np.arctan2(-v, -u).T, np.hypot(u, v).T
+        ang, ms = (windbarbs.dimension_values(i) for i in range(2, 4))
+        # Convert FROM meteorological convention to u,v components
+        us = -np.sin(ang) * ms
+        vs = -np.cos(ang) * ms
 
-        np.testing.assert_allclose(projected.dimension_values("Angle"), a.flatten())
-        np.testing.assert_allclose(projected.dimension_values("Magnitude"), m.flatten())
+        np.testing.assert_allclose(us, U.T.flatten())
+        np.testing.assert_allclose(vs, V.T.flatten())
+
+        # Convert to angle/magnitude in NORMALIZED meteorological convention
+        a = np.pi/2 - np.arctan2(-vs, -us) % (2*np.pi)
+        m = np.hypot(us, vs)
+
+        np.testing.assert_allclose(projected.dimension_values("Angle"), a.T.flatten())
+        np.testing.assert_allclose(projected.dimension_values("Magnitude"), m.T.flatten())
 
     def test_project_image_default_not_mask_extrapolated(self):
         """
@@ -277,3 +283,12 @@ class TestProjection(ComparisonTestCase):
         # The converted data should match the unmasked extrapolated data (approximately)
         # since both should contain the same valid values
         assert np.allclose(unmasked_data, converted_data, equal_nan=True), "Extrapolated and converted data should be similar"
+
+    @pytest.mark.filterwarnings("ignore:Downloading:cartopy.io.DownloadWarning")
+    def test_gf_borders(self):
+        # Get borders at 110m scale using geoviews.feature, number of items can depend on cartopy version
+        borders = gf.borders.geoms(scale='110m')
+        assert len(borders.data) == 331
+
+        projected = project_path(borders, projection=ccrs.GOOGLE_MERCATOR)
+        assert len(projected.data) == 331

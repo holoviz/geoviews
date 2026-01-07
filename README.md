@@ -1,4 +1,4 @@
-<img src="/doc/_static/logo_stacked.png" width="200"/><br>
+<img src="https://raw.githubusercontent.com/holoviz/geoviews/refs/heads/main/doc/_static/logo_stacked.png" width="200"/><br>
 
 -----------------
 

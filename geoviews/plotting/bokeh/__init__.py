@@ -2,7 +2,7 @@ import copy
 
 import numpy as np
 import param
-from bokeh.models import BBoxTileSource, QUADKEYTileSource, SaveTool, WMTSTileSource
+from bokeh.models import BBoxTileSource, QUADKEYTileSource, WMTSTileSource
 from cartopy.crs import GOOGLE_MERCATOR
 from holoviews import NdOverlay, Overlay, Store
 from holoviews.core import util
@@ -39,6 +39,7 @@ from ...element import (
     Text,
     TriMesh,
     VectorField,
+    WindBarbs,
 )
 from ...operation import (
     project_geom,
@@ -48,6 +49,7 @@ from ...operation import (
     project_points,
     project_quadmesh,
     project_vectorfield,
+    project_windbarbs,
 )
 from ...tile_sources import (
     _ATTRIBUTIONS,
@@ -59,6 +61,7 @@ from ...tile_sources import (
 )
 from ...util import line_types, poly_types
 from . import callbacks  # noqa
+from .chart import WindBarbsPlot
 from .plot import GeoOverlayPlot, GeoPlot
 
 try:
@@ -142,9 +145,6 @@ class TilePlot(GeoPlot):
         level = properties.pop('level', 'underlay')
         renderer = plot.add_tile(tile_source, level=level)
         renderer.alpha = properties.get('alpha', 1)
-
-        # Remove save tool
-        plot.tools = [t for t in plot.tools if not isinstance(t, SaveTool)]
         return renderer, tile_source
 
 
@@ -156,6 +156,14 @@ class GeoPointPlot(GeoPlot, PointPlot):
 class GeoVectorFieldPlot(GeoPlot, VectorFieldPlot):
 
     _project_operation = project_vectorfield
+
+
+class GeoWindBarbsPlot(GeoPlot, WindBarbsPlot):
+    """Draws a wind barbs plot from the data in a WindBarbs Element."""
+
+    apply_ranges = param.Boolean(default=True)
+
+    _project_operation = project_windbarbs
 
 
 class GeoQuadMeshPlot(GeoPlot, QuadMeshPlot):
@@ -335,6 +343,7 @@ Store.register({WMTS: TilePlot,
                 Points: GeoPointPlot,
                 Labels: GeoLabelsPlot,
                 VectorField: GeoVectorFieldPlot,
+                WindBarbs: GeoWindBarbsPlot,
                 Polygons: GeoPolygonPlot,
                 Contours: GeoContourPlot,
                 Rectangles: GeoRectanglesPlot,

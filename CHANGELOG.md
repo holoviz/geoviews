@@ -1,3 +1,29 @@
+# Version 1.15.0
+
+Date: November 14, 2025
+
+This release adds Bokeh `WindBarbs` support and includes several bug fixes and build updates.
+
+Many thanks to [@mosc9575](https://github.com/mosc9575) (first contribution), [@ahuang11](https://github.com/ahuang11), [@maximlt](https://github.com/maximlt), and [@hoxbro](https://github.com/hoxbro) for their contributions.
+
+Features:
+
+- Add Bokeh `WindBarbs` ([#805](https://github.com/holoviz/geoviews/pull/805))
+
+Bug Fixes:
+
+- Fix `Vectorfield` projected inconsistency ([#804](https://github.com/holoviz/geoviews/pull/804))
+- Fix missing borders in GeoViews features ([#813](https://github.com/holoviz/geoviews/pull/813))
+
+Documentation:
+
+- Change order of GeoViews features to make coastlines visible ([#808](https://github.com/holoviz/geoviews/pull/808))
+
+Build:
+
+- Bump minimum required Bokeh version to 3.8.0 ([#822](https://github.com/holoviz/geoviews/pull/822))
+- Update package information to support PEP 639 and PEP 734 ([#818](https://github.com/holoviz/geoviews/pull/818))
+
 # Version 1.14.1
 
 Date: August 14, 2025

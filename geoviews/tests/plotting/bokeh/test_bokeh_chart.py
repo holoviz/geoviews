@@ -1,15 +1,11 @@
 import numpy as np
 import pytest
+from bokeh.models.tools import CustomJSHover
 
 import geoviews as gv
 from geoviews.element import WindBarbs
 
 from .test_bokeh_plot import TestBokehPlot, bokeh_renderer
-
-try:
-    import datashader
-except ImportError:
-    datashader = None
 
 
 class TestWindBarbsPlot(TestBokehPlot):
@@ -191,7 +187,6 @@ class TestWindBarbsPlot(TestBokehPlot):
 
 class TestImageStackPlot(TestBokehPlot):
 
-    @pytest.mark.skipif(datashader is None, reason="Needs datashader to be installed")
     def test_image_stack_crs(self):
         pytest.importorskip("scipy")
 
@@ -221,7 +216,6 @@ class TestImageStackPlot(TestBokehPlot):
         assert x_range.start < x_range.end
         assert y_range.start < y_range.end
 
-    @pytest.mark.skipif(datashader is None, reason="Needs datashader to be installed")
     def test_image_stack_rendering(self):
         pytest.importorskip("scipy")
 
@@ -239,3 +233,17 @@ class TestImageStackPlot(TestBokehPlot):
         # Verify the plot was created successfully
         assert plot.state is not None
         assert hasattr(plot, "handles")
+
+
+@pytest.mark.usefixtures("bokeh_backend")
+def test_hover_formatters_in_overlay_with_different_vdims():
+    pts1 = gv.Points([(-58, -34, 'A', 'a')], ['Longitude', 'Latitude'], ['City', 'Country']).opts(tools=['hover'])
+    pts2 = gv.Points([(-70, -33, 'B')], ['Longitude', 'Latitude'], 'City').opts(tools=['hover'])
+
+    plot = gv.render(pts1 * pts2, backend='bokeh')
+    hover_tools = [t for t in plot.tools if hasattr(t, 'tooltips') and t.renderers]
+
+    assert len(hover_tools) == 2
+    for hover in hover_tools:
+        assert len(hover.formatters) == 2
+        assert all(isinstance(f, CustomJSHover) for f in hover.formatters.values())

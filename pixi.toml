@@ -1,7 +1,7 @@
 [workspace]
 name = "geoviews"
 channels = ["pyviz/label/dev", "conda-forge"]
-platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
+platforms = ["linux-64", "osx-arm64", "win-64"]
 
 [tasks]
 install = 'python -m pip install --no-deps --disable-pip-version-check -e .'
@@ -15,9 +15,9 @@ USE_PYGEOS = "0"
 test-310 = ["py310", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
 test-311 = ["py311", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
 test-312 = ["py312", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
-test-313 = ["py313", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
+test-313 = ["py313", "test-core", "test-unit-task", "optional", "test-example", "download-data", "pandas3"]
 test-314 = ["py314", "test-core", "test-unit-task", "optional-314", "test-example", "download-data"]
-test-core = ["py314", "test-unit-task", "test-core"]
+test-core = ["py314", "test-unit-task", "test-core", "pandas3"]
 test-ui = ["py313", "test-core", "optional", "test-ui", "download-data"]
 docs = ["py311", "optional", "doc", "download-data"]
 build = ["py311", "build"]
@@ -61,6 +61,12 @@ python = "3.14.*"
 
 [feature.py314.activation.env]
 COVERAGE_CORE = "sysmon"
+
+[feature.pandas3]
+channels = ["conda-forge/label/pandas_rc"]
+
+[feature.pandas3.dependencies]
+pandas = { version = "3.0.*", channel = "conda-forge/label/pandas_rc" }
 
 [feature.download-data.tasks]
 download-data = 'python scripts/download_data.py'

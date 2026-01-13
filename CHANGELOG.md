@@ -1,3 +1,15 @@
+# Version 1.15.1
+
+Date: January 13, 2026
+
+This release includes a small number of bug fixes.
+Many thanks to [@ahuang11](https://github.com/ahuang11), [@Azaya89](https://github.com/Azaya89), and [@hoxbro](https://github.com/hoxbro) for their contributions.
+
+Bug Fixes:
+
+- Add save button back for tiles ([#825](https://github.com/holoviz/geoviews/pull/825))
+- Fix multiple HoverTool not coordinates correctly ([#810](https://github.com/holoviz/geoviews/pull/810))
+
 # Version 1.15.0
 
 Date: November 14, 2025

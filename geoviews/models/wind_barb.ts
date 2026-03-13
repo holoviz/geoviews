@@ -49,7 +49,6 @@ export class WindBarbView extends XYGlyphView {
     ctx.beginPath()
 
     this.visuals.line.apply(ctx, idx)
-    ctx.strokeStyle = ctx.strokeStyle || "black"
 
     ctx.lineCap = "round"
     ctx.lineJoin = "round"
@@ -70,7 +69,7 @@ export class WindBarbView extends XYGlyphView {
 
       // Draw 50-knot flags (filled triangles)
       while (remaining >= 50) {
-        ctx.fillStyle = ctx.strokeStyle || "black"
+        ctx.fillStyle = ctx.strokeStyle
         ctx.beginPath()
         ctx.moveTo(0, y_offset)
         ctx.lineTo(flag_width, y_offset + spacing)

@@ -202,7 +202,6 @@ jobs:
       - uses: holoviz-dev/holoviz_tasks/pixi_install@v0
         with:
           environments: ${{ matrix.environment }}
-          install: false
       - name: Test Lint
         run: |
           pixi run -e ${{ matrix.environment }} lint-typescript

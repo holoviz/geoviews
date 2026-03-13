@@ -193,4 +193,4 @@ pre-commit = "*"
 [feature.lint.tasks]
 lint = 'pre-commit run --all-files'
 lint-install = 'pre-commit install'
-lint-typescript = { cmd = "npx eslint ./*.ts ./models/**/*.ts", cwd = "geoviews" }
+lint-typescript = { cmd = "npm run lint", cwd = "geoviews" }

@@ -27,7 +27,7 @@ download-data = ["download-data"]
 [dependencies]
 bokeh = ">=3.8.0"
 cartopy = ">=0.18.0"
-holoviews = ">=1.23.0a0"  # Pinning because of tests
+holoviews = ">=1.23.0a0" # Pinning because of tests
 nodejs = ">=20"
 numpy = "*"
 packaging = "*"
@@ -193,3 +193,4 @@ pre-commit = "*"
 [feature.lint.tasks]
 lint = 'pre-commit run --all-files'
 lint-install = 'pre-commit install'
+lint-typescript = { cmd = "npx eslint ./*.ts ./models/**/*.ts", cwd = "geoviews" }

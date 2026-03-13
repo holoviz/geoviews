@@ -24,8 +24,9 @@ export class WindBarbView extends XYGlyphView {
       const mag = magnitude.get(i)
       const lat = y[i]
 
-      if (!isFinite(screen_x + screen_y + a + mag + lat))
+      if (!isFinite(screen_x + screen_y + a + mag + lat)) {
         continue
+      }
 
       this._draw_wind_barb(ctx, screen_x, screen_y, a, mag, scale, i)
     }

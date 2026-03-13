@@ -187,6 +187,25 @@ jobs:
         run: |
           pixi run -e ${{ matrix.environment }} test-unit
 
+  lint_suite:
+    name: core:${{ matrix.environment }}:${{ matrix.os }}
+    needs: [pre_commit, setup, pixi_lock]
+    runs-on: ${{ matrix.os }}
+    if: needs.setup.outputs.code_change == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest"]
+        environment: ["lint"]
+    timeout-minutes: 5
+    steps:
+      - uses: holoviz-dev/holoviz_tasks/pixi_install@v0
+        with:
+          environments: ${{ matrix.environment }}
+      - name: Test Lint
+        run: |
+          pixi run -e ${{ matrix.environment }} lint-typescript
+
   result_test_suite:
     name: result:test
     needs: [unit_test_suite, core_test_suite]

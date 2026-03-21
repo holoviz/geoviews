@@ -53,10 +53,10 @@ jobs:
       code_change: ${{ steps.filter.outputs.code }}
       matrix: ${{ env.MATRIX }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         if: github.event_name != 'pull_request'
       - name: Check for code changes
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         id: filter
         with:
           filters: |
@@ -83,7 +83,7 @@ jobs:
         run: |
           MATRIX=$(jq -nsc '{
               "os": ["ubuntu-latest", "macos-latest", "windows-latest"],
-              "environment": ["test-310", "test-313", "test-314"],
+              "environment": ["test-310", "test-314"],
           }')
           echo "MATRIX=$MATRIX" >> $GITHUB_ENV
       - name: Set test matrix with 'full' option
@@ -130,7 +130,7 @@ jobs:
       - name: Test Examples
         run: |
           pixi run -e ${{ matrix.environment }} test-example
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
@@ -158,13 +158,13 @@ jobs:
           echo "[run]\nconcurrency = greenlet" > .uicoveragerc
           FAIL="--screenshot only-on-failure --full-page-screenshot --output ui_screenshots --tracing retain-on-failure"
           pixi run -e ${{ matrix.environment }} test-ui $COV --cov-config=.uicoveragerc $FAIL
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: ui_screenshots_${{ runner.os }}
           path: ./ui_screenshots
           if-no-files-found: ignore
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 

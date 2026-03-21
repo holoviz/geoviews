@@ -16,7 +16,7 @@ test-310 = ["py310", "test-core", "test-unit-task", "optional", "test-example", 
 test-311 = ["py311", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
 test-312 = ["py312", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
 test-313 = ["py313", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
-test-314 = ["py314", "test-core", "test-unit-task", "optional-314", "test-example", "download-data"]
+test-314 = ["py314", "test-core", "test-unit-task", "optional", "test-example", "download-data"]
 test-core = ["py314", "test-unit-task", "test-core"]
 test-ui = ["py313", "test-core", "optional", "test-ui", "download-data"]
 docs = ["py311", "optional", "doc", "download-data"]
@@ -104,26 +104,9 @@ rioxarray = "*"
 scipy = "*"
 shapely = "*"
 xarray = "*"
-xesmf = "*"
 
-[feature.optional-314.dependencies]
-bokeh_sampledata = "*"
-cftime = "*"
-datashader = "*"
-filelock = "*"
-fiona = "*"
-geopandas-base = "*"
-iris = ">=3.5"
-matplotlib-base = ">2.2"
-nbval = "*"
-netcdf4 = "*"
-pandas = "*"
-pyviz_comms = "*"
-rioxarray = "*"
-scipy = "*"
-shapely = "*"
-xarray = "*"
-# xesmf = "*"
+[feature.optional.target.unix.dependencies]
+xesmf = "*"  # https://github.com/conda-forge/esmf-feedstock/issues/138
 
 [feature.test-example.tasks]
 test-example = 'pytest -n logical --dist loadscope --nbval-lax examples'

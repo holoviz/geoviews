@@ -36,8 +36,6 @@ jobs:
     needs: [pixi_lock]
     runs-on: "macos-latest"
     timeout-minutes: 180
-    outputs:
-      tag: ${{ steps.vars.outputs.tag }}
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi_install@v0
         with:

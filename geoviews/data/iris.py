@@ -68,8 +68,8 @@ class CubeInterface(GridInterface):
     def applies(cls, obj):
         if not cls.loaded():
             return False
-        import iris
-        return isinstance(obj, iris.cube.Cube)
+        from iris.cube import Cube
+        return isinstance(obj, Cube)
 
     @classmethod
     def init(cls, eltype, data, kdims, vdims):

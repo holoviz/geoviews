@@ -1,10 +1,6 @@
-import unittest
+import warnings
 
-try:
-    from iris.tests.stock import lat_lon_cube
-except ImportError:
-    raise unittest.SkipTest("iris not available") from None
-
+import pytest
 from holoviews.core import HoloMap
 from holoviews.element import Curve
 from holoviews.testing import assert_element_equal
@@ -13,8 +9,16 @@ from geoviews.element import Dataset, Image, is_geographic
 
 
 class TestConversions:
-
     def setup_method(self):
+        try:
+            import iris  # noqa: F401
+        except ModuleNotFoundError:
+            pytest.skip("iris is not installed")
+
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore')
+            from iris.tests.stock import lat_lon_cube
+
         self.cube = lat_lon_cube()
 
     def test_is_geographic_2d(self):

@@ -460,8 +460,10 @@ def check_crs(crs):
     if isinstance(crs, pyproj.Proj):
         out = crs
     elif isinstance(crs, (str, dict)):
+        # Normalize spaces after colon (e.g. "EPSG: 4326" -> "EPSG:4326") for PROJ 9.8+
+        crs_normalized = crs.replace(": ", ":") if isinstance(crs, str) else crs
         try:
-            out = pyproj.Proj(crs)
+            out = pyproj.Proj(crs_normalized)
         except RuntimeError:
             try:
                 out = pyproj.Proj(init=crs)

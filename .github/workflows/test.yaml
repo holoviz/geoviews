@@ -24,6 +24,8 @@ on:
   schedule:
     - cron: "0 18 * * SUN"
 
+permissions: {}
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -55,6 +57,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         if: github.event_name != 'pull_request'
+        with:
+          persist-credentials: false
       - name: Check for code changes
         uses: dorny/paths-filter@v4
         id: filter
@@ -67,12 +71,14 @@ jobs:
               - 'pyproject.toml'
               - '.github/workflows/test.yaml'
       - name: Set matrix option
+        env:
+          GITHUB_EVENT_INPUTS_TARGET: ${{ github.event.inputs.target }}
         run: |
-          if [[ '${{ github.event_name }}' == 'workflow_dispatch' ]]; then
-            OPTION=${{ github.event.inputs.target }}
-          elif [[ '${{ github.event_name }}' == 'schedule' ]]; then
+          if [[ "${GITHUB_EVENT_NAME}" == 'workflow_dispatch' ]]; then
+            OPTION=${GITHUB_EVENT_INPUTS_TARGET}
+          elif [[ "${GITHUB_EVENT_NAME}" == 'schedule' ]]; then
             OPTION="full"
-          elif [[ '${{ github.event_name }}' == 'push' && '${{ github.ref_type }}' == 'tag' ]]; then
+          elif [[ "${GITHUB_EVENT_NAME}" == 'push' && "${GITHUB_REF_TYPE}" == 'tag' ]]; then
             OPTION="full"
           else
             OPTION="default"
@@ -120,16 +126,18 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
     timeout-minutes: 120
+    env:
+      ENV: ${{ matrix.environment }}
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi_install@v0
         with:
           environments: ${{ matrix.environment }}
       - name: Test Unit
         run: |
-          pixi run -e ${{ matrix.environment }} test-unit $COV
+          pixi run -e "${ENV}" test-unit $COV
       - name: Test Examples
         run: |
-          pixi run -e ${{ matrix.environment }} test-example
+          pixi run -e "${ENV}" test-example
       - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -147,6 +155,7 @@ jobs:
     timeout-minutes: 60
     env:
       PANEL_LOG_LEVEL: info
+      ENV: ${{ matrix.environment }}
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi_install@v0
         with:
@@ -157,7 +166,7 @@ jobs:
           # https://github.com/microsoft/playwright-python/issues/313
           echo "[run]\nconcurrency = greenlet" > .uicoveragerc
           FAIL="--screenshot only-on-failure --full-page-screenshot --output ui_screenshots --tracing retain-on-failure"
-          pixi run -e ${{ matrix.environment }} test-ui $COV --cov-config=.uicoveragerc $FAIL
+          pixi run -e "${ENV}" test-ui $COV --cov-config=.uicoveragerc $FAIL
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -179,13 +188,15 @@ jobs:
         os: ["ubuntu-latest"]
         environment: ["test-core"]
     timeout-minutes: 120
+    env:
+      ENV: ${{ matrix.environment }}
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi_install@v0
         with:
           environments: ${{ matrix.environment }}
       - name: Test Unit
         run: |
-          pixi run -e ${{ matrix.environment }} test-unit
+          pixi run -e "${ENV}" test-unit
 
   lint_suite:
     name: core:${{ matrix.environment }}:${{ matrix.os }}
@@ -198,13 +209,15 @@ jobs:
         os: ["ubuntu-latest"]
         environment: ["lint"]
     timeout-minutes: 5
+    env:
+      ENV: ${{ matrix.environment }}
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi_install@v0
         with:
           environments: ${{ matrix.environment }}
       - name: Test Lint
         run: |
-          pixi run -e ${{ matrix.environment }} lint-typescript
+          pixi run -e "${ENV}" lint-typescript
 
   result_test_suite:
     name: result:test

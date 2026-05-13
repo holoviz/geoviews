@@ -10,6 +10,12 @@ on:
   schedule:
     - cron: "0 18 * * SUN"
 
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   NODE_VERSION: "24"
   PACKAGE: "geoviews"
@@ -186,6 +192,8 @@ jobs:
       TAG: ${{ github.ref_name }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - uses: actions/download-artifact@v8
         with:
           pattern: artifacts-*

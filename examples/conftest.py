@@ -1,4 +1,15 @@
+import re
+from importlib.metadata import version
 from importlib.util import find_spec
+
+_re_no = re.compile(r"\d+")
+
+def get_version(package):
+    version_str = version(package)
+    return tuple(map(int, _re_no.findall(version_str)[:3]))
+
+MPL_VERSION = get_version("matplotlib")
+CARTOPY_VERSION = get_version("cartopy")
 
 # depend on optional iris, xesmf, etc
 collect_ignore_glob = [
@@ -23,6 +34,13 @@ if find_spec("fiona") is None:
         "user_guide/Working_with_Bokeh.ipynb",
     ]
 
+if MPL_VERSION >= (3, 11, 0) and CARTOPY_VERSION <= (0, 25, 0):
+    # https://github.com/SciTools/cartopy/issues/2682
+    collect_ignore_glob += [
+        "gallery/matplotlib/tile_sources.ipynb",
+        "gallery/matplotlib/wind_barbs_example.ipynb",
+        "user_guide/Geometries.ipynb",
+    ]
 
 def pytest_runtest_makereport(item, call):
     """

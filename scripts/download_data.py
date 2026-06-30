@@ -54,3 +54,8 @@ with suppress(ImportError):
         category="cultural",
         name="admin_0_boundary_lines_land",
     )
+    retry(
+        shapereader.natural_earth,
+        category="physical",
+        name="graticules_30",
+    )

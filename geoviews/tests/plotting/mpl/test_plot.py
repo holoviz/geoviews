@@ -1,3 +1,5 @@
+import cartopy.crs as ccrs
+import cartopy.feature as cf
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
@@ -5,7 +7,7 @@ import pyviz_comms as comms
 from param import concrete_descendents
 from shapely.geometry import MultiPolygon, Polygon
 
-from geoviews import Polygons, Store
+from geoviews import Feature, Polygons, Store
 from geoviews.plotting.mpl import ElementPlot
 
 mpl_renderer = Store.renderers['matplotlib']
@@ -81,3 +83,12 @@ class TestMPLPlot:
         )
 
         assert len(array) == total_subpolygons
+
+
+def test_feature_line_geometry_facecolor_default():
+    graticules = cf.NaturalEarthFeature(category="physical", name="graticules_30", scale="110m")
+    feature = Feature(graticules).opts(projection=ccrs.Orthographic())
+
+    plot = mpl_renderer.get_plot(feature)
+    artist = plot.handles['artist']
+    assert len(artist.get_facecolor()) == 0

@@ -215,4 +215,8 @@ filterwarnings = [
     "ignore:numpy.ndarray size changed, may indicate binary incompatibility:RuntimeWarning", # https://github.com/pydata/xarray/issues/7259
     # 2025-04
     "ignore:The 'shapely.geos' module is deprecated, and will be removed in a future version:DeprecationWarning", # https://github.com/geopandas/geopandas/pull/3453
+    # 2026-06
+    "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:cartopy.img_transform",
+    "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:scipy.io._netcdf",
+    "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:rioxarray._io"
 ]

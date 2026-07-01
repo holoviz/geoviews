@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 import pyviz_comms as comms
 from param import concrete_descendents
-from shapely.geometry import MultiPolygon, Polygon
+from shapely.geometry import LineString, MultiPolygon, Polygon
 
 from geoviews import Feature, Polygons, Store
 from geoviews.plotting.mpl import ElementPlot
@@ -86,8 +86,13 @@ class TestMPLPlot:
 
 
 def test_feature_line_geometry_facecolor_default():
-    graticules = cf.NaturalEarthFeature(category="physical", name="graticules_30", scale="110m")
-    feature = Feature(graticules).opts(projection=ccrs.Orthographic())
+    # test for https://github.com/holoviz/geoviews/issues/845
+
+    class _LineFeature(cf.Feature):
+        def geometries(self):
+            yield LineString([(0, 0), (1, 1)])
+
+    feature = Feature(_LineFeature(ccrs.PlateCarree())).opts(projection=ccrs.Orthographic())
 
     plot = mpl_renderer.get_plot(feature)
     artist = plot.handles['artist']

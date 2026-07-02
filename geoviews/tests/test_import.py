@@ -15,6 +15,6 @@ def test_no_blocklist_imports():
         print(", ".join(mods), end="")
         """
 
-    output = check_output([sys.executable, '-c', dedent(check)])
+    output = check_output([sys.executable, "-c", dedent(check)])
 
     assert output == b""

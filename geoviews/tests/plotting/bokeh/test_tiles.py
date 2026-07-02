@@ -1,4 +1,3 @@
-
 import pytest
 
 import geoviews as gv
@@ -9,7 +8,6 @@ from .test_bokeh_plot import TestBokehPlot, bokeh_renderer
 
 
 class TestWMTSPlot(TestBokehPlot):
-
     def test_xyzservices_tileprovider(self):
         xyzservices = pytest.importorskip("xyzservices")
         osm = xyzservices.providers.OpenStreetMap.Mapnik

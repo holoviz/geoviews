@@ -10,32 +10,41 @@ from geoviews.operation.projection import project_path
 
 
 class TestProjection:
-
     def test_image_latlon360_wrapping(self):
         pytest.importorskip("scipy")
         xs = np.linspace(72, 360, 5)
         ys = np.linspace(-60, 60, 3)
-        img = gv.Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))
+        img = gv.Image((xs, ys, xs[np.newaxis, :] * ys[:, np.newaxis]))
         proj = gv.project(img, projection=ccrs.PlateCarree())
-        zs = proj.dimension_values('z', flat=False)
-        assert_data_equal(zs, np.array([
-            [ -4320.,  -8640., -12960., -17280., -21600.],
-            [     0.,      0.,      0.,      0.,      0.],
-            [  4320.,   8640.,  12960.,  17280.,  21600.]
-        ]))
+        zs = proj.dimension_values("z", flat=False)
+        assert_data_equal(
+            zs,
+            np.array(
+                [
+                    [-4320.0, -8640.0, -12960.0, -17280.0, -21600.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0],
+                    [4320.0, 8640.0, 12960.0, 17280.0, 21600.0],
+                ]
+            ),
+        )
 
     def test_image_project_latlon_to_mercator(self):
         pytest.importorskip("scipy")
         xs = np.linspace(72, 360, 5)
         ys = np.linspace(-60, 60, 3)
-        img = gv.Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))
+        img = gv.Image((xs, ys, xs[np.newaxis, :] * ys[:, np.newaxis]))
         proj = gv.project(img)
-        zs = proj.dimension_values('z', flat=False)
-        assert_data_equal(zs, np.array([
-            [ -4320.,  -8640., -12960., -17280., -21600.],
-            [     0.,      0.,      0.,      0.,      0.],
-            [  4320.,   8640.,  12960.,  17280.,  21600.]
-        ]))
+        zs = proj.dimension_values("z", flat=False)
+        assert_data_equal(
+            zs,
+            np.array(
+                [
+                    [-4320.0, -8640.0, -12960.0, -17280.0, -21600.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0],
+                    [4320.0, 8640.0, 12960.0, 17280.0, 21600.0],
+                ]
+            ),
+        )
 
     def test_project_vectorfield(self):
         xs = np.linspace(10, 50, 2)
@@ -105,7 +114,7 @@ class TestProjection:
         ys = np.array([0, 0, 0, 0])
 
         # Test cardinal directions
-        angles = np.array([0, np.pi/2, np.pi, 3*np.pi/2])  # E, N, W, S
+        angles = np.array([0, np.pi / 2, np.pi, 3 * np.pi / 2])  # E, N, W, S
         magnitudes = np.array([10, 10, 10, 10])
 
         crs = ccrs.PlateCarree()
@@ -170,14 +179,14 @@ class TestProjection:
 
         # All angles should be π/2 (pointing North)
         angles = vectorfield.dimension_values("Angle")
-        np.testing.assert_allclose(angles, np.pi/2, atol=1e-10)
+        np.testing.assert_allclose(angles, np.pi / 2, atol=1e-10)
 
         # Project to PlateCarree (identity projection)
         projected = gv.project(vectorfield, projection=crs)
         projected_angles = projected.dimension_values("Angle")
 
         # Angles should still be π/2 after identity projection
-        np.testing.assert_allclose(projected_angles, np.pi/2, atol=1e-10)
+        np.testing.assert_allclose(projected_angles, np.pi / 2, atol=1e-10)
 
     def test_project_vectorfield_to_orthographic(self):
         """Test VectorField projection to Orthographic maintains mathematical convention."""
@@ -225,7 +234,7 @@ class TestProjection:
         np.testing.assert_allclose(vs, V.T.flatten())
 
         # Convert to angle/magnitude in NORMALIZED meteorological convention
-        a = np.pi/2 - np.arctan2(-vs, -us) % (2*np.pi)
+        a = np.pi / 2 - np.arctan2(-vs, -us) % (2 * np.pi)
         m = np.hypot(us, vs)
 
         np.testing.assert_allclose(projected.dimension_values("Angle"), a.T.flatten())
@@ -253,10 +262,14 @@ class TestProjection:
         proj_op_masked = project_image.instance(projection=ccrs.PlateCarree())
         projected_masked = proj_op_masked(img)
 
-        new_data = projected_masked.dimension_values('z', flat=False)
+        new_data = projected_masked.dimension_values("z", flat=False)
         # Should be all valid even with extrapolation
-        assert not hasattr(new_data, "mask"), "Expected all values when mask_extrapolated=True with longitude 200-330 because auto-wrapping of lons"
-        assert np.all(new_data == 1), "Expected all values to be valid when mask_extrapolated=True with longitude 200-330"
+        assert not hasattr(new_data, "mask"), (
+            "Expected all values when mask_extrapolated=True with longitude 200-330 because auto-wrapping of lons"
+        )
+        assert np.all(new_data == 1), (
+            "Expected all values to be valid when mask_extrapolated=True with longitude 200-330"
+        )
 
         # Test with mask_extrapolated=False
         proj_op_unmasked = project_image.instance(projection=ccrs.PlateCarree())
@@ -264,9 +277,11 @@ class TestProjection:
         projected_unmasked = proj_op_unmasked(img)
 
         # With mask_extrapolated=False, should get valid values via extrapolation
-        unmasked_data = projected_unmasked.dimension_values('z', flat=False)
+        unmasked_data = projected_unmasked.dimension_values("z", flat=False)
         # Should have valid values when extrapolation is allowed
-        assert np.all(np.isfinite(unmasked_data)), "Expected all finite values when mask_extrapolated=False with longitude 200-330"
+        assert np.all(np.isfinite(unmasked_data)), (
+            "Expected all finite values when mask_extrapolated=False with longitude 200-330"
+        )
 
         # Now test with converted longitude range [-180, 180]
         # Convert longitude: ((lon + 180) % 360) - 180
@@ -275,19 +290,23 @@ class TestProjection:
 
         # With converted coordinates, even mask_extrapolated=True should work
         projected_converted = proj_op_masked(img_converted)
-        converted_data = projected_converted.dimension_values('z', flat=False)
+        converted_data = projected_converted.dimension_values("z", flat=False)
 
         # Should have valid values because no extrapolation is needed
-        assert np.all(np.isfinite(converted_data)), "Expected all finite values with converted longitude range [-180, 180]"
+        assert np.all(np.isfinite(converted_data)), (
+            "Expected all finite values with converted longitude range [-180, 180]"
+        )
 
         # The converted data should match the unmasked extrapolated data (approximately)
         # since both should contain the same valid values
-        assert np.allclose(unmasked_data, converted_data, equal_nan=True), "Extrapolated and converted data should be similar"
+        assert np.allclose(unmasked_data, converted_data, equal_nan=True), (
+            "Extrapolated and converted data should be similar"
+        )
 
     @pytest.mark.filterwarnings("ignore:Downloading:cartopy.io.DownloadWarning")
     def test_gf_borders(self):
         # Get borders at 110m scale using geoviews.feature, number of items can depend on cartopy version
-        borders = gf.borders.geoms(scale='110m')
+        borders = gf.borders.geoms(scale="110m")
         assert len(borders.data) == 331
 
         projected = project_path(borders, projection=ccrs.GOOGLE_MERCATOR)

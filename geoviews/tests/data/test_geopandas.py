@@ -1,6 +1,7 @@
 """
 Test for the GeoPandasInterface
 """
+
 import numpy as np
 import pandas as pd
 from shapely import geometry as sgeom
@@ -25,7 +26,6 @@ from .test_multigeometry import GeomInterfaceTest
 
 
 class RoundTripTests:
-
     datatype = None
 
     interface = None
@@ -33,93 +33,138 @@ class RoundTripTests:
     __test__ = False
 
     def test_point_roundtrip(self):
-        points = Points([{'x': 0, 'y': 1, 'z': 0},
-                         {'x': 1, 'y': 0, 'z': 1}], ['x', 'y'],
-                        'z', datatype=[self.datatype])
+        points = Points(
+            [{"x": 0, "y": 1, "z": 0}, {"x": 1, "y": 0, "z": 1}],
+            ["x", "y"],
+            "z",
+            datatype=[self.datatype],
+        )
         assert isinstance(points.data.geometry.dtype, GeometryDtype)
-        roundtrip = points.clone(datatype=['multitabular'])
-        assert roundtrip.interface.datatype == 'multitabular'
-        expected = Points([{'x': 0, 'y': 1, 'z': 0},
-                           {'x': 1, 'y': 0, 'z': 1}], ['x', 'y'],
-                          'z', datatype=['multitabular'])
+        roundtrip = points.clone(datatype=["multitabular"])
+        assert roundtrip.interface.datatype == "multitabular"
+        expected = Points(
+            [{"x": 0, "y": 1, "z": 0}, {"x": 1, "y": 0, "z": 1}],
+            ["x", "y"],
+            "z",
+            datatype=["multitabular"],
+        )
         assert_element_equal(roundtrip, expected)
 
     def test_multi_point_roundtrip(self):
         xs = [1, 2, 3, 2]
         ys = [2, 0, 7, 4]
-        points = Points([{'x': xs, 'y': ys, 'z': 0},
-                         {'x': xs[::-1], 'y': ys[::-1], 'z': 1}],
-                        ['x', 'y'], 'z', datatype=[self.datatype])
+        points = Points(
+            [{"x": xs, "y": ys, "z": 0}, {"x": xs[::-1], "y": ys[::-1], "z": 1}],
+            ["x", "y"],
+            "z",
+            datatype=[self.datatype],
+        )
         assert isinstance(points.data.geometry.dtype, GeometryDtype)
-        roundtrip = points.clone(datatype=['multitabular'])
-        assert roundtrip.interface.datatype == 'multitabular'
-        expected = Points([{'x': xs, 'y': ys, 'z': 0},
-                           {'x': xs[::-1], 'y': ys[::-1], 'z': 1}],
-                          ['x', 'y'], 'z', datatype=['multitabular'])
+        roundtrip = points.clone(datatype=["multitabular"])
+        assert roundtrip.interface.datatype == "multitabular"
+        expected = Points(
+            [{"x": xs, "y": ys, "z": 0}, {"x": xs[::-1], "y": ys[::-1], "z": 1}],
+            ["x", "y"],
+            "z",
+            datatype=["multitabular"],
+        )
         assert_element_equal(roundtrip, expected)
 
     def test_line_roundtrip(self):
         xs = [1, 2, 3]
         ys = [2, 0, 7]
-        path = Path([{'x': xs, 'y': ys, 'z': 1},
-                     {'x': xs[::-1], 'y': ys[::-1], 'z': 2}],
-                    ['x', 'y'], 'z', datatype=[self.datatype])
+        path = Path(
+            [{"x": xs, "y": ys, "z": 1}, {"x": xs[::-1], "y": ys[::-1], "z": 2}],
+            ["x", "y"],
+            "z",
+            datatype=[self.datatype],
+        )
         assert isinstance(path.data.geometry.dtype, GeometryDtype)
-        roundtrip = path.clone(datatype=['multitabular'])
-        assert roundtrip.interface.datatype == 'multitabular'
-        expected = Path([{'x': xs, 'y': ys, 'z': 1},
-                         {'x': xs[::-1], 'y': ys[::-1], 'z': 2}],
-                        ['x', 'y'], 'z', datatype=['multitabular'])
+        roundtrip = path.clone(datatype=["multitabular"])
+        assert roundtrip.interface.datatype == "multitabular"
+        expected = Path(
+            [{"x": xs, "y": ys, "z": 1}, {"x": xs[::-1], "y": ys[::-1], "z": 2}],
+            ["x", "y"],
+            "z",
+            datatype=["multitabular"],
+        )
         assert_element_equal(roundtrip, expected)
 
     def test_multi_line_roundtrip(self):
         xs = [1, 2, 3, np.nan, 6, 7, 3]
         ys = [2, 0, 7, np.nan, 7, 5, 2]
-        path = Path([{'x': xs, 'y': ys, 'z': 0},
-                     {'x': xs[::-1], 'y': ys[::-1], 'z': 1}],
-                    ['x', 'y'], 'z', datatype=[self.datatype])
+        path = Path(
+            [{"x": xs, "y": ys, "z": 0}, {"x": xs[::-1], "y": ys[::-1], "z": 1}],
+            ["x", "y"],
+            "z",
+            datatype=[self.datatype],
+        )
         assert isinstance(path.data.geometry.dtype, GeometryDtype)
-        roundtrip = path.clone(datatype=['multitabular'])
-        assert roundtrip.interface.datatype == 'multitabular'
-        expected = Path([{'x': xs, 'y': ys, 'z': 0},
-                         {'x': xs[::-1], 'y': ys[::-1], 'z': 1}],
-                        ['x', 'y'], 'z', datatype=['multitabular'])
+        roundtrip = path.clone(datatype=["multitabular"])
+        assert roundtrip.interface.datatype == "multitabular"
+        expected = Path(
+            [{"x": xs, "y": ys, "z": 0}, {"x": xs[::-1], "y": ys[::-1], "z": 1}],
+            ["x", "y"],
+            "z",
+            datatype=["multitabular"],
+        )
         assert_element_equal(roundtrip, expected)
 
     def test_polygon_roundtrip(self):
         xs = [1, 2, 3]
         ys = [2, 0, 7]
-        poly = Polygons([{'x': xs, 'y': ys, 'z': 0},
-                         {'x': xs[::-1], 'y': ys[::-1], 'z': 1}],
-                        ['x', 'y'], 'z', datatype=[self.datatype])
+        poly = Polygons(
+            [{"x": xs, "y": ys, "z": 0}, {"x": xs[::-1], "y": ys[::-1], "z": 1}],
+            ["x", "y"],
+            "z",
+            datatype=[self.datatype],
+        )
         assert isinstance(poly.data.geometry.dtype, GeometryDtype)
-        roundtrip = poly.clone(datatype=['multitabular'])
-        assert roundtrip.interface.datatype == 'multitabular'
-        expected = Polygons([{'x': xs+[1], 'y': ys+[2], 'z': 0},
-                             {'x': xs[::-1]+[3], 'y': ys[::-1]+[7], 'z': 1}],
-                            ['x', 'y'], 'z', datatype=['multitabular'])
+        roundtrip = poly.clone(datatype=["multitabular"])
+        assert roundtrip.interface.datatype == "multitabular"
+        expected = Polygons(
+            [
+                {"x": xs + [1], "y": ys + [2], "z": 0},
+                {"x": xs[::-1] + [3], "y": ys[::-1] + [7], "z": 1},
+            ],
+            ["x", "y"],
+            "z",
+            datatype=["multitabular"],
+        )
         assert_element_equal(roundtrip, expected)
 
     def test_multi_polygon_roundtrip(self):
         xs = [1, 2, 3, np.nan, 6, 7, 3]
         ys = [2, 0, 7, np.nan, 7, 5, 2]
-        holes = [
-            [[(1.5, 2), (2, 3), (1.6, 1.6)], [(2.1, 4.5), (2.5, 5), (2.3, 3.5)]],
-            []
-        ]
-        poly = Polygons([{'x': xs, 'y': ys, 'holes': holes, 'z': 1},
-                         {'x': xs[::-1], 'y': ys[::-1], 'z': 2}],
-                        ['x', 'y'], 'z', datatype=[self.datatype])
+        holes = [[[(1.5, 2), (2, 3), (1.6, 1.6)], [(2.1, 4.5), (2.5, 5), (2.3, 3.5)]], []]
+        poly = Polygons(
+            [{"x": xs, "y": ys, "holes": holes, "z": 1}, {"x": xs[::-1], "y": ys[::-1], "z": 2}],
+            ["x", "y"],
+            "z",
+            datatype=[self.datatype],
+        )
         assert isinstance(poly.data.geometry.dtype, GeometryDtype)
-        roundtrip = poly.clone(datatype=['multitabular'])
-        assert roundtrip.interface.datatype == 'multitabular'
-        expected = Polygons([{'x': [1, 2, 3, 1, np.nan, 6, 7, 3, 6],
-                              'y': [2, 0, 7, 2, np.nan, 7, 5, 2, 7], 'holes': holes, 'z': 1},
-                             {'x': [3, 7, 6, 3, np.nan, 3, 2, 1, 3],
-                              'y': [2, 5, 7, 2, np.nan, 7, 0, 2, 7], 'z': 2}],
-                            ['x', 'y'], 'z', datatype=['multitabular'])
+        roundtrip = poly.clone(datatype=["multitabular"])
+        assert roundtrip.interface.datatype == "multitabular"
+        expected = Polygons(
+            [
+                {
+                    "x": [1, 2, 3, 1, np.nan, 6, 7, 3, 6],
+                    "y": [2, 0, 7, 2, np.nan, 7, 5, 2, 7],
+                    "holes": holes,
+                    "z": 1,
+                },
+                {
+                    "x": [3, 7, 6, 3, np.nan, 3, 2, 1, 3],
+                    "y": [2, 5, 7, 2, np.nan, 7, 0, 2, 7],
+                    "z": 2,
+                },
+            ],
+            ["x", "y"],
+            "z",
+            datatype=["multitabular"],
+        )
         assert_element_equal(roundtrip, expected)
-
 
 
 class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
@@ -127,79 +172,81 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
     Test of the GeoPandasInterface.
     """
 
-    datatype = 'geodataframe'
+    datatype = "geodataframe"
     interface = GeoPandasInterface
 
     __test__ = True
 
     def setup_method(self):
         if geopandas is None:
-            pytest.skip('GeoPandasInterface requires geopandas, skipping tests')
+            pytest.skip("GeoPandasInterface requires geopandas, skipping tests")
         super().setup_method()
 
     def test_df_dataset(self):
         if not pd:
-            pytest.skip('Pandas not available')
-        dfs = [pd.DataFrame(np.column_stack([np.arange(i, i+2), np.arange(i, i+2)]), columns=['x', 'y'])
-                  for i in range(2)]
-        mds = Path(dfs, kdims=['x', 'y'], datatype=[self.datatype])
+            pytest.skip("Pandas not available")
+        dfs = [
+            pd.DataFrame(
+                np.column_stack([np.arange(i, i + 2), np.arange(i, i + 2)]), columns=["x", "y"]
+            )
+            for i in range(2)
+        ]
+        mds = Path(dfs, kdims=["x", "y"], datatype=[self.datatype])
         assert mds.interface is self.interface
-        for i, ds in enumerate(mds.split(datatype='dataframe')):
-            ds['x'] = ds.x.astype(int)
-            ds['y'] = ds.y.astype(int)
+        for i, ds in enumerate(mds.split(datatype="dataframe")):
+            ds["x"] = ds.x.astype(int)
+            ds["y"] = ds.y.astype(int)
             np.testing.assert_array_equal(ds, dfs[i])
 
     def test_multi_geom_point_coord_values(self):
-        geoms = [{'geometry': sgeom.Point([(0, 1)])},
-                 {'geometry': sgeom.Point([(3, 5)])}]
-        mds = Dataset(geoms, kdims=['x', 'y'], datatype=[self.datatype])
-        np.testing.assert_array_equal(mds.dimension_values('x'), np.array([0, 3]))
-        np.testing.assert_array_equal(mds.dimension_values('y'), np.array([1, 5]))
+        geoms = [{"geometry": sgeom.Point([(0, 1)])}, {"geometry": sgeom.Point([(3, 5)])}]
+        mds = Dataset(geoms, kdims=["x", "y"], datatype=[self.datatype])
+        np.testing.assert_array_equal(mds.dimension_values("x"), np.array([0, 3]))
+        np.testing.assert_array_equal(mds.dimension_values("y"), np.array([1, 5]))
 
     def test_multi_geom_point_length(self):
-        geoms = [{'geometry': sgeom.Point([(0, 0)])},
-                 {'geometry': sgeom.Point([(3, 3)])}]
-        mds = Dataset(geoms, kdims=['x', 'y'], datatype=[self.datatype])
+        geoms = [{"geometry": sgeom.Point([(0, 0)])}, {"geometry": sgeom.Point([(3, 3)])}]
+        mds = Dataset(geoms, kdims=["x", "y"], datatype=[self.datatype])
         assert len(mds) == 2
 
     def test_array_points_iloc_index_rows_index_cols(self):
-        arrays = [np.array([(1+i, i), (2+i, i), (3+i, i)]) for i in range(2)]
-        mds = Dataset(arrays, kdims=['x', 'y'], datatype=[self.datatype])
+        arrays = [np.array([(1 + i, i), (2 + i, i), (3 + i, i)]) for i in range(2)]
+        mds = Dataset(arrays, kdims=["x", "y"], datatype=[self.datatype])
         assert mds.interface is self.interface
         with pytest.raises(DataError):
             mds.iloc[3, 0]
 
     def test_polygon_dtype(self):
-        poly = Polygons([{'x': [1, 2, 3], 'y': [2, 0, 7]}], datatype=[self.datatype])
+        poly = Polygons([{"x": [1, 2, 3], "y": [2, 0, 7]}], datatype=[self.datatype])
         assert poly.interface is self.interface
-        assert poly.interface.dtype(poly, 'x') == 'float64'
+        assert poly.interface.dtype(poly, "x") == "float64"
 
     def test_geometry_column_not_named_geometry(self):
         # The geodataframe has its geometry column not named 'geometry'
         gdf = geopandas.GeoDataFrame(
             {
-                'v': [1, 2],
-                'not geometry': [sgeom.Point(0, 1), sgeom.Point(1, 2)],
+                "v": [1, 2],
+                "not geometry": [sgeom.Point(0, 1), sgeom.Point(1, 2)],
             },
-            geometry='not geometry',
+            geometry="not geometry",
         )
-        ds = Dataset(gdf, kdims=['Longitude', 'Latitude'], datatype=[self.datatype])
-        assert_data_equal(ds.dimension_values('Longitude'), np.array([0, 1]))
-        assert_data_equal(ds.dimension_values('Latitude'), np.array([1, 2]))
+        ds = Dataset(gdf, kdims=["Longitude", "Latitude"], datatype=[self.datatype])
+        assert_data_equal(ds.dimension_values("Longitude"), np.array([0, 1]))
+        assert_data_equal(ds.dimension_values("Latitude"), np.array([1, 2]))
 
     def test_geometry_column_not_named_geometry_and_additional_geometry_column(self):
         gdf = geopandas.GeoDataFrame(
             {
-                'v': [1, 2],
-                'not geometry': [sgeom.Point(0, 1), sgeom.Point(1, 2)],
+                "v": [1, 2],
+                "not geometry": [sgeom.Point(0, 1), sgeom.Point(1, 2)],
             },
-            geometry='not geometry',
+            geometry="not geometry",
         )
         # The geodataframe contains a column called 'geometry' that doesn't contain geometry data.
-        gdf = gdf.rename(columns={'v': 'geometry'})
-        ds = Dataset(gdf, kdims=['Longitude', 'Latitude'], datatype=[self.datatype])
-        assert_data_equal(ds.dimension_values('Longitude'), np.array([0, 1]))
-        assert_data_equal(ds.dimension_values('Latitude'), np.array([1, 2]))
+        gdf = gdf.rename(columns={"v": "geometry"})
+        ds = Dataset(gdf, kdims=["Longitude", "Latitude"], datatype=[self.datatype])
+        assert_data_equal(ds.dimension_values("Longitude"), np.array([0, 1]))
+        assert_data_equal(ds.dimension_values("Latitude"), np.array([1, 2]))
 
     def test_geopandas_dataframe_with_different_dtype_column(self):
         # Fix for https://github.com/holoviz/geoviews/issues/721
@@ -207,7 +254,7 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
             {
                 "x": [1, 2, 3, 4, 5],
                 "y": [1, 2, 3, 4, 5],
-                "value": [5, '4', 3, 2, 1],
+                "value": [5, "4", 3, 2, 1],
             }
         )
         gdf = geopandas.GeoDataFrame(df, geometry=geopandas.points_from_xy(df.x, df.y))

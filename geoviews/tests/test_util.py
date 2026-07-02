@@ -29,17 +29,13 @@ def test_process_crs(raw_crs) -> None:
 # To avoid '+init=<authority>:<code>' syntax is deprecated.
 @pytest.mark.filterwarnings("ignore::FutureWarning")
 def test_process_crs_raises_error():
-    with pytest.raises(
-        ValueError, match="must be defined as a EPSG code, proj4 string"
-    ):
+    with pytest.raises(ValueError, match="must be defined as a EPSG code, proj4 string"):
         process_crs(43823)
 
 
 @pytest.mark.skipif(rxr is None, reason="Needs rioxarray to be installed")
 def test_from_xarray():
-    file = (
-        "https://github.com/holoviz/hvplot/raw/main/hvplot/tests/data/RGB-red.byte.tif"
-    )
+    file = "https://github.com/holoviz/hvplot/raw/main/hvplot/tests/data/RGB-red.byte.tif"
     output = gv.from_xarray(rxr.open_rasterio(file))
 
     assert isinstance(output, gv.RGB)

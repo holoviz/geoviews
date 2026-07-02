@@ -50,11 +50,14 @@ def test_rasterize_with_coastline_not_blank_on_zoom(serve_hv, lon_start, lon_end
     data = np.random.rand(180, 360)
     ds = xr.Dataset({"data": (["lat", "lon"], data)}, coords={"lon": lon, "lat": lat})
 
-    overlay = rasterize(
-        gv.Image(ds, ["lon", "lat"], ["data"], crs=ccrs.PlateCarree()).opts(
-            tools=["hover"], active_tools=["box_zoom"]
+    overlay = (
+        rasterize(
+            gv.Image(ds, ["lon", "lat"], ["data"], crs=ccrs.PlateCarree()).opts(
+                tools=["hover"], active_tools=["box_zoom"]
+            )
         )
-    ) * gv.feature.coastline()
+        * gv.feature.coastline()
+    )
 
     page = serve_hv(overlay)
 

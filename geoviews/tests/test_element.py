@@ -1,6 +1,7 @@
 """
 Unit tests of Path types.
 """
+
 import numpy as np
 from shapely.geometry import (
     GeometryCollection,
@@ -17,7 +18,6 @@ import geoviews as gv
 
 
 class TestRectangles:
-
     def test_empty_geom_conversion(self):
         rects = gv.Rectangles([])
         assert rects.geom() == GeometryCollection()
@@ -28,13 +28,7 @@ class TestRectangles:
         assert isinstance(geom, Polygon)
         np.testing.assert_array_equal(
             np.array(geom.exterior.coords),
-            np.array([
-                [1., 0.],
-                [1., 1.],
-                [0., 1.],
-                [0., 0.],
-                [1., 0.]
-            ])
+            np.array([[1.0, 0.0], [1.0, 1.0], [0.0, 1.0], [0.0, 0.0], [1.0, 0.0]]),
         )
 
     def test_multi_geom_conversion(self):
@@ -44,23 +38,11 @@ class TestRectangles:
         assert len(geom.geoms) == 2
         np.testing.assert_array_equal(
             np.array(geom.geoms[0].exterior.coords),
-            np.array([
-                [1., 0.],
-                [1., 1.],
-                [0., 1.],
-                [0., 0.],
-                [1., 0.]
-            ])
+            np.array([[1.0, 0.0], [1.0, 1.0], [0.0, 1.0], [0.0, 0.0], [1.0, 0.0]]),
         )
         np.testing.assert_array_equal(
             np.array(geom.geoms[1].exterior.coords),
-            np.array([
-                [2.5, 2],
-                [2.5, 1.5],
-                [3, 1.5],
-                [3, 2],
-                [2.5, 2]
-            ])
+            np.array([[2.5, 2], [2.5, 1.5], [3, 1.5], [3, 2], [2.5, 2]]),
         )
 
     def test_geom_union(self):
@@ -70,33 +52,15 @@ class TestRectangles:
         array = np.array(geom.exterior.coords)
         try:
             np.testing.assert_array_equal(
-                array,
-                np.array([
-                    [0, 0],
-                    [0, 1],
-                    [1, 1],
-                    [2, 1],
-                    [2, 0],
-                    [1, 0],
-                    [0, 0]
-                ])
+                array, np.array([[0, 0], [0, 1], [1, 1], [2, 1], [2, 0], [1, 0], [0, 0]])
             )
         except Exception:
             np.testing.assert_array_equal(
-                array,
-                np.array([
-                    [1, 0],
-                    [0, 0],
-                    [0, 1],
-                    [1, 1],
-                    [2, 1],
-                    [2, 0],
-                    [1, 0]
-                ])
+                array, np.array([[1, 0], [0, 0], [0, 1], [1, 1], [2, 1], [2, 0], [1, 0]])
             )
 
-class TestPath:
 
+class TestPath:
     def test_empty_geom_conversion(self):
         path = gv.Path([])
         assert path.geom() == GeometryCollection()
@@ -105,14 +69,7 @@ class TestPath:
         path = gv.Path([[(0, 0), (1, 1), (2, 0)]])
         geom = path.geom()
         assert isinstance(geom, LineString)
-        np.testing.assert_array_equal(
-            np.array(geom.coords),
-            np.array([
-                [0, 0],
-                [1, 1],
-                [2, 0]
-            ])
-        )
+        np.testing.assert_array_equal(np.array(geom.coords), np.array([[0, 0], [1, 1], [2, 0]]))
 
     def test_multi_geom_conversion(self):
         path = gv.Path([[(0, 0), (1, 1), (2, 0)], [(3, 2), (2.5, 1.5)]])
@@ -120,24 +77,14 @@ class TestPath:
         assert isinstance(geom, MultiLineString)
         assert len(geom.geoms) == 2
         np.testing.assert_array_equal(
-            np.array(geom.geoms[0].coords),
-            np.array([
-                [0, 0],
-                [1, 1],
-                [2, 0]
-            ])
+            np.array(geom.geoms[0].coords), np.array([[0, 0], [1, 1], [2, 0]])
         )
         np.testing.assert_array_equal(
-            np.array(geom.geoms[1].coords),
-            np.array([
-                [3, 2],
-                [2.5, 1.5]
-            ])
+            np.array(geom.geoms[1].coords), np.array([[3, 2], [2.5, 1.5]])
         )
 
 
 class TestPolygons:
-
     def test_empty_geom_conversion(self):
         polys = gv.Polygons([])
         assert polys.geom() == GeometryCollection()
@@ -147,83 +94,49 @@ class TestPolygons:
         geom = path.geom()
         assert isinstance(geom, Polygon)
         np.testing.assert_array_equal(
-            np.array(geom.exterior.coords),
-            np.array([
-                [0, 0],
-                [1, 1],
-                [2, 0],
-                [0, 0]
-            ])
+            np.array(geom.exterior.coords), np.array([[0, 0], [1, 1], [2, 0], [0, 0]])
         )
 
     def test_single_geom_with_hole_conversion(self):
         holes = [[((0.5, 0.2), (1, 0.8), (1.5, 0.2))]]
-        path = gv.Polygons([{'x': [0, 1, 2], 'y': [0, 1, 0], 'holes': holes}], ['x', 'y'])
+        path = gv.Polygons([{"x": [0, 1, 2], "y": [0, 1, 0], "holes": holes}], ["x", "y"])
         geom = path.geom()
         assert isinstance(geom, Polygon)
         np.testing.assert_array_equal(
-            np.array(geom.exterior.coords),
-            np.array([
-                [0, 0],
-                [1, 1],
-                [2, 0],
-                [0, 0]
-            ])
+            np.array(geom.exterior.coords), np.array([[0, 0], [1, 1], [2, 0], [0, 0]])
         )
         assert len(geom.interiors) == 1
         assert isinstance(geom.interiors[0], LinearRing)
         np.testing.assert_array_equal(
             np.array(geom.interiors[0].coords),
-            np.array([
-                [0.5, 0.2],
-                [1, 0.8],
-                [1.5, 0.2],
-                [0.5, 0.2]
-            ])
+            np.array([[0.5, 0.2], [1, 0.8], [1.5, 0.2], [0.5, 0.2]]),
         )
 
     def test_multi_geom_conversion(self):
         holes = [[((0.5, 0.2), (1, 0.8), (1.5, 0.2))]]
-        path = gv.Polygons([{'x': [0, 1, 2], 'y': [0, 1, 0], 'holes': holes},
-                         {'x': [5, 6, 7], 'y': [2, 1, 2]}], ['x', 'y'])
+        path = gv.Polygons(
+            [{"x": [0, 1, 2], "y": [0, 1, 0], "holes": holes}, {"x": [5, 6, 7], "y": [2, 1, 2]}],
+            ["x", "y"],
+        )
         geom = path.geom()
         assert isinstance(geom, MultiPolygon)
         assert len(geom.geoms) == 2
         np.testing.assert_array_equal(
-            np.array(geom.geoms[0].exterior.coords),
-            np.array([
-                [0, 0],
-                [1, 1],
-                [2, 0],
-                [0, 0]
-            ])
+            np.array(geom.geoms[0].exterior.coords), np.array([[0, 0], [1, 1], [2, 0], [0, 0]])
         )
         assert len(geom.geoms[0].interiors) == 1
         assert isinstance(geom.geoms[0].interiors[0], LinearRing)
         np.testing.assert_array_equal(
             np.array(geom.geoms[0].interiors[0].coords),
-            np.array([
-                [0.5, 0.2],
-                [1, 0.8],
-                [1.5, 0.2],
-                [0.5, 0.2]
-            ])
+            np.array([[0.5, 0.2], [1, 0.8], [1.5, 0.2], [0.5, 0.2]]),
         )
         np.testing.assert_array_equal(
-            np.array(geom.geoms[1].exterior.coords),
-            np.array([
-                [5, 2],
-                [6, 1],
-                [7, 2],
-                [5, 2]
-            ])
+            np.array(geom.geoms[1].exterior.coords), np.array([[5, 2], [6, 1], [7, 2], [5, 2]])
         )
         assert len(geom.geoms[1].interiors) == 0
 
 
-
 class TestPoints:
-
     def test_empty_geom_conversion(self):
         points = gv.Points([])
         assert points.geom() == GeometryCollection()
@@ -244,7 +157,6 @@ class TestPoints:
 
 
 class TestSegments:
-
     def test_empty_geom_conversion(self):
         segs = gv.Segments([])
         assert segs.geom() == GeometryCollection()
@@ -253,30 +165,12 @@ class TestSegments:
         segs = gv.Segments([(0, 0, 1, 1)])
         geom = segs.geom()
         assert isinstance(geom, LineString)
-        np.testing.assert_array_equal(
-            np.array(geom.coords),
-            np.array([
-                [0, 0],
-                [1, 1]
-            ])
-        )
+        np.testing.assert_array_equal(np.array(geom.coords), np.array([[0, 0], [1, 1]]))
 
     def test_multi_geom_conversion(self):
         segs = gv.Segments([(0, 0, 1, 1), (1.5, 2, 3, 1)])
         geom = segs.geom()
         assert isinstance(geom, MultiLineString)
         assert len(geom.geoms) == 2
-        np.testing.assert_array_equal(
-            np.array(geom.geoms[0].coords),
-            np.array([
-                [0, 0],
-                [1, 1]
-            ])
-        )
-        np.testing.assert_array_equal(
-            np.array(geom.geoms[1].coords),
-            np.array([[
-                1.5, 2],
-                [3, 1]
-            ])
-        )
+        np.testing.assert_array_equal(np.array(geom.geoms[0].coords), np.array([[0, 0], [1, 1]]))
+        np.testing.assert_array_equal(np.array(geom.geoms[1].coords), np.array([[1.5, 2], [3, 1]]))

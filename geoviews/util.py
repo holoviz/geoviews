@@ -620,15 +620,15 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
     Parameters
     ----------
     da : xarray.DataArray
-      DataArray to convert to element
+        DataArray to convert to element
     crs : Cartopy CRS or EPSG string, optional
-      Overrides CRS inferred from the data
+        Overrides CRS inferred from the data
     apply_transform : boolean
-      Whether to apply affine transform if defined on the data
+        Whether to apply affine transform if defined on the data
     nan_nodata : boolean
-      If data contains nodata values convert them to NaNs
+        If data contains nodata values convert them to NaNs
     **kwargs :
-      Keyword arguments passed to the HoloViews/GeoViews element
+        Keyword arguments passed to the HoloViews/GeoViews element
 
     Returns
     -------
@@ -730,14 +730,14 @@ def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=None):
     Parameters
     ----------
     tile_source : WMTS element or string URL
-      The tile source to download the tiles from.
+        The tile source to download the tiles from.
     bbox : tuple
-      A four tuple specifying the (left, bottom, right, top) corners of the
-      domain to download the tiles for.
+        A four tuple specifying the (left, bottom, right, top) corners of the
+        domain to download the tiles for.
     zoom_level : int
-      The zoom level at which to download the tiles
+        The zoom level at which to download the tiles
     bbox_crs : ccrs.CRs
-      cartopy CRS defining the coordinate system of the supplied bbox
+        cartopy CRS defining the coordinate system of the supplied bbox
 
     Returns
     -------

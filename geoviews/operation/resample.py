@@ -136,16 +136,16 @@ class resample_geometry(Operation):
         default=None,
         length=2,
         doc="""
-       The x_range as a tuple of min and max x-value. Auto-ranges
-       if set to None.""",
+        The x_range as a tuple of min and max x-value. Auto-ranges
+        if set to None.""",
     )
 
     y_range = param.NumericTuple(
         default=None,
         length=2,
         doc="""
-       The x_range as a tuple of min and max y-value. Auto-ranges
-       if set to None.""",
+        The x_range as a tuple of min and max y-value. Auto-ranges
+        if set to None.""",
     )
 
     zoom_levels = param.Integer(

@@ -211,24 +211,24 @@ class Feature(_GeoFeature):
         Parameters
         ----------
         scale : str
-          Scale of the geometry to return expressed as string.
-          Available scales depends on the Feature type.
+            Scale of the geometry to return expressed as string.
+            Available scales depends on the Feature type.
 
-          NaturalEarthFeature:
-           '10m', '50m', '110m'
+            NaturalEarthFeature:
+            '10m', '50m', '110m'
 
-          GSHHSFeature:
-           'auto', 'coarse', 'low', 'intermediate', 'high', 'full'
+            GSHHSFeature:
+            'auto', 'coarse', 'low', 'intermediate', 'high', 'full'
 
         bounds : tuple
-          Tuple of a bounding region to query for geometries in
+            Tuple of a bounding region to query for geometries in
         as_element : boolean
-          Whether to wrap the geometries in an element
+            Whether to wrap the geometries in an element
 
         Returns
         -------
         geometries : Polygons/Path
-          Polygons or Path object wrapping around returned geometries
+            Polygons or Path object wrapping around returned geometries
         """
         feature = self.data
         if scale is not None:
@@ -602,15 +602,15 @@ class RGB(_Element, HvRGB):
         Parameters
         ----------
         da : xarray.DataArray
-          DataArray to convert to element
+            DataArray to convert to element
         crs : Cartopy CRS or EPSG string (optional)
-          Overrides CRS inferred from the data
+            Overrides CRS inferred from the data
         apply_transform : boolean
-          Whether to apply affine transform if defined on the data
+            Whether to apply affine transform if defined on the data
         nan_nodata : boolean
-          If data contains nodata values convert them to NaNs
+            If data contains nodata values convert them to NaNs
         **kwargs :
-          Keyword arguments passed to the HoloViews/GeoViews element
+            Keyword arguments passed to the HoloViews/GeoViews element
 
         Returns
         -------
@@ -960,26 +960,26 @@ class Shape(Dataset):
         Parameters
         ----------
         records : list of cartopy.io.shapereader.Record
-           Iterator containing Records.
+            Iterator containing Records.
         dataset : holoviews.Dataset
-           Any HoloViews Dataset type.
+            Any HoloViews Dataset type.
         on : str or list or dict
-          A mapping between the attribute names in the records and the
-          dimensions in the dataset.
+            A mapping between the attribute names in the records and the
+            dimensions in the dataset.
         value : str
-          The value dimension in the dataset the values will be drawn
-          from.
+            The value dimension in the dataset the values will be drawn
+            from.
         index : str or list
-          One or more dimensions in the dataset the Shapes will be
-          indexed by.
+            One or more dimensions in the dataset the Shapes will be
+            indexed by.
         drop_missing : boolean
-          Whether to drop shapes which are missing from the provides
-          dataset.
+            Whether to drop shapes which are missing from the provides
+            dataset.
 
         Returns
         -------
         shapes : Polygons or Path object
-          A Polygons or Path object containing the geometries
+            A Polygons or Path object containing the geometries
         """
         reader = Reader(shapefile)
         return cls.from_records(reader.records(), *args, **kwargs)
@@ -1010,26 +1010,26 @@ class Shape(Dataset):
         Parameters
         ----------
         records : list of cartopy.io.shapereader.Record
-           Iterator containing Records.
+            Iterator containing Records.
         dataset : holoviews.Dataset
-           Any HoloViews Dataset type.
+            Any HoloViews Dataset type.
         on : str or list or dict
-          A mapping between the attribute names in the records and the
-          dimensions in the dataset.
+            A mapping between the attribute names in the records and the
+            dimensions in the dataset.
         value : str
-          The value dimension in the dataset the values will be drawn
-          from.
+            The value dimension in the dataset the values will be drawn
+            from.
         index : str or list
-          One or more dimensions in the dataset the Shapes will be
-          indexed by.
+            One or more dimensions in the dataset the Shapes will be
+            indexed by.
         drop_missing : boolean
-          Whether to drop shapes which are missing from the provides
-          dataset.
+            Whether to drop shapes which are missing from the provides
+            dataset.
 
         Returns
         -------
         shapes : Polygons or Path object
-          A Polygons or Path object containing the geometries
+            A Polygons or Path object containing the geometries
         """
         if index is None:
             index = []

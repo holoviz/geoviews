@@ -5,26 +5,26 @@ import pyviz_comms as comms
 from param import concrete_descendents
 from shapely.geometry import MultiPolygon, Polygon
 
-from geoviews import Polygons, Store
+import geoviews as gv
 from geoviews.plotting.mpl import ElementPlot
 
-mpl_renderer = Store.renderers['matplotlib']
+mpl_renderer = gv.Store.renderers['matplotlib']
 
 
 class TestMPLPlot:
 
     def setup_method(self):
-        self.previous_backend = Store.current_backend
+        self.previous_backend = gv.Store.current_backend
         self.comm_manager = mpl_renderer.comm_manager
         mpl_renderer.comm_manager = comms.CommManager
-        Store.set_current_backend('matplotlib')
+        gv.Store.set_current_backend('matplotlib')
         self._padding = {}
         for plot in concrete_descendents(ElementPlot).values():
             self._padding[plot] = plot.padding
             plot.padding = 0
 
     def teardown_method(self):
-        Store.current_backend = self.previous_backend
+        gv.Store.current_backend = self.previous_backend
         mpl_renderer.comm_manager = self.comm_manager
         plt.close(plt.gcf())
         for plot, padding in self._padding.items():
@@ -64,7 +64,7 @@ class TestMPLPlot:
             actual_type = gdf.loc[gdf['state'] == state, 'geometry'].iloc[0].geom_type
             assert actual_type == expected_type
 
-        polygons = Polygons(gdf, vdims=["bea_region"]).opts(c="bea_region")
+        polygons = gv.Polygons(gdf, vdims=["bea_region"]).opts(c="bea_region")
 
         plot = mpl_renderer.get_plot(polygons)
         array = plot.handles["artist"].get_array()

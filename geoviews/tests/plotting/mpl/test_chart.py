@@ -5,15 +5,13 @@ from holoviews.tests.plotting.utils import ParamLogStream
 from test_plot import TestMPLPlot
 
 import geoviews as gv
-from geoviews import Store
-from geoviews.element import WindBarbs
 
 try:
     import datashader
 except ImportError:
     datashader = None
 
-mpl_renderer = Store.renderers["matplotlib"]
+mpl_renderer = gv.Store.renderers["matplotlib"]
 
 
 class TestWindBarbsPlot(TestMPLPlot):
@@ -25,7 +23,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         angle = np.pi/2 - np.arctan2(-V, -U)  # meteorological convention
         mag = np.hypot(U, V)
 
-        gv_barbs = WindBarbs((X, Y, angle, mag))
+        gv_barbs = gv.WindBarbs((X, Y, angle, mag))
 
         fig = gv.render(gv_barbs)
         mpl_barbs = fig.axes[0].get_children()[0]
@@ -66,8 +64,8 @@ class TestWindBarbsPlot(TestMPLPlot):
         angle = np.pi/2 - np.arctan2(-V, -U)  # meteorological convention
         mag = np.hypot(U, V)
 
-        gv_barbs = WindBarbs((X, Y, angle, mag))
-        gv_barbs_uv = WindBarbs.from_uv((X, Y, U, V))
+        gv_barbs = gv.WindBarbs((X, Y, angle, mag))
+        gv_barbs_uv = gv.WindBarbs.from_uv((X, Y, U, V))
 
         np.testing.assert_almost_equal(gv_barbs.data["Angle"].T.flatten(), gv_barbs_uv.data["Angle"])
         np.testing.assert_almost_equal(gv_barbs.data["Magnitude"].T.flatten(), gv_barbs_uv.data["Magnitude"])
@@ -92,11 +90,11 @@ class TestWindBarbsPlot(TestMPLPlot):
             coords={"x": x, "y": -x},
         )
 
-        gv_barbs = WindBarbs.from_uv(ds, ["x", "y"], ["u", "v", "other"])
+        gv_barbs = gv.WindBarbs.from_uv(ds, ["x", "y"], ["u", "v", "other"])
         assert "other" in gv_barbs.data
 
     def test_windbarbs_color_op(self):
-        barbs = WindBarbs(
+        barbs = gv.WindBarbs(
             [(0, 0, 0, 1, "#000000"), (0, 1, 0, 1, "#FF0000"), (0, 2, 0, 1, "#00FF00")],
             vdims=["A", "M", "color"],
         ).opts(color="color")

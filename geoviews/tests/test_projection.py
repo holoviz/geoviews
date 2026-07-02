@@ -3,9 +3,9 @@ import numpy as np
 import pytest
 from holoviews.testing import assert_data_equal
 
+import geoviews as gv
 import geoviews.feature as gf
-from geoviews.element import Image, VectorField, WindBarbs
-from geoviews.operation import project, project_image
+from geoviews.operation import project_image
 from geoviews.operation.projection import project_path
 
 
@@ -15,8 +15,8 @@ class TestProjection:
         pytest.importorskip("scipy")
         xs = np.linspace(72, 360, 5)
         ys = np.linspace(-60, 60, 3)
-        img = Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))
-        proj = project(img, projection=ccrs.PlateCarree())
+        img = gv.Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))
+        proj = gv.project(img, projection=ccrs.PlateCarree())
         zs = proj.dimension_values('z', flat=False)
         assert_data_equal(zs, np.array([
             [ -4320.,  -8640., -12960., -17280., -21600.],
@@ -28,8 +28,8 @@ class TestProjection:
         pytest.importorskip("scipy")
         xs = np.linspace(72, 360, 5)
         ys = np.linspace(-60, 60, 3)
-        img = Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))
-        proj = project(img)
+        img = gv.Image((xs, ys, xs[np.newaxis, :]*ys[:, np.newaxis]))
+        proj = gv.project(img)
         zs = proj.dimension_values('z', flat=False)
         assert_data_equal(zs, np.array([
             [ -4320.,  -8640., -12960., -17280., -21600.],
@@ -44,9 +44,9 @@ class TestProjection:
         A = np.arctan2(V, U)
         M = np.hypot(U, V)
         crs = ccrs.PlateCarree()
-        vectorfield = VectorField((X, Y, A, M), crs=crs)
+        vectorfield = gv.VectorField((X, Y, A, M), crs=crs)
         projection = ccrs.Orthographic()
-        projected = project(vectorfield, projection=projection)
+        projected = gv.project(vectorfield, projection=projection)
         assert projected.crs == projection
 
         xs, ys, ang, ms = (vectorfield.dimension_values(i) for i in range(4))
@@ -65,9 +65,9 @@ class TestProjection:
         X, Y = np.meshgrid(xs, xs)
         U, V = 5 * X, 1 * Y
         crs = ccrs.PlateCarree()
-        vectorfield = VectorField.from_uv((X, Y, U, V), crs=crs)
+        vectorfield = gv.VectorField.from_uv((X, Y, U, V), crs=crs)
         projection = ccrs.Orthographic()
-        projected = project(vectorfield, projection=projection)
+        projected = gv.project(vectorfield, projection=projection)
         assert projected.crs == projection
 
         # Verify that from_uv creates the correct angle/magnitude by roundtrip
@@ -81,7 +81,7 @@ class TestProjection:
         # Create a new vectorfield from these u,v values
         xs_values = vectorfield.dimension_values(0)
         ys_values = vectorfield.dimension_values(1)
-        vectorfield2 = VectorField.from_uv(
+        vectorfield2 = gv.VectorField.from_uv(
             (xs_values, ys_values, u_converted, v_converted), crs=crs
         )
 
@@ -109,10 +109,10 @@ class TestProjection:
         magnitudes = np.array([10, 10, 10, 10])
 
         crs = ccrs.PlateCarree()
-        vectorfield = VectorField((xs, ys, angles, magnitudes), crs=crs)
+        vectorfield = gv.VectorField((xs, ys, angles, magnitudes), crs=crs)
 
         # Project to same CRS (should preserve angles)
-        projected = project(vectorfield, projection=crs)
+        projected = gv.project(vectorfield, projection=crs)
 
         # Verify angles are preserved by comparing u,v components (handles wrapping)
         projected_angles = projected.dimension_values("Angle")
@@ -142,14 +142,14 @@ class TestProjection:
         V = np.zeros_like(Y)
 
         crs = ccrs.PlateCarree()
-        vectorfield = VectorField.from_uv((X, Y, U, V), crs=crs)
+        vectorfield = gv.VectorField.from_uv((X, Y, U, V), crs=crs)
 
         # All angles should be 0 (pointing East)
         angles = vectorfield.dimension_values("Angle")
         np.testing.assert_allclose(angles, 0, atol=1e-10)
 
         # Project to PlateCarree (identity projection)
-        projected = project(vectorfield, projection=crs)
+        projected = gv.project(vectorfield, projection=crs)
         projected_angles = projected.dimension_values("Angle")
 
         # Angles should still be 0 after identity projection
@@ -166,14 +166,14 @@ class TestProjection:
         V = np.ones_like(Y) * 10  # All vectors point North
 
         crs = ccrs.PlateCarree()
-        vectorfield = VectorField.from_uv((X, Y, U, V), crs=crs)
+        vectorfield = gv.VectorField.from_uv((X, Y, U, V), crs=crs)
 
         # All angles should be π/2 (pointing North)
         angles = vectorfield.dimension_values("Angle")
         np.testing.assert_allclose(angles, np.pi/2, atol=1e-10)
 
         # Project to PlateCarree (identity projection)
-        projected = project(vectorfield, projection=crs)
+        projected = gv.project(vectorfield, projection=crs)
         projected_angles = projected.dimension_values("Angle")
 
         # Angles should still be π/2 after identity projection
@@ -190,11 +190,11 @@ class TestProjection:
         magnitudes = np.ones(3) * 10
 
         crs = ccrs.PlateCarree()
-        vectorfield = VectorField((xs, ys, angles, magnitudes), crs=crs)
+        vectorfield = gv.VectorField((xs, ys, angles, magnitudes), crs=crs)
 
         # Project to Orthographic
         projection = ccrs.Orthographic(central_longitude=10, central_latitude=0)
-        projected = project(vectorfield, projection=projection)
+        projected = gv.project(vectorfield, projection=projection)
 
         # The projection should succeed
         assert projected.crs == projection
@@ -211,9 +211,9 @@ class TestProjection:
         A = np.pi / 2 - np.arctan2(-V, -U)
         M = np.hypot(U, V)
         crs = ccrs.PlateCarree()
-        windbarbs = WindBarbs((X, Y, A, M), crs=crs)
+        windbarbs = gv.WindBarbs((X, Y, A, M), crs=crs)
         projection = ccrs.PlateCarree()
-        projected = project(windbarbs, projection=projection)
+        projected = gv.project(windbarbs, projection=projection)
         assert projected.crs == projection
 
         ang, ms = (windbarbs.dimension_values(i) for i in range(2, 4))
@@ -247,7 +247,7 @@ class TestProjection:
         xs = np.linspace(200, 330, 5)
         ys = np.linspace(-60, 60, 3)
         zs = np.ones((3, 5))  # Fill with constant value
-        img = Image((xs, ys, zs), crs=ccrs.PlateCarree())
+        img = gv.Image((xs, ys, zs), crs=ccrs.PlateCarree())
 
         # Test with mask_extrapolated=True (default)
         proj_op_masked = project_image.instance(projection=ccrs.PlateCarree())
@@ -271,7 +271,7 @@ class TestProjection:
         # Now test with converted longitude range [-180, 180]
         # Convert longitude: ((lon + 180) % 360) - 180
         xs_converted = ((xs + 180) % 360) - 180  # Convert 200-330 to -160 to -30
-        img_converted = Image((xs_converted, ys, zs), crs=ccrs.PlateCarree())
+        img_converted = gv.Image((xs_converted, ys, zs), crs=ccrs.PlateCarree())
 
         # With converted coordinates, even mask_extrapolated=True should work
         projected_converted = proj_op_masked(img_converted)

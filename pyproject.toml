@@ -99,6 +99,10 @@ path = 'hatch_build.py'
 
 [tool.ruff]
 fix = true
+line-length = 99
+
+[tool.ruff.format]
+exclude = ["*.ipynb", "*.md"]
 
 [tool.ruff.lint]
 select = [

@@ -69,9 +69,6 @@ recommended = [
 [dependency-groups]
 tests = ['psutil', 'pytest', 'pytest-xdist']
 
-[project.scripts]
-geoviews = "geoviews.command:main"
-
 [tool.hatch.version]
 source = "vcs"
 raw-options = { version_scheme = "no-guess-dev" }

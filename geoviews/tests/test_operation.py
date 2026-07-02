@@ -21,6 +21,7 @@ def test_unwrap_lons():
     pytest.importorskip("datashader")
     # Regression test for: https://github.com/holoviz/geoviews/pull/722
     from holoviews.operation.datashader import rasterize
+
     ds = xr.tutorial.open_dataset("air_temperature").isel(time=0)
     p1 = gv.Image(ds)
     p2 = rasterize(p1, filled=True)
@@ -38,6 +39,7 @@ def test_no_unwrap_lons():
     pytest.importorskip("datashader")
     # Regression test for: https://github.com/holoviz/geoviews/pull/722
     from holoviews.operation.datashader import rasterize
+
     ds = xr.tutorial.open_dataset("air_temperature").isel(time=0)
     # to -180, 180
     ds["lon"] = (ds["lon"] + 180) % 360 - 180

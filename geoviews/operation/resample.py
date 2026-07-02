@@ -16,6 +16,7 @@ def find_geom(geom, geoms):
         if g is geom:
             return i
 
+
 def compute_zoom_level(bounds, domain, levels):
     """Computes a zoom level given a bounds polygon, a polygon of the
     overall domain and the number of zoom levels to divide the data
@@ -35,8 +36,8 @@ def compute_zoom_level(bounds, domain, levels):
     zoom_level : int
         Integer zoom level
     """
-    area_fraction = min(bounds.area/domain.area, 1)
-    return int(min(round(np.log2(1/area_fraction)), levels))
+    area_fraction = min(bounds.area / domain.area, 1)
+    return int(min(round(np.log2(1 / area_fraction)), levels))
 
 
 def bounds_to_poly(bounds):
@@ -82,49 +83,82 @@ class resample_geometry(Operation):
     visible.
     """
 
-    cache = param.Boolean(default=True, doc="""
+    cache = param.Boolean(
+        default=True,
+        doc="""
         Whether to cache simplified geometries depending on the zoom
-        level.""")
+        level.""",
+    )
 
-    clip = param.Boolean(default=False, doc="""
+    clip = param.Boolean(
+        default=False,
+        doc="""
         Whether to disable the cache and clip polygons
-        to current bounds.""")
+        to current bounds.""",
+    )
 
-    display_threshold = param.Number(default=0.0001, doc="""
+    display_threshold = param.Number(
+        default=0.0001,
+        doc="""
         The fraction of the current viewport covered by a geometry
-        before it is shown.""")
+        before it is shown.""",
+    )
 
-    dynamic = param.Boolean(default=True, doc="""
-       Enables dynamic processing by default.""")
+    dynamic = param.Boolean(
+        default=True,
+        doc="""
+       Enables dynamic processing by default.""",
+    )
 
-    preserve_topology = param.Boolean(default=False, doc="""
+    preserve_topology = param.Boolean(
+        default=False,
+        doc="""
         Whether to preserve topology between geometries. If disabled
         simplification can produce self-intersecting or otherwise
-        invalid geometries but will be much faster.""")
+        invalid geometries but will be much faster.""",
+    )
 
-    streams = param.ClassSelector(default=[RangeXY], class_=(dict, list), doc="""
+    streams = param.ClassSelector(
+        default=[RangeXY],
+        class_=(dict, list),
+        doc="""
         List or dictionary streams that are applied if dynamic=True,
-        allowing for dynamic interaction with the plot.""")
+        allowing for dynamic interaction with the plot.""",
+    )
 
-    tolerance_factor = param.Number(default=0.002, doc="""
+    tolerance_factor = param.Number(
+        default=0.002,
+        doc="""
         The tolerance distance for path simplification as a fraction
-        of the square root of the area of the current viewport.""")
+        of the square root of the area of the current viewport.""",
+    )
 
-    x_range  = param.NumericTuple(default=None, length=2, doc="""
+    x_range = param.NumericTuple(
+        default=None,
+        length=2,
+        doc="""
        The x_range as a tuple of min and max x-value. Auto-ranges
-       if set to None.""")
+       if set to None.""",
+    )
 
-    y_range  = param.NumericTuple(default=None, length=2, doc="""
+    y_range = param.NumericTuple(
+        default=None,
+        length=2,
+        doc="""
        The x_range as a tuple of min and max y-value. Auto-ranges
-       if set to None.""")
+       if set to None.""",
+    )
 
-    zoom_levels = param.Integer(default=20, doc="""
-        The number of zoom levels to cache.""")
+    zoom_levels = param.Integer(
+        default=20,
+        doc="""
+        The number of zoom levels to cache.""",
+    )
 
     _per_element = True
 
     @param.parameterized.bothmethod
-    def instance(self_or_cls,**params):
+    def instance(self_or_cls, **params):
         inst = super().instance(**params)
         inst._cache = {}
         return inst
@@ -144,7 +178,7 @@ class resample_geometry(Operation):
                 geom_dicts = polygons_to_geom_dicts(element)
             elif isinstance(element, Path):
                 geom_dicts = path_to_geom_dicts(element)
-            geoms = [g['geometry'] for g in geom_dicts]
+            geoms = [g["geometry"] for g in geom_dicts]
             tree = STRtree(geoms)
             domain = bounds
             geom_cache, area_cache = {}, {}
@@ -162,15 +196,15 @@ class resample_geometry(Operation):
             g = tree.geometries[g] if SHAPELY_GE_2_0_0 else g
             garea = area_cache.get(id(g))
             if garea is None:
-                is_poly = 'Polygon' in g.geom_type
+                is_poly = "Polygon" in g.geom_type
                 garea = g.area if is_poly else bounds_to_poly(g.bounds).area
                 area_cache[id(g)] = garea
 
             # Skip if geometry area is below display threshold or
             # does not intersect with viewport
-            if ((self.p.display_threshold is not None and
-                 (garea/area) < self.p.display_threshold)
-                or not g.intersects(bounds)):
+            if (
+                self.p.display_threshold is not None and (garea / area) < self.p.display_threshold
+            ) or not g.intersects(bounds):
                 continue
 
             # Try to look up geometry in cache by zoom level
@@ -184,7 +218,7 @@ class resample_geometry(Operation):
 
                 g = g.simplify(tol, self.p.preserve_topology)
                 if not g:
-                    continue # Skip if geometry empty
+                    continue  # Skip if geometry empty
 
                 geom_dict = dict(gdict, geometry=g)
                 if self.p.cache:

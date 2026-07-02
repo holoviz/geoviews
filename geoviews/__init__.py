@@ -96,18 +96,18 @@ __all__ = (
     "VectorField",
     "WindBarbs",
     "__version__",
-    "annotate", # Lazy modules
+    "annotate",  # Lazy modules
     "data",
     "dim",
     "extension",
     "feature",
     "from_xarray",
     "help",
-    "operation", # Lazy modules
+    "operation",  # Lazy modules
     "opts",
     "output",
     "plotting",
-    "project", # Lazy modules
+    "project",  # Lazy modules
     "render",
     "renderer",
     "save",
@@ -125,33 +125,44 @@ try:
         examples as _examples,
         fetch_data as _fetch,
     )
-    copy_examples = partial(_copy, 'geoviews')
-    fetch_data = partial(_fetch, 'geoviews')
-    examples = partial(_examples, 'geoviews')
+
+    copy_examples = partial(_copy, "geoviews")
+    fetch_data = partial(_fetch, "geoviews")
+    examples = partial(_examples, "geoviews")
 except ImportError:
-    def _missing_cmd(*args,**kw): return("install pyct to enable this command (e.g. `conda install -c pyviz pyct`)")
+
+    def _missing_cmd(*args, **kw):
+        return "install pyct to enable this command (e.g. `conda install -c pyviz pyct`)"
+
     _copy = _fetch = _examples = _missing_cmd
-    def _err(): raise ValueError(_missing_cmd())
+
+    def _err():
+        raise ValueError(_missing_cmd())
+
     fetch_data = copy_examples = examples = _err
 del partial, _examples, _copy, _fetch
 
 
 def __getattr__(attr):
     # Lazy loading heavy modules
-    if attr == 'annotate':
+    if attr == "annotate":
         from .annotators import annotate
+
         return annotate
-    elif attr == 'project':
+    elif attr == "project":
         from .operation import project
+
         return project
-    elif attr == 'operation':
+    elif attr == "operation":
         from . import operation
+
         return operation
     raise AttributeError(f"module {__name__} has no attribute {attr!r}")
 
 
 def __dir__():
     return __all__
+
 
 from typing import TYPE_CHECKING
 

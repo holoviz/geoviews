@@ -29,9 +29,9 @@ def coord_to_dimension(coord):
     """Converts an iris coordinate to a HoloViews dimension."""
     kwargs = {}
     if coord.units.is_time_reference():
-        kwargs['value_format'] = get_date_format(coord)
+        kwargs["value_format"] = get_date_format(coord)
     else:
-        kwargs['unit'] = str(coord.units)
+        kwargs["unit"] = str(coord.units)
     return Dimension(coord.name(), **kwargs)
 
 
@@ -42,10 +42,10 @@ def sort_coords(coord):
     order.
     """
     import iris
-    order = {'T': -2, 'Z': -1, 'X': 1, 'Y': 2}
+
+    order = {"T": -2, "Z": -1, "X": 1, "Y": 2}
     axis = iris.util.guess_coord_axis(coord)
     return (order.get(axis, 0), coord and coord.name())
-
 
 
 class CubeInterface(GridInterface):
@@ -58,17 +58,18 @@ class CubeInterface(GridInterface):
 
     types = ()
 
-    datatype = 'cube'
+    datatype = "cube"
 
     @classmethod
     def loaded(cls):
-        return 'iris' in sys.modules
+        return "iris" in sys.modules
 
     @classmethod
     def applies(cls, obj):
         if not cls.loaded():
             return False
         from iris.cube import Cube
+
         return isinstance(obj, Cube)
 
     @classmethod
@@ -90,60 +91,58 @@ class CubeInterface(GridInterface):
             vdims = [vdim]
             if isinstance(data, np.ndarray):
                 if data.ndim != 2 or data.shape[1] != 2 or len(kdims) != 1:
-                    raise ValueError('Iris interface could not interpret array data.')
+                    raise ValueError("Iris interface could not interpret array data.")
                 data = {kdims[0].name: data[:, 0], vdim.name: data[:, 1]}
             elif isinstance(data, tuple):
                 value_array = data[-1]
                 data = {d: vals for d, vals in zip(kdim_names + [vdim.name], data)}
             elif isinstance(data, list) and data == []:
                 ndims = len(kdims)
-                dimensions = [d.name for d in kdims+vdims]
+                dimensions = [d.name for d in kdims + vdims]
                 data = {d: np.array([]) for d in dimensions[:ndims]}
                 data.update({d: np.empty((0,) * ndims) for d in dimensions[ndims:]})
 
             if isinstance(data, dict):
                 value_array = data[vdim.name]
-            coords = [(iris.coords.DimCoord(data[kd.name], long_name=kd.name,
-                                            units=kd.unit), ndims-n-1)
-                      for n, kd in enumerate(kdims)]
+            coords = [
+                (
+                    iris.coords.DimCoord(data[kd.name], long_name=kd.name, units=kd.unit),
+                    ndims - n - 1,
+                )
+                for n, kd in enumerate(kdims)
+            ]
             try:
-                data = iris.cube.Cube(value_array, long_name=vdim.name,
-                                      dim_coords_and_dims=coords)
+                data = iris.cube.Cube(value_array, long_name=vdim.name, dim_coords_and_dims=coords)
             except Exception:
                 pass
             if not isinstance(data, iris.cube.Cube):
-                raise TypeError('Data must be be an iris Cube type.')
+                raise TypeError("Data must be be an iris Cube type.")
 
         if kdims:
             coords = []
             for kd in kdims:
                 coord = data.coords(kd.name)
                 if len(coord) == 0:
-                    raise ValueError(f'Key dimension {kd} not found in '
-                                     'Iris cube.')
+                    raise ValueError(f"Key dimension {kd} not found in Iris cube.")
                 coords.append(kd if isinstance(kd, Dimension) else coord[0])
         else:
             coords = data.dim_coords
             coords = sorted(coords, key=sort_coords)
-        kdims = [crd if isinstance(crd, Dimension) else coord_to_dimension(crd)
-                 for crd in coords]
+        kdims = [crd if isinstance(crd, Dimension) else coord_to_dimension(crd) for crd in coords]
         if vdims is None:
             vdims = [Dimension(data.name(), unit=str(data.units))]
 
-        return data, {'kdims':kdims, 'vdims':vdims}, {}
-
+        return data, {"kdims": kdims, "vdims": vdims}, {}
 
     @classmethod
     def validate(cls, dataset, vdims=True):
         if vdims and len(dataset.vdims) > 1:
             raise DataError("Iris cubes do not support more than one value dimension", cls)
 
-
     @classmethod
     def irregular(cls, dataset, dim):
         """CubeInterface does not support irregular data"""
         return False
-
 
     @classmethod
     def shape(cls, dataset, gridded=False):
@@ -151,7 +150,6 @@ class CubeInterface(GridInterface):
             return dataset.data.shape
         else:
             return (cls.length(dataset), len(dataset.dimensions()))
-
 
     @classmethod
     def coords(cls, dataset, dim, ordered=False, expanded=False):
@@ -163,24 +161,22 @@ class CubeInterface(GridInterface):
             data = data[::-1]
         return data
 
-
     @classmethod
     def mask(cls, dataset, mask, mask_val=np.nan):
         masked = dataset.data.copy()
         orig_mask = mask
         data_coords = [c.name() for c in dataset.data.coords()]
         mask = cls.canonicalize(dataset, orig_mask, data_coords)
-        masked.data = masked.data.astype('float')
+        masked.data = masked.data.astype("float")
         masked.data[mask] = mask_val
         return masked
-
 
     @classmethod
     def assign(cls, dataset, new_data):
         import iris
+
         value_dims = [
-            d for d, v in new_data.items() if d in dataset.vdims
-            and isinstance(v, iris.cube.Cube)
+            d for d, v in new_data.items() if d in dataset.vdims and isinstance(v, iris.cube.Cube)
         ]
         if value_dims:
             data = new_data.pop(value_dims[0]).copy()
@@ -192,9 +188,7 @@ class CubeInterface(GridInterface):
                 coord_vals = cls.coords(dataset, dim)
                 if not coord_vals.ndim > 1 and np.all(coord_vals[1:] < coord_vals[:-1]):
                     values = values[::-1]
-                coord = iris.coords.DimCoord(
-                    values, long_name=dim.name, units=dim.unit
-                )
+                coord = iris.coords.DimCoord(values, long_name=dim.name, units=dim.unit)
                 data.replace_coord(coord)
             elif dim in dataset.vdims:
                 data.data = values
@@ -206,7 +200,6 @@ class CubeInterface(GridInterface):
     def packed(cls, dataset):
         return False
 
-
     @classmethod
     def dtype(cls, dataset, dimension):
         name = dataset.get_dimension(dimension, strict=True).name
@@ -214,7 +207,6 @@ class CubeInterface(GridInterface):
             return dataset.data.dtype
         else:
             return dataset.data.coord(name).dtype
-
 
     @classmethod
     def values(cls, dataset, dim, expanded=True, flat=True, compute=True, keep_index=False):
@@ -233,7 +225,6 @@ class CubeInterface(GridInterface):
         else:
             return cls.coords(dataset, dim.name, ordered=True)
 
-
     @classmethod
     def reindex(cls, dataset, kdims=None, vdims=None):
         import iris
@@ -248,9 +239,8 @@ class CubeInterface(GridInterface):
             constraints = iris.Constraint(**constant)
             return dataset.data.extract(constraints)
         elif dropped_kdims:
-            return tuple(dataset.columns(kdims+vdims).values())
+            return tuple(dataset.columns(kdims + vdims).values())
         return dataset.data
-
 
     @classmethod
     def groupby(cls, dataset, dims, container_type=HoloMap, group_type=None, **kwargs):
@@ -261,30 +251,29 @@ class CubeInterface(GridInterface):
         """
         import iris
 
-        if not isinstance(dims, list): dims = [dims]
+        if not isinstance(dims, list):
+            dims = [dims]
         dims = [dataset.get_dimension(d, strict=True) for d in dims]
         constraints = [d.name for d in dims]
         slice_dims = [d for d in dataset.kdims if d not in dims]
 
         # Update the kwargs appropriately for Element group types
         group_kwargs = {}
-        group_type = dict if group_type == 'raw' else group_type
+        group_type = dict if group_type == "raw" else group_type
         if issubclass(group_type, Element):
             group_kwargs.update(util.get_param_values(dataset))
-            group_kwargs['kdims'] = slice_dims
+            group_kwargs["kdims"] = slice_dims
         group_kwargs.update(kwargs)
 
-        drop_dim = any(d not in group_kwargs['kdims'] for d in slice_dims)
+        drop_dim = any(d not in group_kwargs["kdims"] for d in slice_dims)
 
-        unique_coords = product(*[cls.values(dataset, d, expanded=False)
-                                  for d in dims])
+        unique_coords = product(*[cls.values(dataset, d, expanded=False) for d in dims])
         data = []
         for key in unique_coords:
             constraint = iris.Constraint(**dict(zip(constraints, key)))
             extracted = dataset.data.extract(constraint)
             if drop_dim:
-                extracted = group_type(extracted, kdims=slice_dims,
-                                       vdims=dataset.vdims).columns()
+                extracted = group_type(extracted, kdims=slice_dims, vdims=dataset.vdims).columns()
             cube = group_type(extracted, **group_kwargs)
             data.append((key, cube))
         if issubclass(container_type, NdMapping):
@@ -297,6 +286,7 @@ class CubeInterface(GridInterface):
     def concat_dim(cls, datasets, dim, vdims):
         """Concatenates datasets along one dimension."""
         import iris
+
         try:
             from iris.util import equalise_attributes
         except ImportError:
@@ -311,14 +301,12 @@ class CubeInterface(GridInterface):
         equalise_attributes(cubes)
         return cubes.merge_cube()
 
-
     @classmethod
     def range(cls, dataset, dimension):
         """Computes the range along a particular dimension."""
         dim = dataset.get_dimension(dimension, strict=True)
         values = dataset.dimension_values(dim.name, False)
         return (np.nanmin(values), np.nanmax(values))
-
 
     @classmethod
     def redim(cls, dataset, dimensions):
@@ -332,12 +320,12 @@ class CubeInterface(GridInterface):
                     coord.rename(new_dim.name)
         return new_dataset
 
-
     @classmethod
     def length(cls, dataset):
         """Returns the total number of samples in the dataset."""
-        return np.prod([len(d.points) for d in dataset.data.coords(dim_coords=True)], dtype=np.intp)
-
+        return np.prod(
+            [len(d.points) for d in dataset.data.coords(dim_coords=True)], dtype=np.intp
+        )
 
     @classmethod
     def sort(cls, columns, by=None, reverse=False):
@@ -346,12 +334,10 @@ class CubeInterface(GridInterface):
             by = []
         return columns
 
-
     @classmethod
     def aggregate(cls, columns, kdims, function, **kwargs):
         """Aggregation currently not implemented."""
         raise NotImplementedError
-
 
     @classmethod
     def sample(cls, dataset, samples=None):
@@ -359,7 +345,6 @@ class CubeInterface(GridInterface):
         if samples is None:
             samples = []
         raise NotImplementedError
-
 
     @classmethod
     def add_dimension(cls, columns, dimension, dim_pos, values, vdim):
@@ -371,7 +356,6 @@ class CubeInterface(GridInterface):
             raise Exception("Cannot add key dimension to a dense representation.")
         raise NotImplementedError
 
-
     @classmethod
     def select_to_constraint(cls, dataset, selection):
         """Transform a selection dictionary to an iris Constraint."""
@@ -380,7 +364,9 @@ class CubeInterface(GridInterface):
         def get_slicer(start, end):
             def slicer(cell):
                 return start <= cell.point < end
+
             return slicer
+
         constraint_kwargs = {}
         for dim, constraint in selection.items():
             if isinstance(constraint, slice):
@@ -393,11 +379,11 @@ class CubeInterface(GridInterface):
             constraint_kwargs[dim.name] = constraint
         return iris.Constraint(**constraint_kwargs)
 
-
     @classmethod
     def select(cls, dataset, selection_mask=None, **selection):
         """Apply a selection to the data."""
         import iris
+
         constraint = cls.select_to_constraint(dataset, selection)
         pre_dim_coords = [c.name() for c in dataset.data.dim_coords]
         indexed = cls.indexed(dataset, selection)
@@ -413,4 +399,4 @@ class CubeInterface(GridInterface):
 
 
 Interface.register(CubeInterface)
-Dataset.datatype.append('cube')
+Dataset.datatype.append("cube")

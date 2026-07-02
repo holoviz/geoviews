@@ -22,9 +22,11 @@ geo_ops = [contours, bivariate_kde]
 try:
     from holoviews.operation.datashader import dynspread, shade, stack
     from holoviews.operation.resample import ResampleOperation2D
+
     geo_ops += [ResampleOperation2D, shade, stack, dynspread]
 except ImportError:
     pass
+
 
 def convert_to_geotype(element, crs=None):
     """Converts a HoloViews element type to the equivalent GeoViews
@@ -41,22 +43,22 @@ def find_crs(op, element):
     systems (crs). If multiple clashing reference systems are found
     it will throw an error.
     """
-    crss = [crs for crs in element.traverse(lambda x: x.crs, [_Element])
-            if crs is not None]
+    crss = [crs for crs in element.traverse(lambda x: x.crs, [_Element]) if crs is not None]
     if not crss:
         return {}
     crs = crss[0]
     if any(crs != ocrs for ocrs in crss[1:]):
-        raise ValueError(f'Cannot {type(op).__name__} Elements in different '
-                         'coordinate reference systems.')
-    return {'crs': crs}
+        raise ValueError(
+            f"Cannot {type(op).__name__} Elements in different coordinate reference systems."
+        )
+    return {"crs": crs}
 
 
 def add_crs(op, element, **kwargs):
     """Converts any elements in the input to their equivalent geotypes
     if given a coordinate reference system.
     """
-    return element.map(lambda x: convert_to_geotype(x, kwargs.get('crs')), Element)
+    return element.map(lambda x: convert_to_geotype(x, kwargs.get("crs")), Element)
 
 
 for op in geo_ops:

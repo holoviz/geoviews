@@ -4,9 +4,11 @@ from importlib.util import find_spec
 
 _re_no = re.compile(r"\d+")
 
+
 def get_version(package):
     version_str = version(package)
     return tuple(map(int, _re_no.findall(version_str)[:3]))
+
 
 MPL_VERSION = get_version("matplotlib")
 CARTOPY_VERSION = get_version("cartopy")
@@ -41,6 +43,7 @@ if MPL_VERSION >= (3, 11, 0) and CARTOPY_VERSION <= (0, 25, 0):
         "gallery/matplotlib/wind_barbs_example.ipynb",
         "user_guide/Geometries.ipynb",
     ]
+
 
 def pytest_runtest_makereport(item, call):
     """

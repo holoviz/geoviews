@@ -67,9 +67,12 @@ except ImportError:
 
 try:
     from holoviews import ImageStack as HvImageStack
+
     _IMAGESTACK_AVAILABLE = True
 except ImportError:
+
     class HvImageStack: ...
+
     _IMAGESTACK_AVAILABLE = False
 
 from ..util import (
@@ -83,11 +86,14 @@ from ..util import (
 
 geographic_types = (GoogleTiles, cFeature, BaseGeometry)
 
+
 def _check_bokeh_mercator(data) -> bool:
     if "bokeh.models" in sys.modules:
         from bokeh.models import MercatorTileSource
+
         return isinstance(data, MercatorTileSource)
     return False
+
 
 def is_geographic(element, kdims=None):
     """Utility to determine whether the supplied element optionally
@@ -119,13 +125,18 @@ class _Element(Element2D):
 
     _abstract = True
 
-    crs = param.ClassSelector(default=ccrs.PlateCarree(), class_=ccrs.CRS, doc="""
+    crs = param.ClassSelector(
+        default=ccrs.PlateCarree(),
+        class_=ccrs.CRS,
+        doc="""
         Cartopy coordinate-reference-system specifying the
         coordinate system of the data. Inferred automatically
-        when _Element wraps cartopy Feature object.""")
+        when _Element wraps cartopy Feature object.""",
+    )
 
-    kdims = param.List(default=[Dimension('Longitude'), Dimension('Latitude')],
-                       bounds=(2, 2), constant=True)
+    kdims = param.List(
+        default=[Dimension("Longitude"), Dimension("Latitude")], bounds=(2, 2), constant=True
+    )
 
     def __init__(self, data, kdims=None, vdims=None, **kwargs):
         crs = None
@@ -133,35 +144,34 @@ class _Element(Element2D):
             crs_data = data.data
         else:
             crs_data = data
-        if hasattr(crs_data, 'coord_system') and _get_iris_cube() and isinstance(crs_data, _get_iris_cube()):
+        if (
+            hasattr(crs_data, "coord_system")
+            and _get_iris_cube()
+            and isinstance(crs_data, _get_iris_cube())
+        ):
             coord_sys = crs_data.coord_system()
-            if hasattr(coord_sys, 'as_cartopy_projection'):
+            if hasattr(coord_sys, "as_cartopy_projection"):
                 crs = coord_sys.as_cartopy_projection()
         elif isinstance(crs_data, (cFeature, GoogleTiles)):
             crs = crs_data.crs
 
-        supplied_crs = kwargs.get('crs', None)
+        supplied_crs = kwargs.get("crs", None)
         if supplied_crs and crs and crs != supplied_crs:
-            raise ValueError('Supplied coordinate reference '
-                             'system must match crs of the data.')
+            raise ValueError("Supplied coordinate reference system must match crs of the data.")
         elif crs:
-            kwargs['crs'] = crs
+            kwargs["crs"] = crs
         elif isinstance(data, _Element):
-            kwargs['crs'] = data.crs
+            kwargs["crs"] = data.crs
         super().__init__(data, kdims=kdims, vdims=vdims, **kwargs)
 
-
-    def clone(self, data=None, shared_data=True, new_type=None,
-              *args, **overrides):
-        if 'crs' not in overrides and (not new_type or isinstance(new_type, _Element)):
-            overrides['crs'] = self.crs
-        return super().clone(data, shared_data, new_type,
-                                           *args, **overrides)
+    def clone(self, data=None, shared_data=True, new_type=None, *args, **overrides):
+        if "crs" not in overrides and (not new_type or isinstance(new_type, _Element)):
+            overrides["crs"] = self.crs
+        return super().clone(data, shared_data, new_type, *args, **overrides)
 
 
 class _GeoFeature(_Element):
-    """Baseclass for geographic types without their own data.
-    """
+    """Baseclass for geographic types without their own data."""
 
     _auxiliary_component = True
 
@@ -177,11 +187,11 @@ class Feature(_GeoFeature):
     specified as a cartopy Feature type.
     """
 
-    group = param.String(default='Feature')
+    group = param.String(default="Feature")
 
     def __init__(self, data, kdims=None, vdims=None, **params):
         if not isinstance(data, cFeature):
-            raise TypeError(f'{type(data).__name__} data has to be an cartopy Feature type')
+            raise TypeError(f"{type(data).__name__} data has to be an cartopy Feature type")
         super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
     def __call__(self, *args, **kwargs):
@@ -231,9 +241,9 @@ class Feature(_GeoFeature):
         geoms = [g for g in feature.intersecting_geometries(extent) if g is not None]
         if not as_element:
             return geoms
-        elif not geoms or 'Polygon' in geoms[0].geom_type:
+        elif not geoms or "Polygon" in geoms[0].geom_type:
             return Polygons(geoms, crs=feature.crs)
-        elif 'Point' in geoms[0].geom_type:
+        elif "Point" in geoms[0].geom_type:
             return Points(geoms, crs=feature.crs)
         else:
             return Path(geoms, crs=feature.crs)
@@ -268,12 +278,16 @@ class WMTS(_GeoFeature):
     projected.
     """
 
-    crs = param.ClassSelector(default=ccrs.GOOGLE_MERCATOR, class_=ccrs.CRS, doc="""
+    crs = param.ClassSelector(
+        default=ccrs.GOOGLE_MERCATOR,
+        class_=ccrs.CRS,
+        doc="""
         Cartopy coordinate-reference-system specifying the
         coordinate system of the data. Inferred automatically
-        when _Element wraps cartopy Feature object.""")
+        when _Element wraps cartopy Feature object.""",
+    )
 
-    group = param.String(default='WMTS')
+    group = param.String(default="WMTS")
 
     layer = param.String(doc="The layer on the tile service")
 
@@ -284,8 +298,8 @@ class WMTS(_GeoFeature):
             pass
         elif data is not None and not isinstance(data, (str, dict)):
             raise TypeError(
-                f'{type(self).__name__} data should be a tile service URL or '
-                f'xyzservices.TileProvider not a {type(data).__name__} type.'
+                f"{type(self).__name__} data should be a tile service URL or "
+                f"xyzservices.TileProvider not a {type(data).__name__} type."
             )
         super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
@@ -298,18 +312,17 @@ class Tiles(WMTS):
     load data from depending on the zoom level.
     """
 
-    group = param.String(default='Tiles')
+    group = param.String(default="Tiles")
 
 
 class Dataset(_Element, HvDataset):
-    """Coordinate system aware version of a HoloViews dataset.
-    """
+    """Coordinate system aware version of a HoloViews dataset."""
 
-    kdims = param.List(default=[Dimension('Longitude'), Dimension('Latitude')],
-                       bounds=(0, None),
-                       constant=True)
+    kdims = param.List(
+        default=[Dimension("Longitude"), Dimension("Latitude")], bounds=(0, None), constant=True
+    )
 
-    group = param.String(default='Dataset')
+    group = param.String(default="Dataset")
 
 
 class Points(_Element, HvPoints):
@@ -317,7 +330,7 @@ class Points(_Element, HvPoints):
     an associated cartopy coordinate-reference system.
     """
 
-    group = param.String(default='Points')
+    group = param.String(default="Points")
 
     def geom(self, union=False, projection=None):
         """Converts the Points to a shapely geometry.
@@ -351,8 +364,7 @@ class HexTiles(_Element, HvHexTiles):
     an associated cartopy coordinate-reference system.
     """
 
-    group = param.String(default='HexTiles')
-
+    group = param.String(default="HexTiles")
 
 
 class Labels(_Element, HvLabels):
@@ -360,7 +372,7 @@ class Labels(_Element, HvLabels):
     an associated cartopy coordinate-reference system.
     """
 
-    group = param.String(default='Labels')
+    group = param.String(default="Labels")
 
 
 class VectorField(_Element, HvVectorField):
@@ -369,10 +381,12 @@ class VectorField(_Element, HvVectorField):
     by defining an angle in radians and a magnitude.
     """
 
-    group = param.String(default='VectorField', constant=True)
+    group = param.String(default="VectorField", constant=True)
 
-    vdims = param.List(default=[Dimension('Angle', cyclic=True, range=(0,2*np.pi)),
-                                Dimension('Magnitude')], bounds=(1, None))
+    vdims = param.List(
+        default=[Dimension("Angle", cyclic=True, range=(0, 2 * np.pi)), Dimension("Magnitude")],
+        bounds=(1, None),
+    )
 
     @classmethod
     def from_uv(cls, data, kdims=None, vdims=None, **params):
@@ -401,7 +415,7 @@ class VectorField(_Element, HvVectorField):
         - 0 radians points East (positive x direction)
         - π/2 radians points North (positive y direction)
         """
-        crs = params.pop('crs', None)
+        crs = params.pop("crs", None)
         vectorfield = super().from_uv(data, kdims=kdims, vdims=vdims, **params)
         if crs is not None:
             vectorfield.crs = crs
@@ -409,26 +423,27 @@ class VectorField(_Element, HvVectorField):
 
 
 class WindBarbs(_Element, Selection2DExpr, HvGeometry):
-    """
-    """
+    """ """
 
-    group = param.String(default='WindBarbs', constant=True)
+    group = param.String(default="WindBarbs", constant=True)
 
-    vdims = param.List(default=[Dimension('Angle', cyclic=True, range=(0,2*np.pi)),
-                                Dimension('Magnitude')], bounds=(2, None))
+    vdims = param.List(
+        default=[Dimension("Angle", cyclic=True, range=(0, 2 * np.pi)), Dimension("Magnitude")],
+        bounds=(2, None),
+    )
 
     @classmethod
     def from_uv(cls, data, kdims=None, vdims=None, **params):
         if kdims is None:
-            kdims = ['x', 'y']
+            kdims = ["x", "y"]
         if vdims is None:
-            vdims = ['u', 'v']
+            vdims = ["u", "v"]
         dataset = Dataset(data, kdims=kdims, vdims=vdims, **params)
         us, vs = (dataset.dimension_values(i) for i in range(2, 4))
 
         uv_magnitudes = np.hypot(us, vs)  # unscaled
         # Use meteorological convention
-        radians = np.pi/2 - np.arctan2(-vs, -us)
+        radians = np.pi / 2 - np.arctan2(-vs, -us)
 
         # calculations on this data could mutate the original data
         # here we do not do any calculations; we only store the data
@@ -440,8 +455,8 @@ class WindBarbs(_Element, Selection2DExpr, HvGeometry):
         for vdim in vdims[2:]:
             repackaged_dataset[vdim] = dataset[vdim]
         vdims = [
-            Dimension('Angle', cyclic=True, range=(0, 2 * np.pi)),
-            Dimension('Magnitude'),
+            Dimension("Angle", cyclic=True, range=(0, 2 * np.pi)),
+            Dimension("Magnitude"),
             *vdims[2:],
         ]
         return cls(repackaged_dataset, kdims=kdims, vdims=vdims, **params)
@@ -452,13 +467,12 @@ class Image(_Element, HvImage):
     some associated coordinates.
     """
 
-    vdims = param.List(default=[Dimension('z')], bounds=(1, None))
+    vdims = param.List(default=[Dimension("z")], bounds=(1, None))
 
-    group = param.String(default='Image')
+    group = param.String(default="Image")
 
     @classmethod
-    def from_xarray(cls, da, crs=None, apply_transform=False,
-                    nan_nodata=False, **kwargs):
+    def from_xarray(cls, da, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
         return from_xarray(da, crs, apply_transform, **kwargs)
 
 
@@ -487,13 +501,15 @@ class ImageStack(_Element, HvImageStack):
 
     def __init__(self, data, kdims=None, vdims=None, **params):
         if not _IMAGESTACK_AVAILABLE:
-            raise ImportError('ImageStack requires HoloViews 1.18 or greater.')
+            raise ImportError("ImageStack requires HoloViews 1.18 or greater.")
         super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
-    vdims = param.List(doc="""
-        The dimension description of the data held in the matrix.""")
+    vdims = param.List(
+        doc="""
+        The dimension description of the data held in the matrix."""
+    )
 
-    group = param.String(default='ImageStack', constant=True)
+    group = param.String(default="ImageStack", constant=True)
 
     _ndim = 3
 
@@ -513,26 +529,24 @@ class QuadMesh(_Element, HvQuadMesh):
     2D arrays for the x-/y-coordinates and grid values.
     """
 
-    datatype = param.List(default=['grid', 'xarray'])
+    datatype = param.List(default=["grid", "xarray"])
 
-    vdims = param.List(default=[Dimension('z')], bounds=(1, None))
+    vdims = param.List(default=[Dimension("z")], bounds=(1, None))
 
-    group = param.String(default='QuadMesh')
+    group = param.String(default="QuadMesh")
 
     _binned = True
 
     @classmethod
-    def from_xarray(cls, da, crs=None, apply_transform=False,
-                    nan_nodata=False, **kwargs):
+    def from_xarray(cls, da, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
         return from_xarray(da, crs, apply_transform, **kwargs)
 
     def trimesh(self):
         trimesh = super().trimesh()
         node_params = util.get_param_values(trimesh.nodes)
-        node_params['crs'] = self.crs
+        node_params["crs"] = self.crs
         nodes = TriMesh.node_type(trimesh.nodes.data, **node_params)
-        return TriMesh((trimesh.data, nodes), crs=self.crs,
-                       **util.get_param_values(trimesh))
+        return TriMesh((trimesh.data, nodes), crs=self.crs, **util.get_param_values(trimesh))
 
 
 class LineContours(QuadMesh):
@@ -541,7 +555,7 @@ class LineContours(QuadMesh):
     into one or more line contours.
     """
 
-    group = param.String(default='LineContours')
+    group = param.String(default="LineContours")
 
 
 class FilledContours(QuadMesh):
@@ -550,7 +564,7 @@ class FilledContours(QuadMesh):
     into one or more filled contours.
     """
 
-    group = param.String(default='FilledContours')
+    group = param.String(default="FilledContours")
 
 
 class RGB(_Element, HvRGB):
@@ -563,20 +577,24 @@ class RGB(_Element, HvRGB):
     list of value dimensions.
     """
 
-    group = param.String(default='RGB', constant=True)
+    group = param.String(default="RGB", constant=True)
 
     vdims = param.List(
-        default=[Dimension('R', range=(0,1)), Dimension('G',range=(0,1)),
-                 Dimension('B', range=(0,1))],
-        bounds=(3, 4), doc="""
+        default=[
+            Dimension("R", range=(0, 1)),
+            Dimension("G", range=(0, 1)),
+            Dimension("B", range=(0, 1)),
+        ],
+        bounds=(3, 4),
+        doc="""
         The dimension description of the data held in the matrix.
 
         If an alpha channel is supplied, the defined alpha_dimension
-        is automatically appended to this list.""")
+        is automatically appended to this list.""",
+    )
 
     @classmethod
-    def from_xarray(cls, da, crs=None, apply_transform=False,
-                    nan_nodata=False, **kwargs):
+    def from_xarray(cls, da, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
         """Returns an RGB or Image element given an xarray DataArray
         loaded using xr.open_rasterio.
 
@@ -605,18 +623,17 @@ class RGB(_Element, HvRGB):
         return from_xarray(da, crs, apply_transform, **kwargs)
 
 
-
 class Nodes(_Element, HvNodes):
     """Nodes is a simple Element representing Graph nodes as a set of
     Points.  Unlike regular Points, Nodes must define a third key
     dimension corresponding to the node index.
     """
 
-    group = param.String(default='Nodes', constant=True)
+    group = param.String(default="Nodes", constant=True)
 
-    kdims = param.List(default=[Dimension('Longitude'), Dimension('Latitude'),
-                                Dimension('index')], bounds=(3, 3))
-
+    kdims = param.List(
+        default=[Dimension("Longitude"), Dimension("Latitude"), Dimension("index")], bounds=(3, 3)
+    )
 
 
 class Text(HvText, _Element):
@@ -630,7 +647,7 @@ class Path(_Element, HvPath):
     arrays along with a coordinate reference system.
     """
 
-    group = param.String(default='Path', constant=True)
+    group = param.String(default="Path", constant=True)
 
     def geom(self, union=False, projection=None):
         """Converts the Path to a shapely geometry.
@@ -646,7 +663,7 @@ class Path(_Element, HvPath):
         -------
         A shapely geometry
         """
-        geoms = expand_geoms([g['geometry'] for g in path_to_geom_dicts(self)])
+        geoms = expand_geoms([g["geometry"] for g in path_to_geom_dicts(self)])
         ngeoms = len(geoms)
         if not ngeoms:
             geom = GeometryCollection()
@@ -664,13 +681,11 @@ class EdgePaths(Path):
     connecting nodes in a graph.
     """
 
-    group = param.String(default='EdgePaths', constant=True)
-
+    group = param.String(default="EdgePaths", constant=True)
 
 
 class Graph(_Element, HvGraph):
-
-    group = param.String(default='Graph', constant=True)
+    group = param.String(default="Graph", constant=True)
 
     node_type = Nodes
 
@@ -684,13 +699,13 @@ class Graph(_Element, HvGraph):
             elif len(data) > 2 and isinstance(data[2], self.edge_type):
                 edges = data[2]
 
-        if 'crs' in params:
-            crs = params['crs']
+        if "crs" in params:
+            crs = params["crs"]
             mismatch = None
             if nodes is not None and type(crs) != type(nodes.crs):  # noqa: E721
-                mismatch = 'nodes'
+                mismatch = "nodes"
             elif edges is not None and type(crs) != type(edges.crs):  # noqa: E721
-                mismatch = 'edges'
+                mismatch = "edges"
             if mismatch:
                 raise ValueError(
                     "Coordinate reference system supplied "
@@ -699,13 +714,12 @@ class Graph(_Element, HvGraph):
                 )
         elif nodes is not None:
             crs = nodes.crs
-            params['crs'] = crs
+            params["crs"] = crs
         else:
             crs = self.crs
 
         super().__init__(data, kdims, vdims, **params)
         self.nodes.crs = crs
-
 
     @property
     def edgepaths(self):
@@ -717,10 +731,8 @@ class Graph(_Element, HvGraph):
         return edgepaths
 
 
-
 class TriMesh(HvTriMesh, Graph):
-
-    group = param.String(default='TriMesh', constant=True)
+    group = param.String(default="TriMesh", constant=True)
 
     node_type = Nodes
 
@@ -736,13 +748,13 @@ class TriMesh(HvTriMesh, Graph):
             elif len(data) > 2 and isinstance(data[2], self.edge_type):
                 edges = data[2]
 
-        if 'crs' in params:
-            crs = params['crs']
+        if "crs" in params:
+            crs = params["crs"]
             mismatch = None
             if nodes is not None and type(crs) != type(nodes.crs):  # noqa: E721
-                mismatch = 'nodes'
+                mismatch = "nodes"
             elif edges is not None and type(crs) != type(edges.crs):  # noqa: E721
-                mismatch = 'edges'
+                mismatch = "edges"
             if mismatch:
                 raise ValueError(
                     "Coordinate reference system supplied "
@@ -751,7 +763,7 @@ class TriMesh(HvTriMesh, Graph):
                 )
         elif nodes is not None:
             crs = nodes.crs
-            params['crs'] = crs
+            params["crs"] = crs
         else:
             crs = self.crs
 
@@ -774,7 +786,7 @@ class Contours(_Element, HvContours):
     system.
     """
 
-    group = param.String(default='Contours', constant=True)
+    group = param.String(default="Contours", constant=True)
 
     def geom(self, union=False, projection=None):
         """Converts the Contours to a shapely geometry.
@@ -790,7 +802,7 @@ class Contours(_Element, HvContours):
         -------
         A shapely geometry
         """
-        geoms = expand_geoms([g['geometry'] for g in path_to_geom_dicts(self)])
+        geoms = expand_geoms([g["geometry"] for g in path_to_geom_dicts(self)])
         ngeoms = len(geoms)
         if not ngeoms:
             geom = GeometryCollection()
@@ -809,7 +821,7 @@ class Polygons(_Element, HvPolygons):
     system.
     """
 
-    group = param.String(default='Polygons', constant=True)
+    group = param.String(default="Polygons", constant=True)
 
     def geom(self, union=False, projection=None):
         """Converts the Path to a shapely geometry.
@@ -825,7 +837,7 @@ class Polygons(_Element, HvPolygons):
         -------
         A shapely geometry
         """
-        geoms = expand_geoms([g['geometry'] for g in polygons_to_geom_dicts(self)])
+        geoms = expand_geoms([g["geometry"] for g in polygons_to_geom_dicts(self)])
         ngeoms = len(geoms)
         if not ngeoms:
             geom = GeometryCollection()
@@ -839,17 +851,19 @@ class Polygons(_Element, HvPolygons):
 
 
 class Rectangles(_Element, HvRectangles):
-    """Rectangles represent a collection of axis-aligned rectangles in 2D space.
-    """
+    """Rectangles represent a collection of axis-aligned rectangles in 2D space."""
 
-    group = param.String(default='Rectangles', constant=True)
+    group = param.String(default="Rectangles", constant=True)
 
-    kdims = param.List(default=[Dimension('lon0'), Dimension('lat0'),
-                                Dimension('lon1'), Dimension('lat1')],
-                       bounds=(4, 4), constant=True, doc="""
+    kdims = param.List(
+        default=[Dimension("lon0"), Dimension("lat0"), Dimension("lon1"), Dimension("lat1")],
+        bounds=(4, 4),
+        constant=True,
+        doc="""
         The key dimensions of the Rectangles element represent the
         bottom-left (lon0, lat0) and top right (lon1, lat1) coordinates
-        of each box.""")
+        of each box.""",
+    )
 
     def geom(self, union=False, projection=None):
         """Converts the Rectangles to a shapely geometry.
@@ -879,23 +893,23 @@ class Rectangles(_Element, HvRectangles):
 
 
 class Segments(_Element, HvSegments):
-    """Segments represent a collection of lines in 2D space.
-    """
+    """Segments represent a collection of lines in 2D space."""
 
-    group = param.String(default='Segments', constant=True)
+    group = param.String(default="Segments", constant=True)
 
-    kdims = param.List(default=[Dimension('lon0'), Dimension('lat0'),
-                                Dimension('lon1'), Dimension('lat1')],
-                       bounds=(4, 4), constant=True, doc="""
+    kdims = param.List(
+        default=[Dimension("lon0"), Dimension("lat0"), Dimension("lon1"), Dimension("lat1")],
+        bounds=(4, 4),
+        constant=True,
+        doc="""
         The key dimensions of the Segments element represent the
         bottom-left (lon0, lat0) and top-right (lon1, lat1) coordinates
-        of each segment.""")
+        of each segment.""",
+    )
 
     def geom(self, union=False, projection=None):
-        """Converts the Segments to a shapely geometry.
-        """
-        lines = [LineString([(x0, y0), (x1, y1)]) for (x0, y0, x1, y1)
-                 in self.array([0, 1, 2, 3])]
+        """Converts the Segments to a shapely geometry."""
+        lines = [LineString([(x0, y0), (x1, y1)]) for (x0, y0, x1, y1) in self.array([0, 1, 2, 3])]
         nlines = len(lines)
         if not nlines:
             geom = GeometryCollection()
@@ -909,24 +923,30 @@ class Segments(_Element, HvSegments):
 
 
 class Shape(Dataset):
-    """Shape wraps any shapely geometry type.
-    """
+    """Shape wraps any shapely geometry type."""
 
-    group = param.String(default='Shape')
+    group = param.String(default="Shape")
 
-    datatype = param.List(default=['geom_dictionary'])
+    datatype = param.List(default=["geom_dictionary"])
 
-    level = param.Number(default=None, doc="""
-        Optional level associated with the set of Contours.""")
+    level = param.Number(
+        default=None,
+        doc="""
+        Optional level associated with the set of Contours.""",
+    )
 
-    vdims = param.List(default=[], doc="""
+    vdims = param.List(
+        default=[],
+        doc="""
         Shape optionally accept a value dimension, corresponding
-        to the supplied values.""", bounds=(0, None))
+        to the supplied values.""",
+        bounds=(0, None),
+    )
 
     def __init__(self, data, kdims=None, vdims=None, **params):
-        if params.get('level') is not None:
+        if params.get("level") is not None:
             if vdims is None:
-                vdims = [Dimension('Level')]
+                vdims = [Dimension("Level")]
             self.param.warning(
                 "Supplying a level to a Shape is deprecated "
                 "provide the value as part of a dictionary of "
@@ -934,7 +954,6 @@ class Shape(Dataset):
                 f"'level': {params['level']}}} instead"
             )
         super().__init__(data, kdims=kdims, vdims=vdims, **params)
-
 
     @classmethod
     def from_shapefile(cls, shapefile, *args, **kwargs):
@@ -969,10 +988,18 @@ class Shape(Dataset):
         reader = Reader(shapefile)
         return cls.from_records(reader.records(), *args, **kwargs)
 
-
     @classmethod
-    def from_records(cls, records, dataset=None, on=None, value=None,
-                     index=None, drop_missing=False, element=None, **kwargs):
+    def from_records(
+        cls,
+        records,
+        dataset=None,
+        on=None,
+        value=None,
+        index=None,
+        drop_missing=False,
+        element=None,
+        **kwargs,
+    ):
         """Load data from a collection of `cartopy.io.shapereader.Record`
         objects and optionally merge it with a dataset to assign
         values to each polygon and form a choropleth. Supplying just
@@ -1011,8 +1038,9 @@ class Shape(Dataset):
         if index is None:
             index = []
         if dataset is not None and not on:
-            raise ValueError('To merge dataset with shapes mapping '
-                             'must define attribute(s) to merge on.')
+            raise ValueError(
+                "To merge dataset with shapes mapping must define attribute(s) to merge on."
+            )
 
         if util.pd and isinstance(dataset, util.pd.DataFrame):
             dataset = Dataset(dataset)
@@ -1032,7 +1060,6 @@ class Shape(Dataset):
                 dim = Dimension(ind)
             kdims.append(dim)
 
-
         ddims = []
         if dataset:
             if value:
@@ -1041,8 +1068,9 @@ class Shape(Dataset):
                 vdims = dataset.vdims
             ddims = dataset.dimensions()
             if None in vdims:
-                raise ValueError(f'Value dimension {value} not found '
-                                 f'in dataset dimensions {ddims}' )
+                raise ValueError(
+                    f"Value dimension {value} not found in dataset dimensions {ddims}"
+                )
         else:
             vdims = []
 
@@ -1050,8 +1078,7 @@ class Shape(Dataset):
         for rec in records:
             geom = {}
             if dataset:
-                selection = {dim: rec.attributes.get(attr, None)
-                             for attr, dim in on.items()}
+                selection = {dim: rec.attributes.get(attr, None) for attr, dim in on.items()}
                 row = dataset.select(**selection)
                 if len(row):
                     values = {k: v[0] for k, v in row.iloc[0].columns().items()}
@@ -1070,21 +1097,20 @@ class Shape(Dataset):
                     else:
                         k = None
                     geom[kdim.name] = k
-            geom['geometry'] = rec.geometry
+            geom["geometry"] = rec.geometry
             data.append(geom)
 
         if element is not None:
             pass
         elif data and data[0]:
-            if isinstance(data[0]['geometry'], poly_types):
+            if isinstance(data[0]["geometry"], poly_types):
                 element = Polygons
             else:
                 element = Path
         else:
             element = Polygons
 
-        return element(data, vdims=kdims+vdims, **kwargs).opts(color=value)
-
+        return element(data, vdims=kdims + vdims, **kwargs).opts(color=value)
 
     def geom(self, union=False, projection=None):
         """Returns the Shape as a shapely geometry
@@ -1100,7 +1126,7 @@ class Shape(Dataset):
         -------
         A shapely geometry
         """
-        geom = self.data['geometry']
+        geom = self.data["geometry"]
         if projection:
             geom = transform_shapely(geom, self.crs, projection)
         return unary_union(geom) if union else geom

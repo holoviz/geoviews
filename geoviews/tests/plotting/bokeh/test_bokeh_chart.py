@@ -185,7 +185,6 @@ class TestWindBarbsPlot(TestBokehPlot):
 
 
 class TestImageStackPlot(TestBokehPlot):
-
     def test_image_stack_crs(self):
         pytest.importorskip("scipy")
 
@@ -195,7 +194,9 @@ class TestImageStackPlot(TestBokehPlot):
         b = np.random.rand(len(y), len(x))
 
         img_stack = gv.ImageStack(
-            (x, y, a, b), kdims=["x", "y"], vdims=["a", "b"],
+            (x, y, a, b),
+            kdims=["x", "y"],
+            vdims=["a", "b"],
         )
         data = img_stack.data
         np.testing.assert_almost_equal(data["x"], x)
@@ -224,7 +225,9 @@ class TestImageStackPlot(TestBokehPlot):
         b = np.random.rand(len(y), len(x))
 
         img_stack = gv.ImageStack(
-            (x, y, a, b), kdims=["x", "y"], vdims=["a", "b"],
+            (x, y, a, b),
+            kdims=["x", "y"],
+            vdims=["a", "b"],
         )
 
         plot = bokeh_renderer.get_plot(img_stack)
@@ -236,11 +239,13 @@ class TestImageStackPlot(TestBokehPlot):
 
 @pytest.mark.usefixtures("bokeh_backend")
 def test_hover_formatters_in_overlay_with_different_vdims():
-    pts1 = gv.Points([(-58, -34, 'A', 'a')], ['Longitude', 'Latitude'], ['City', 'Country']).opts(tools=['hover'])
-    pts2 = gv.Points([(-70, -33, 'B')], ['Longitude', 'Latitude'], 'City').opts(tools=['hover'])
+    pts1 = gv.Points([(-58, -34, "A", "a")], ["Longitude", "Latitude"], ["City", "Country"]).opts(
+        tools=["hover"]
+    )
+    pts2 = gv.Points([(-70, -33, "B")], ["Longitude", "Latitude"], "City").opts(tools=["hover"])
 
-    plot = gv.render(pts1 * pts2, backend='bokeh')
-    hover_tools = [t for t in plot.tools if hasattr(t, 'tooltips') and t.renderers]
+    plot = gv.render(pts1 * pts2, backend="bokeh")
+    hover_tools = [t for t in plot.tools if hasattr(t, "tooltips") and t.renderers]
 
     assert len(hover_tools) == 2
     for hover in hover_tools:

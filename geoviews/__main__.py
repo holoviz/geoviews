@@ -5,9 +5,11 @@ def main(args=None):
         import sys
 
         from . import _missing_cmd
+
         print(_missing_cmd())
         sys.exit(1)
-    return pyct.cmd.substitute_main('geoviews',args=args)
+    return pyct.cmd.substitute_main("geoviews", args=args)
+
 
 if __name__ == "__main__":
     main()

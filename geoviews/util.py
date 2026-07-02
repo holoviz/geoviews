@@ -23,8 +23,7 @@ from shapely.ops import transform
 
 from ._warnings import warn
 
-geom_types = (MultiLineString, LineString, MultiPolygon, Polygon,
-              LinearRing, Point, MultiPoint)
+geom_types = (MultiLineString, LineString, MultiPolygon, Polygon, LinearRing, Point, MultiPoint)
 line_types = (MultiLineString, LineString)
 poly_types = (MultiPolygon, Polygon, LinearRing)
 
@@ -35,8 +34,7 @@ CARTOPY_VERSION = Version(cartopy.__version__).release
 
 
 def wrap_lons(lons, base, period):
-    """Wrap longitude values into the range between base and base+period.
-    """
+    """Wrap longitude values into the range between base and base+period."""
     lons = lons.astype(np.float64)
     return ((lons - base + period * 2) % period) + base
 
@@ -53,8 +51,7 @@ def wrap_cylindrical_projection_lons(src_proj, x1, x2, base=-180.0, period=360.0
 
 
 def expand_geoms(geoms):
-    """Expands multi-part geometries in a list of geometries.
-    """
+    """Expands multi-part geometries in a list of geometries."""
     expanded = []
     for geom in geoms:
         if isinstance(geom, BaseMultipartGeometry):
@@ -67,10 +64,12 @@ def expand_geoms(geoms):
 def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     x1, y1, x2, y2 = extents
 
-    if (isinstance(src_proj, ccrs.PlateCarree) and
-        not isinstance(dest_proj, ccrs.PlateCarree) and
-        src_proj.proj4_params['lon_0'] != 0):
-        xoffset = src_proj.proj4_params['lon_0']
+    if (
+        isinstance(src_proj, ccrs.PlateCarree)
+        and not isinstance(dest_proj, ccrs.PlateCarree)
+        and src_proj.proj4_params["lon_0"] != 0
+    ):
+        xoffset = src_proj.proj4_params["lon_0"]
         x1 = x1 - xoffset
         x2 = x2 - xoffset
         src_proj = ccrs.PlateCarree()
@@ -89,20 +88,16 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     # Wrap longitudes
     x1, x2 = wrap_cylindrical_projection_lons(src_proj, x1, x2)
 
-    domain_in_src_proj = Polygon([[x1, y1], [x2, y1],
-                                  [x2, y2], [x1, y2],
-                                  [x1, y1]])
+    domain_in_src_proj = Polygon([[x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, y1]])
     boundary_poly = Polygon(src_proj.boundary)
     dest_poly = src_proj.project_geometry(Polygon(dest_proj.boundary), dest_proj).buffer(0)
     if src_proj != dest_proj:
         # Erode boundary by threshold to avoid transform issues.
         # This is a workaround for numerical issues at the boundary.
         eroded_boundary = boundary_poly.buffer(-src_proj.threshold)
-        geom_in_src_proj = eroded_boundary.intersection(
-            domain_in_src_proj)
+        geom_in_src_proj = eroded_boundary.intersection(domain_in_src_proj)
         try:
-            geom_clipped_to_dest_proj = dest_poly.intersection(
-                geom_in_src_proj)
+            geom_clipped_to_dest_proj = dest_poly.intersection(geom_in_src_proj)
         except Exception:
             geom_clipped_to_dest_proj = None
         if geom_clipped_to_dest_proj:
@@ -110,12 +105,12 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
         try:
             geom_in_crs = dest_proj.project_geometry(geom_in_src_proj, src_proj)
         except ValueError as e:
-            src_name =type(src_proj).__name__
-            dest_name =type(dest_proj).__name__
+            src_name = type(src_proj).__name__
+            dest_name = type(dest_proj).__name__
             raise ValueError(
-                f'Could not project data from {src_name} projection '
-                f'to {dest_name} projection. Ensure the coordinate '
-                'reference system (crs) matches your data and the kdims.'
+                f"Could not project data from {src_name} projection "
+                f"to {dest_name} projection. Ensure the coordinate "
+                "reference system (crs) matches your data and the kdims."
             ) from e
     else:
         geom_in_crs = boundary_poly.intersection(domain_in_src_proj)
@@ -123,8 +118,7 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
 
 
 def zoom_level(bounds, width, height):
-    """Compute zoom level given bounds and the plot size.
-    """
+    """Compute zoom level given bounds and the plot size."""
     w, s, e, n = bounds
     max_width, max_height = 256, 256
     ZOOM_MAX = 21
@@ -157,18 +151,18 @@ def geom_dict_to_array_dict(geom_dict, coord_names=None):
     if coord_names is None:
         coord_names = ["Longitude", "Latitude"]
     x, y = coord_names
-    geom = geom_dict['geometry']
-    new_dict = {k: v for k, v in geom_dict.items() if k != 'geometry'}
+    geom = geom_dict["geometry"]
+    new_dict = {k: v for k, v in geom_dict.items() if k != "geometry"}
     array = geom_to_array(geom)
     new_dict[x] = array[:, 0]
     new_dict[y] = array[:, 1]
-    if geom.geom_type == 'Polygon':
+    if geom.geom_type == "Polygon":
         holes = []
         for interior in geom.interiors:
             holes.append(geom_to_array(interior))
         if holes:
-            new_dict['holes'] = [holes]
-    elif geom.geom_type == 'MultiPolygon':
+            new_dict["holes"] = [holes]
+    elif geom.geom_type == "MultiPolygon":
         outer_holes = []
         for g in geom.geoms:
             holes = []
@@ -176,7 +170,7 @@ def geom_dict_to_array_dict(geom_dict, coord_names=None):
                 holes.append(geom_to_array(interior))
             outer_holes.append(holes)
         if any(hs for hs in outer_holes):
-            new_dict['holes'] = outer_holes
+            new_dict["holes"] = outer_holes
     return new_dict
 
 
@@ -185,21 +179,22 @@ def unpack_geoms(geom_el):
     geometry format.
     """
     interface = geom_el.interface
-    if interface.datatype in  ('geodataframe', 'spatialpandas'):
+    if interface.datatype in ("geodataframe", "spatialpandas"):
         geom_col = interface.geo_column(geom_el.data)
         geoms = []
         for _, row in geom_el.data.iterrows():
             row = row.to_dict()
-            if interface.datatype  == 'spatialpandas':
-                row['geometry'] = row[geom_col].to_shapely()
+            if interface.datatype == "spatialpandas":
+                row["geometry"] = row[geom_col].to_shapely()
             else:
-                row['geometry'] = row[geom_col]
+                row["geometry"] = row[geom_col]
             geoms.append(row)
         return geoms
-    elif interface.datatype == 'geom_dictionary':
+    elif interface.datatype == "geom_dictionary":
         return [geom_el.data]
-    elif (interface.datatype == 'multitabular' and
-          all(isinstance(p, dict) and 'geometry' in p for p in geom_el.data)):
+    elif interface.datatype == "multitabular" and all(
+        isinstance(p, dict) and "geometry" in p for p in geom_el.data
+    ):
         return geom_el.data
 
 
@@ -227,10 +222,10 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
     xdim, ydim = polygons.kdims
     has_holes = polygons.has_holes
     holes = polygons.holes() if has_holes else None
-    for i, polygon in enumerate(polygons.split(datatype='columns')):
+    for i, polygon in enumerate(polygons.split(datatype="columns")):
         array = np.column_stack([polygon.pop(xdim.name), polygon.pop(ydim.name)])
-        splits = np.where(np.isnan(array[:, :2].astype('float')).sum(axis=1))[0]
-        arrays = np.split(array, splits+1) if len(splits) else [array]
+        splits = np.where(np.isnan(array[:, :2].astype("float")).sum(axis=1))[0]
+        arrays = np.split(array, splits + 1) if len(splits) else [array]
 
         invalid = False
         subpolys = []
@@ -238,8 +233,8 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
         if has_holes:
             subholes = [[LinearRing(h) for h in hs] for hs in holes[i]]
         for j, arr in enumerate(arrays):
-            if j != (len(arrays)-1):
-                arr = arr[:-1] # Drop nan
+            if j != (len(arrays) - 1):
+                arr = arr[:-1]  # Drop nan
 
             if len(arr) == 0:
                 continue
@@ -270,7 +265,7 @@ def polygons_to_geom_dicts(polygons, skip_invalid=True):
             geom = MultiPolygon(subpolys)
         else:
             continue
-        polygon['geometry'] = geom
+        polygon["geometry"] = geom
         polys.append(polygon)
     return polys
 
@@ -286,14 +281,14 @@ def path_to_geom_dicts(fullpath, skip_invalid=True):
     geoms = []
     invalid = False
     xdim, ydim = fullpath.kdims
-    for path in fullpath.split(datatype='columns'):
+    for path in fullpath.split(datatype="columns"):
         array = np.column_stack([path.pop(xdim.name), path.pop(ydim.name)])
-        splits = np.where(np.isnan(array[:, :2].astype('float')).sum(axis=1))[0]
-        arrays = np.split(array, splits+1) if len(splits) else [array]
+        splits = np.where(np.isnan(array[:, :2].astype("float")).sum(axis=1))[0]
+        arrays = np.split(array, splits + 1) if len(splits) else [array]
         subpaths = []
         for j, arr in enumerate(arrays):
-            if j != (len(arrays)-1):
-                arr = arr[:-1] # Drop nan
+            if j != (len(arrays) - 1):
+                arr = arr[:-1]  # Drop nan
 
             if len(arr) == 0:
                 continue
@@ -315,25 +310,23 @@ def path_to_geom_dicts(fullpath, skip_invalid=True):
             geom = MultiLineString(subpaths)
         else:
             continue
-        path['geometry'] = geom
+        path["geometry"] = geom
         geoms.append(path)
     return geoms
 
 
 def to_ccw(geom):
-    """Reorients polygon to be wound counter-clockwise.
-    """
+    """Reorients polygon to be wound counter-clockwise."""
     if isinstance(geom, sgeom.Polygon) and not geom.exterior.is_ccw:
         geom = sgeom.polygon.orient(geom)
     return geom
 
 
 def geom_to_arr(geom):
-    """LineString, LinearRing and Polygon (exterior only?)
-    """
+    """LineString, LinearRing and Polygon (exterior only?)"""
     # LineString and LinearRing geoms have an xy attribute
     try:
-        xy = getattr(geom, 'xy', None)
+        xy = getattr(geom, "xy", None)
     except NotImplementedError:
         xy = None
     if xy is not None:
@@ -344,10 +337,10 @@ def geom_to_arr(geom):
     # unfortunately also introduced a bug in the `array_interface_base`
     # property which raised an error as soon as it was called.
     if SHAPELY_VERSION < (1, 8, 0):
-        if hasattr(geom, 'array_interface'):
+        if hasattr(geom, "array_interface"):
             data = geom.array_interface()
-            return np.array(data['data']).reshape(data['shape'])[:, :2]
-        arr = geom.array_interface_base['data']
+            return np.array(data["data"]).reshape(data["shape"])[:, :2]
+        arr = geom.array_interface_base["data"]
     else:
         arr = np.asarray(geom.exterior.coords)
 
@@ -357,48 +350,46 @@ def geom_to_arr(geom):
 
 
 def geom_length(geom):
-    """Calculates the length of coordinates in a shapely geometry.
-    """
-    if geom.geom_type == 'Point':
+    """Calculates the length of coordinates in a shapely geometry."""
+    if geom.geom_type == "Point":
         return 1
     # Polygon
-    if hasattr(geom, 'exterior'):
+    if hasattr(geom, "exterior"):
         geom = geom.exterior
     # As of shapely 1.8.0: LineString, LinearRing (and GeometryCollection?)
     if SHAPELY_VERSION < (1, 8, 0):
-        if not geom.geom_type.startswith('Multi') and hasattr(geom, 'array_interface_base'):
-            return len(geom.array_interface_base['data'])//2
-    elif not geom.geom_type.startswith('Multi'):
+        if not geom.geom_type.startswith("Multi") and hasattr(geom, "array_interface_base"):
+            return len(geom.array_interface_base["data"]) // 2
+    elif not geom.geom_type.startswith("Multi"):
         return len(geom.coords)
     # MultiPolygon, MultiPoint, MultiLineString (recursively)
     glength = len(geom.geoms)
     length = 0
     for i, g in enumerate(geom.geoms):
         length += geom_length(g)
-        if 'Point' not in geom.geom_type and (i+1 != glength):
+        if "Point" not in geom.geom_type and (i + 1 != glength):
             length += 1
 
     return length
 
 
 def geom_to_array(geom):
-    """Convert the coords of a shapely Geometry to a numpy array.
-    """
-    if geom.geom_type == 'Point':
+    """Convert the coords of a shapely Geometry to a numpy array."""
+    if geom.geom_type == "Point":
         return np.array([[geom.x, geom.y]])
     # Only Polygon as of shapely 1.8.0
-    if hasattr(geom, 'exterior'):
+    if hasattr(geom, "exterior"):
         if geom.exterior is None:
             xs, ys = np.array([]), np.array([])
         else:
             xs = np.array(geom.exterior.coords.xy[0])
             ys = np.array(geom.exterior.coords.xy[1])
-    elif geom.geom_type in ('LineString', 'LinearRing'):
+    elif geom.geom_type in ("LineString", "LinearRing"):
         return geom_to_arr(geom)
-    elif geom.geom_type == 'MultiPoint':
+    elif geom.geom_type == "MultiPoint":
         arrays = []
         for g in geom.geoms:
-            if g.geom_type == 'Point':
+            if g.geom_type == "Point":
                 arrays.append(np.array(g.xy).T)
         return np.concatenate(arrays) if arrays else np.array([])
     else:
@@ -418,13 +409,12 @@ def geo_mesh(element):
     actually wraps around.
     """
     if len(element.vdims) > 1:
-        xs, ys = (element.dimension_values(i, False, False)
-                  for i in range(2))
-        zs = np.dstack([element.dimension_values(i, False, False)
-                        for i in range(2, 2+len(element.vdims))])
+        xs, ys = (element.dimension_values(i, False, False) for i in range(2))
+        zs = np.dstack(
+            [element.dimension_values(i, False, False) for i in range(2, 2 + len(element.vdims))]
+        )
     else:
-        xs, ys, zs = (element.dimension_values(i, False, False)
-                      for i in range(3))
+        xs, ys, zs = (element.dimension_values(i, False, False) for i in range(3))
     lon0, lon1 = element.range(0)
     if isinstance(element.crs, ccrs._CylindricalProjection) and (lon1 - lon0) == 360:
         xs = np.append(xs, xs[0:1] + 360, axis=0)
@@ -433,9 +423,8 @@ def geo_mesh(element):
 
 
 def is_multi_geometry(geom):
-    """Whether the shapely geometry is a Multi or Collection type.
-    """
-    return 'Multi' in geom.geom_type or 'Collection' in geom.geom_type
+    """Whether the shapely geometry is a Multi or Collection type."""
+    return "Multi" in geom.geom_type or "Collection" in geom.geom_type
 
 
 def check_crs(crs):
@@ -457,6 +446,7 @@ def check_crs(crs):
     A valid crs if possible, otherwise None
     """
     import pyproj
+
     if isinstance(crs, pyproj.Proj):
         out = crs
     elif isinstance(crs, (str, dict)):
@@ -489,18 +479,20 @@ def proj_to_cartopy(proj):
     a cartopy.crs.Projection object
     """
     import cartopy.crs as ccrs
+
     try:
         from osgeo import osr
+
         has_gdal = True
     except ImportError:
         has_gdal = False
 
     proj = check_crs(proj)
 
-    if hasattr(proj, 'crs'):
+    if hasattr(proj, "crs"):
         if proj.crs.is_geographic:
             return ccrs.PlateCarree()
-    elif proj.is_latlong(): # pyproj < 2.0
+    elif proj.is_latlong():  # pyproj < 2.0
         return ccrs.PlateCarree()
 
     srs = proj.srs
@@ -510,24 +502,27 @@ def proj_to_cartopy(proj):
         s1.ImportFromProj4(proj.srs)
         srs = s1.ExportToProj4()
 
-    km_proj = {'lon_0': 'central_longitude',
-               'lat_0': 'central_latitude',
-               'x_0': 'false_easting',
-               'y_0': 'false_northing',
-               'k': 'scale_factor',
-               'zone': 'zone',
-               }
-    km_globe = {'a': 'semimajor_axis',
-                'b': 'semiminor_axis',
-                }
-    km_std = {'lat_1': 'lat_1',
-              'lat_2': 'lat_2',
-              }
+    km_proj = {
+        "lon_0": "central_longitude",
+        "lat_0": "central_latitude",
+        "x_0": "false_easting",
+        "y_0": "false_northing",
+        "k": "scale_factor",
+        "zone": "zone",
+    }
+    km_globe = {
+        "a": "semimajor_axis",
+        "b": "semiminor_axis",
+    }
+    km_std = {
+        "lat_1": "lat_1",
+        "lat_2": "lat_2",
+    }
     kw_proj = {}
     kw_globe = {}
     kw_std = {}
-    for s in srs.split('+'):
-        s = s.split('=')
+    for s in srs.split("+"):
+        s = s.split("=")
         if len(s) != 2:
             continue
         k = s[0].strip()
@@ -536,14 +531,14 @@ def proj_to_cartopy(proj):
             v = float(v)
         except Exception:
             pass
-        if k == 'proj':
-            if v == 'tmerc':
+        if k == "proj":
+            if v == "tmerc":
                 cl = ccrs.TransverseMercator
-            if v == 'lcc':
+            if v == "lcc":
                 cl = ccrs.LambertConformal
-            if v == 'merc':
+            if v == "merc":
                 cl = ccrs.Mercator
-            if v == 'utm':
+            if v == "utm":
                 cl = ccrs.UTM
         if k in km_proj:
             kw_proj[km_proj[k]] = v
@@ -556,18 +551,19 @@ def proj_to_cartopy(proj):
     if kw_globe:
         globe = ccrs.Globe(**kw_globe)
     if kw_std:
-        kw_proj['standard_parallels'] = (kw_std['lat_1'], kw_std['lat_2'])
+        kw_proj["standard_parallels"] = (kw_std["lat_1"], kw_std["lat_2"])
 
     # mercatoooor
-    if cl.__name__ == 'Mercator':
-        kw_proj.pop('false_easting', None)
-        kw_proj.pop('false_northing', None)
+    if cl.__name__ == "Mercator":
+        kw_proj.pop("false_easting", None)
+        kw_proj.pop("false_northing", None)
 
     return cl(globe=globe, **kw_proj)
 
 
 def is_pyproj(crs):
     import pyproj
+
     return isinstance(crs, pyproj.Proj)
 
 
@@ -583,7 +579,7 @@ def process_crs(crs):
         import cartopy.crs as ccrs
         import pyproj
     except ImportError:
-        raise ImportError('Geographic projection support requires pyproj and cartopy.') from None
+        raise ImportError("Geographic projection support requires pyproj and cartopy.") from None
 
     if crs is None:
         return ccrs.PlateCarree()
@@ -608,7 +604,9 @@ def process_crs(crs):
         except Exception as e:
             errors.append(e)
 
-    raise ValueError("Projection must be defined as a EPSG code, proj4 string, cartopy CRS or pyproj.Proj.") from Exception(*errors)
+    raise ValueError(
+        "Projection must be defined as a EPSG code, proj4 string, cartopy CRS or pyproj.Proj."
+    ) from Exception(*errors)
 
 
 def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs):
@@ -638,15 +636,17 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
         Image/RGB/QuadMesh element
     """
     if crs:
-        kwargs['crs'] = crs
-    elif hasattr(da, 'crs'):
+        kwargs["crs"] = crs
+    elif hasattr(da, "crs"):
         # xarray.open_rasterio (not supported since April 2023)
         try:
-            kwargs['crs'] = process_crs(da.crs)
+            kwargs["crs"] = process_crs(da.crs)
         except Exception:
-            warn(f'Could not decode projection from crs string {da.crs}, '
-                  'defaulting to non-geographic element.')
-    elif hasattr(da, 'rio') and da.rio.crs is not None:
+            warn(
+                f"Could not decode projection from crs string {da.crs}, "
+                "defaulting to non-geographic element."
+            )
+    elif hasattr(da, "rio") and da.rio.crs is not None:
         # rioxarray.open_rasterio
         crs = None
         # to handle rasterio 1.4.1 vs 1.4.2 differences
@@ -656,15 +656,18 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
                 crs = process_crs(getattr(da.rio.crs, method_name)())
                 break
         if crs:
-            kwargs['crs'] = crs
+            kwargs["crs"] = crs
         else:
-            warn(f'Could not decode projection from crs string {da.rio.crs}, '
-                  'defaulting to non-geographic element.')
+            warn(
+                f"Could not decode projection from crs string {da.rio.crs}, "
+                "defaulting to non-geographic element."
+            )
 
     coords = list(da.dims)
-    if coords not in (['band', 'y', 'x'], ['y', 'x']):
+    if coords not in (["band", "y", "x"], ["y", "x"]):
         from .element.geo import Dataset, HvDataset
-        el = Dataset if 'crs' in kwargs else HvDataset
+
+        el = Dataset if "crs" in kwargs else HvDataset
         return el(da, **kwargs)
 
     if len(coords) == 2:
@@ -676,44 +679,47 @@ def from_xarray(da, crs=None, apply_transform=False, nan_nodata=False, **kwargs)
 
     if apply_transform:
         from affine import Affine
-        transform = Affine.from_gdal(*da.attrs['transform'][:6])
+
+        transform = Affine.from_gdal(*da.attrs["transform"][:6])
         nx, ny = da.sizes[x], da.sizes[y]
-        xs, ys = np.meshgrid(np.arange(nx)+0.5, np.arange(ny)+0.5) * transform
+        xs, ys = np.meshgrid(np.arange(nx) + 0.5, np.arange(ny) + 0.5) * transform
         data = (xs, ys)
     else:
-        xres, yres = da.attrs['res'] if 'res' in da.attrs else (1, 1)
+        xres, yres = da.attrs["res"] if "res" in da.attrs else (1, 1)
         xs = da.coords[x][::-1] if xres < 0 else da.coords[x]
         ys = da.coords[y][::-1] if yres < 0 else da.coords[y]
 
     data = (xs, ys)
     for b in range(bands):
         values = da[b].values
-        if nan_nodata and da.attrs.get('nodatavals', []):
-
+        if nan_nodata and da.attrs.get("nodatavals", []):
             values = values.astype(float)
-            for d in da.attrs['nodatavals']:
-                values[values==d] = np.nan
+            for d in da.attrs["nodatavals"]:
+                values[values == d] = np.nan
         data += (values,)
 
-    if 'datatype' not in kwargs:
-        kwargs['datatype'] = ['xarray', 'grid', 'image']
+    if "datatype" not in kwargs:
+        kwargs["datatype"] = ["xarray", "grid", "image"]
 
     if xs.ndim > 1:
         from .element.geo import HvQuadMesh, QuadMesh
-        el = QuadMesh if 'crs' in kwargs else HvQuadMesh
+
+        el = QuadMesh if "crs" in kwargs else HvQuadMesh
         el = el(data, [x, y], **kwargs)
     elif bands < 3:
         from .element.geo import HvImage, Image
-        el = Image if 'crs' in kwargs else HvImage
+
+        el = Image if "crs" in kwargs else HvImage
         el = el(data, [x, y], **kwargs)
     else:
         from .element.geo import RGB, HvRGB
-        el = RGB if 'crs' in kwargs else HvRGB
+
+        el = RGB if "crs" in kwargs else HvRGB
         vdims = el.vdims[:bands]
         if bands == 4:
             vdims.append("A")
         el = el(data, [x, y], vdims, **kwargs)
-    if hasattr(el.data, 'attrs'):
+    if hasattr(el.data, "attrs"):
         el.data.attrs = da.attrs
     return el
 
@@ -738,6 +744,7 @@ def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=None):
     RGB element containing the tile data in the specified bbox
     """
     from .element import RGB, WMTS
+
     if bbox_crs is None:
         bbox_crs = ccrs.PlateCarree()
 
@@ -747,20 +754,23 @@ def get_tile_rgb(tile_source, bbox, zoom_level, bbox_crs=None):
     if bbox_crs is not ccrs.GOOGLE_MERCATOR:
         bbox = project_extents(bbox, bbox_crs, ccrs.GOOGLE_MERCATOR)
 
-    if '{Q}' in tile_source:
-        tile_source = QuadtreeTiles(url=tile_source.replace('{Q}', '{tile}'))
+    if "{Q}" in tile_source:
+        tile_source = QuadtreeTiles(url=tile_source.replace("{Q}", "{tile}"))
     else:
         tile_source = GoogleTiles(url=tile_source)
 
     bounds = box(*bbox)
     rgb, extent, orient = tile_source.image_for_domain(bounds, zoom_level)
-    if orient == 'lower':
+    if orient == "lower":
         rgb = rgb[::-1]
     x0, x1, y0, y1 = extent
     l, b, r, t = bbox
     return RGB(
-        rgb, bounds=(x0, y0, x1, y1), crs=ccrs.GOOGLE_MERCATOR, vdims=['R', 'G', 'B'],
-    ).clone(datatype=['grid', 'xarray', 'iris'])[l:r, b:t]
+        rgb,
+        bounds=(x0, y0, x1, y1),
+        crs=ccrs.GOOGLE_MERCATOR,
+        vdims=["R", "G", "B"],
+    ).clone(datatype=["grid", "xarray", "iris"])[l:r, b:t]
 
 
 def asarray(v):

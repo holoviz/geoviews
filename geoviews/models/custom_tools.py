@@ -10,6 +10,7 @@ from .._warnings import warn
 
 class _BokehCheck(Tool):
     _bokeh_require_version = "bokeh ==3.9.*"
+
     def __init__(self, *args, **kwargs):
         self._check_bokeh_version()
         super().__init__(*args, **kwargs)
@@ -47,18 +48,32 @@ class ClearTool(_BokehCheck, Tool):
 
 
 class PolyVertexEditTool(_BokehCheck, PolyEditTool):
+    node_style = Dict(
+        String,
+        Any,
+        help="""
+    Custom styling to apply to the intermediate nodes of a patch or line glyph.""",
+    )
 
-    node_style = Dict(String, Any, help="""
-    Custom styling to apply to the intermediate nodes of a patch or line glyph.""")
-
-    end_style = Dict(String, Any, help="""
-    Custom styling to apply to the start and nodes of a patch or line glyph.""")
+    end_style = Dict(
+        String,
+        Any,
+        help="""
+    Custom styling to apply to the start and nodes of a patch or line glyph.""",
+    )
 
 
 class PolyVertexDrawTool(_BokehCheck, PolyDrawTool):
+    node_style = Dict(
+        String,
+        Any,
+        help="""
+    Custom styling to apply to the intermediate nodes of a patch or line glyph.""",
+    )
 
-    node_style = Dict(String, Any, help="""
-    Custom styling to apply to the intermediate nodes of a patch or line glyph.""")
-
-    end_style = Dict(String, Any, help="""
-    Custom styling to apply to the start and nodes of a patch or line glyph.""")
+    end_style = Dict(
+        String,
+        Any,
+        help="""
+    Custom styling to apply to the start and nodes of a patch or line glyph.""",
+    )

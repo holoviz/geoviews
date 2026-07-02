@@ -129,21 +129,13 @@ class WindBarbsPlot(ColorbarPlot):
             del properties["legend_label"]
 
         # Handle coordinate ranges
-        if (
-            self.handles["x_range"].name in plot.extra_x_ranges
-            and not self.subcoordinate_y
-        ):
+        if self.handles["x_range"].name in plot.extra_x_ranges and not self.subcoordinate_y:
             properties["x_range_name"] = self.handles["x_range"].name
-        if (
-            self.handles["y_range"].name in plot.extra_y_ranges
-            and not self.subcoordinate_y
-        ):
+        if self.handles["y_range"].name in plot.extra_y_ranges and not self.subcoordinate_y:
             properties["y_range_name"] = self.handles["y_range"].name
 
         if "name" not in properties:
-            properties["name"] = properties.get("legend_label") or properties.get(
-                "legend_field"
-            )
+            properties["name"] = properties.get("legend_label") or properties.get("legend_field")
 
         # Separate glyph properties from renderer properties
         # Glyph properties are those that the WindBarb glyph understands

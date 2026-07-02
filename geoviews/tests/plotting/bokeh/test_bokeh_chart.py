@@ -3,7 +3,6 @@ import pytest
 from bokeh.models.tools import CustomJSHover
 
 import geoviews as gv
-from geoviews.element import WindBarbs
 
 from .test_bokeh_plot import TestBokehPlot, bokeh_renderer
 
@@ -17,7 +16,7 @@ class TestWindBarbsPlot(TestBokehPlot):
         angle = np.arctan2(V, U)
         mag = np.hypot(U, V)
 
-        gv_barbs = WindBarbs((X, Y, angle, mag))
+        gv_barbs = gv.WindBarbs((X, Y, angle, mag))
 
         plot = bokeh_renderer.get_plot(gv_barbs)
         source = plot.handles["source"]
@@ -60,7 +59,7 @@ class TestWindBarbsPlot(TestBokehPlot):
         x = np.linspace(-1, 1, 4)
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 2 * Y
-        gv_barbs_uv = WindBarbs.from_uv((X, Y, U, V))
+        gv_barbs_uv = gv.WindBarbs.from_uv((X, Y, U, V))
 
         # Just verify the from_uv method works and creates valid data
         plot = bokeh_renderer.get_plot(gv_barbs_uv)
@@ -91,11 +90,11 @@ class TestWindBarbsPlot(TestBokehPlot):
             coords={"x": x, "y": -x},
         )
 
-        gv_barbs = WindBarbs.from_uv(ds, ["x", "y"], ["u", "v", "other"])
+        gv_barbs = gv.WindBarbs.from_uv(ds, ["x", "y"], ["u", "v", "other"])
         assert "other" in gv_barbs.data
 
     def test_windbarbs_line_color_op(self):
-        barbs = WindBarbs(
+        barbs = gv.WindBarbs(
             [(0, 0, 0, 1, "#000000"), (0, 1, 0, 1, "#FF0000"), (0, 2, 0, 1, "#00FF00")],
             vdims=["A", "M", "line_color"],
         ).opts(line_color="line_color")

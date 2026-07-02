@@ -1,9 +1,11 @@
+import cartopy.crs as ccrs
+import cartopy.feature as cf
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 import pyviz_comms as comms
 from param import concrete_descendents
-from shapely.geometry import MultiPolygon, Polygon
+from shapely.geometry import LineString, MultiPolygon, Polygon
 
 import geoviews as gv
 from geoviews.plotting.mpl import ElementPlot
@@ -81,3 +83,17 @@ class TestMPLPlot:
         )
 
         assert len(array) == total_subpolygons
+
+
+def test_feature_line_geometry_facecolor_default():
+    # test for https://github.com/holoviz/geoviews/issues/845
+
+    class _LineFeature(cf.Feature):
+        def geometries(self):
+            yield LineString([(0, 0), (1, 1)])
+
+    feature = gv.Feature(_LineFeature(ccrs.PlateCarree())).opts(projection=ccrs.Orthographic())
+
+    plot = mpl_renderer.get_plot(feature)
+    artist = plot.handles['artist']
+    assert len(artist.get_facecolor()) == 0

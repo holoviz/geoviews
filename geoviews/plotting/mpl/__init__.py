@@ -470,6 +470,18 @@ class FeaturePlot(GeoPlot):
         else:
             feature = copy.copy(element.data)
             feature.scale = self.scale
+        # Line features need facecolor='none'; the Collection default (C0/blue) fills open paths.
+        if (
+            'facecolor' not in style
+            and 'color' not in style
+            and 'facecolor' not in feature.kwargs
+            and 'color' not in feature.kwargs
+        ):
+            first_geom = next(iter(feature.geometries()), None)
+            if first_geom is not None and first_geom.geom_type in (
+                'LineString', 'MultiLineString', 'LinearRing'
+            ):
+                style['facecolor'] = 'none'
         return (feature,), style, {}
 
     def init_artists(self, ax, plot_args, plot_kwargs):

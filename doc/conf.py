@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-from nbsite.shared_conf import *
+from nbsite.shared_conf import *  # noqa: F403
 
 project = "GeoViews"
 authors = "HoloViz Developers"

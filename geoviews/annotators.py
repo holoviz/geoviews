@@ -77,14 +77,12 @@ Annotator._extra_opts["hooks"] = [initialize_tools]
 class PathBreakingAnnotator(PathAnnotator):
     feature_style = param.Dict(
         default={"fill_color": "blue", "size": 10},
-        doc="""
-         Styling to apply to the feature vertices.""",
+        doc="Styling to apply to the feature vertices.",
     )
 
     node_style = param.Dict(
         default={"fill_color": "indianred", "size": 6},
-        doc="""
-         Styling to apply to the node vertices.""",
+        doc="Styling to apply to the node vertices.",
     )
 
     def _init_stream(self):

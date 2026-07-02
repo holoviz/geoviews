@@ -24,8 +24,7 @@ class weighted_regrid(regrid):
     interpolation = param.Selector(
         default="bilinear",
         objects=["bilinear", "conservative", "nearest_s2d", "nearest_d2s"],
-        doc="""
-        Interpolation method""",
+        doc="Interpolation method",
     )
 
     reuse_weights = param.Boolean(

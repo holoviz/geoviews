@@ -64,8 +64,7 @@ class _project_operation(Operation):
         default=ccrs.GOOGLE_MERCATOR,
         class_=ccrs.Projection,
         instantiate=False,
-        doc="""
-        Projection the shape type is projected to.""",
+        doc="Projection the shape type is projected to.",
     )
 
     # Defines the types of elements supported by the operation
@@ -407,14 +406,12 @@ class project_image(_project_operation):
 
     width = param.Integer(
         default=None,
-        doc="""
-        Width of the reprojectd Image""",
+        doc="Width of the reprojectd Image",
     )
 
     height = param.Integer(
         default=None,
-        doc="""
-        Height of the reprojected Image""",
+        doc="Height of the reprojected Image",
     )
 
     link_inputs = param.Boolean(
@@ -570,8 +567,7 @@ class project(Operation):
         default=ccrs.GOOGLE_MERCATOR,
         class_=ccrs.Projection,
         instantiate=False,
-        doc="""
-        Projection the image type is projected to.""",
+        doc="Projection the image type is projected to.",
     )
 
     _operations = [

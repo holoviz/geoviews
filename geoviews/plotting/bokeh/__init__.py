@@ -227,8 +227,7 @@ class LineContourPlot(GeoContourPlot):
     levels = param.ClassSelector(
         default=10,
         class_=(list, int),
-        doc="""
-        A list of scalar values used to specify the contour levels.""",
+        doc="A list of scalar values used to specify the contour levels.",
     )
 
 
@@ -238,8 +237,7 @@ class FilledContourPlot(GeoPolygonPlot):
     levels = param.ClassSelector(
         default=10,
         class_=(list, int),
-        doc="""
-        A list of scalar values used to specify the contour levels.""",
+        doc="A list of scalar values used to specify the contour levels.",
     )
 
 

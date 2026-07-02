@@ -106,8 +106,7 @@ class resample_geometry(Operation):
 
     dynamic = param.Boolean(
         default=True,
-        doc="""
-       Enables dynamic processing by default.""",
+        doc="Enables dynamic processing by default.",
     )
 
     preserve_topology = param.Boolean(
@@ -151,8 +150,7 @@ class resample_geometry(Operation):
 
     zoom_levels = param.Integer(
         default=20,
-        doc="""
-        The number of zoom levels to cache.""",
+        doc="The number of zoom levels to cache.",
     )
 
     _per_element = True

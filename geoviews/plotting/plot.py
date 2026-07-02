@@ -24,8 +24,7 @@ class ProjectionPlot(param.Parameterized):
 
     infer_projection = param.Boolean(
         default=True,
-        doc="""
-        Whether the projection should be inferred from the element crs.""",
+        doc="Whether the projection should be inferred from the element crs.",
     )
 
     def _get_projection(self, obj):

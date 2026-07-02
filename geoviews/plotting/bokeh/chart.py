@@ -39,8 +39,7 @@ class WindBarbsPlot(ColorbarPlot):
 
     scale = param.Number(
         default=1.0,
-        doc="""
-        Scaling factor for the size of the wind barbs.""",
+        doc="Scaling factor for the size of the wind barbs.",
     )
 
     style_opts = [

@@ -30,32 +30,27 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
     fixed_bounds = param.Boolean(
         default=False,
-        doc="""
-        Whether to prevent zooming beyond the projections defined bounds.""",
+        doc="Whether to prevent zooming beyond the projections defined bounds.",
     )
 
     global_extent = param.Boolean(
         default=False,
-        doc="""
-        Whether the plot should display the whole globe.""",
+        doc="Whether the plot should display the whole globe.",
     )
 
     infer_projection = param.Boolean(
         default=False,
-        doc="""
-        Whether the projection should be inferred from the element crs.""",
+        doc="Whether the projection should be inferred from the element crs.",
     )
 
     show_grid = param.Boolean(
         default=False,
-        doc="""
-        Whether to show gridlines on the plot.""",
+        doc="Whether to show gridlines on the plot.",
     )
 
     show_bounds = param.Boolean(
         default=False,
-        doc="""
-        Whether to show gridlines on the plot.""",
+        doc="Whether to show gridlines on the plot.",
     )
 
     projection = param.Parameter(
@@ -243,8 +238,7 @@ class GeoOverlayPlot(GeoPlot, HvOverlayPlot):
 
     global_extent = param.Boolean(
         default=False,
-        doc="""
-        Whether the plot should display the whole globe.""",
+        doc="Whether the plot should display the whole globe.",
     )
 
     _propagate_options = HvOverlayPlot._propagate_options + [

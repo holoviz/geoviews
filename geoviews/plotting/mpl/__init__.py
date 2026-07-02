@@ -101,8 +101,7 @@ class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
 
     global_extent = param.Boolean(
         default=False,
-        doc="""
-        Set the extent of the Axes to the limits of the projection.""",
+        doc="Set the extent of the Axes to the limits of the projection.",
     )
 
     _propagate_options = HvOverlayPlot._propagate_options + ["global_extent"]
@@ -142,14 +141,12 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
     apply_ranges = param.Boolean(
         default=False,
-        doc="""
-        Do not use ranges to compute plot extents by default.""",
+        doc="Do not use ranges to compute plot extents by default.",
     )
 
     global_extent = param.Boolean(
         default=False,
-        doc="""
-        Whether the plot should display the whole globe.""",
+        doc="Whether the plot should display the whole globe.",
     )
 
     projection = param.Parameter(default=ccrs.PlateCarree())
@@ -411,8 +408,7 @@ class LineContourPlot(GeoContourPlot):
     levels = param.ClassSelector(
         default=10,
         class_=(list, int),
-        doc="""
-        A list of scalar values used to specify the contour levels.""",
+        doc="A list of scalar values used to specify the contour levels.",
     )
 
 
@@ -422,8 +418,7 @@ class FilledContourPlot(GeoPolygonPlot):
     levels = param.ClassSelector(
         default=10,
         class_=(list, int),
-        doc="""
-        A list of scalar values used to specify the contour levels.""",
+        doc="A list of scalar values used to specify the contour levels.",
     )
 
 
@@ -507,8 +502,7 @@ class WMTSPlot(GeoPlot):
 
     zoom = param.Integer(
         default=3,
-        doc="""
-        Controls the zoom level of the tile source.""",
+        doc="Controls the zoom level of the tile source.",
     )
 
     style_opts = ["alpha", "cmap", "interpolation", "visible", "filterrad", "clims", "norm"]

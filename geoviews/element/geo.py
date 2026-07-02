@@ -504,10 +504,7 @@ class ImageStack(_Element, HvImageStack):
             raise ImportError("ImageStack requires HoloViews 1.18 or greater.")
         super().__init__(data, kdims=kdims, vdims=vdims, **params)
 
-    vdims = param.List(
-        doc="""
-        The dimension description of the data held in the matrix."""
-    )
+    vdims = param.List(doc="The dimension description of the data held in the matrix.")
 
     group = param.String(default="ImageStack", constant=True)
 
@@ -931,8 +928,7 @@ class Shape(Dataset):
 
     level = param.Number(
         default=None,
-        doc="""
-        Optional level associated with the set of Contours.""",
+        doc="Optional level associated with the set of Contours.",
     )
 
     vdims = param.List(

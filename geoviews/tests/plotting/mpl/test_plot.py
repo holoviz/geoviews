@@ -103,3 +103,29 @@ def test_feature_line_geometry_facecolor_default():
     plot = mpl_renderer.get_plot(feature)
     artist = plot.handles["artist"]
     assert len(artist.get_facecolor()) == 0
+
+
+@pytest.mark.parametrize("projection", [ccrs.PlateCarree(), ccrs.Mercator()])
+def test_gridlabel_projection_layout_finite_figure_size(projection):
+    """Test for https://github.com/holoviz/geoviews/issues/850.
+
+    PlateCarree and Mercator hide the native matplotlib axis and use cartopy
+    gridliner labels instead. On matplotlib 3.11 Axes._update_title_position
+    then computed a non-finite title position for the hidden-axis GeoAxes,
+    which propagated NaN through get_tightbbox into the layout figure size and
+    raised "figure size must be positive finite". Rendering a titled layout
+    must keep the figure size and every title position finite.
+    """
+    poly = {"Longitude": [-170, 170, 170, -170], "Latitude": [-80, -80, 80, 80], "value": 1}
+    left = gv.Polygons([poly], vdims="value").opts(
+        projection=projection, title="left", colorbar=True
+    )
+    right = gv.Polygons([poly], vdims="value").opts(
+        projection=ccrs.Robinson(), title="right", colorbar=True
+    )
+
+    fig = mpl_renderer.get_plot(left + right).state
+
+    assert np.isfinite(fig.get_size_inches()).all()
+    for ax in fig.axes:
+        assert np.isfinite(ax.title.get_position()[1])

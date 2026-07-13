@@ -1,6 +1,7 @@
 from contextlib import suppress
 
 import cartopy
+import matplotlib as mpl
 import numpy as np
 import shapely
 import shapely.geometry as sgeom
@@ -31,6 +32,8 @@ poly_types = (MultiPolygon, Polygon, LinearRing)
 SHAPELY_VERSION = Version(shapely.__version__).release
 SHAPELY_GE_2_0_0 = SHAPELY_VERSION >= (2, 0, 0)
 CARTOPY_VERSION = Version(cartopy.__version__).release
+MPL_VERSION = Version(mpl.__version__).release
+MPL_GE_3_11_0 = MPL_VERSION >= (3, 11, 0)
 
 
 def wrap_lons(lons, base, period):

@@ -74,7 +74,7 @@ from ...operation import (
     project_vectorfield,
     project_windbarbs,
 )
-from ...util import geo_mesh, poly_types
+from ...util import MPL_GE_3_11_0, geo_mesh, poly_types
 from ..plot import ProjectionPlot
 from .chart import WindBarbsPlot
 
@@ -133,6 +133,10 @@ class GeoOverlayPlot(ProjectionPlot, HvOverlayPlot):
             axis.grid()
         if self.global_extent:
             axis.set_global()
+        if gridlabels and MPL_GE_3_11_0:
+            # matplotlib 3.11 (#850): freeze the title auto-position so it
+            # stays finite when the native axis is hidden (see GeoPlot).
+            axis._autotitlepos = False
         return ret
 
 
@@ -240,6 +244,14 @@ class GeoPlot(ProjectionPlot, ElementPlot):
 
         if self.global_extent:
             axis.set_global()
+        if gridlabels and MPL_GE_3_11_0:
+            # matplotlib 3.11 (#850): with the native x/y axis hidden for
+            # PlateCarree/Mercator, Axes._update_title_position computes a
+            # non-finite (inf) title position. That propagates NaN through
+            # Axes.get_tightbbox into the layout figure sizing and raises
+            # "figure size must be positive finite". Freezing the title
+            # auto-position keeps it at the finite default location.
+            axis._autotitlepos = False
         return ret
 
     def get_data(self, element, ranges, style):

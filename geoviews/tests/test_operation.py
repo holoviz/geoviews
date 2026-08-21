@@ -17,6 +17,9 @@ def test_quadmesh_contoures_filled():
     gv.renderer("bokeh").get_plot(p2)
 
 
+@pytest.mark.filterwarnings(
+    "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5"  # https://github.com/SciTools/cartopy/pull/2686
+)
 def test_unwrap_lons():
     pytest.importorskip("datashader")
     # Regression test for: https://github.com/holoviz/geoviews/pull/722

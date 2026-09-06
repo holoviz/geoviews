@@ -116,6 +116,9 @@ pyproj = "*"
 shapely = ">=1.8.0"
 xyzservices = "*"
 
+[feature.required.target.osx-arm64.dependencies]
+geos = "!=3.14.1" # tmp: https://github.com/conda-forge/geos-feedstock/issues/93
+
 [feature.required.tasks]
 install = 'python -m pip install --no-deps --disable-pip-version-check -e .'
 sync-git-tags = 'python scripts/sync_git_tags.py geoviews'
@@ -231,7 +234,7 @@ nbsite = ">=0.8.4,<0.9.0"
 numpydoc = "*"
 selenium = "*"
 sphinx-reredirects = "*"
-matplotlib-base = "<3.11"  # 2026-07 until next cartopy release 0.25.0+
+matplotlib-base = "<3.11" # 2026-07 until next cartopy release 0.25.0+
 
 [feature.doc.activation.env]
 MOZ_HEADLESS = "1"

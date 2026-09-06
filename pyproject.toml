@@ -224,5 +224,7 @@ filterwarnings = [
     "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:scipy.io._netcdf",
     "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:rioxarray._io",
     # 2026-08
-    "ignore:Use `@` matmul instead of `\\*` mul:Warning:rioxarray"
+    "ignore:Use `@` matmul instead of `\\*` mul:Warning:rioxarray",
+    # 2026-09
+    "ignore:invalid value encountered in create_collection:RuntimeWarning:shapely.creation"
 ]

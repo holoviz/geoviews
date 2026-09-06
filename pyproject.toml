@@ -222,5 +222,7 @@ filterwarnings = [
     # 2026-06
     "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:cartopy.img_transform",
     "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:scipy.io._netcdf",
-    "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:rioxarray._io"
+    "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:rioxarray._io",
+    # 2026-08
+    "ignore:Use `@` matmul instead of `\\*` mul:Warning:rioxarray"
 ]

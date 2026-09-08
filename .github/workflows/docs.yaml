@@ -18,8 +18,9 @@ on:
           - dryrun
         required: true
         default: dryrun
-  schedule:
-    - cron: "0 18 * * SUN"
+  pull_request:
+    branches:
+      - "main"
 
 permissions: {}
 
@@ -31,16 +32,10 @@ env:
   DISPLAY: ":99.0"
 
 jobs:
-  pixi_lock:
-    name: Pixi lock
-    runs-on: ubuntu-latest
-    steps:
-      - uses: holoviz-dev/holoviz_tasks/pixi-lock@8fb2d0a3e4c70e218d487e0eed3b9c2488997212 # v1.0.6
-
   docs_build:
     name: Build Documentation
-    needs: [pixi_lock]
     runs-on: "macos-latest"
+    if: github.event_name != 'pull_request' || github.head_ref == 'renovate/lock-file-maintenance-pixi-lock'
     timeout-minutes: 180
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@8fb2d0a3e4c70e218d487e0eed3b9c2488997212 # v1.0.6
@@ -84,3 +79,13 @@ jobs:
           publish_dir: ./builtdocs
           cname: geoviews.org
           force_orphan: true
+
+  result_docs_build:
+    name: result:docs
+    needs: [docs_build, docs_publish]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: check for failures
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: echo job failed && exit 1

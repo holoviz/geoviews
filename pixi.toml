@@ -282,8 +282,9 @@ build-npm = { cmd = "npm pack .", cwd = "geoviews" }
 [feature.lint.dependencies]
 pre-commit = "*"
 nodejs = ">=20"
+geoviews = { path = "." }
 
 [feature.lint.tasks]
 lint = 'pre-commit run --all-files'
-# lint-install = 'pre-commit install'  # TODO: Update actions
+lint-install = 'pre-commit install'
 lint-typescript = { cmd = "npm run lint", cwd = "geoviews" }

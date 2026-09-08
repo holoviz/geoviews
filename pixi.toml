@@ -72,7 +72,7 @@ features = ["required", "py314", "test-core", "test-unit-task"]
 no-default-feature = true
 
 [environments.test-ui]
-features = ["required", "py314", "optional", "test-core", "test-ui", "download-data"]
+features = ["required", "py313", "optional", "test-core", "test-ui", "download-data"]
 no-default-feature = true
 
 [environments.docs]

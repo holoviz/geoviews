@@ -31,30 +31,6 @@ default = [
     "dev",
 ]
 
-[environments.test-310]
-features = [
-    "required",
-    "py310",
-    "optional",
-    "test-core",
-    "test-unit-task",
-    "test-example",
-    "download-data",
-]
-no-default-feature = true
-
-[environments.test-311]
-features = [
-    "required",
-    "py311",
-    "optional",
-    "test-core",
-    "test-unit-task",
-    "test-example",
-    "download-data",
-]
-no-default-feature = true
-
 [environments.test-312]
 features = [
     "required",
@@ -96,15 +72,15 @@ features = ["required", "py314", "test-core", "test-unit-task"]
 no-default-feature = true
 
 [environments.test-ui]
-features = ["required", "py313", "optional", "test-core", "test-ui", "download-data"]
+features = ["required", "py314", "optional", "test-core", "test-ui", "download-data"]
 no-default-feature = true
 
 [environments.docs]
-features = ["required", "py311", "optional", "doc", "download-data"]
+features = ["required", "py314", "optional", "doc", "download-data"]
 no-default-feature = true
 
 [environments.build]
-features = ["required", "py311", "build"]
+features = ["required", "py314", "build"]
 no-default-feature = true
 
 [environments.lint]
@@ -140,31 +116,17 @@ sync-git-tags = 'python scripts/sync_git_tags.py geoviews'
 [feature.required.activation.env]
 PYTHONIOENCODING = "utf-8"
 USE_PYGEOS = "0"
-
-[feature.py310.dependencies]
-python = "3.10.*"
-
-[feature.py311.dependencies]
-python = "3.11.*"
+COVERAGE_CORE = "sysmon"
 
 [feature.py312.dependencies]
 python = "3.12.*"
 
-[feature.py312.activation.env]
-COVERAGE_CORE = "sysmon"
-
 [feature.py313.dependencies]
 python = "3.13.*"
-
-[feature.py313.activation.env]
-COVERAGE_CORE = "sysmon"
 
 [feature.py314.dependencies]
 python-gil = "*"
 python = "3.14.*"
-
-[feature.py314.activation.env]
-COVERAGE_CORE = "sysmon"
 
 [feature.download-data.tasks]
 download-data = 'python scripts/download_data.py'

@@ -20,7 +20,7 @@ concurrency:
 env:
   NODE_VERSION: "24"
   PACKAGE: "geoviews"
-  PYTHON_VERSION: "3.10"
+  PYTHON_VERSION: "3.12"
 
 jobs:
   waiting_room:

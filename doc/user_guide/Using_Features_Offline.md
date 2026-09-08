@@ -8,7 +8,7 @@ configuring ``cartopy`` ahead of time.
 1. Create a new cartopy environment (or use an existing one):
 
     ```bash
-    conda create -n cartopy_env python=3.10
+    conda create -n cartopy_env python
     ```
 
 2. Install the required packages (note that `cartopy_offlinedata` is about 200MBs):

@@ -108,7 +108,7 @@ features = ["required", "py311", "build"]
 no-default-feature = true
 
 [environments.lint]
-features = ["required", "lint"]
+features = ["lint"]
 no-default-feature = true
 
 [environments.download-data]
@@ -281,8 +281,9 @@ build-npm = { cmd = "npm pack .", cwd = "geoviews" }
 # =============================================
 [feature.lint.dependencies]
 pre-commit = "*"
+nodejs = ">=20"
 
 [feature.lint.tasks]
 lint = 'pre-commit run --all-files'
-lint-install = 'pre-commit install'
+# lint-install = 'pre-commit install'  # TODO: Update actions
 lint-typescript = { cmd = "npm run lint", cwd = "geoviews" }

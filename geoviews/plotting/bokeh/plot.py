@@ -8,6 +8,7 @@ from bokeh.models.tools import BoxZoomTool, WheelZoomTool
 from cartopy.crs import GOOGLE_MERCATOR, Mercator, PlateCarree, _CylindricalProjection
 from holoviews.core.dimension import Dimension
 from holoviews.core.util import dimension_sanitizer, match_spec
+from holoviews.element.graphs import Graph
 from holoviews.plotting.bokeh.element import ElementPlot, OverlayPlot as HvOverlayPlot
 
 from ...element import Shape, _Element, is_geographic
@@ -122,6 +123,8 @@ class GeoPlot(ProjectionPlot, ElementPlot):
     def _set_unwrap_lons(self, element, ranges):
         """Check whether the lons should be transformed from 0, 360 to -180, 180."""
         if isinstance(self.geographic, _CylindricalProjection):
+            if isinstance(element, Graph):
+                element = element.nodes
             xdim = element.get_dimension(0)
             x_range = ranges.get(xdim.name, {}).get("data")
             if x_range:

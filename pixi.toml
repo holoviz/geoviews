@@ -15,7 +15,7 @@ backend = { name = "pixi-build-python", version = ">=0.4.4" }
 [package.host-dependencies]
 hatchling = "*"
 hatch-vcs = "*"
-bokeh = "3.9.*"
+bokeh = "3.10.*"
 nodejs = ">=20"
 
 [environments]
@@ -95,7 +95,7 @@ no-default-feature = true
 nomkl = "*"
 geoviews = { path = "." }
 # Required
-bokeh = ">=3.8.0"
+bokeh = ">=3.10.0"
 cartopy = ">=0.18.0"
 holoviews = ">=1.23.0a0" # Pinning because of tests
 nodejs = ">=20"

@@ -165,7 +165,7 @@ jobs:
     name: unit:${{ matrix.environment }}:${{ matrix.os }}
     needs: [pre_commit, setup]
     runs-on: ${{ matrix.os }}
-    if: needs.setup.outputs.code_change == 'true'
+    if: github.event_name != 'push' && needs.setup.outputs.code_change == 'true'
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
@@ -194,7 +194,7 @@ jobs:
     name: ui:${{ matrix.environment }}:${{ matrix.os }}
     needs: [pre_commit, setup]
     runs-on: ${{ matrix.os }}
-    if: needs.setup.outputs.code_change == 'true'
+    if: github.event_name != 'push' && needs.setup.outputs.code_change == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -233,7 +233,7 @@ jobs:
     name: core:${{ matrix.environment }}:${{ matrix.os }}
     needs: [pre_commit, setup]
     runs-on: ${{ matrix.os }}
-    if: needs.setup.outputs.code_change == 'true'
+    if: github.event_name != 'push' && needs.setup.outputs.code_change == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -258,7 +258,7 @@ jobs:
     name: core:${{ matrix.environment }}:${{ matrix.os }}
     needs: [pre_commit, setup]
     runs-on: ${{ matrix.os }}
-    if: needs.setup.outputs.code_change == 'true'
+    if: github.event_name != 'push' && needs.setup.outputs.code_change == 'true'
     strategy:
       fail-fast: false
       matrix:

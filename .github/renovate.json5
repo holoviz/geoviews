@@ -1,7 +1,7 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["config:recommended", ":enablePreCommit"],
-  enabledManagers: ["github-actions", "pre-commit", "pixi"],
+  enabledManagers: ["github-actions", "pre-commit", "pixi", "npm"],
   lockFileMaintenance: {
     enabled: true,
   },
@@ -51,6 +51,23 @@
       commitMessageAction: "Update",
       commitMessageTopic: "pixi.lock",
       branchTopic: "pixi-lock",
+      enabled: true,
+    },
+    {
+      matchManagers: ["npm"],
+      enabled: false, // We don't want updates package.json
+    },
+    {
+      groupName: "NPM Lock",
+      matchManagers: ["npm"],
+      matchUpdateTypes: ["lockFileMaintenance"],
+      description: "Monthly update of NPM Lock",
+      schedule: ["before 5am on the 1st day of the month"],
+      automergeSchedule: ["after 5am on the 1st day of the month"], // avoid multiple PRs in the same day
+      prConcurrentLimit: 1, // avoid multiple PRs in the same day
+      commitMessageAction: "Update",
+      commitMessageTopic: "package-lock.json",
+      branchTopic: "npm-lock",
       enabled: true,
     },
   ],

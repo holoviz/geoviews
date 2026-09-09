@@ -42,7 +42,7 @@ jobs:
     name: Run pre-commit
     runs-on: "ubuntu-latest"
     steps:
-      - uses: holoviz-dev/holoviz_tasks/pre-commit@8fb2d0a3e4c70e218d487e0eed3b9c2488997212 # v1.0.6
+      - uses: holoviz-dev/holoviz_tasks/pre-commit@e9aaca7738db5d27bf34d0f69e25990b74a85eaf # v1.0.7
 
   setup:
     name: Setup workflow
@@ -120,7 +120,7 @@ jobs:
     env:
       ENV: ${{ matrix.environment }}
     steps:
-      - uses: holoviz-dev/holoviz_tasks/pixi-install@8fb2d0a3e4c70e218d487e0eed3b9c2488997212 # v1.0.6
+      - uses: holoviz-dev/holoviz_tasks/pixi-install@e9aaca7738db5d27bf34d0f69e25990b74a85eaf # v1.0.7
         with:
           environments: ${{ matrix.environment }}
       - name: Update upstream packages
@@ -152,7 +152,7 @@ jobs:
       PANEL_LOG_LEVEL: info
       ENV: ${{ matrix.environment }}
     steps:
-      - uses: holoviz-dev/holoviz_tasks/pixi-install@8fb2d0a3e4c70e218d487e0eed3b9c2488997212 # v1.0.6
+      - uses: holoviz-dev/holoviz_tasks/pixi-install@e9aaca7738db5d27bf34d0f69e25990b74a85eaf # v1.0.7
         with:
           environments: ${{ matrix.environment }}
       - name: Update upstream packages
@@ -190,7 +190,7 @@ jobs:
     env:
       ENV: ${{ matrix.environment }}
     steps:
-      - uses: holoviz-dev/holoviz_tasks/pixi-install@8fb2d0a3e4c70e218d487e0eed3b9c2488997212 # v1.0.6
+      - uses: holoviz-dev/holoviz_tasks/pixi-install@e9aaca7738db5d27bf34d0f69e25990b74a85eaf # v1.0.7
         with:
           environments: ${{ matrix.environment }}
       - name: Update upstream packages

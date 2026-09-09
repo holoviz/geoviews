@@ -224,7 +224,7 @@ jobs:
 
   result_test_suite:
     name: result:test
-    needs: [unit_test_suite, core_test_suite]
+    needs: [unit_test_suite, ui_test_suite, core_test_suite, lint_suite]
     if: always()
     runs-on: ubuntu-latest
     steps:

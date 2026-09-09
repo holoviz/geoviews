@@ -7,8 +7,9 @@ on:
       - "v[0-9]+.[0-9]+.[0-9]+b[0-9]+"
       - "v[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
   workflow_dispatch:
-  schedule:
-    - cron: "0 18 * * SUN"
+  pull_request:
+    branches:
+      - "main"
 
 permissions: {}
 
@@ -32,16 +33,10 @@ jobs:
     steps:
       - run: echo "All builds have finished, have been approved, and ready to publish"
 
-  pixi_lock:
-    name: Pixi lock
-    runs-on: ubuntu-latest
-    steps:
-      - uses: holoviz-dev/holoviz_tasks/pixi-lock@8fb2d0a3e4c70e218d487e0eed3b9c2488997212 # v1.0.6
-
   conda_build:
     name: Build Conda
-    needs: [pixi_lock]
     runs-on: "ubuntu-latest"
+    if: github.event_name != 'pull_request' || github.head_ref == 'renovate/lock-file-maintenance-pixi-lock'
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@8fb2d0a3e4c70e218d487e0eed3b9c2488997212 # v1.0.6
         with:
@@ -82,8 +77,8 @@ jobs:
 
   pip_build:
     name: Build PyPI
-    needs: [pixi_lock]
     runs-on: "ubuntu-latest"
+    if: github.event_name != 'pull_request' || github.head_ref == 'renovate/lock-file-maintenance-pixi-lock'
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@8fb2d0a3e4c70e218d487e0eed3b9c2488997212 # v1.0.6
         with:
@@ -133,8 +128,8 @@ jobs:
 
   npm_build:
     name: Build NPM
-    needs: [pixi_lock]
     runs-on: "ubuntu-latest"
+    if: github.event_name != 'pull_request' || github.head_ref == 'renovate/lock-file-maintenance-pixi-lock'
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@8fb2d0a3e4c70e218d487e0eed3b9c2488997212 # v1.0.6
         with:
@@ -217,3 +212,23 @@ jobs:
             --notes-file RELEASE_BODY.md \
             --draft \
             artifacts/*
+
+  result_build:
+    name: result:build
+    needs:
+      [
+        conda_build,
+        conda_publish,
+        pip_build,
+        pip_install,
+        pip_publish,
+        npm_build,
+        npm_publish,
+        announce,
+      ]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: check for failures
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: echo job failed && exit 1

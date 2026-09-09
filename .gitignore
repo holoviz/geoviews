@@ -87,6 +87,6 @@ node_modules/
 examples/data
 
 # Pixi + hatch
-pixi.lock
+!pixi.lock
 .pixi
 geoviews/_version.py

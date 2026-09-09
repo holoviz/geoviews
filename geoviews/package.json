@@ -20,6 +20,6 @@
   ],
   "main": "dist/geoviews.min.js",
   "scripts": {
-    "lint": "npx eslint './*.ts' './models/**/*.ts'"
+    "lint": "npx eslint './*.ts' './models/**/*.ts' --fix"
   }
 }

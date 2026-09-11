@@ -54,8 +54,13 @@
       enabled: true,
     },
     {
+      groupName: "NPM",
       matchManagers: ["npm"],
-      enabled: false, // We don't want updates package.json
+    },
+    {
+      matchManagers: ["npm"],
+      matchPackageNames: ["@bokeh/bokehjs"],
+      enabled: false, // BokehJS needs to be updated manually
     },
     {
       groupName: "NPM Lock",
@@ -68,12 +73,6 @@
       commitMessageAction: "Update",
       commitMessageTopic: "package-lock.json",
       branchTopic: "npm-lock",
-      enabled: true,
-    },
-    {
-      matchManagers: ["npm"],
-      isVulnerabilityAlert: true,
-      enabled: true, // Re-enable, as the rule above also disables security updates
     },
   ],
   vulnerabilityAlerts: {

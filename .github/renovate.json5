@@ -70,6 +70,11 @@
       branchTopic: "npm-lock",
       enabled: true,
     },
+    {
+      matchManagers: ["npm"],
+      isVulnerabilityAlert: true,
+      enabled: true, // Re-enable, as the rule above also disables security updates
+    },
   ],
   vulnerabilityAlerts: {
     enabled: true,

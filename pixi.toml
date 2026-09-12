@@ -12,6 +12,13 @@ version = "9999.0.0" # dynamic versioning: https://github.com/prefix-dev/pixi/is
 [package.build]
 backend = { name = "pixi-build-python", version = ">=0.4.4" }
 
+[package.build.config]
+extra-input-globs = [
+    "geoviews/package.json",
+    "geoviews/package-lock.json",
+    "geoviews/tsconfig.json",
+]
+
 [package.host-dependencies]
 hatchling = "*"
 hatch-vcs = "*"

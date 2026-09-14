@@ -10,13 +10,9 @@ on:
   pull_request:
     branches:
       - "main"
-    types: [synchronize, labeled]
+    types: [opened, synchronize, reopened, labeled]
 
 permissions: {}
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}${{ github.event.action == 'labeled' && github.event.label.name != 'run-build-ci' && '-other-label' || '' }}
-  cancel-in-progress: true
 
 env:
   NODE_VERSION: "24"
@@ -42,6 +38,9 @@ jobs:
     name: build:conda
     runs-on: "ubuntu-latest"
     if: *run_build_ci
+    concurrency:
+      group: ${{ github.workflow }}-conda_build-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@ba69594cc0818936bdf628134c86267016a4ef6d # v1.0.8
         with:
@@ -84,6 +83,9 @@ jobs:
     name: build:pip
     runs-on: "ubuntu-latest"
     if: *run_build_ci
+    concurrency:
+      group: ${{ github.workflow }}-pip_build-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@ba69594cc0818936bdf628134c86267016a4ef6d # v1.0.8
         with:
@@ -135,6 +137,9 @@ jobs:
     name: build:npm
     runs-on: "ubuntu-latest"
     if: *run_build_ci
+    concurrency:
+      group: ${{ github.workflow }}-npm_build-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@ba69594cc0818936bdf628134c86267016a4ef6d # v1.0.8
         with:
@@ -219,7 +224,7 @@ jobs:
             artifacts/*
 
   result_build:
-    name: result:build
+    name: ${{ github.event.action == 'labeled' && github.event.label.name != 'run-build-ci' && 'result:build:other-label' || 'result:build' }}
     needs:
       [
         conda_build,

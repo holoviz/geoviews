@@ -21,13 +21,9 @@ on:
   pull_request:
     branches:
       - "main"
-    types: [synchronize, labeled]
+    types: [opened, synchronize, reopened, labeled]
 
 permissions: {}
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}${{ github.event.action == 'labeled' && github.event.label.name != 'run-docs-ci' && '-other-label' || '' }}
-  cancel-in-progress: true
 
 env:
   DISPLAY: ":99.0"
@@ -41,6 +37,9 @@ jobs:
     name: build:docs
     runs-on: "macos-latest"
     if: *run_docs_ci
+    concurrency:
+      group: ${{ github.workflow }}-docs_build-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
     timeout-minutes: 180
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@ba69594cc0818936bdf628134c86267016a4ef6d # v1.0.8
@@ -86,7 +85,7 @@ jobs:
           force_orphan: true
 
   result_docs_build:
-    name: result:docs
+    name: ${{ github.event.action == 'labeled' && github.event.label.name != 'run-docs-ci' && 'result:docs:other-label' || 'result:docs' }}
     needs: [docs_build, docs_publish]
     if: always()
     runs-on: ubuntu-latest

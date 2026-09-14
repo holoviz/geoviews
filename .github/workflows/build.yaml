@@ -8,8 +8,6 @@ on:
       - "v[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
   workflow_dispatch:
   pull_request:
-    branches:
-      - "main"
     types: [opened, synchronize, reopened, labeled]
 
 permissions: {}
@@ -18,12 +16,35 @@ env:
   NODE_VERSION: "24"
   PACKAGE: "geoviews"
   PYTHON_VERSION: "3.12"
-  RUN_BUILD_CI: &run_build_ci |
-    github.event_name != 'pull_request' ||
-    (contains(github.event.pull_request.labels.*.name, 'run-build-ci') &&
-     (github.event.action != 'labeled' || github.event.label.name == 'run-build-ci'))
 
 jobs:
+  setup:
+    name: setup:build
+    runs-on: ubuntu-latest
+    permissions:
+      checks: read
+    outputs:
+      run: ${{ steps.check.outputs.run }}
+    steps:
+      - name: check if packages should be built
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HAS_LABEL: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'run-build-ci') }}
+          OTHER_LABEL: ${{ github.event.action == 'labeled' && github.event.label.name != 'run-build-ci' }}
+        run: |
+          run=$HAS_LABEL
+          if [ "$run" = true ] && [ "$OTHER_LABEL" = true ]; then
+            # This run hides the earlier run's checks, so only skip if the packages already built for this commit
+            built=$(gh api "repos/$GH_REPO/commits/$HEAD_SHA/check-runs?per_page=100" \
+              --jq '[.check_runs[] | select(.name == "build:conda" or .name == "install:pip" or .name == "build:npm") | select(.conclusion != "skipped")]
+                | group_by(.name) | map(max_by(.started_at).conclusion) == ["success", "success", "success"]')
+            [ "$built" = true ] && run=false
+          fi
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+
   waiting_room:
     name: Waiting Room
     runs-on: ubuntu-latest
@@ -37,7 +58,8 @@ jobs:
   conda_build:
     name: build:conda
     runs-on: "ubuntu-latest"
-    if: *run_build_ci
+    needs: [setup]
+    if: needs.setup.outputs.run == 'true'
     concurrency:
       group: ${{ github.workflow }}-conda_build-${{ github.event.pull_request.number || github.ref }}
       cancel-in-progress: true
@@ -82,7 +104,8 @@ jobs:
   pip_build:
     name: build:pip
     runs-on: "ubuntu-latest"
-    if: *run_build_ci
+    needs: [setup]
+    if: needs.setup.outputs.run == 'true'
     concurrency:
       group: ${{ github.workflow }}-pip_build-${{ github.event.pull_request.number || github.ref }}
       cancel-in-progress: true
@@ -136,7 +159,8 @@ jobs:
   npm_build:
     name: build:npm
     runs-on: "ubuntu-latest"
-    if: *run_build_ci
+    needs: [setup]
+    if: needs.setup.outputs.run == 'true'
     concurrency:
       group: ${{ github.workflow }}-npm_build-${{ github.event.pull_request.number || github.ref }}
       cancel-in-progress: true
@@ -224,9 +248,10 @@ jobs:
             artifacts/*
 
   result_build:
-    name: ${{ github.event.action == 'labeled' && github.event.label.name != 'run-build-ci' && 'result:build:other-label' || 'result:build' }}
+    name: result:build
     needs:
       [
+        setup,
         conda_build,
         conda_publish,
         pip_build,

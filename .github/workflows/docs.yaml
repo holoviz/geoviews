@@ -23,6 +23,10 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   DISPLAY: ":99.0"
 
@@ -58,9 +62,6 @@ jobs:
     runs-on: "macos-latest"
     needs: [setup]
     if: needs.setup.outputs.run == 'true'
-    concurrency:
-      group: ${{ github.workflow }}-docs_build-${{ github.event.pull_request.number || github.ref }}
-      cancel-in-progress: true
     timeout-minutes: 180
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@ba69594cc0818936bdf628134c86267016a4ef6d # v1.0.8

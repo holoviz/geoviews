@@ -85,7 +85,7 @@ jobs:
           force_orphan: true
 
   result_docs_build:
-    name: result:docs
+    name: ${{ github.event.action == 'labeled' && github.event.label.name != 'run-docs-ci' && 'result:docs:other-label' || 'result:docs' }}
     needs: [docs_build, docs_publish]
     if: always()
     runs-on: ubuntu-latest

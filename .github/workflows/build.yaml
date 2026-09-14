@@ -39,7 +39,7 @@ jobs:
       - run: echo "All builds have finished, have been approved, and ready to publish"
 
   conda_build:
-    name: Build Conda
+    name: build:conda
     runs-on: "ubuntu-latest"
     if: *run_build_ci
     steps:
@@ -58,7 +58,7 @@ jobs:
           if-no-files-found: error
 
   conda_publish:
-    name: Publish Conda
+    name: publish:conda
     runs-on: ubuntu-latest
     needs: [conda_build, waiting_room]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
@@ -81,7 +81,7 @@ jobs:
           binstar --token ${{ secrets.CONDA_UPLOAD_TOKEN }} upload --user pyviz --label=dev --label=main dist/*.conda
 
   pip_build:
-    name: Build PyPI
+    name: build:pip
     runs-on: "ubuntu-latest"
     if: *run_build_ci
     steps:
@@ -100,7 +100,7 @@ jobs:
           if-no-files-found: error
 
   pip_install:
-    name: Install PyPI
+    name: install:pip
     runs-on: "ubuntu-latest"
     needs: [pip_build]
     steps:
@@ -117,7 +117,7 @@ jobs:
         run: python -c "import $PACKAGE; print($PACKAGE._version.__version__)"
 
   pip_publish:
-    name: Publish PyPI
+    name: publish:pip
     runs-on: ubuntu-latest
     needs: [pip_build, waiting_room]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
@@ -132,7 +132,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
 
   npm_build:
-    name: Build NPM
+    name: build:npm
     runs-on: "ubuntu-latest"
     if: *run_build_ci
     steps:
@@ -157,7 +157,7 @@ jobs:
           path: ${{ env.PACKAGE }}/${{ env.TARBALL }}
 
   npm_publish:
-    name: Publish NPM
+    name: publish:npm
     runs-on: "ubuntu-latest"
     needs: [npm_build, waiting_room]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
@@ -183,7 +183,7 @@ jobs:
           npm publish --tag latest *.tgz
 
   announce:
-    name: Announce GitHub
+    name: announce:github
     runs-on: ubuntu-latest
     needs: [waiting_room]
     permissions:

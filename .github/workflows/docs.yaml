@@ -38,7 +38,7 @@ env:
 
 jobs:
   docs_build:
-    name: Build Documentation
+    name: build:docs
     runs-on: "macos-latest"
     if: *run_docs_ci
     timeout-minutes: 180
@@ -56,7 +56,7 @@ jobs:
           path: builtdocs
 
   docs_publish:
-    name: Publish Documentation
+    name: publish:docs
     runs-on: "ubuntu-latest"
     needs: [docs_build]
     steps:

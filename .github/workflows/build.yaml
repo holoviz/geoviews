@@ -10,17 +10,22 @@ on:
   pull_request:
     branches:
       - "main"
+    types: [synchronize, labeled]
 
 permissions: {}
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}${{ github.event.action == 'labeled' && github.event.label.name != 'run-build-ci' && '-other-label' || '' }}
   cancel-in-progress: true
 
 env:
   NODE_VERSION: "24"
   PACKAGE: "geoviews"
   PYTHON_VERSION: "3.12"
+  RUN_BUILD_CI: &run_build_ci |
+    github.event_name != 'pull_request' ||
+    (contains(github.event.pull_request.labels.*.name, 'run-build-ci') &&
+     (github.event.action != 'labeled' || github.event.label.name == 'run-build-ci'))
 
 jobs:
   waiting_room:
@@ -34,9 +39,9 @@ jobs:
       - run: echo "All builds have finished, have been approved, and ready to publish"
 
   conda_build:
-    name: Build Conda
+    name: build:conda
     runs-on: "ubuntu-latest"
-    if: github.event_name != 'pull_request' || github.head_ref == 'renovate/lock-file-maintenance-pixi-lock'
+    if: *run_build_ci
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@ba69594cc0818936bdf628134c86267016a4ef6d # v1.0.8
         with:
@@ -53,7 +58,7 @@ jobs:
           if-no-files-found: error
 
   conda_publish:
-    name: Publish Conda
+    name: publish:conda
     runs-on: ubuntu-latest
     needs: [conda_build, waiting_room]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
@@ -76,9 +81,9 @@ jobs:
           binstar --token ${{ secrets.CONDA_UPLOAD_TOKEN }} upload --user pyviz --label=dev --label=main dist/*.conda
 
   pip_build:
-    name: Build PyPI
+    name: build:pip
     runs-on: "ubuntu-latest"
-    if: github.event_name != 'pull_request' || github.head_ref == 'renovate/lock-file-maintenance-pixi-lock'
+    if: *run_build_ci
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@ba69594cc0818936bdf628134c86267016a4ef6d # v1.0.8
         with:
@@ -95,7 +100,7 @@ jobs:
           if-no-files-found: error
 
   pip_install:
-    name: Install PyPI
+    name: install:pip
     runs-on: "ubuntu-latest"
     needs: [pip_build]
     steps:
@@ -112,7 +117,7 @@ jobs:
         run: python -c "import $PACKAGE; print($PACKAGE._version.__version__)"
 
   pip_publish:
-    name: Publish PyPI
+    name: publish:pip
     runs-on: ubuntu-latest
     needs: [pip_build, waiting_room]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
@@ -127,9 +132,9 @@ jobs:
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
 
   npm_build:
-    name: Build NPM
+    name: build:npm
     runs-on: "ubuntu-latest"
-    if: github.event_name != 'pull_request' || github.head_ref == 'renovate/lock-file-maintenance-pixi-lock'
+    if: *run_build_ci
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@ba69594cc0818936bdf628134c86267016a4ef6d # v1.0.8
         with:
@@ -152,7 +157,7 @@ jobs:
           path: ${{ env.PACKAGE }}/${{ env.TARBALL }}
 
   npm_publish:
-    name: Publish NPM
+    name: publish:npm
     runs-on: "ubuntu-latest"
     needs: [npm_build, waiting_room]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
@@ -178,7 +183,7 @@ jobs:
           npm publish --tag latest *.tgz
 
   announce:
-    name: Announce GitHub
+    name: announce:github
     runs-on: ubuntu-latest
     needs: [waiting_room]
     permissions:

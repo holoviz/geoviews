@@ -48,6 +48,7 @@
       minimumReleaseAge: null, // Handled in pixi itself
       commitMessageAction: "Update",
       commitMessageTopic: "pixi.lock",
+      branchTopic: "pixi-lock",
       labels: ["run-build-ci", "run-docs-ci"],
       enabled: true,
     },
@@ -72,6 +73,7 @@
       labels: ["run-build-ci"],
       commitMessageAction: "Update",
       commitMessageTopic: "package-lock.json",
+      branchTopic: "npm-lock",
     },
   ],
   vulnerabilityAlerts: {

@@ -46,6 +46,7 @@
       description: "Weekly update of Pixi Lock",
       schedule: ["before 5am on monday"],
       automergeSchedule: ["after 5am on monday"], // avoid multiple PRs in the same day
+      platformAutomerge: false, // native automerge ignores automergeSchedule
       minimumReleaseAge: null, // Handled in pixi itself
       commitMessageAction: "Update",
       commitMessageTopic: "pixi.lock",

@@ -51,11 +51,13 @@
       commitMessageAction: "Update",
       commitMessageTopic: "pixi.lock",
       branchTopic: "pixi-lock",
+      labels: ["run-build-ci", "run-docs-ci"],
       enabled: true,
     },
     {
       groupName: "NPM",
       matchManagers: ["npm"],
+      labels: ["run-build-ci"],
     },
     {
       matchManagers: ["npm"],
@@ -69,6 +71,8 @@
       description: "Monthly update of NPM Lock",
       schedule: ["before 5am on the 1st day of the month"],
       automergeSchedule: ["after 5am on the 1st day of the month"], // avoid multiple PRs in the same day
+      platformAutomerge: false, // native automerge ignores automergeSchedule
+      labels: ["run-build-ci"],
       commitMessageAction: "Update",
       commitMessageTopic: "package-lock.json",
       branchTopic: "npm-lock",

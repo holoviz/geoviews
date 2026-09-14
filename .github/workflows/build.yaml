@@ -10,17 +10,22 @@ on:
   pull_request:
     branches:
       - "main"
+    types: [synchronize, labeled]
 
 permissions: {}
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}${{ github.event.action == 'labeled' && github.event.label.name != 'run-build-ci' && '-other-label' || '' }}
   cancel-in-progress: true
 
 env:
   NODE_VERSION: "24"
   PACKAGE: "geoviews"
   PYTHON_VERSION: "3.12"
+  RUN_BUILD_CI: &run_build_ci |
+    github.event_name != 'pull_request' ||
+    (contains(github.event.pull_request.labels.*.name, 'run-build-ci') &&
+     (github.event.action != 'labeled' || github.event.label.name == 'run-build-ci'))
 
 jobs:
   waiting_room:
@@ -36,7 +41,7 @@ jobs:
   conda_build:
     name: Build Conda
     runs-on: "ubuntu-latest"
-    if: github.event_name != 'pull_request' || github.head_ref == 'renovate/lock-file-maintenance-pixi-lock'
+    if: *run_build_ci
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@ba69594cc0818936bdf628134c86267016a4ef6d # v1.0.8
         with:
@@ -78,7 +83,7 @@ jobs:
   pip_build:
     name: Build PyPI
     runs-on: "ubuntu-latest"
-    if: github.event_name != 'pull_request' || github.head_ref == 'renovate/lock-file-maintenance-pixi-lock'
+    if: *run_build_ci
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@ba69594cc0818936bdf628134c86267016a4ef6d # v1.0.8
         with:
@@ -129,7 +134,7 @@ jobs:
   npm_build:
     name: Build NPM
     runs-on: "ubuntu-latest"
-    if: github.event_name != 'pull_request' || github.head_ref == 'renovate/lock-file-maintenance-pixi-lock'
+    if: *run_build_ci
     steps:
       - uses: holoviz-dev/holoviz_tasks/pixi-install@ba69594cc0818936bdf628134c86267016a4ef6d # v1.0.8
         with:

@@ -32,7 +32,7 @@ dependencies = [
     'holoviews >=1.16.0',
     'numpy',
     'packaging',
-    'panel >=1.0.0',
+    'panel >=1.10.0a0',  # TODO(build): Remove a0
     'param >=1.9.3,<3.0',
     'pyproj',
     'shapely >=1.8.0',

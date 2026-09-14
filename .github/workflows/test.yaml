@@ -6,7 +6,6 @@ on:
   pull_request:
     branches:
       - "*"
-    types: [labeled]
   workflow_dispatch:
     inputs:
       target:
@@ -73,11 +72,10 @@ jobs:
       - name: Set matrix option
         env:
           GITHUB_EVENT_INPUTS_TARGET: ${{ github.event.inputs.target }}
-          RUN_FULL_TEST_CI: ${{ contains(github.event.pull_request.labels.*.name, 'run-full-test-ci') }}
         run: |
           if [[ "${GITHUB_EVENT_NAME}" == 'workflow_dispatch' ]]; then
             OPTION=${GITHUB_EVENT_INPUTS_TARGET}
-          elif [[ "${GITHUB_EVENT_NAME}" == 'pull_request' && "${RUN_FULL_TEST_CI}" == 'true' ]]; then
+          elif [[ "${GITHUB_EVENT_NAME}" == 'pull_request' && "${GITHUB_HEAD_REF}" == 'renovate/lock-file-maintenance-pixi-lock' ]]; then
             OPTION="full"
           elif [[ "${GITHUB_EVENT_NAME}" == 'push' && "${GITHUB_REF_TYPE}" == 'tag' ]]; then
             OPTION="full"

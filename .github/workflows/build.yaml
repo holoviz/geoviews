@@ -10,7 +10,7 @@ on:
   pull_request:
     branches:
       - "main"
-    types: [synchronize, labeled]
+    types: [opened, synchronize, reopened, labeled]
 
 permissions: {}
 

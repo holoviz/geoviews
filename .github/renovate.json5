@@ -49,7 +49,7 @@
       commitMessageAction: "Update",
       commitMessageTopic: "pixi.lock",
       branchTopic: "pixi-lock",
-      labels: ["run-build-ci", "run-docs-ci", "run-full-test-ci"],
+      labels: ["run-build-ci", "run-docs-ci"],
       enabled: true,
     },
     {

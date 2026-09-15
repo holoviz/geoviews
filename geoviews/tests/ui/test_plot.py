@@ -82,3 +82,38 @@ def test_rasterize_with_coastline_not_blank_on_zoom(serve_hv, lon_start, lon_end
     expect(page.locator(".bk-Tooltip")).to_contain_text("lat:")
     expect(page.locator(".bk-Tooltip")).to_contain_text("data:")
     expect(page.locator(".bk-Tooltip")).not_to_contain_text("?")
+
+
+@pytest.mark.usefixtures("bokeh_backend")
+def test_rasterize_0_360_lons_range_on_zoom_west_of_prime_meridian(serve_hv):
+    """
+    Regression test for https://github.com/holoviz/geoviews/issues/344
+    """
+    from holoviews.operation.datashader import rasterize
+
+    lon = np.linspace(200, 330, 53)
+    lat = np.linspace(15, 75, 25)
+    data = np.random.rand(25, 53)
+    ds = xr.Dataset({"air": (["lat", "lon"], data)}, coords={"lon": lon, "lat": lat})
+
+    img = rasterize(gv.Image(ds, ["lon", "lat"], ["air"])).opts(active_tools=["box_zoom"])
+    xy_range = hv.streams.RangeXY(source=img)
+
+    page = serve_hv(img)
+    hv_plot = page.locator(".bk-events")
+
+    expect(hv_plot).to_have_count(1)
+
+    bbox = hv_plot.bounding_box()
+    hv_plot.click()
+
+    page.mouse.move(bbox["x"] + 100, bbox["y"] + 100)
+    page.mouse.down()
+    page.mouse.move(bbox["x"] + 150, bbox["y"] + 150, steps=5)
+    page.mouse.up()
+
+    def zoomed_range_within_data_lons():
+        x0, x1 = xy_range.x_range
+        return lon[0] <= x0 < x1 <= lon[-1] and x1 - x0 < (lon[-1] - lon[0]) / 2
+
+    wait_until(zoomed_range_within_data_lons, page)

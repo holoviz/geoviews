@@ -154,9 +154,9 @@ def __getattr__(attr):
 
         return project
     elif attr == "operation":
-        from . import operation
+        from importlib import import_module
 
-        return operation
+        return import_module("geoviews.operation")
     raise AttributeError(f"module {__name__} has no attribute {attr!r}")
 
 

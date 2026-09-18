@@ -16,7 +16,7 @@ repos:
       - id: check-json
       - id: detect-private-key
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: c59bba8fb259db0fec2bbb77ad8ba51ea7341b56 # frozen: v0.15.20
+    rev: e8f7d69b957a30acb2c875078d5fd012de24b64c # frozen: v0.16.7
     hooks:
       - id: ruff-check
       - id: ruff-format
@@ -25,7 +25,7 @@ repos:
     hooks:
       - id: clean-notebook
   - repo: https://github.com/crate-ci/typos
-    rev: bee27e3a4fd1ea2111cf90ab89cd076c870fce14 # frozen: v1.48.0
+    rev: d43b6c087ac471e2ea7b8af622ff15f05c0c365b # frozen: v1.50.1
     hooks:
       - id: typos
   - repo: https://github.com/pre-commit/pygrep-hooks

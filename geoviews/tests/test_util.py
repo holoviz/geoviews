@@ -1,9 +1,11 @@
+from types import SimpleNamespace
+
 import cartopy.crs as ccrs
 import numpy as np
 import pytest
 
 import geoviews as gv
-from geoviews.util import central_longitude, process_crs, project_extents
+from geoviews.util import _central_longitude, process_crs, project_extents
 
 try:
     import rioxarray as rxr
@@ -34,13 +36,6 @@ def test_process_crs_raises_error():
         process_crs(43823)
 
 
-class FakeProjection:
-    """Stands in for a cartopy CRS so both proj4 layouts stay covered on either version."""
-
-    def __init__(self, proj4_params):
-        self.proj4_params = proj4_params
-
-
 @pytest.mark.parametrize(
     ("proj4_params", "expected"),
     [
@@ -55,7 +50,8 @@ class FakeProjection:
     ],
 )
 def test_central_longitude(proj4_params, expected):
-    assert central_longitude(FakeProjection(proj4_params)) == expected
+    crs = SimpleNamespace(proj4_params=proj4_params)
+    assert _central_longitude(crs) == expected
 
 
 def test_project_extents_offset_platecarree():

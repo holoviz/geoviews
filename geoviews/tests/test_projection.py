@@ -313,7 +313,6 @@ class TestProjection:
         assert len(projected.data) == 331
 
     def test_project_path_from_offset_platecarree(self):
-        """Cartopy 0.26 drops lon_0 from PlateCarree, which used to raise KeyError here."""
         path = gv.Path(
             [[(-10, -10), (10, 10)]],
             crs=ccrs.PlateCarree(central_longitude=30),

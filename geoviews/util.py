@@ -61,7 +61,7 @@ def expand_geoms(geoms):
     return expanded
 
 
-def central_longitude(proj):
+def _central_longitude(proj):
     """Central longitude of a projection, in degrees.
 
     Cartopy 0.26 switched PlateCarree from ``proj=eqc`` to ``proj=latlong``,
@@ -81,11 +81,10 @@ def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     if (
         isinstance(src_proj, ccrs.PlateCarree)
         and not isinstance(dest_proj, ccrs.PlateCarree)
-        and central_longitude(src_proj) != 0
+        and (xoffset := _central_longitude(src_proj)) != 0
     ):
-        xoffset = central_longitude(src_proj)
-        x1 = x1 - xoffset
-        x2 = x2 - xoffset
+        x1 -= xoffset
+        x2 -= xoffset
         src_proj = ccrs.PlateCarree()
 
     # Limit latitudes

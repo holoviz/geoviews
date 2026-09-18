@@ -33,6 +33,7 @@ from ..element import (
     WindBarbs,
 )
 from ..util import (
+    _central_longitude,
     geom_dict_to_array_dict,
     path_to_geom_dicts,
     polygons_to_geom_dicts,
@@ -90,7 +91,7 @@ class project_path(_project_operation):
         if (
             isinstance(crs, ccrs.PlateCarree)
             and not isinstance(proj, ccrs.PlateCarree)
-            and crs.proj4_params["lon_0"] != 0
+            and _central_longitude(crs) != 0
         ):
             element = self.instance(projection=ccrs.PlateCarree())(element)
 

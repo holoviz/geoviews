@@ -5,7 +5,7 @@ import numpy as np
 import param
 from cartopy import crs as ccrs
 from cartopy.io.img_tiles import GoogleTiles, QuadtreeTiles
-from cartopy.mpl.gridliner import LATITUDE_FORMATTER, LONGITUDE_FORMATTER
+from cartopy.mpl.ticker import LatitudeFormatter, LongitudeFormatter
 
 try:
     from owslib.wmts import WebMapTileService
@@ -184,7 +184,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 gl.bottom_labels = False
 
             if self.xformatter is None:
-                gl.xformatter = LONGITUDE_FORMATTER
+                gl.xformatter = LongitudeFormatter()
             else:
                 gl.xformatter = wrap_formatter(self.xformatter)
         else:
@@ -206,7 +206,7 @@ class GeoPlot(ProjectionPlot, ElementPlot):
                 gl.left_labels = False
 
             if self.yformatter is None:
-                gl.yformatter = LATITUDE_FORMATTER
+                gl.yformatter = LatitudeFormatter()
             else:
                 gl.yformatter = wrap_formatter(self.yformatter)
         else:

@@ -1,8 +1,11 @@
+from types import SimpleNamespace
+
 import cartopy.crs as ccrs
+import numpy as np
 import pytest
 
 import geoviews as gv
-from geoviews.util import process_crs
+from geoviews.util import _central_longitude, process_crs, project_extents
 
 try:
     import rioxarray as rxr
@@ -31,6 +34,33 @@ def test_process_crs(raw_crs) -> None:
 def test_process_crs_raises_error():
     with pytest.raises(ValueError, match="must be defined as a EPSG code, proj4 string"):
         process_crs(43823)
+
+
+@pytest.mark.parametrize(
+    ("proj4_params", "expected"),
+    [
+        # cartopy >= 0.26 PlateCarree: proj=latlong, prime meridian, no lon_0
+        ({"proj": "latlong", "pm": 0.0}, 0.0),
+        ({"proj": "latlong", "pm": 30}, 30),
+        # cartopy < 0.26 PlateCarree, and projections that still use lon_0
+        ({"proj": "eqc", "lon_0": 0.0}, 0.0),
+        ({"proj": "robin", "lon_0": 45}, 45),
+        # neither key present
+        ({"proj": "geos"}, 0),
+    ],
+)
+def test_central_longitude(proj4_params, expected):
+    crs = SimpleNamespace(proj4_params=proj4_params)
+    assert _central_longitude(crs) == expected
+
+
+def test_project_extents_offset_platecarree():
+    """Cartopy 0.26 drops lon_0 from PlateCarree, which used to raise KeyError here."""
+    extents = (-10, -10, 10, 10)
+    projected = project_extents(extents, ccrs.PlateCarree(central_longitude=30), ccrs.Robinson())
+
+    assert len(projected) == 4
+    assert all(np.isfinite(projected))
 
 
 @pytest.mark.skipif(rxr is None, reason="Needs rioxarray to be installed")

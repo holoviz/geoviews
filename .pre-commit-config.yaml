@@ -38,3 +38,11 @@ repos:
     rev: 745eface02aef23e168a8afb6b5737818efbea95 # frozen: v0.11.0.1
     hooks:
       - id: shellcheck
+  - repo: local
+    hooks:
+      - id: pixi
+        name: check pixi
+        entry: pixi lock --check
+        language: system
+        files: ^pixi
+        pass_filenames: false

@@ -23,10 +23,14 @@ class WindBarbsPlot(ColorbarPlot):
 
     padding = param.ClassSelector(default=0.05, class_=(int, float, tuple))
 
-    convention = param.Selector(default="from", objects=["from", "to"], doc="""
+    convention = param.Selector(
+        default="from",
+        objects=["from", "to"],
+        doc="""
         Convention to return direction; 'from' returns the direction the wind is coming from
         (meteorological convention), 'to' returns the direction the wind is going towards
-        (oceanographic convention).""")
+        (oceanographic convention).""",
+    )
 
     style_opts = [
         "alpha",
@@ -102,20 +106,21 @@ class WindBarbsPlot(ColorbarPlot):
         us, vs = self._get_us_vs(element)
         args = (xs, ys, us, vs)
 
-        color = style.get('color', None)  # must do before apply transform
-        flagcolor = style.get('flagcolor', None)
-        barbcolor = style.get('barbcolor', None)
+        color = style.get("color", None)  # must do before apply transform
+        flagcolor = style.get("flagcolor", None)
+        barbcolor = style.get("barbcolor", None)
 
         # Process style
         with abbreviated_exception():
             style = self._apply_transforms(element, ranges, style)
-        uses_color = ((isinstance(color, str) and color in element) or isinstance(color, dim))
+        uses_color = (isinstance(color, str) and color in element) or isinstance(color, dim)
         if uses_color and (flagcolor is not None or barbcolor is not None):
             self.param.warning(
                 "Cannot declare style mapping for 'color' option and either "
-                "'flagcolor' and 'barbcolor'; ignoring 'flagcolor' and 'barbcolor'.")
-            style.pop('flagcolor', None)
-            style.pop('barbcolor', None)
+                "'flagcolor' and 'barbcolor'; ignoring 'flagcolor' and 'barbcolor'."
+            )
+            style.pop("flagcolor", None)
+            style.pop("barbcolor", None)
         if "vmin" in style:
             style["clim"] = (style.pop("vmin"), style.pop("vmax"))
         if "c" in style:

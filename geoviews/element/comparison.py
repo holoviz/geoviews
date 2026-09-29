@@ -6,7 +6,6 @@ from .geo import FilledContours, Image, ImageStack, LineContours, Points, WindBa
 
 
 class Comparison(HvComparison):
-
     @classmethod
     def register(cls):
         super().register()

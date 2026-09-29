@@ -1,7 +1,6 @@
-
 import pytest
 
-from geoviews.element import WMTS
+import geoviews as gv
 from geoviews.plotting.bokeh import TilePlot
 from geoviews.tile_sources import OSM
 
@@ -9,12 +8,11 @@ from .test_bokeh_plot import TestBokehPlot, bokeh_renderer
 
 
 class TestWMTSPlot(TestBokehPlot):
-
     def test_xyzservices_tileprovider(self):
         xyzservices = pytest.importorskip("xyzservices")
         osm = xyzservices.providers.OpenStreetMap.Mapnik
 
-        tiles = WMTS(osm)
+        tiles = gv.WMTS(osm)
         plot = bokeh_renderer.get_plot(tiles)
         glyph = plot.handles["glyph"]
         assert glyph.attribution == osm.html_attribution

@@ -13,5 +13,5 @@ __all__ = (
     "PolyVertexDrawTool",
     "PolyVertexEditTool",
     "RestoreTool",
-    "WindBarb"
+    "WindBarb",
 )

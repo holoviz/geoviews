@@ -1,0 +1,8 @@
+# Run this command to always ignore formatting commits in `git blame`
+# git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# Using top level `gv.` import in tests
+b2d93098c18d306652d695093c60f866efced34c
+
+# Ruff formatting
+edddb2b2c08e077c5b4a38d1e7af716fdfc19d9a

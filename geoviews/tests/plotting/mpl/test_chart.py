@@ -5,15 +5,13 @@ from holoviews.tests.plotting.utils import ParamLogStream
 from test_plot import TestMPLPlot
 
 import geoviews as gv
-from geoviews import Store
-from geoviews.element import WindBarbs
 
 try:
     import datashader
 except ImportError:
     datashader = None
 
-mpl_renderer = Store.renderers["matplotlib"]
+mpl_renderer = gv.Store.renderers["matplotlib"]
 
 
 class TestWindBarbsPlot(TestMPLPlot):
@@ -22,10 +20,10 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 5 * Y
 
-        angle = np.pi/2 - np.arctan2(-V, -U)  # meteorological convention
+        angle = np.pi / 2 - np.arctan2(-V, -U)  # meteorological convention
         mag = np.hypot(U, V)
 
-        gv_barbs = WindBarbs((X, Y, angle, mag))
+        gv_barbs = gv.WindBarbs((X, Y, angle, mag))
 
         fig = gv.render(gv_barbs)
         mpl_barbs = fig.axes[0].get_children()[0]
@@ -39,7 +37,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 1 * Y
 
-        angle = np.pi/2 - np.arctan2(-V, -U)  # meteorological convention
+        angle = np.pi / 2 - np.arctan2(-V, -U)  # meteorological convention
         mag = np.hypot(U, V)
         ds = xr.Dataset(
             {
@@ -63,14 +61,18 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 2 * Y
 
-        angle = np.pi/2 - np.arctan2(-V, -U)  # meteorological convention
+        angle = np.pi / 2 - np.arctan2(-V, -U)  # meteorological convention
         mag = np.hypot(U, V)
 
-        gv_barbs = WindBarbs((X, Y, angle, mag))
-        gv_barbs_uv = WindBarbs.from_uv((X, Y, U, V))
+        gv_barbs = gv.WindBarbs((X, Y, angle, mag))
+        gv_barbs_uv = gv.WindBarbs.from_uv((X, Y, U, V))
 
-        np.testing.assert_almost_equal(gv_barbs.data["Angle"].T.flatten(), gv_barbs_uv.data["Angle"])
-        np.testing.assert_almost_equal(gv_barbs.data["Magnitude"].T.flatten(), gv_barbs_uv.data["Magnitude"])
+        np.testing.assert_almost_equal(
+            gv_barbs.data["Angle"].T.flatten(), gv_barbs_uv.data["Angle"]
+        )
+        np.testing.assert_almost_equal(
+            gv_barbs.data["Magnitude"].T.flatten(), gv_barbs_uv.data["Magnitude"]
+        )
 
     def test_windbarbs_dataset_from_uv_other_dim(self):
         xr = pytest.importorskip("xarray")
@@ -79,7 +81,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 3 * Y
 
-        angle = np.pi/2 - np.arctan2(-V, -U)  # meteorological (not used by from_uv)
+        angle = np.pi / 2 - np.arctan2(-V, -U)  # meteorological (not used by from_uv)
         mag = np.hypot(U, V)
         ds = xr.Dataset(
             {
@@ -92,11 +94,11 @@ class TestWindBarbsPlot(TestMPLPlot):
             coords={"x": x, "y": -x},
         )
 
-        gv_barbs = WindBarbs.from_uv(ds, ["x", "y"], ["u", "v", "other"])
+        gv_barbs = gv.WindBarbs.from_uv(ds, ["x", "y"], ["u", "v", "other"])
         assert "other" in gv_barbs.data
 
     def test_windbarbs_color_op(self):
-        barbs = WindBarbs(
+        barbs = gv.WindBarbs(
             [(0, 0, 0, 1, "#000000"), (0, 1, 0, 1, "#FF0000"), (0, 2, 0, 1, "#00FF00")],
             vdims=["A", "M", "color"],
         ).opts(color="color")
@@ -112,7 +114,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 4 * Y
 
-        angle = np.pi/2 - np.arctan2(-V, -U)  # meteorological convention
+        angle = np.pi / 2 - np.arctan2(-V, -U)  # meteorological convention
         mag = np.hypot(U, V)
 
         barbs = gv.WindBarbs((X, Y, angle, mag)).opts(
@@ -136,12 +138,10 @@ class TestWindBarbsPlot(TestMPLPlot):
         X, Y = np.meshgrid(x, x)
         U, V = 10 * X, 5 * Y
 
-        angle = np.pi/2 - np.arctan2(-V, -U)  # meteorological convention
+        angle = np.pi / 2 - np.arctan2(-V, -U)  # meteorological convention
         mag = np.hypot(U, V)
 
-        barbs = gv.WindBarbs((X, Y, angle, mag)).opts(
-            colorbar=True, clim=(0, 50), flagcolor="red"
-        )
+        barbs = gv.WindBarbs((X, Y, angle, mag)).opts(colorbar=True, clim=(0, 50), flagcolor="red")
         plot = mpl_renderer.get_plot(barbs)
         artist = plot.handles["artist"]
         np.testing.assert_almost_equal(
@@ -163,9 +163,7 @@ class TestWindBarbsPlot(TestMPLPlot):
         angle = np.arctan2(V, U)
         mag = np.hypot(U, V)
 
-        barbs = gv.WindBarbs((X, Y, angle, mag)).opts(
-            colorbar=True, clim=(0, 50), barbcolor="red"
-        )
+        barbs = gv.WindBarbs((X, Y, angle, mag)).opts(colorbar=True, clim=(0, 50), barbcolor="red")
         plot = mpl_renderer.get_plot(barbs)
         artist = plot.handles["artist"]
         np.testing.assert_almost_equal(
@@ -205,7 +203,6 @@ class TestWindBarbsPlot(TestMPLPlot):
 
 
 class TestImageStackPlot(TestMPLPlot):
-
     @pytest.mark.skipif(datashader is None, reason="Needs datashader to be installed")
     def test_image_stack_crs(self):
         x = np.arange(-120, -115)
@@ -214,7 +211,9 @@ class TestImageStackPlot(TestMPLPlot):
         b = np.random.rand(len(y), len(x))
 
         img_stack = gv.ImageStack(
-            (x, y, a, b), kdims=["x", "y"], vdims=["a", "b"],
+            (x, y, a, b),
+            kdims=["x", "y"],
+            vdims=["a", "b"],
         )
         data = img_stack.data
         np.testing.assert_almost_equal(data["x"], x)

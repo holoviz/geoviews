@@ -17,9 +17,9 @@ class PointTableLink(Link):
     _requires_target = True
 
     def __init__(self, source, target, **params):
-        if 'point_columns' not in params:
+        if "point_columns" not in params:
             dimensions = [dimension_sanitizer(d.name) for d in target.dimensions()[:2]]
-            params['point_columns'] = dimensions
+            params["point_columns"] = dimensions
         super().__init__(source, target, **params)
 
 
@@ -33,9 +33,9 @@ class VertexTableLink(Link):
     _requires_target = True
 
     def __init__(self, source, target, **params):
-        if 'vertex_columns' not in params:
+        if "vertex_columns" not in params:
             dimensions = [dimension_sanitizer(d.name) for d in target.dimensions()[:2]]
-            params['vertex_columns'] = dimensions
+            params["vertex_columns"] = dimensions
         super().__init__(source, target, **params)
 
 
@@ -44,12 +44,11 @@ class RectanglesTableLink(HvRectanglesTableLink):
 
 
 class PointTableLinkCallback(LinkCallback):
+    source_model = "cds"
+    target_model = "cds"
 
-    source_model = 'cds'
-    target_model = 'cds'
-
-    on_source_changes = ['data', 'patching']
-    on_target_changes = ['data', 'patching']
+    on_source_changes = ["data", "patching"]
+    on_target_changes = ["data", "patching"]
 
     source_code = """
     const projections = Bokeh.require("core/util/projections");
@@ -105,12 +104,11 @@ class PointTableLinkCallback(LinkCallback):
 
 
 class VertexTableLinkCallback(LinkCallback):
+    source_model = "cds"
+    target_model = "cds"
 
-    source_model = 'cds'
-    target_model = 'cds'
-
-    on_source_changes = ['selected', 'data', 'patching']
-    on_target_changes = ['data', 'patching']
+    on_source_changes = ["selected", "data", "patching"]
+    on_target_changes = ["data", "patching"]
 
     source_code = """
     const projections = Bokeh.require("core/util/projections");
@@ -226,7 +224,6 @@ class VertexTableLinkCallback(LinkCallback):
 
 
 class RectanglesTableLinkCallback(HvRectanglesTableLinkCallback):
-
     source_code = """
     const projections = Bokeh.require("core/util/projections");
     const l = source_cds.data[source_glyph.left.field]
@@ -281,6 +278,7 @@ class RectanglesTableLinkCallback(HvRectanglesTableLinkCallback):
     source_cds.data['top'] = t
     """
 
-VertexTableLink.register_callback('bokeh', VertexTableLinkCallback)
-PointTableLink.register_callback('bokeh', PointTableLinkCallback)
-RectanglesTableLink.register_callback('bokeh', RectanglesTableLinkCallback)
+
+VertexTableLink.register_callback("bokeh", VertexTableLinkCallback)
+PointTableLink.register_callback("bokeh", PointTableLinkCallback)
+RectanglesTableLink.register_callback("bokeh", RectanglesTableLinkCallback)

@@ -17,10 +17,14 @@ def test_quadmesh_contoures_filled():
     gv.renderer("bokeh").get_plot(p2)
 
 
+@pytest.mark.filterwarnings(
+    "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5"  # https://github.com/SciTools/cartopy/pull/2686
+)
 def test_unwrap_lons():
     pytest.importorskip("datashader")
     # Regression test for: https://github.com/holoviz/geoviews/pull/722
     from holoviews.operation.datashader import rasterize
+
     ds = xr.tutorial.open_dataset("air_temperature").isel(time=0)
     p1 = gv.Image(ds)
     p2 = rasterize(p1, filled=True)
@@ -38,6 +42,7 @@ def test_no_unwrap_lons():
     pytest.importorskip("datashader")
     # Regression test for: https://github.com/holoviz/geoviews/pull/722
     from holoviews.operation.datashader import rasterize
+
     ds = xr.tutorial.open_dataset("air_temperature").isel(time=0)
     # to -180, 180
     ds["lon"] = (ds["lon"] + 180) % 360 - 180

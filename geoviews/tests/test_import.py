@@ -15,6 +15,21 @@ def test_no_blocklist_imports():
         print(", ".join(mods), end="")
         """
 
-    output = check_output([sys.executable, '-c', dedent(check)])
+    output = check_output([sys.executable, "-c", dedent(check)])
 
+    assert output == b""
+
+
+def test_lazy_imports():
+    check = """\
+    import geoviews as gv
+
+    for attr in ("operation", "project", "annotate"):
+        try:
+            getattr(gv, attr)
+        except RecursionError:
+            print(attr, end=" ")
+    """
+
+    output = check_output([sys.executable, "-c", dedent(check)])
     assert output == b""

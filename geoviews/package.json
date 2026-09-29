@@ -1,6 +1,6 @@
 {
   "name": "@holoviz/geoviews",
-  "version": "1.15.2-a.3",
+  "version": "1.16.0-b.0",
   "description": "Simple, concise geographical visualization in Python",
   "license": "BSD-3-Clause",
   "repository": {
@@ -8,11 +8,11 @@
     "url": "https://github.com/holoviz/geoviews.git"
   },
   "dependencies": {
-    "@bokeh/bokehjs": "^3.9.0",
+    "@bokeh/bokehjs": "^3.10.0",
     "@stylistic/eslint-plugin": "^5.9.0",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
-    "eslint": "^9.39.1",
+    "eslint": "^10.0.0",
     "typescript-eslint": "^8.56.1"
   },
   "files": [
@@ -20,6 +20,6 @@
   ],
   "main": "dist/geoviews.min.js",
   "scripts": {
-    "lint": "npx eslint './*.ts' './models/**/*.ts'"
+    "lint": "npx eslint './*.ts' './models/**/*.ts' --fix"
   }
 }

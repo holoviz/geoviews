@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs", 'bokeh ==3.9.*']
+requires = ["hatchling", "hatch-vcs", 'bokeh ==3.10.*']
 build-backend = "hatchling.build"
 
 [project]
@@ -9,13 +9,11 @@ description = 'GeoViews is a Python library that makes it easy to explore and vi
 readme = "README.md"
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 authors = [{ name = "HoloViz developers", email = "developers@holoviz.org" }]
 maintainers = [{ name = "HoloViz developers", email = "developers@holoviz.org" }]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
@@ -29,12 +27,12 @@ classifiers = [
 ]
 
 dependencies = [
-    'bokeh >=3.8.0',
+    'bokeh >=3.10.0',
     'cartopy >=0.18.0',
     'holoviews >=1.16.0',
     'numpy',
     'packaging',
-    'panel >=1.0.0',
+    'panel >=1.10.0a0',  # TODO(build): Remove a0
     'param >=1.9.3,<3.0',
     'pyproj',
     'shapely >=1.8.0',
@@ -222,5 +220,7 @@ filterwarnings = [
     # 2026-06
     "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:cartopy.img_transform",
     "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:scipy.io._netcdf",
-    "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:rioxarray._io"
+    "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:rioxarray._io",
+    # 2026-09
+    "ignore:Use `@` matmul instead of `\\*` mul:Warning:rioxarray", # https://github.com/corteva/rioxarray/issues/937
 ]

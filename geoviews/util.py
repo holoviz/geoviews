@@ -61,17 +61,30 @@ def expand_geoms(geoms):
     return expanded
 
 
+def _central_longitude(proj):
+    """Central longitude of a projection, in degrees.
+
+    Cartopy 0.26 switched PlateCarree from ``proj=eqc`` to ``proj=latlong``,
+    which reports the central longitude as the prime meridian ``pm`` and no
+    longer emits ``lon_0``. Earlier versions, and other projections, still use
+    ``lon_0``.
+    """
+    params = proj.proj4_params
+    if "lon_0" in params:
+        return params["lon_0"]
+    return params.get("pm", 0)
+
+
 def project_extents(extents, src_proj, dest_proj, tol=1e-6):
     x1, y1, x2, y2 = extents
 
     if (
         isinstance(src_proj, ccrs.PlateCarree)
         and not isinstance(dest_proj, ccrs.PlateCarree)
-        and src_proj.proj4_params["lon_0"] != 0
+        and (xoffset := _central_longitude(src_proj)) != 0
     ):
-        xoffset = src_proj.proj4_params["lon_0"]
-        x1 = x1 - xoffset
-        x2 = x2 - xoffset
+        x1 -= xoffset
+        x2 -= xoffset
         src_proj = ccrs.PlateCarree()
 
     # Limit latitudes

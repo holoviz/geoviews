@@ -311,3 +311,13 @@ class TestProjection:
 
         projected = project_path(borders, projection=ccrs.GOOGLE_MERCATOR)
         assert len(projected.data) == 331
+
+    def test_project_path_from_offset_platecarree(self):
+        path = gv.Path(
+            [[(-10, -10), (10, 10)]],
+            crs=ccrs.PlateCarree(central_longitude=30),
+        )
+        projected = project_path(path, projection=ccrs.Robinson())
+
+        assert projected.crs == ccrs.Robinson()
+        assert np.isfinite(projected.dimension_values(0)).all()

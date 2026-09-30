@@ -321,3 +321,15 @@ class TestProjection:
 
         assert projected.crs == ccrs.Robinson()
         assert np.isfinite(projected.dimension_values(0)).all()
+
+    def test_project_quadmesh_does_not_mutate_source(self):
+        xr = pytest.importorskip("xarray")
+        lons = np.linspace(-179, 179, 100)
+        lats = np.linspace(-89, 89, 50)
+        arr = xr.DataArray(lons, coords={"lon": lons}) + xr.DataArray(lats, coords={"lat": lats})
+        original = arr.copy()
+        qmesh = gv.QuadMesh(arr, ["lon", "lat"], crs=ccrs.PlateCarree())
+        projected = gv.project(qmesh, projection=ccrs.Robinson(central_longitude=7))
+
+        assert np.isnan(projected.dimension_values(2)).any()
+        xr.testing.assert_identical(arr, original)

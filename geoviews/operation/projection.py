@@ -383,7 +383,7 @@ class project_quadmesh(_project_operation):
                 mask[1:, :-1][to_mask[:-1]] = True
                 mask[:-1, 1:][to_mask[1:]] = True
                 mask[:-1, :-1][to_mask[1:]] = True
-                zs[mask] = np.nan
+                zs = np.where(mask, np.nan, zs)  # copies to not overwrite source
 
         params = get_param_values(element)
         return element.clone((PX, PY, zs), crs=self.p.projection, **params)

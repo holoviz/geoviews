@@ -259,3 +259,24 @@ class GeoPandasInterfaceTest(GeomInterfaceTest, GeomTests, RoundTripTests):
         )
         gdf = geopandas.GeoDataFrame(df, geometry=geopandas.points_from_xy(df.x, df.y))
         render(Points(gdf))
+
+    def test_geopandas_vdim_with_custom_label_resolved_by_name(self):
+        # Fix for https://github.com/holoviz/geoviews/issues/840
+        # A dim() expression carries a Dimension whose label is the column
+        # name, which must still resolve against a vdim with a custom label.
+        from holoviews import dim
+
+        gdf = geopandas.GeoDataFrame(
+            {"status": ["safe", "endangered", "safe"]},
+            geometry=geopandas.points_from_xy([0, 1, 2], [0, 1, 2]),
+        )
+        points = Points(gdf, vdims=[("status", "Conservation Status")])
+        probe = dim("status").dimension
+        assert self.interface.isscalar(points, probe, per_geom=True)
+        assert_data_equal(
+            self.interface.values(points, probe),
+            np.array(["safe", "endangered", "safe"], dtype=object),
+        )
+        assert self.interface.range(points, probe) == ("endangered", "safe")
+        color = dim("status").categorize({"safe": "green", "endangered": "red"})
+        render(points.opts(color=color))

@@ -681,7 +681,7 @@ class EdgePaths(Path):
     group = param.String(default="EdgePaths", constant=True)
 
 
-class Graph(_Element, HvGraph):
+class Graph(HvGraph, _Element):
     group = param.String(default="Graph", constant=True)
 
     node_type = Nodes

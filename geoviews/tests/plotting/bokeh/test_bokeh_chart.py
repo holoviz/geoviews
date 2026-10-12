@@ -251,3 +251,9 @@ def test_hover_formatters_in_overlay_with_different_vdims():
     for hover in hover_tools:
         assert len(hover.formatters) == 2
         assert all(isinstance(f, CustomJSHover) for f in hover.formatters.values())
+
+
+def test_graph_categorical_nodes():
+    graph = gv.Graph(((["A"], ["B"]), gv.Nodes([(0, 0, "A"), (1, 1, "B")])))
+    plot = bokeh_renderer.get_plot(graph)
+    assert plot.state is not None

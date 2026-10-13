@@ -74,6 +74,18 @@ features = [
 ]
 no-default-feature = true
 
+[environments.test-315]
+features = [
+    "required",
+    "py315",
+    "optional",
+    "test-core",
+    "test-unit-task",
+    "test-example",
+    "download-data",
+]
+no-default-feature = true
+
 [environments.test-core]
 features = ["required", "py314", "test-core", "test-unit-task"]
 no-default-feature = true
@@ -114,9 +126,6 @@ pyproj = "*"
 shapely = ">=1.8.0"
 xyzservices = "*"
 
-[feature.required.target.osx-arm64.dependencies]
-geos = "!=3.14.1" # tmp: https://github.com/conda-forge/geos-feedstock/issues/93
-
 [feature.required.tasks]
 sync-git-tags = 'python scripts/sync_git_tags.py geoviews'
 
@@ -134,6 +143,10 @@ python = "3.13.*"
 [feature.py314.dependencies]
 python-gil = "*"
 python = "3.14.*"
+
+[feature.py315.dependencies]
+python-gil = "*"
+python = "3.15.*"
 
 [feature.download-data.tasks]
 download-data = 'python scripts/download_data.py'

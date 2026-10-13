@@ -231,7 +231,6 @@ nbsite = ">=0.8.4,<0.10.0"
 numpydoc = "*"
 selenium = "*"
 sphinx-reredirects = "*"
-matplotlib-base = "<3.11" # 2026-07 until next cartopy release 0.25.0+
 
 [feature.doc.activation.env]
 MOZ_HEADLESS = "1"

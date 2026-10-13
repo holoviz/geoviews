@@ -152,12 +152,10 @@ python = "3.15.*"
 download-data = 'python scripts/download_data.py'
 
 [feature.download-data.dependencies]
-cftime = "*"
 geodatasets = "*"
 pooch = "*"
-pyct = "*"
+requests = "*"
 scipy = "*"
-setuptools = "*" # Because of pyct
 xarray = "*"
 
 [feature.dev.dependencies]

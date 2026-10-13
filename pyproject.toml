@@ -221,4 +221,6 @@ filterwarnings = [
     "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5:DeprecationWarning:rioxarray._io",
     # 2026-09
     "ignore:Use `@` matmul instead of `\\*` mul:Warning:rioxarray", # https://github.com/corteva/rioxarray/issues/937
+    # 2026-10
+    "ignore:invalid value encountered in create_collection:RuntimeWarning:shapely.creation" # https://github.com/libgeos/geos/issues/1492
 ]

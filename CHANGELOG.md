@@ -21,6 +21,7 @@ Compatibility:
 - Cartopy 0.26.0 ([#884](https://github.com/holoviz/geoviews/pull/884))
 - Bokeh 3.10.0 ([#861](https://github.com/holoviz/geoviews/pull/861))
 - Iris 3.15 and PyProj 9.8 ([#839](https://github.com/holoviz/geoviews/pull/839))
+- Python 3.15 support ([#905](https://github.com/holoviz/geoviews/pull/905))
 
 # Version 1.15.1
 

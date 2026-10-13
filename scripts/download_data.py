@@ -1,7 +1,11 @@
 import sys
 import time
 from contextlib import suppress
+from io import BytesIO
 from pathlib import Path
+from zipfile import ZipFile
+
+import requests
 
 BASE_PATH = Path(__file__).resolve().parents[1]
 
@@ -17,15 +21,18 @@ def retry(func, *args, **kwargs):
     return func(*args, **kwargs)
 
 
-with suppress(ImportError):
-    import pyct.cmd
+def fetch_sample_data():
+    data_path = BASE_PATH / "examples" / "data"
+    if data_path.exists():
+        return
 
-    retry(
-        pyct.cmd.fetch_data,
-        name="data",
-        path=str(BASE_PATH / "examples"),
-        datasets="datasets.yml",
-    )
+    resp = requests.get("http://assets.holoviews.org/geoviews-sample-data.zip", timeout=30)
+    resp.raise_for_status()
+    with ZipFile(BytesIO(resp.content)) as zf:
+        zf.extractall(data_path)
+
+
+retry(fetch_sample_data)
 
 
 with suppress(ImportError):

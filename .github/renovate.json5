@@ -1,7 +1,7 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["config:recommended", ":enablePreCommit"],
-  enabledManagers: ["github-actions", "pre-commit", "pixi", "npm"],
+  enabledManagers: ["github-actions", "pre-commit", "pixi"],
   lockFileMaintenance: { enabled: true },
   schedule: ["* * 1 * *"],
 
@@ -49,27 +49,6 @@
       branchTopic: "pixi-lock",
       labels: ["run-build-ci", "run-docs-ci"],
       enabled: true,
-    },
-    {
-      groupName: "NPM",
-      matchManagers: ["npm"],
-      labels: ["run-build-ci"],
-    },
-    {
-      matchManagers: ["npm"],
-      matchPackageNames: ["@bokeh/bokehjs"],
-      enabled: false, // BokehJS needs to be updated manually
-    },
-    {
-      groupName: "NPM Lock",
-      matchManagers: ["npm"],
-      matchUpdateTypes: ["lockFileMaintenance"],
-      description: "Monthly update of NPM Lock",
-      schedule: ["before 5am on the 1st day of the month"],
-      labels: ["run-build-ci"],
-      commitMessageAction: "Update",
-      commitMessageTopic: "package-lock.json",
-      branchTopic: "npm-lock",
     },
   ],
   vulnerabilityAlerts: {

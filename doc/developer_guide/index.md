@@ -162,12 +162,11 @@ A development version of GeoViews can be found [here](https://dev.geoviews.org/)
 
 ## Build
 
-GeoViews have three build tasks. One is for building packages for Pip, Conda, and NPM.
+GeoViews have two build tasks. One is for building packages for Pip and Conda.
 
 ```bash
 pixi run build-pip
 pixi run build-conda
-pixi run build-npm
 ```
 
 ## Continuous Integration

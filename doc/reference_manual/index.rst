@@ -34,9 +34,6 @@ GeoViews subpackages
 `links`_
   Tools for linking different elements and streams.
 
-`models`_
-  Custom models extending GeoViews' capabilities.
-
 `operation`_
   Operations applied to transform existing elements or data structures.
 
@@ -63,7 +60,6 @@ GeoViews subpackages
    data <geoviews.data>
    element <geoviews.element>
    links <geoviews.links>
-   models <geoviews.models>
    operation <geoviews.operation>
    plotting <geoviews.plotting>
    plotting.bokeh <geoviews.plotting.bokeh>
@@ -77,7 +73,6 @@ GeoViews subpackages
 .. _data: geoviews.data.html
 .. _element: geoviews.element.html
 .. _links: geoviews.links.html
-.. _models: geoviews.models.html
 .. _operation: geoviews.operation.html
 .. _plotting: geoviews.plotting.html
 .. _plotting.bokeh: geoviews.plotting.bokeh.html

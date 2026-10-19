@@ -208,30 +208,9 @@ jobs:
         run: |
           pixi run -e "${ENV}" test-unit
 
-  lint_suite:
-    name: core:${{ matrix.environment }}:${{ matrix.os }}
-    needs: [pre_commit, setup]
-    runs-on: ${{ matrix.os }}
-    if: github.event_name != 'push' && needs.setup.outputs.code_change == 'true'
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ["ubuntu-latest"]
-        environment: ["lint"]
-    timeout-minutes: 5
-    env:
-      ENV: ${{ matrix.environment }}
-    steps:
-      - uses: holoviz-dev/holoviz_tasks/pixi-install@17107a157b32cc1bd2a09c71fbdbc74603efdb40 # v1.0.15
-        with:
-          environments: ${{ matrix.environment }}
-      - name: Test Lint
-        run: |
-          pixi run -e "${ENV}" lint-typescript
-
   result_test_suite:
     name: result:test
-    needs: [unit_test_suite, ui_test_suite, core_test_suite, lint_suite]
+    needs: [unit_test_suite, ui_test_suite, core_test_suite]
     if: always()
     runs-on: ubuntu-latest
     steps:

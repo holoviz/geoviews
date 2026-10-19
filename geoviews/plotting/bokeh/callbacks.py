@@ -1,7 +1,8 @@
 from pathlib import Path
 
 import numpy as np
-from bokeh.models import CustomAction, CustomJS, PolyEditTool
+from bokeh.core.properties import field
+from bokeh.models import CustomAction, CustomJS, CustomJSTransform, PolyDrawTool, PolyEditTool
 from holoviews.core.ndmapping import UniformNdMapping
 from holoviews.plotting.bokeh.callbacks import (
     BoundsCallback,
@@ -51,7 +52,6 @@ from holoviews.streams import (
 )
 
 from ...element.geo import Shape, _Element
-from ...models import PolyVertexDrawTool, PolyVertexEditTool
 from ...operation import project
 from ...streams import PolyVertexDraw, PolyVertexEdit
 from ...util import project_extents
@@ -311,6 +311,182 @@ class GeoPointDrawCallback(PointDrawCallback):
         return msg
 
 
+_VERTEX_STYLE_CODE_JS = """
+const vys = vsource.get_array(ykey)
+const ends = new Set()
+for (const renderer of tool.renderers) {
+  const {glyph, data_source} = renderer
+  if (glyph.xs?.field == null || glyph.ys?.field == null) {
+    continue
+  }
+  const xpaths = data_source.get_array(glyph.xs.field)
+  const ypaths = data_source.get_array(glyph.ys.field)
+  for (let k = 0; k < xpaths.length; k++) {
+    const px = xpaths[k]
+    const py = ypaths[k]
+    if (px.length == 0) {
+      continue
+    }
+    ends.add(`${px[0]},${py[0]}`)
+    ends.add(`${px[px.length - 1]},${py[py.length - 1]}`)
+  }
+}
+return Array.from(xs, (x, i) => ends.has(`${x},${vys[i]}`) ? end : node)
+"""
+
+_SPLIT_PATH_CODE_JS = """
+const xkey = glyph.xs.field
+const ykey = glyph.ys.field
+const xpaths = source.get_array(xkey)
+const ypaths = source.get_array(ykey)
+const n = xpaths.length
+if (n < 2) {
+  return
+}
+const drawn = new Set()
+for (let j = 0; j < xpaths[n - 1].length; j++) {
+  drawn.add(`${xpaths[n - 1][j]},${ypaths[n - 1][j]}`)
+}
+for (let k = 0; k < n - 1; k++) {
+  const xs = xpaths[k]
+  const ys = ypaths[k]
+  for (let j = 1; j < xs.length - 1; j++) {
+    if (!drawn.has(`${xs[j]},${ys[j]}`)) {
+      continue
+    }
+    const entries = source.data instanceof Map ? [...source.data] : Object.entries(source.data)
+    const data = {}
+    for (const [col, column] of entries) {
+      const array = Array.from(column)
+      if (col == xkey || col == ykey) {
+        const path = Array.from(array[k])
+        array.splice(k, 1, path.slice(0, j + 1), path.slice(j))
+      } else {
+        array.splice(k + 1, 0, array[k])
+      }
+      data[col] = array
+    }
+    // Re-triggers this callback, which splits the next path if any
+    source.data = data
+    return
+  }
+}
+"""
+
+# The drag mutates the paths in place and only emits a data change when it
+# ends, so the snapshot of the paths before the drag is taken when the path
+# is selected (needed to show its vertices) and after each data change.
+_LINK_SNAPSHOT_CODE_JS = """
+const state = source._gv_link ??= {}
+if (!state.panning) {
+  state.prev = {
+    xs: Array.from(source.get_array(glyph.xs.field), (p) => Array.from(p)),
+    ys: Array.from(source.get_array(glyph.ys.field), (p) => Array.from(p)),
+  }
+}
+"""
+
+_LINK_PANSTART_CODE_JS = """
+if (tool.active) {
+  const state = source._gv_link ??= {}
+  state.panning = true
+  state.shift = cb_obj.modifiers?.shift ?? false
+}
+"""
+
+_LINK_MOVE_CODE_JS = """
+const state = source._gv_link ??= {}
+const xpaths = source.get_array(glyph.xs.field)
+const ypaths = source.get_array(glyph.ys.field)
+const {prev} = state
+const link = state.panning && !state.shift && prev != null && prev.xs.length == xpaths.length
+state.panning = false
+let changed = false
+if (link) {
+  const moves = []
+  for (let k = 0; k < xpaths.length; k++) {
+    if (prev.xs[k].length != xpaths[k].length) {
+      continue
+    }
+    for (let j = 0; j < xpaths[k].length; j++) {
+      const [ox, oy] = [prev.xs[k][j], prev.ys[k][j]]
+      const [nx, ny] = [xpaths[k][j], ypaths[k][j]]
+      if (ox != nx || oy != ny) {
+        moves.push([ox, oy, nx, ny])
+      }
+    }
+  }
+  for (const [ox, oy, nx, ny] of moves) {
+    for (let m = 0; m < xpaths.length; m++) {
+      const xs = xpaths[m]
+      const ys = ypaths[m]
+      for (let j = 0; j < xs.length; j++) {
+        if (xs[j] == ox && ys[j] == oy) {
+          xs[j] = nx
+          ys[j] = ny
+          changed = true
+        }
+      }
+    }
+  }
+}
+state.prev = {
+  xs: Array.from(xpaths, (p) => Array.from(p)),
+  ys: Array.from(ypaths, (p) => Array.from(p)),
+}
+if (changed) {
+  // The columns were mutated in place, so skip the equality check
+  source.setv({data: source.data}, {check_eq: false})
+}
+"""
+
+
+def _unwrap_value(value):
+    if isinstance(value, dict):
+        return value.get("value")
+    return getattr(value, "value", value)
+
+
+def _style_vertices(tool, node_style, end_style):
+    """Styles the vertices which are the start or end of a path with
+    ``end_style`` and the remaining with ``node_style``.
+    """
+    glyph = tool.vertex_renderer.glyph
+    props = glyph.properties()
+    for key in (node_style.keys() | end_style.keys()) & props:
+        default = _unwrap_value(getattr(glyph, key))
+        transform = CustomJSTransform(
+            args={
+                "tool": tool,
+                "vsource": tool.vertex_renderer.data_source,
+                "ykey": "y",
+                "node": node_style.get(key, default),
+                "end": end_style.get(key, default),
+            },
+            v_func=_VERTEX_STYLE_CODE_JS,
+        )
+        setattr(glyph, key, field("x", transform))
+
+
+def _split_path_on_snap(renderer):
+    source = renderer.data_source
+    source.js_on_change(
+        "data",
+        CustomJS(args={"source": source, "glyph": renderer.glyph}, code=_SPLIT_PATH_CODE_JS),
+    )
+
+
+def _link_vertices(plot, renderer, tool):
+    """Moves vertices which coincide with a dragged vertex along with it,
+    unless shift is held when the drag starts.
+    """
+    source = renderer.data_source
+    args = {"source": source, "glyph": renderer.glyph, "tool": tool}
+    source.selected.js_on_change("indices", CustomJS(args=args, code=_LINK_SNAPSHOT_CODE_JS))
+    plot.js_on_event("panstart", CustomJS(args=args, code=_LINK_PANSTART_CODE_JS))
+    source.js_on_change("data", CustomJS(args=args, code=_LINK_MOVE_CODE_JS))
+
+
 class PolyVertexEditCallback(GeoPolyEditCallback):
     split_code = """
     var vcds = vertex.data_source
@@ -364,16 +540,13 @@ class PolyVertexEditCallback(GeoPolyEditCallback):
             vertex_style = dict({"size": 10, "alpha": 0.8}, **stream.vertex_style)
             r1 = plot.state.scatter([], [], **vertex_style)
             tooltip = f"{type(element).__name__} Edit Tool"
-            vertex_tool = PolyVertexEditTool(
-                vertex_renderer=r1,
-                description=tooltip,
-                node_style=stream.node_style,
-                end_style=stream.feature_style,
-            )
+            vertex_tool = PolyEditTool(vertex_renderer=r1, description=tooltip)
+            _style_vertices(vertex_tool, stream.node_style, stream.feature_style)
             action = CustomAction(description="Split path", icon=self.icon)
             plot.state.add_tools(vertex_tool, action)
             self._create_vertex_split_link(action, renderer, r1, vertex_tool)
         vertex_tool.renderers.append(renderer)
+        _link_vertices(plot.state, renderer, vertex_tool)
         self._update_cds_vdims(renderer.data_source.data)
         CDSCallback.initialize(self, plot_id)
 
@@ -394,14 +567,15 @@ class PolyVertexDrawCallback(GeoPolyDrawCallback):
         tooltip = f"{type(element).__name__} Draw Tool"
         if stream.empty_value is not None:
             kwargs["empty_value"] = stream.empty_value
-        poly_tool = PolyVertexDrawTool(
+        poly_tool = PolyDrawTool(
             drag=all(s.drag for s in self.streams),
             renderers=[renderer],
-            node_style=stream.node_style,
-            end_style=stream.feature_style,
             description=tooltip,
             **kwargs,
         )
+        if stream.show_vertices:
+            _style_vertices(poly_tool, stream.node_style, stream.feature_style)
+            _split_path_on_snap(renderer)
         plot.state.tools.append(poly_tool)
         self._update_cds_vdims(renderer.data_source.data)
         CDSCallback.initialize(self, plot_id)

@@ -1,5 +1,6 @@
 import cartopy.crs as ccrs
 import param
+from bokeh.models import CustomAction, CustomJS
 from holoviews.annotators import (
     Annotator,
     PathAnnotator,
@@ -18,9 +19,74 @@ from .links import (
     RectanglesTableLink,
     VertexTableLink,
 )
-from .models.custom_tools import CheckpointTool, ClearTool, RestoreTool
 from .operation import project
 from .streams import PolyVertexDraw, PolyVertexEdit
+
+_CHECKPOINT_CODE_JS = """
+for (const source of sources) {
+  source._gv_buffer ??= []
+  const entries = source.data instanceof Map ? [...source.data] : Object.entries(source.data)
+  const data = {}
+  for (const [key, column] of entries) {
+    data[key] = Array.from(column, (v) => Array.isArray(v) || ArrayBuffer.isView(v) ? v.slice() : v)
+  }
+  source._gv_buffer.push(data)
+}
+"""
+
+_RESTORE_CODE_JS = """
+for (const source of sources) {
+  const data = source._gv_buffer?.pop()
+  if (data != null) {
+    source.data = data
+  }
+}
+"""
+
+_CLEAR_CODE_JS = """
+for (const source of sources) {
+  source.clear()
+}
+"""
+
+_CHECKPOINT_TAG = "geoviews_checkpoint"
+_RESTORE_TAG = "geoviews_restore"
+_CLEAR_TAG = "geoviews_clear"
+
+
+def CheckpointTool():
+    """Checkpoints the data on the ColumnDataSources, allowing the
+    RestoreTool to restore the data to a previous state.
+    """
+    return CustomAction(
+        icon="save",
+        description="Checkpoint",
+        tags=[_CHECKPOINT_TAG],
+        callback=CustomJS(args={"sources": []}, code=_CHECKPOINT_CODE_JS),
+    )
+
+
+def RestoreTool():
+    """Restores the data on the ColumnDataSources to a previous
+    checkpoint created by the CheckpointTool.
+    """
+    return CustomAction(
+        icon="undo",
+        description="Restore",
+        tags=[_RESTORE_TAG],
+        callback=CustomJS(args={"sources": []}, code=_RESTORE_CODE_JS),
+    )
+
+
+def ClearTool():
+    """Clears the data on the ColumnDataSources."""
+    return CustomAction(
+        icon="reset",
+        description="Clear data",
+        tags=[_CLEAR_TAG],
+        callback=CustomJS(args={"sources": []}, code=_CLEAR_CODE_JS),
+    )
+
 
 Annotator._tools = [CheckpointTool, RestoreTool, ClearTool]
 Annotator.table_transforms.append(project.instance(projection=ccrs.PlateCarree()))
@@ -60,15 +126,10 @@ PolyAnnotator._vertex_table_link = get_vertex_table_link
 def initialize_tools(plot, element):
     """Initializes the Checkpoint and Restore tools."""
     cds = plot.handles["source"]
-    checkpoint = plot.state.select(type=CheckpointTool)
-    restore = plot.state.select(type=RestoreTool)
-    clear = plot.state.select(type=ClearTool)
-    if checkpoint:
-        checkpoint[0].sources.append(cds)
-    if restore:
-        restore[0].sources.append(cds)
-    if clear:
-        clear[0].sources.append(cds)
+    for tag in (_CHECKPOINT_TAG, _RESTORE_TAG, _CLEAR_TAG):
+        tools = plot.state.select(type=CustomAction, tags=[tag])
+        if tools:
+            tools[0].callback.args["sources"].append(cds)
 
 
 Annotator._extra_opts["hooks"] = [initialize_tools]

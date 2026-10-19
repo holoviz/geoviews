@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+from bokeh.models import Scatter
 from bokeh.models.tools import CustomJSHover
 
 import geoviews as gv
@@ -147,8 +148,28 @@ class TestWindBarbsPlot(TestBokehPlot):
         plot = bokeh_renderer.get_plot(barbs)
         glyph = plot.handles["glyph"]
 
-        # Check that scale was set
-        assert glyph.scale == 2.0
+        # The marker size is the staff length times two
+        assert glyph.size == 2 * 30.0 * 2.0
+
+    def test_windbarbs_glyph(self):
+        barbs = gv.WindBarbs([(0, 0, np.pi / 2, 10)]).opts(
+            barb_length=20, spacing=4, line_color="red"
+        )
+        plot = bokeh_renderer.get_plot(barbs)
+        glyph = plot.handles["glyph"]
+        source = plot.handles["source"]
+
+        assert isinstance(glyph, Scatter)
+        assert glyph.marker == "@windbarb"
+        assert glyph.angle == "neg_angle"
+        assert glyph.size == 40
+        assert glyph.fill_color == "red"
+        np.testing.assert_equal(source.data["neg_angle"], -source.data["angle"])
+        args = glyph.defs["@windbarb"].args
+        assert args["source"] is source
+        assert args["barb_length"] == 20
+        assert args["spacing"] == 4
+        assert args["flag_width"] == 15.0
 
     def test_windbarbs_convention_from(self):
         x = np.linspace(-1, 1, 4)

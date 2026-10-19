@@ -12,18 +12,9 @@ version = "9999.0.0" # dynamic versioning: https://github.com/prefix-dev/pixi/is
 [package.build]
 backend = { name = "pixi-build-python", version = ">=0.4.4" }
 
-[package.build.config]
-extra-input-globs = [
-    "geoviews/package.json",
-    "geoviews/package-lock.json",
-    "geoviews/tsconfig.json",
-]
-
 [package.host-dependencies]
 hatchling = "*"
 hatch-vcs = "*"
-bokeh = "3.10.*"
-nodejs = ">=20"
 
 [environments]
 default = [
@@ -117,7 +108,6 @@ geoviews = { path = "." }
 bokeh = ">=3.10.0"
 cartopy = ">=0.18.0"
 holoviews = ">=1.23.0a0" # Pinning because of tests
-nodejs = ">=20"
 numpy = "*"
 packaging = "*"
 panel = ">=1.0.0"
@@ -254,17 +244,13 @@ conda-build = "*"
 [feature.build.tasks]
 build-conda = 'bash scripts/conda/build.sh'
 build-pip = 'python -m build .'
-build-npm = { cmd = "npm pack .", cwd = "geoviews" }
 
 # =============================================
 # =================== LINT ====================
 # =============================================
 [feature.lint.dependencies]
 pre-commit = "*"
-nodejs = ">=20"
-geoviews = { path = "." }
 
 [feature.lint.tasks]
 lint = 'pre-commit run --all-files'
 lint-install = 'pre-commit install'
-lint-typescript = { cmd = "npm run lint", cwd = "geoviews" }

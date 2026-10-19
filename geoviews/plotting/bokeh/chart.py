@@ -151,8 +151,7 @@ class WindBarbsPlot(ColorbarPlot):
         # Get angle and magnitude
         angles, magnitudes = self._get_angle_magnitude(element)
 
-        # Scatter rotates by the materialized (negated) angle, the opposite
-        # direction of the old WindBarb glyph.
+        # Scatter rotates by the materialized angle, which Bokeh negates
         data = {
             "x": xs,
             "y": ys,

@@ -1,3 +1,28 @@
+# Version 1.16.0
+
+Date: October 23, 2026
+
+Many thanks to [@rajeeja](https://github.com/rajeeja) (first contribution) and [@hoxbro](https://github.com/hoxbro) for their contributions.
+
+Breaking changes:
+
+- Remove Python 3.10 and 3.11 support ([#859](https://github.com/holoviz/geoviews/pull/859))
+- Remove entry point ([#833](https://github.com/holoviz/geoviews/pull/833))
+
+Bug Fixes:
+
+- Don't overwrite source in `project_quadmesh` ([#895](https://github.com/holoviz/geoviews/pull/895))
+- Fix `.operation` import which would give `RecursiveError` ([#882](https://github.com/holoviz/geoviews/pull/882))
+- Default `facecolor='none'` for line-type Feature elements ([#846](https://github.com/holoviz/geoviews/pull/846))
+- Fix `Graph` with categorical nodes ([#852](https://github.com/holoviz/geoviews/pull/852))
+
+Compatibility:
+
+- Cartopy 0.26.0 ([#884](https://github.com/holoviz/geoviews/pull/884))
+- Bokeh 3.10.0 ([#861](https://github.com/holoviz/geoviews/pull/861))
+- Iris 3.15 and PyProj 9.8 ([#839](https://github.com/holoviz/geoviews/pull/839))
+- Python 3.15 support ([#905](https://github.com/holoviz/geoviews/pull/905))
+
 # Version 1.15.1
 
 Date: January 13, 2026

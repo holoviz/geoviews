@@ -1,6 +1,6 @@
 # Version 1.16.0
 
-Date: XXX
+Date: October 23, 2026
 
 Many thanks to [@rajeeja](https://github.com/rajeeja) (first contribution) and [@hoxbro](https://github.com/hoxbro) for their contributions.
 

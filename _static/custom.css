@@ -1,0 +1,27 @@
+:root[data-theme="light"],
+:root[data-theme="dark"] {
+  --pst-color-inline-code: var(--holoviz-main-color);
+  --pst-color-link-hover: var(--holoviz-main-color);
+  --pst-color-link: var(--holoviz-main-color);
+  --pst-color-primary: var(--holoviz-main-color);
+  --pst-color-secondary-highlight: var(--holoviz-main-color);
+  --pst-color-secondary: var(--holoviz-main-color);
+  --pst-violet-600: var(--holoviz-main-color); /* back to top hover */
+  --sd-color-card-border-hover: var(--holoviz-main-color);
+}
+
+:root[data-theme="light"] {
+  --holoviz-main-color: #387bb2;
+}
+
+:root[data-theme="dark"] {
+  --holoviz-main-color: #387bb2;
+}
+
+#binder-link {
+  display: inline-block;
+  font-size: 0.9rem;
+  padding-left: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}

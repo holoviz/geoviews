@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="en" data-content_root="../../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Airport Graph — GeoViews v1.16.0</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079">
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css">
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d">
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b">
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e">
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsite.css?v=d9d93254">
+    <link rel="stylesheet" type="text/css" href="../../_static/notebook.css?v=19946987">
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css?v=0a3248cd">
+    <link rel="stylesheet" type="text/css" href="../../_static/alert.css?v=c26666be">
+    <link rel="stylesheet" type="text/css" href="../../_static/dataframe.css?v=a0f274c1">
+    <link rel="stylesheet" type="text/css" href="../../_static/scroller.css?v=2dcde208">
+    <link rel="stylesheet" type="text/css" href="../../_static/hv-sidebar-dropdown.css?v=3e2b0152">
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=2e948e39">
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf">
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf">
+
+    <script src="../../_static/documentation_options.js?v=e2aa0a4e"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>
+    window.goatcounter = {
+        path: function(p) { return location.host + p }
+    }
+</script>
+    <script async="async" data-goatcounter="https://holoviz.goatcounter.com/count" src="../../_static/js/goatcounter.js?v=f53f84b8"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gallery/bokeh/airport_graph';</script>
+    <link rel="icon" href="../../_static/favicon.ico">
+    <link rel="author" title="About these documents" href="../../about.html">
+    <link rel="index" title="Index" href="../../genindex.html">
+    <link rel="search" title="Search" href="../../search.html">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="docsearch:language" content="en">
+  <meta name="docsearch:version" content="1.16.0">
+    <meta name="docbuild:last-update" content="2026-10-24">
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../../_static/logo_horizontal.png" class="logo__image only-light" alt="GeoViews v1.16.0 - Home">
+    <img src="../../_static/logo_horizontal.png" class="logo__image only-dark pst-js-only" alt="GeoViews v1.16.0 - Home">
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Home
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../index.html">
+    Gallery
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://examples.holoviz.org">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference_manual/index.html">
+    API
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../developer_guide/index.html">
+    Developer Guide
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../about.html">
+    About
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark" title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/holoviz/geoviews" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/HoloViews" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-twitter-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.holoviz.org/c/geoviews" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/AXRHnJU6sP" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../index.html">
+    Home
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../index.html">
+    Gallery
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://examples.holoviz.org">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference_manual/index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../developer_guide/index.html">
+    Developer Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../about.html">
+    About
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark" title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/holoviz/geoviews" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/HoloViews" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-twitter-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.holoviz.org/c/geoviews" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/AXRHnJU6sP" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><!-- Adapted from sidebar-nav-bs.html (1.15.2) with the following changes
+
+  - Commented out the tag that adds the "Section Navigation" title
+  - Call generate_toctree_html with startdepth=0
+
+The name has to end with "sidebar-nav-bs.html", as pydata-sphinx-theme otherwise
+renders it for every page an extra time to check whether it is empty.
+
+Please update this file when required when bumping the max pin of pydata-sphinx-theme.
+-->
+
+
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <!-- <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p> -->
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../user_guide/index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Projections.html">Projections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Geometries.html">Geometries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Gridded_Datasets_I.html">Gridded Datasets I</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Gridded_Datasets_II.html">Gridded Datasets II</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Working_with_Bokeh.html">Working with Bokeh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Resampling_Grids.html">Resampling Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Annotators.html">Annotating Geographic Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Using_Features_Offline.html">Using Features Offline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/Using_WMTS_Offline.html">Using WMTS Offline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../index.html">Gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="simple">
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference external" href="https://examples.holoviz.org">Examples</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../reference_manual/index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference_manual/geoviews.annotators.html">annotators</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference_manual/geoviews.data.html">data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.data.geom_dict.html">geoviews.data.geom_dict module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.data.geopandas.html">geoviews.data.geopandas module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.data.iris.html">geoviews.data.iris module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference_manual/geoviews.element.html">element</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.element.comparison.html">geoviews.element.comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.element.geo.html">geoviews.element.geo module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference_manual/geoviews.links.html">links</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference_manual/geoviews.models.html">models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.models.custom_tools.html">geoviews.models.custom_tools module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.models.wind_barb.html">geoviews.models.wind_barb module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference_manual/geoviews.operation.html">operation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.operation.projection.html">geoviews.operation.projection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.operation.regrid.html">geoviews.operation.regrid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.operation.resample.html">geoviews.operation.resample module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference_manual/geoviews.plotting.html">plotting</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference_manual/geoviews.plotting.bokeh.html">geoviews.plotting.bokeh package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../reference_manual/geoviews.plotting.bokeh.callbacks.html">geoviews.plotting.bokeh.callbacks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../reference_manual/geoviews.plotting.bokeh.chart.html">geoviews.plotting.bokeh.chart module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../reference_manual/geoviews.plotting.bokeh.plot.html">geoviews.plotting.bokeh.plot module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference_manual/geoviews.plotting.mpl.html">geoviews.plotting.mpl package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../reference_manual/geoviews.plotting.mpl.chart.html">geoviews.plotting.mpl.chart module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.plotting.plot.html">geoviews.plotting.plot module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference_manual/geoviews.plotting.bokeh.html">plotting.bokeh</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.plotting.bokeh.callbacks.html">geoviews.plotting.bokeh.callbacks module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.plotting.bokeh.chart.html">geoviews.plotting.bokeh.chart module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.plotting.bokeh.plot.html">geoviews.plotting.bokeh.plot module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference_manual/geoviews.plotting.mpl.html">plotting.matplotlib</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference_manual/geoviews.plotting.mpl.chart.html">geoviews.plotting.mpl.chart module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference_manual/geoviews.streams.html">streams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference_manual/geoviews.util.html">util</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+</ul>
+</div>
+</nav></div>
+        <div class="sidebar-primary-item">
+<div class="hv-sb-dd">
+  <div class="btn-group">
+    
+    <a href="https://holoviz.org" class="btn hv-sb-dd-value" target="_blank">HoloViz.org<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a>
+    
+    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+      <span class="visually-hidden"></span>
+    </button>
+    <ul class="dropdown-menu">
+      
+      
+        <li><a class="dropdown-item" href="https://param.holoviz.org" target="_blank" title="Assembling objects from many different libraries into a layout or app, whether in a Jupyter notebook or in a standalone servable dashboard">Panel<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+        <li><a class="dropdown-item" href="https://hvplot.holoviz.org" target="_blank" title="Quickly return interactive HoloViews, GeoViews, or Panel objects from Pandas, Xarray, or other data structures">hvPlot<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+        <li><a class="dropdown-item" href="https://holoviews.org" target="_blank" title="Declarative objects for instantly visualizable data, building Bokeh plots from convenient high-level specifications">HoloViews<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+      
+      
+        <li><a class="dropdown-item" href="https://datashader.org" target="_blank" title="Rasterizing huge datasets quickly as fixed-size images">Datashader<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+        <li><a class="dropdown-item" href="https://param.holoviz.org" target="_blank" title="Make your Python code clearer and more reliable by declaring Parameters">Param<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+        <li><a class="dropdown-item" href="https://lumen.holoviz.org" target="_blank" title="Framework for visual analytics that allows users to build data-driven dashboards from a simple YAML specification">Lumen<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+        <li><a class="dropdown-item" href="https://colorcet.holoviz.org" target="_blank" title="A wide range of perceptually uniform continuous colormaps and perceptually based categorical color sets for use with the other libraries">Colorcet<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+      <li><hr class="dropdown-divider"></li>
+      
+      
+      <li><a class="dropdown-item" href="https://examples.holoviz.org" target="_blank" title=" Visualization-focused examples using HoloViz for specific topics ">Examples Gallery<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+      <li><a class="dropdown-item" href="https://blog.holoviz.org" target="_blank" title="HoloViz blog">Blog<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+    </ul>
+  </div>
+</div>
+</div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement" class="flat" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Airport Graph</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="airport-graph">
+<h1>Airport Graph<a class="headerlink" href="#airport-graph" title="Link to this heading">#</a></h1>
+<p><a class="reference external" href="https://raw.githubusercontent.com/holoviz/geoviews/main/examples/gallery/bokeh/airport_graph.ipynb">Download this notebook from GitHub (right-click to download).</a></p>
+<hr class="docutils">
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bokeh.sampledata.airport_routes</span><span class="w"> </span><span class="kn">import</span> <span class="n">airports</span><span class="p">,</span> <span class="n">routes</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">geoviews</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geoviews</span><span class="w"> </span><span class="kn">import</span> <span class="n">opts</span>
+
+<span class="n">gv</span><span class="o">.</span><span class="n">extension</span><span class="p">(</span><span class="s1">'bokeh'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><script type="esms-options">{"shimMode": true}</script><style>*[data-root-id],
+*[data-root-id] > * {
+  box-sizing: border-box;
+  font-family: var(--jp-ui-font-family);
+  font-size: var(--jp-ui-font-size1);
+  color: var(--vscode-editor-foreground, var(--jp-ui-font-color1));
+}
+
+/* Override VSCode background color */
+.cell-output-ipywidget-background:has(
+  > .cell-output-ipywidget-background > .lm-Widget > *[data-root-id]
+),
+.cell-output-ipywidget-background:has(> .lm-Widget > *[data-root-id]) {
+  background-color: transparent !important;
+}
+</style><div id="81500b44-ebc0-44d2-a65c-cd9c8fcdc7d4" role="alert" hidden></div></div><script type="application/javascript">(function(root) {
+  function now() {
+    return new Date();
+  }
+
+  const force = true;
+  const version = '3.10.0'.replace('rc', '-rc.').replace('.dev', '-dev.');
+  const reloading = false;
+  const Bokeh = root.Bokeh;
+  const BK_RE = /^https:\/\/cdn\.bokeh\.org\/bokeh\/(release|dev)\/bokeh-/;
+  const PN_RE = /^https:\/\/cdn\.holoviz\.org\/panel\/[^/]+\/dist\/panel/i;
+  const JUPYTER_EXTENSION_PATH = "/panel-preview/static/extensions/panel/";
+  const CDN_DIST = "https://cdn.holoviz.org/panel/1.10.0-rc.1/dist/";
+  // Executed notebooks retain this bootstrap when published as static pages.
+  const live_notebook = root.Jupyter?.notebook != null || document.querySelector('.jp-LabShell') != null;
+  root.__panel_live_notebook__ = live_notebook;
+  // The lazy-resource registry needs the same export routing and CDN fallback.
+  root.__panel_cdn_dist__ = CDN_DIST;
+
+  function resource_url(url) {
+    const index = url.indexOf(JUPYTER_EXTENSION_PATH);
+    return !live_notebook && index !== -1 ? CDN_DIST + url.slice(index + JUPYTER_EXTENSION_PATH.length) : url;
+  }
+
+  // Pending until this bootstrap has loaded everything (or given up), so
+  // that output rendered meanwhile can wait for Panel's models.
+  let bootstrap_resolve;
+  const bootstrap = new Promise((resolve) => { bootstrap_resolve = resolve });
+  root.__panel_bootstrap__ = bootstrap;
+  function bootstrap_done() {
+    if (root.__panel_bootstrap__ === bootstrap) {
+      root.__panel_bootstrap__ = null;
+    }
+    bootstrap_resolve();
+  }
+  setTimeout(bootstrap_done, Math.max(5000, 15000));
+
+  // jupyter_bokeh, which renders Panel output for comms='ipywidgets' and in
+  // VS Code, builds a view as soon as its output arrives, so a notebook run
+  // top to bottom can render before BokehJS has loaded or before panel.js
+  // has registered the models the view needs. Both the classic notebook and
+  // VS Code load jupyter_bokeh through RequireJS, so its fetch is held until
+  // the bootstrap is done, and should it already be loaded, ipywidgets
+  // awaits render(), which is held instead.
+  function hold_bokeh_views(module) {
+    const View = module?.BokehView;
+    if (View == null || View.prototype.__panel_hold__ === true) {
+      return;
+    }
+    const render = View.prototype.render;
+    View.prototype.render = function(...args) {
+      const pending = root.__panel_bootstrap__;
+      return pending == null ? render.apply(this, args) : pending.then(() => render.apply(this, args));
+    };
+    View.prototype.__panel_hold__ = true;
+  }
+  if (root.requirejs != null) {
+    for (const name of ["@bokeh/jupyter_bokeh", "nbextensions/jupyter_bokeh/index"]) {
+      if (root.requirejs.defined(name)) {
+        hold_bokeh_views(root.requirejs(name));
+      }
+    }
+    const load = root.requirejs.load;
+    if (load?.__panel_hold__ !== true) {
+      root.requirejs.load = function(context, name, url) {
+        const pending = root.__panel_bootstrap__;
+        if (pending != null && name.includes("jupyter_bokeh")) {
+          pending.then(() => load.call(this, context, name, url));
+          return;
+        }
+        return load.call(this, context, name, url);
+      };
+      root.requirejs.load.__panel_hold__ = true;
+    }
+    const on_resource_load = root.requirejs.onResourceLoad;
+    if (on_resource_load?.__panel_hold__ !== true) {
+      // Called once a module is defined but before it is handed to the
+      // widget manager that asked for it.
+      root.requirejs.onResourceLoad = function(context, map, deps) {
+        if (map.id.includes("jupyter_bokeh")) {
+          hold_bokeh_views(context.defined[map.id]);
+        }
+        return on_resource_load?.apply(this, arguments);
+      };
+      root.requirejs.onResourceLoad.__panel_hold__ = true;
+    }
+  }
+
+  // Set a timeout for this load but only if we are not already initializing
+  if (typeof (root._bokeh_timeout) === "undefined" || (force || !root._bokeh_is_initializing)) {
+    root._bokeh_timeout = Date.now() + 5000;
+    root._bokeh_failed_load = false;
+  }
+
+  function run_callbacks() {
+    try {
+      root._bokeh_onload_callbacks.forEach(function(callback) {
+        if (callback != null)
+          callback();
+      });
+    } finally {
+      delete root._bokeh_onload_callbacks;
+    }
+    console.debug("Bokeh: all callbacks have finished");
+  }
+
+  function show_jupyter_extension_error() {
+    if (!live_notebook) {
+      return;
+    }
+    const element = document.getElementById("81500b44-ebc0-44d2-a65c-cd9c8fcdc7d4");
+    if (element == null || !element.hidden) {
+      return;
+    }
+    element.style.cssText = "color: #b91c1c; font-family: sans-serif; padding: 0.5em;";
+    element.textContent = (
+      "Panel could not load resources from its Jupyter server extension. " +
+      "Install Panel in the environment running the Jupyter server and restart it."
+    );
+    element.hidden = false;
+  }
+  root.__panel_jupyter_extension_error__ = show_jupyter_extension_error;
+
+
+  function load_libs(css_urls, js_urls, js_modules, Bokeh, callback) {
+    if (css_urls == null) css_urls = [];
+    if (js_urls == null) js_urls = [];
+    if (js_modules == null) js_modules = [];
+
+    root._bokeh_onload_callbacks.push(callback);
+
+    if (root._bokeh_is_loading > 0) {
+      // Don't load bokeh if it is still initializing
+      console.debug("Bokeh: BokehJS is being loaded, scheduling callback at", now());
+      return null;
+    } else if (js_urls.length === 0 && js_modules.length === 0) {
+      // There is nothing to load
+      run_callbacks();
+      return null;
+    }
+
+    function on_load() {
+      root._bokeh_is_loading--;
+      if (root._bokeh_is_loading === 0) {
+        console.debug("Bokeh: all BokehJS libraries/stylesheets loaded");
+        run_callbacks()
+      }
+    }
+    window._bokeh_on_load = on_load
+
+    function on_error(url) {
+      console.error("failed to load " + url);
+      if (url.includes(JUPYTER_EXTENSION_PATH)) {
+        show_jupyter_extension_error();
+      }
+    }
+
+    function fallback_to_cdn(element, url, attribute, parent) {
+      const index = url.indexOf(JUPYTER_EXTENSION_PATH);
+      if (index === -1 || element.dataset.panelCdnFallback != null) {
+        return false;
+      }
+      element.dataset.panelCdnFallback = "";
+      element.remove();
+      element[attribute] = CDN_DIST + url.slice(index + JUPYTER_EXTENSION_PATH.length);
+      parent.appendChild(element);
+      return true;
+    }
+
+    // Mirrors the AMD guard in panel/models/resources.ts: a UMD library that
+    // is not loaded by RequireJS must take its browser-global branch, so
+    // define.amd reads as undefined while one of these scripts executes. A
+    // module script has no currentScript, so it is told apart by the
+    // directory its code was loaded from.
+    function install_amd_guard() {
+      const define = root.define;
+      if (typeof define !== "function" || define.amd == null || define.__panel_no_amd__ === true) {
+        return;
+      }
+      const dirs = root.__panel_no_amd_dirs__ = root.__panel_no_amd_dirs__ || [];
+      const hidden = () => {
+        const script = document.currentScript;
+        if (script != null) {
+          return script.hasAttribute("data-panel-no-amd");
+        }
+        const stack = new Error().stack || "";
+        return dirs.some((dir) => stack.includes(dir));
+      };
+      let amd = define.amd;
+      try {
+        Object.defineProperty(define, "amd", {
+          configurable: true,
+          enumerable: true,
+          get: () => hidden() ? undefined : amd,
+          set: (value) => { amd = value },
+        });
+        Object.defineProperty(define, "__panel_no_amd__", {value: true});
+      } catch (e) {
+        console.warn(`Panel: could not hide RequireJS from component libraries: ${e}`);
+      }
+    }
+
+    function hide_amd(element) {
+      element.setAttribute("data-panel-no-amd", "");
+      install_amd_guard();
+    }
+
+    function hide_amd_module(url) {
+      const dirs = root.__panel_no_amd_dirs__ = root.__panel_no_amd_dirs__ || [];
+      const dir = new URL(url, document.baseURI).href.split("?")[0].replace(/[^/]*$/, "");
+      // panel.js itself lives in a dist root, and must never match.
+      if (!/\/(dist|static\/extensions\/panel)\/$/.test(dir) && !dirs.includes(dir)) {
+        dirs.push(dir);
+      }
+      install_amd_guard();
+    }
+
+    function inject_script_tag(url) {
+      const element = document.createElement('script');
+      hide_amd(element);
+      element.onload = on_load;
+      element.onerror = () => {
+        if (!fallback_to_cdn(element, url, "src", document.head)) {
+          on_error(url);
+        }
+      };
+      element.async = false;
+      element.src = resource_url(url);
+      console.debug("Bokeh: injecting script tag for BokehJS library: ", url);
+      document.head.appendChild(element);
+    }
+
+    const skip = [];
+    // Held open until every resource below has been queued, then released
+    // by on_load() at the end of this function.
+    root._bokeh_is_loading = 1;
+    if (window.requirejs) {
+      const require_config = {'packages': {}, 'paths': {}, 'shim': {}};
+      // RequireJS tries each path in turn, so a bundled copy the Jupyter
+      // extension cannot serve falls back to the CDN, then to the original.
+      const require_urls = (url) => {
+        url = resource_url(url);
+        const index = url.indexOf(JUPYTER_EXTENSION_PATH);
+        return index === -1 ? [url] : [url, CDN_DIST + url.slice(index + JUPYTER_EXTENSION_PATH.length)];
+      };
+      for (const [name, path] of Object.entries(require_config.paths || {})) {
+        require_config.paths[name] = (Array.isArray(path) ? path : [path]).flatMap(require_urls);
+      }
+      window.requirejs.config(require_config);
+    }
+
+    const existing_stylesheets = []
+    const links = document.getElementsByTagName('link')
+    for (let i = 0; i < links.length; i++) {
+      const link = links[i]
+      if (link.href != null) {
+        existing_stylesheets.push(link.href)
+      }
+    }
+    for (let i = 0; i < css_urls.length; i++) {
+      const url = css_urls[i];
+      const escaped = encodeURI(url)
+      if (existing_stylesheets.indexOf(escaped) !== -1) {
+        continue;
+      }
+      const element = document.createElement("link");
+      root._bokeh_is_loading++;
+      element.onload = on_load;
+      element.onerror = () => {
+        if (!fallback_to_cdn(element, url, "href", document.body)) {
+          on_error(url);
+        }
+      };
+      element.rel = "stylesheet";
+      element.type = "text/css";
+      element.href = resource_url(url);
+      console.debug("Bokeh: injecting link tag for BokehJS stylesheet: ", url);
+      document.body.appendChild(element);
+    }    var existing_scripts = []
+    const scripts = document.getElementsByTagName('script')
+    for (let i = 0; i < scripts.length; i++) {
+      var script = scripts[i]
+      if (script.src != null) {
+        existing_scripts.push(script.src)
+      }
+    }
+    for (let i = 0; i < js_urls.length; i++) {
+      const url = js_urls[i];
+      const escaped = encodeURI(url)
+      const shouldSkip = skip.includes(escaped) || existing_scripts.includes(escaped)
+      const isBokehOrPanel = BK_RE.test(escaped) || PN_RE.test(escaped)
+      const missingOrBroken = Bokeh == null || Bokeh.Panel == null || (Bokeh.version != version && !Bokeh.versions?.has(version)) || Bokeh.versions?.get(version)?.Panel == null;
+      if (shouldSkip && !(isBokehOrPanel && missingOrBroken)) {
+        continue;
+      }
+      root._bokeh_is_loading++;
+      inject_script_tag(url);
+    }
+    for (let i = 0; i < js_modules.length; i++) {
+      const [url, name] = js_modules[i];
+      const escaped = encodeURI(url)
+      const loaded = name == null ? existing_scripts.indexOf(escaped) !== -1 : root[name] != null
+      if (skip.indexOf(escaped) !== -1 || loaded) {
+        continue;
+      }
+      var element = document.createElement('script');
+      hide_amd_module(resource_url(url));
+      root._bokeh_is_loading++;
+      element.onerror = () => {
+        if (!fallback_to_cdn(element, url, "src", document.head)) {
+          on_error(url);
+        }
+      };
+      element.async = false;
+      element.type = "module";
+      if (name == null) {
+        element.onload = on_load;
+        element.src = resource_url(url);
+      } else {
+        // Namespace import rather than a default import, matching what the
+        // resource registry's module wrapper assigns, so a library that only
+        // has named exports resolves to its namespace instead of to undefined.
+        // The import loads the module, so it gets no bare tag as well. The url
+        // is absolutized because an import specifier resolves through the
+        // import map unless it starts with a scheme, / or ./, whereas a src
+        // resolves against the document.
+        element.textContent = `
+        import * as ns from "${new URL(resource_url(url), document.baseURI).href}"
+        window.${name} = ns.default ?? ns
+        window._bokeh_on_load()
+        `
+      }
+      console.debug("Bokeh: injecting script tag for BokehJS library: ", url);
+      document.head.appendChild(element);
+    }
+    // Releases the reservation taken above, running the callbacks now if
+    // nothing else is outstanding.
+    on_load()
+  };
+
+  function inject_raw_css(css) {
+    const element = document.createElement("style");
+    element.appendChild(document.createTextNode(css));
+    document.body.appendChild(element);
+  }
+
+  const js_urls = ["https://cdn.holoviz.org/panel/1.10.0-rc.1/dist/bundled/reactiveesm/es-module-shims@^1.10.0/dist/es-module-shims.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-3.10.0.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.10.0.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.10.0.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.10.0.min.js", "https://cdn.holoviz.org/panel/1.10.0-rc.1/dist/panel.min.js", "https://cdn.jsdelivr.net/npm/@holoviz/geoviews@1.16.0/dist/geoviews.min.js"];
+  const js_modules = [];
+  const css_urls = [];
+  const inline_js = [    function(Bokeh, define, module, exports) {
+Bokeh.set_log_level("info");
+    },
+function(Bokeh, define, module, exports) {} // ensure no trailing comma for IE
+  ];
+
+  // Resolved once RequireJS has loaded its libraries and assigned their
+  // globals, so the resource registry can wait for them instead of racing.
+  let require_ready_resolve;
+  const require_ready = new Promise((resolve) => { require_ready_resolve = resolve });  require_ready_resolve();
+  // Module exports are only assigned once their libraries have loaded. A
+  // library that fails to load never finishes the load, so the wait is bounded
+  // and the registry loads whatever is still missing itself.
+  let libs_ready_resolve;
+  const libs_ready = new Promise((resolve) => { libs_ready_resolve = resolve });
+  setTimeout(() => libs_ready_resolve(), 5000 || 5000);
+
+  function declare_resources() {
+    // Tells the panel.js resource registry which component libraries this
+    // bundle has already satisfied, so nothing is fetched a second time.
+    // In inline mode the libraries have no URLs at all, which makes this
+    // the only way the registry can know about them.
+    const declared = {"libs": [{"name": "reactiveesm:extra", "js": ["https://cdn.holoviz.org/panel/1.10.0-rc.1/dist/bundled/reactiveesm/es-module-shims@^1.10.0/dist/es-module-shims.min.js"]}]};
+    if (!declared || !(declared.libs || declared.css)) {
+      return;
+    }
+    // Libraries RequireJS is loading are claimed against require_ready
+    // instead of being declared, since they are not ready yet.
+    const require_urls = window.requirejs ? [] : [];
+    const satisfied = [], pending = [], exporting = [];
+    for (const lib of declared.libs || []) {
+      const urls = lib.js || [];
+      const by_require = urls.length > 0 && urls.every((url) => require_urls.includes(url));
+      const exports = (lib.modules || []).some((module) => module.export != null);
+      (by_require ? pending : exports ? exporting : satisfied).push(lib);
+    }
+    const declarations = [{libs: satisfied, css: declared.css}];
+    if (pending.length > 0) {
+      declarations.push({libs: pending, ready: require_ready});
+    }
+    if (exporting.length > 0) {
+      declarations.push({libs: exporting, ready: libs_ready});
+    }
+    for (const declaration of declarations) {
+      if (root.__panel_resources__ != null) {
+        if (declaration.ready != null) {
+          root.__panel_resources__.claim(declaration, declaration.ready);
+        } else {
+          root.__panel_resources__.declare(declaration);
+        }
+      } else {
+        (root.__panel_resources_declared__ = root.__panel_resources_declared__ || []).push(declaration);
+      }
+    }
+  }
+
+  function run_inline_js() {
+    if ((root.Bokeh !== undefined) || (force === true)) {
+      for (let i = 0; i < inline_js.length; i++) {
+        try {
+          inline_js[i].call(root, root.Bokeh);
+        } catch(e) {
+          if (!reloading) {
+            throw e;
+          }
+        }
+      }
+      // Views waiting on this run once the current task is done, by which
+      // point the load callback has also restored root.Bokeh.
+      bootstrap_done();
+    } else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(run_inline_js, 100);
+    } else if (!root._bokeh_failed_load) {
+      console.log("Bokeh: BokehJS failed to load within specified timeout.");
+      root._bokeh_failed_load = true;
+      bootstrap_done();
+    }
+    root._bokeh_is_initializing = false;
+  }
+
+  function load_or_wait() {
+    // Implement a backoff loop that tries to ensure we do not load multiple
+    // versions of Bokeh and its dependencies at the same time.
+    // In recent versions we use the root._bokeh_is_initializing flag
+    // to determine whether there is an ongoing attempt to initialize
+    // bokeh, however for backward compatibility we also try to ensure
+    // that we do not start loading a newer (Panel>=1.0 and Bokeh>3) version
+    // before older versions are fully initialized.
+    if (root._bokeh_is_initializing && Date.now() > root._bokeh_timeout) {
+      // If the timeout and bokeh was not successfully loaded we reset
+      // everything and try loading again
+      root._bokeh_timeout = Date.now() + 5000;
+      root._bokeh_is_initializing = false;
+      root._bokeh_onload_callbacks = undefined;
+      root._bokeh_is_loading = 0;
+      console.log("Bokeh: BokehJS was loaded multiple times but one version failed to initialize.");
+      load_or_wait();
+    } else if (root._bokeh_is_initializing || (typeof root._bokeh_is_initializing === "undefined" && root._bokeh_onload_callbacks !== undefined)) {
+      setTimeout(load_or_wait, 100);
+    } else {
+      root._bokeh_is_initializing = true;
+      root._bokeh_onload_callbacks = [];
+      const bokeh_loaded = Bokeh != null && ((Bokeh.version === version && Bokeh.Panel) || (Bokeh.versions?.has(version) && Bokeh.versions.get(version)?.Panel));
+      if (!reloading && !bokeh_loaded) {
+        if (root.Bokeh) {
+          root.Bokeh = undefined;
+        }
+        console.debug("Bokeh: BokehJS not loaded, scheduling load and callback at", now());
+      }
+      load_libs(css_urls, js_urls, js_modules, Bokeh, function() {
+        console.debug("Bokeh: BokehJS plotting callback run at", now());
+        libs_ready_resolve();
+        run_inline_js();
+        if (Bokeh != undefined && !reloading) {
+          const NewBokeh = root.Bokeh;
+          if (Bokeh.versions === undefined) {
+            Bokeh.versions = new Map();
+          }
+          if (NewBokeh.version !== Bokeh.version) {
+            Bokeh[NewBokeh.version] = NewBokeh;
+            Bokeh.versions.set(NewBokeh.version, NewBokeh);
+          }
+          root.Bokeh = Bokeh;
+        }
+      });
+    }
+  }
+  // Declared synchronously, before anything is scheduled, so a cell whose
+  // output embeds while libraries are still loading finds this in place
+  // instead of fetching its own second copy of each.
+  declare_resources();
+  // Give older versions of the autoload script a head-start to ensure
+  // they initialize before we start loading newer version.
+  setTimeout(load_or_wait, 100)
+}(window));</script><script type="application/javascript">
+if ((window.PyViz === undefined) || (window.PyViz instanceof HTMLElement)) {
+  window.PyViz = {comms: {}, comm_status:{}, kernels:{}, receivers: {}, plot_index: []}
+}
+
+
+    function JupyterCommManager() {
+    }
+
+    JupyterCommManager.prototype.register_target = function(plot_id, comm_id, msg_handler) {
+      if (window.comm_manager || ((window.Jupyter !== undefined) && (Jupyter.notebook.kernel != null))) {
+        var comm_manager = window.comm_manager || Jupyter.notebook.kernel.comm_manager;
+        comm_manager.register_target(comm_id, function(comm) {
+          comm.on_msg(msg_handler);
+        });
+      } else if ((plot_id in window.PyViz.kernels) && (window.PyViz.kernels[plot_id])) {
+        window.PyViz.kernels[plot_id].registerCommTarget(comm_id, function(comm) {
+          comm.onMsg = msg_handler;
+        });
+      } else if (typeof google != 'undefined' && google.colab.kernel != null) {
+        google.colab.kernel.comms.registerTarget(comm_id, (comm) => {
+          var messages = comm.messages[Symbol.asyncIterator]();
+          function processIteratorResult(result) {
+            var message = result.value;
+            var content = {data: message.data, comm_id};
+            var buffers = []
+            for (var buffer of message.buffers || []) {
+              buffers.push(new DataView(buffer))
+            }
+            var metadata = message.metadata || {};
+            var msg = {content, buffers, metadata}
+            msg_handler(msg);
+            return messages.next().then(processIteratorResult);
+          }
+          return messages.next().then(processIteratorResult);
+        })
+      }
+    }
+
+    JupyterCommManager.prototype.get_client_comm = function(plot_id, comm_id, msg_handler) {
+      if (comm_id in window.PyViz.comms) {
+        return window.PyViz.comms[comm_id];
+      } else if (window.comm_manager || ((window.Jupyter !== undefined) && (Jupyter.notebook.kernel != null))) {
+        var comm_manager = window.comm_manager || Jupyter.notebook.kernel.comm_manager;
+        var comm = comm_manager.new_comm(comm_id, {}, {}, {}, comm_id);
+        if (msg_handler) {
+          comm.on_msg(msg_handler);
+        }
+      } else if ((plot_id in window.PyViz.kernels) && (window.PyViz.kernels[plot_id])) {
+        var comm = window.PyViz.kernels[plot_id].connectToComm(comm_id);
+        let retries = 0;
+        const open = () => {
+          if (comm.active) {
+            comm.open();
+          } else if (retries > 3) {
+            console.warn('Comm target never activated')
+          } else {
+            retries += 1
+            setTimeout(open, 500)
+          }
+        }
+        if (comm.active) {
+          comm.open();
+        } else {
+          setTimeout(open, 500)
+        }
+        if (msg_handler) {
+          comm.onMsg = msg_handler;
+        }
+      } else if (typeof google != 'undefined' && google.colab.kernel != null) {
+        var comm_promise = google.colab.kernel.comms.open(comm_id)
+        comm_promise.then((comm) => {
+          window.PyViz.comms[comm_id] = comm;
+          if (msg_handler) {
+            var messages = comm.messages[Symbol.asyncIterator]();
+            function processIteratorResult(result) {
+              var message = result.value;
+              var content = {data: message.data};
+              var metadata = message.metadata || {comm_id};
+              var msg = {content, metadata}
+              msg_handler(msg);
+              return messages.next().then(processIteratorResult);
+            }
+            return messages.next().then(processIteratorResult);
+          }
+        })
+        var sendClosure = (data, metadata, buffers, disposeOnDone) => {
+          return comm_promise.then((comm) => {
+            comm.send(data, metadata, buffers, disposeOnDone);
+          });
+        };
+        var comm = {
+          send: sendClosure
+        };
+      }
+      window.PyViz.comms[comm_id] = comm;
+      return comm;
+    }
+    window.PyViz.comm_manager = new JupyterCommManager();
+    
+
+
+var JS_MIME_TYPE = 'application/javascript';
+var HTML_MIME_TYPE = 'text/html';
+var EXEC_MIME_TYPE = 'application/vnd.holoviews_exec.v0+json';
+var CLASS_NAME = 'output';
+
+/**
+ * Render data to the DOM node
+ */
+function render(props, node) {
+  var div = document.createElement("div");
+  var script = document.createElement("script");
+  node.appendChild(div);
+  node.appendChild(script);
+}
+
+/**
+ * Handle when a new output is added
+ */
+function handle_add_output(event, handle) {
+  var output_area = handle.output_area;
+  var output = handle.output;
+  if ((output.data == undefined) || (!output.data.hasOwnProperty(EXEC_MIME_TYPE))) {
+    return
+  }
+  var id = output.metadata[EXEC_MIME_TYPE]["id"];
+  var toinsert = output_area.element.find("." + CLASS_NAME.split(' ')[0]);
+  if (id !== undefined) {
+    var nchildren = toinsert.length;
+    var html_node = toinsert[nchildren-1].children[0];
+    html_node.innerHTML = output.data[HTML_MIME_TYPE];
+    var scripts = [];
+    var nodelist = html_node.querySelectorAll("script");
+    for (var i in nodelist) {
+      if (nodelist.hasOwnProperty(i)) {
+        scripts.push(nodelist[i])
+      }
+    }
+
+    scripts.forEach( function (oldScript) {
+      var newScript = document.createElement("script");
+      var attrs = [];
+      var nodemap = oldScript.attributes;
+      for (var j in nodemap) {
+        if (nodemap.hasOwnProperty(j)) {
+          attrs.push(nodemap[j])
+        }
+      }
+      attrs.forEach(function(attr) { newScript.setAttribute(attr.name, attr.value) });
+      newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+      oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
+    if (JS_MIME_TYPE in output.data) {
+      toinsert[nchildren-1].children[1].textContent = output.data[JS_MIME_TYPE];
+    }
+    output_area._hv_plot_id = id;
+    if ((window.Bokeh !== undefined) && (id in Bokeh.index)) {
+      window.PyViz.plot_index[id] = Bokeh.index[id];
+    } else {
+      window.PyViz.plot_index[id] = null;
+    }
+  } else if (output.metadata[EXEC_MIME_TYPE]["server_id"] !== undefined) {
+    var bk_div = document.createElement("div");
+    bk_div.innerHTML = output.data[HTML_MIME_TYPE];
+    var script_attrs = bk_div.children[0].attributes;
+    for (var i = 0; i < script_attrs.length; i++) {
+      toinsert[toinsert.length - 1].childNodes[1].setAttribute(script_attrs[i].name, script_attrs[i].value);
+    }
+    // store reference to server id on output_area
+    output_area._bokeh_server_id = output.metadata[EXEC_MIME_TYPE]["server_id"];
+  }
+}
+
+/**
+ * Handle when an output is cleared or removed
+ */
+function handle_clear_output(event, handle) {
+  var id = handle.cell.output_area._hv_plot_id;
+  var server_id = handle.cell.output_area._bokeh_server_id;
+  if (((id === undefined) || !(id in PyViz.plot_index)) && (server_id !== undefined)) { return; }
+  var comm = window.PyViz.comm_manager.get_client_comm("hv-extension-comm", "hv-extension-comm", function () {});
+  if (server_id !== null) {
+    comm.send({event_type: 'server_delete', 'id': server_id});
+    return;
+  } else if (comm !== null) {
+    comm.send({event_type: 'delete', 'id': id});
+  }
+  delete PyViz.plot_index[id];
+  if ((window.Bokeh !== undefined) & (id in window.Bokeh.index)) {
+    var doc = window.Bokeh.index[id].model.document
+    doc.clear();
+    const i = window.Bokeh.documents.indexOf(doc);
+    if (i > -1) {
+      window.Bokeh.documents.splice(i, 1);
+    }
+  }
+}
+
+/**
+ * Handle kernel restart event
+ */
+function handle_kernel_cleanup(event, handle) {
+  delete PyViz.comms["hv-extension-comm"];
+  window.PyViz.plot_index = {}
+}
+
+/**
+ * Handle update_display_data messages
+ */
+function handle_update_output(event, handle) {
+  handle_clear_output(event, {cell: {output_area: handle.output_area}})
+  handle_add_output(event, handle)
+}
+
+function register_renderer(events, OutputArea) {
+  function append_mime(data, metadata, element) {
+    // create a DOM node to render to
+    var toinsert = this.create_output_subarea(
+    metadata,
+    CLASS_NAME,
+    EXEC_MIME_TYPE
+    );
+    this.keyboard_manager.register_events(toinsert);
+    // Render to node
+    var props = {data: data, metadata: metadata[EXEC_MIME_TYPE]};
+    render(props, toinsert[0]);
+    element.append(toinsert);
+    return toinsert
+  }
+
+  events.on('output_added.OutputArea', handle_add_output);
+  events.on('output_updated.OutputArea', handle_update_output);
+  events.on('clear_output.CodeCell', handle_clear_output);
+  events.on('delete.Cell', handle_clear_output);
+  events.on('kernel_ready.Kernel', handle_kernel_cleanup);
+
+  OutputArea.prototype.register_mime_type(EXEC_MIME_TYPE, append_mime, {
+    safe: true,
+    index: 0
+  });
+}
+
+if (window.Jupyter !== undefined) {
+  try {
+    var events = require('base/js/events');
+    var OutputArea = require('notebook/js/outputarea').OutputArea;
+    if (OutputArea.prototype.mime_types().indexOf(EXEC_MIME_TYPE) == -1) {
+      register_renderer(events, OutputArea);
+    }
+  } catch(err) {
+  }
+}
+</script><div class="output text_html"><div id="a57dad5f-90c4-4966-8a3b-48c6e3f28b8f">
+  <div id="b6f66da7-441d-4f6d-b42c-303550c9aea9" data-root-id="a57dad5f-90c4-4966-8a3b-48c6e3f28b8f" style="display: contents;"></div>
+</div>
+<script type="application/javascript">(function(root) {
+  var docs_json = {"99ec7efd-177f-4105-b840-32a994ae7a87":{"version":"3.10.0","title":"Bokeh Application","config":{"type":"object","name":"DocumentConfig","id":"ad0f8691-4264-4e29-82e1-da35d7cae23e","attributes":{"notifications":{"type":"object","name":"Notifications","id":"1a776467-cbae-4686-84d0-1edbf583bcd0"}}},"roots":[{"type":"object","name":"panel.models.browser.BrowserInfo","id":"a57dad5f-90c4-4966-8a3b-48c6e3f28b8f"},{"type":"object","name":"panel.models.comm_manager.CommManager","id":"95e2cfd3-d243-4d67-9770-beeb43a8c56e","attributes":{"plot_id":"a57dad5f-90c4-4966-8a3b-48c6e3f28b8f","comm_id":"e826945487d04ef5b96d968f4ba9a74b","client_comm_id":"b0d1c2ff32244b9bb365a18a32fe678c"}}],"defs":[{"type":"model","name":"ReactiveHTML1"},{"type":"model","name":"FlexBox1","properties":[{"name":"align_content","kind":"Any","default":"flex-start"},{"name":"align_items","kind":"Any","default":"flex-start"},{"name":"flex_direction","kind":"Any","default":"row"},{"name":"flex_wrap","kind":"Any","default":"wrap"},{"name":"gap","kind":"Any","default":""},{"name":"justify_content","kind":"Any","default":"flex-start"}]},{"type":"model","name":"FloatPanel1","properties":[{"name":"config","kind":"Any","default":{"type":"map"}},{"name":"contained","kind":"Any","default":true},{"name":"position","kind":"Any","default":"right-top"},{"name":"offsetx","kind":"Any","default":null},{"name":"offsety","kind":"Any","default":null},{"name":"theme","kind":"Any","default":"primary"},{"name":"status","kind":"Any","default":"normalized"}]},{"type":"model","name":"GridStack1","properties":[{"name":"ncols","kind":"Any","default":null},{"name":"nrows","kind":"Any","default":null},{"name":"allow_resize","kind":"Any","default":true},{"name":"allow_drag","kind":"Any","default":true},{"name":"state","kind":"Any","default":[]}]},{"type":"model","name":"drag1","properties":[{"name":"slider_width","kind":"Any","default":5},{"name":"slider_color","kind":"Any","default":"black"},{"name":"start","kind":"Any","default":0},{"name":"end","kind":"Any","default":100},{"name":"value","kind":"Any","default":50}]},{"type":"model","name":"click1","properties":[{"name":"terminal_output","kind":"Any","default":""},{"name":"debug_name","kind":"Any","default":""},{"name":"clears","kind":"Any","default":0}]},{"type":"model","name":"ReactiveESM1","properties":[{"name":"esm_constants","kind":"Any","default":{"type":"map"}}]},{"type":"model","name":"JSComponent1","properties":[{"name":"esm_constants","kind":"Any","default":{"type":"map"}}]},{"type":"model","name":"ReactComponent1","properties":[{"name":"use_shadow_dom","kind":"Any","default":true},{"name":"esm_constants","kind":"Any","default":{"type":"map"}}]},{"type":"model","name":"AnyWidgetComponent1","properties":[{"name":"use_shadow_dom","kind":"Any","default":true},{"name":"esm_constants","kind":"Any","default":{"type":"map"}}]},{"type":"model","name":"FastWrapper1","properties":[{"name":"object","kind":"Any","default":null},{"name":"style","kind":"Any","default":null}]},{"type":"model","name":"NotificationArea1","properties":[{"name":"js_events","kind":"Any","default":{"type":"map"}},{"name":"max_notifications","kind":"Any","default":5},{"name":"notifications","kind":"Any","default":[]},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0},{"name":"types","kind":"Any","default":[{"type":"map","entries":[["type","warning"],["background","#ffc107"],["icon",{"type":"map","entries":[["className","fas fa-exclamation-triangle"],["tagName","i"],["color","white"]]}]]},{"type":"map","entries":[["type","info"],["background","#007bff"],["icon",{"type":"map","entries":[["className","fas fa-info-circle"],["tagName","i"],["color","white"]]}]]}]}]},{"type":"model","name":"Notification","properties":[{"name":"background","kind":"Any","default":null},{"name":"duration","kind":"Any","default":3000},{"name":"icon","kind":"Any","default":null},{"name":"message","kind":"Any","default":""},{"name":"notification_type","kind":"Any","default":null},{"name":"_rendered","kind":"Any","default":false},{"name":"_destroyed","kind":"Any","default":false}]},{"type":"model","name":"TemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"BootstrapTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"TemplateEditor1","properties":[{"name":"layout","kind":"Any","default":[]}]},{"type":"model","name":"MaterialTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"request_value1","properties":[{"name":"fill","kind":"Any","default":"none"},{"name":"_synced","kind":"Any","default":null},{"name":"_request_sync","kind":"Any","default":0}]},{"type":"model","name":"holoviews.plotting.bokeh.raster.HoverModel","properties":[{"name":"xy","kind":"Any","default":null},{"name":"data","kind":"Any","default":null}]}]}};
+  var render_items = [{"docid":"99ec7efd-177f-4105-b840-32a994ae7a87","roots":{"a57dad5f-90c4-4966-8a3b-48c6e3f28b8f":"b6f66da7-441d-4f6d-b42c-303550c9aea9"},"root_ids":["a57dad5f-90c4-4966-8a3b-48c6e3f28b8f"]}];
+  var docs = Object.values(docs_json)
+  if (!docs) {
+    return
+  }
+  const version = docs[0].version.replace('rc', '-rc.').replace('.dev', '-dev.')
+  async function embed_document(root) {
+    var Bokeh = get_bokeh(root)
+    await Bokeh.embed.embed_items_notebook(docs_json, render_items);
+    for (const render_item of render_items) {
+      for (const root_id of render_item.root_ids) {
+	const id_el = document.getElementById(root_id)
+	if (id_el.children.length && id_el.children[0].hasAttribute('data-root-id')) {
+	  const root_el = id_el.children[0]
+	  root_el.id = root_el.id + '-rendered'
+	  for (const child of root_el.children) {
+            // Ensure JupyterLab does not capture keyboard shortcuts
+            // see: https://jupyterlab.readthedocs.io/en/4.1.x/extension/notebook.html#keyboard-interaction-model
+	    child.setAttribute('data-lm-suppress-shortcuts', 'true')
+	  }
+	}
+      }
+    }
+  }
+  function get_bokeh(root) {
+    if (root.Bokeh === undefined) {
+      return null
+    } else if (root.Bokeh.version !== version) {
+      if (root.Bokeh.versions === undefined || !root.Bokeh.versions.has(version)) {
+	return null
+      }
+      return root.Bokeh.versions.get(version);
+    } else if (root.Bokeh.version === version) {
+      return root.Bokeh
+    }
+    return null
+  }
+  function is_loaded(root) {
+    var Bokeh = get_bokeh(root)
+    return (Bokeh != null && Bokeh.Panel !== undefined)
+  }
+  if (is_loaded(root)) {
+    embed_document(root);
+  } else {
+    var attempts = 0;
+    var timer = setInterval(function(root) {
+      if (is_loaded(root)) {
+        clearInterval(timer);
+        embed_document(root);
+      } else if (document.readyState == "complete") {
+        attempts++;
+        if (attempts > 200) {
+          clearInterval(timer);
+	  var Bokeh = get_bokeh(root)
+	  if (Bokeh == null || Bokeh.Panel == null) {
+            console.warn("Panel: ERROR: Unable to run Panel code because Bokeh or Panel library is missing");
+	  } else {
+	    console.warn("Panel: WARNING: Attempting to render but not all required libraries could be resolved.")
+	    embed_document(root)
+	  }
+        }
+      }
+    }, 25, root)
+  }
+})(window);</script></div><div class="output text_html">
+
+
+
+<div class="logo-block">
+<a href="https://holoviews.org" target="_blank" title="HoloViews 1.24.0a2">
+  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAB+wAAAfsBxc2miwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAA6zSURBVHic7ZtpeFRVmsf/5966taWqUlUJ2UioBBJiIBAwCZtog9IOgjqACsogKtqirT2ttt069nQ/zDzttI4+CrJIREFaFgWhBXpUNhHZQoKBkIUASchWla1S+3ar7r1nPkDaCAnZKoQP/D7mnPOe9/xy76n3nFSAW9ziFoPFNED2LLK5wcyBDObkb8ZkxuaoSYlI6ZcOKq1eWFdedqNzGHQBk9RMEwFAASkk0Xw3ETacDNi2vtvc7L0ROdw0AjoSotQVkKSvHQz/wRO1lScGModBFbDMaNRN1A4tUBCS3lk7BWhQkgpDlG4852/+7DWr1R3uHAZVQDsbh6ZPN7CyxUrCzJMRouusj0ipRwD2uKm0Zn5d2dFwzX1TCGhnmdGoG62Nna+isiUqhkzuKrkQaJlPEv5mFl2fvGg2t/VnzkEV8F5ioioOEWkLG86fvbpthynjdhXYZziQx1hC9J2NFyi8vCTt91Fh04KGip0AaG9zuCk2wQCVyoNU3Hjezee9bq92duzzTmxsRJoy+jEZZZYoGTKJ6SJngdJqAfRzpze0+jHreUtPc7gpBLQnIYK6BYp/uGhw9YK688eu7v95ysgshcg9qSLMo3JC4jqLKQFBgdKDPoQ+Pltb8dUyQLpeDjeVgI6EgLIQFT5tEl3rn2losHVsexbZ3EyT9wE1uGdkIPcyBGxn8QUq1QrA5nqW5i2tLqvrrM9NK6AdkVIvL9E9bZL/oyfMVd/jqvc8LylzRBKDJSzIExwhQzuLQYGQj4rHfFTc8mUdu3E7yoLtbTe9gI4EqVgVkug2i5+uXGo919ixbRog+3fTbQ8qJe4ZOYNfMoTIOoshUNosgO60AisX15aeI2PSIp5KiFLI9ubb1vV3Qb2ltwLakUCDAkWX7/nHKRmmGIl9VgYsUhJm2NXjKYADtM1ygne9QQDIXlk49FBstMKx66D1v4+XuQr7vqTe0VcBHQlRWiOCbmmSYe2SqtL6q5rJzsTb7lKx3FKOYC4DoqyS/B5bvLPxvD9Qtf6saxYLQGJErmDOdOMr/zo96km1nElr8bmPOBwI9COvHnFPRIwmkSOv9kcAS4heRsidOkpeWBgZM+UBrTFAXNYL5Vf2ii9c1trNzpYdaoVil3WIc+wdk+gQnoie3ecCcxt9ITcLAPWt/laGEO/9U6PmzZkenTtsSMQ8uYywJVW+grCstAvCIaAdArAsIWkRDDs/KzLm2YcjY1Lv0UdW73HabE9n6V66cxSzfEmuJssTpKGVp+0vHq73FwL46eOjpMpbRAnNmJFrGJNuUkf9Yrz+3rghiumCKNXXWPhLYcjxGsIpoCMsIRoFITkW8AuyM8jC1+/QLx4bozCEJIq38+1rtpR6V/yzb8eBlRb3fo5l783N0CWolAzJHaVNzkrTzlEp2bQ2q3TC5gn6wpnoQAmwSiGh2GitnTmVMc5OUyfKWUKCIsU7+fZDKwqdT6DDpvkzAX4/+AMFjk0tDp5GRXLpQ2MUmhgDp5gxQT8+Y7hyPsMi8uxF71H0oebujHALECjFKaW9Lm68n18wXp2kVzIcABytD5iXFzg+WVXkegpAsOOYziqo0OkK76GyquC3ltZAzMhhqlSNmmWTE5T6e3IN05ITFLM4GdN0vtZ3ob8Jh1NAKXFbm5PtLU/eqTSlGjkNAJjdgn/NaedXa0tdi7+t9G0FIF49rtMSEgAs1kDLkTPO7ebm4IUWeyh1bKomXqlgMG6kJmHcSM0clYLJ8XtR1GTnbV3F6I5wCGikAb402npp1h1s7LQUZZSMIfALFOuL3UUrfnS8+rez7v9qcold5tilgHbO1fjK9ubb17u9oshxzMiUBKXWqJNxd+fqb0tLVs4lILFnK71H0Ind7uiPgACVcFJlrb0tV6DzxqqTIhUMCwDf1/rrVhTa33/3pGPxJYdQ2l2cbgVcQSosdx8uqnDtbGjh9SlDVSMNWhlnilfqZk42Th2ZpLpfxrHec5e815zrr0dfBZSwzkZfqsv+1FS1KUknUwPARVvItfKUY+cn57yP7qv07UE3p8B2uhUwLk09e0SCOrK+hbdYHYLjRIl71wWzv9jpEoeOHhGRrJAzyEyNiJuUqX0g2sBN5kGK6y2Blp5M3lsB9Qh4y2Ja6x6+i0ucmKgwMATwhSjdUu49tKrQ/pvN5d53ml2CGwCmJipmKjgmyuaXzNeL2a0AkQ01Th5j2DktO3Jyk8f9vcOBQHV94OK+fPumJmvQHxJoWkaKWq9Vs+yUsbq0zGT1I4RgeH2b5wef7+c7bl8FeKgoHVVZa8ZPEORzR6sT1BzDUAD/d9F78e2Tzv99v8D+fLVTqAKAsbGamKey1Mt9Ann4eH3gTXTzidWtAJ8PQWOk7NzSeQn/OTHDuEikVF1R4z8BQCy+6D1aWRfY0tTGG2OM8rRoPaeIj5ZHzJxszElNVM8K8JS5WOfv8mzRnQAKoEhmt8gyPM4lU9SmBK1MCQBnW4KONT86v1hZ1PbwSXPw4JWussVjtH9YNCoiL9UoH/6PSu8jFrfY2t36erQHXLIEakMi1SydmzB31h3GGXFDFNPaK8Rme9B79Ixrd0WN+1ijNRQ/doRmuFLBkHSTOm5GruG+pFjFdAmorG4IXH1Qua6ASniclfFtDYt+oUjKipPrCQB7QBQ2lrgPfFzm+9XWUtcqJ3/5vDLDpJ79XHZk3u8nGZ42qlj1+ydtbxysCezrydp6ugmipNJ7WBPB5tydY0jPHaVNzs3QzeE4ZpTbI+ZbnSFPbVOw9vsfnVvqWnirPyCNGD08IlqtYkh2hjZ5dErEQzoNm+6ykyOtLt5/PQEuSRRKo22VkydK+vvS1XEKlhCJAnsqvcVvH7f/ZU2R67eXbMEGAMiIV5oWZWiWvz5Fv2xGsjqNJQRvn3Rs2lji/lNP19VjAQDgD7FHhujZB9OGqYxRkZxixgRDVlqS6uEOFaJUVu0rPFzctrnFJqijImVp8dEKVWyUXDk92zAuMZ6bFwpBU1HrOw6AdhQgUooChb0+ItMbWJitSo5Ws3IAOGEOtL530vHZih9sC4vtofZ7Qu6523V/fmGcds1TY3V36pUsBwAbSlxnVh2xLfAD/IAIMDf7XYIkNmXfpp2l18rkAJAy9HKFaIr/qULkeQQKy9zf1JgDB2uaeFNGijo5QsUyacNUUTOnGO42xSnv4oOwpDi1zYkcefUc3I5Gk6PhyTuVKaOGyLUAYPGIoY9Pu/atL/L92+4q9wbflRJ2Trpm/jPjdBtfnqB/dIThcl8AKG7hbRuKnb8qsQsVvVlTrwQAQMUlf3kwJI24Z4JhPMtcfng5GcH49GsrxJpGvvHIaeem2ma+KSjQlIwUdYyCY8j4dE1KzijNnIP2llF2wcXNnsoapw9XxsgYAl6k+KzUXbi2yP3KR2ecf6z3BFsBICdWnvnIaG3eHybqX7vbpEqUMT+9OL4Qpe8VON7dXuFd39v19FoAABRVePbGGuXTszO0P7tu6lghUonEllRdrhArLvmKdh9u29jcFiRRkfLUxBiFNiqSU9icoZQHo5mYBI1MBgBH6wMNb+U7Pnw337H4gi1YciWs+uks3Z9fztUvfzxTm9Ne8XXkvQLHNytOOZeiD4e0PgkAIAYCYknKUNUDSXEKzdWNpnil7r4pxqkjTarZMtk/K8TQ6Qve78qqvXurGwIJqcOUKfUWHsm8KGvxSP68YudXq4pcj39X49uOK2X142O0Tz5/u/7TVybqH0rSya6ZBwD21/gubbrgWdDgEOx9WUhfBaC2ibcEBYm7a7x+ukrBMNcEZggyR0TET8zUPjikQ4VosQZbTpS4vqizBKvqmvjsqnpfzaZyx9JPiz1/bfGKdgD45XB1zoIMzYbfTdS/NClBGct0USiY3YL/g0LHy/uq/Ef6uo5+n0R/vyhp17Klpge763f8rMu6YU/zrn2nml+2WtH+Z+5IAAFc2bUTdTDOSNa9+cQY7YLsOIXhevEkCvzph7a8laecz/Un/z4/Ae04XeL3UQb57IwU9ZDr9UuKVajvnxp1+1UVIo/LjztZkKH59fO3G/JemqCfmaCRqbqbd90ZZ8FfjtkfAyD0J/9+C2h1hDwsSxvGjNDcb4zk5NfrSwiQblLHzZhg+Jf4aPlUwpDqkQqa9nimbt1/TDH8OitGMaQnj+RJS6B1fbF7SY1TqO5v/v0WAADl1f7zokgS7s7VT2DZ7pegUjBM7mjtiDZbcN4j0YrHH0rXpCtY0qPX0cVL0rv5jv/ZXend0u/EESYBAFBU4T4Qa5TflZOhTe7pmKpaP8kCVUVw1+yhXfJWvn1P3hnXi33JsTN6PnP3hHZ8Z3/haLHzmkNPuPj7Bc/F/Q38CwjTpSwQXgE4Vmwry9tpfq/ZFgqFMy4AVDtCvi8rvMvOmv0N4YwbVgEAsPM72/KVnzfspmH7HQGCRLG2yL1+z8XwvPcdCbsAANh+xPzstgMtxeGKt+6MK3/tacfvwhWvIwMioKEBtm0H7W+UVfkc/Y1V0BhoPlDr/w1w/eu1vjIgAgDg22OtX6/eYfnEz/focrZTHAFR+PSs56/7q32nwpjazxgwAQCwcU/T62t3WL7r6/jVRa6/byp1rei+Z98ZUAEAhEPHPc8fKnTU9nbgtnOe8h0l9hcGIqmODLQAHCy2Xti6v/XNRivf43f4fFvIteu854+VHnR7q9tfBlwAAGz+pnndB9vM26UebAe8SLHujPOTPVW+rwY+sxskAAC2HrA8t2Vvc7ffP1r9o+vwR2dcr92InIAbKKC1FZ5tB1tf+/G8p8svN/9Q5zd/XR34LYCwV5JdccMEAMDBk45DH243r/X4xGvqxFa/GNpS7n6rwOwNWwHVE26oAADYurf1zx/utOzt+DMKYM0p17YtZZ5VNzqfsB2HewG1WXE8PoZ7gOclbTIvynZf9JV+fqZtfgs/8F/Nu5rBEIBmJ+8QRMmpU7EzGRsf2FzuePqYRbzh/zE26EwdrT10f6r6o8HOYzCJB9Dpff8tbnGLG8L/A/WEroTBs2RqAAAAAElFTkSuQmCC" style="height:25px; border-radius:12px; display: inline-block; float: left; vertical-align: middle">
+</a>
+
+
+<a href="https://bokeh.org" target="_blank" title="Bokeh 3.10.0">
+  <img src="data:image/png;base64,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" style="height:15px; border-radius:12px; display: inline-block; float: left">
+  
+</a>
+
+
+
+
+
+
+
+</div>
+</div></div>
+</div>
+<section id="define-data">
+<h2>Define data<a class="headerlink" href="#define-data" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Count the number of connections from each airport</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">routes</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'SourceID'</span><span class="p">)[[</span><span class="s1">'Stops'</span><span class="p">]]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'Stops'</span><span class="p">:</span> <span class="s1">'Connections'</span><span class="p">})</span>
+<span class="n">airports_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">airports</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">'AirportID'</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">'SourceID'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
+
+<span class="c1"># Select only US mainland airports &amp; convert from Mercator to Latitudes/Longitudes</span>
+<span class="n">airport_points</span> <span class="o">=</span> <span class="n">gv</span><span class="o">.</span><span class="n">Points</span><span class="p">(</span><span class="n">airports_df</span><span class="p">,</span> <span class="p">[</span><span class="s1">'Longitude'</span><span class="p">,</span> <span class="s1">'Latitude'</span><span class="p">])</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">Longitude</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">170</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">),</span> <span class="n">Latitude</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+
+<span class="c1"># Declare nodes, graph and tiles</span>
+<span class="n">nodes</span> <span class="o">=</span> <span class="n">gv</span><span class="o">.</span><span class="n">Nodes</span><span class="p">(</span><span class="n">airport_points</span><span class="p">,</span> <span class="p">[</span><span class="s1">'Longitude'</span><span class="p">,</span> <span class="s1">'Latitude'</span><span class="p">,</span> <span class="s1">'AirportID'</span><span class="p">],</span>
+                 <span class="p">[</span><span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'City'</span><span class="p">,</span> <span class="s1">'Connections'</span><span class="p">])</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">gv</span><span class="o">.</span><span class="n">Graph</span><span class="p">((</span><span class="n">routes</span><span class="p">,</span> <span class="n">nodes</span><span class="p">),</span> <span class="p">[</span><span class="s1">'SourceID'</span><span class="p">,</span> <span class="s1">'DestinationID'</span><span class="p">],</span> <span class="p">[</span><span class="s1">'Source'</span><span class="p">,</span> <span class="s1">'Destination'</span><span class="p">])</span>
+<span class="n">tiles</span> <span class="o">=</span> <span class="n">gv</span><span class="o">.</span><span class="n">tile_sources</span><span class="o">.</span><span class="n">OSM</span>
+
+<span class="c1"># Select 50 busiest airports</span>
+<span class="n">busiest</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">routes</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'SourceID'</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'Stops'</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">:]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="n">busiest_airports</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">AirportID</span><span class="o">=</span><span class="n">busiest</span><span class="p">,</span> <span class="n">selection_mode</span><span class="o">=</span><span class="s1">'nodes'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="plot">
+<h2>Plot<a class="headerlink" href="#plot" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">tiles</span> <span class="o">*</span> <span class="n">busiest_airports</span><span class="p">)</span><span class="o">.</span><span class="n">opts</span><span class="p">(</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">edge_selection_line_color</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span> <span class="n">edge_hover_line_color</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span>
+               <span class="n">edge_line_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">edge_line_alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">edge_nonselection_line_alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+               <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div id="5b823468-58fa-453c-b88c-356f4c7516d4">
+  <div id="fc68a93f-1aaf-417c-b9fb-e797a904eedb" data-root-id="5b823468-58fa-453c-b88c-356f4c7516d4" style="display: contents;"></div>
+</div>
+<script type="application/javascript">(function(root) {
+  var docs_json = {"9290f907-f0fc-4806-b25a-ca9de436fe1e":{"version":"3.10.0","title":"Bokeh Application","config":{"type":"object","name":"DocumentConfig","id":"b34416aa-8d1c-4f18-9950-18c1a4840deb","attributes":{"notifications":{"type":"object","name":"Notifications","id":"d5a5a9a0-7337-4c0d-9a5a-d934aa6468e1"}}},"roots":[{"type":"object","name":"Row","id":"5b823468-58fa-453c-b88c-356f4c7516d4","attributes":{"name":"Row00462","tags":["embedded"],"stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  width: calc(min(40px, 300px));\n  height: calc(min(40px, 300px));\n  mask-size: calc(min(40px, 300px)) calc(min(40px, 300px));\n  -webkit-mask-size: calc(min(40px, 300px)) calc(min(40px, 300px));\n}",{"type":"object","name":"ImportedStyleSheet","id":"65afb71a-ef19-4e6d-af27-86dd1b491343","attributes":{"url":"https://cdn.holoviz.org/panel/1.10.0-rc.1/dist/css/loading.css?v=1.10.0-rc.1"}},{"type":"object","name":"ImportedStyleSheet","id":"da50a27f-55fc-4be5-9b67-a6076f6c3ef7","attributes":{"url":"https://cdn.holoviz.org/panel/1.10.0-rc.1/dist/css/listpanel.css"}},{"type":"object","name":"ImportedStyleSheet","id":"1ba562e1-eabf-413f-b9ca-346e1d2a2371","attributes":{"url":"https://cdn.holoviz.org/panel/1.10.0-rc.1/dist/bundled/theme/default.css"}},{"type":"object","name":"ImportedStyleSheet","id":"12ad33de-05d8-427d-8b47-9eca027cc9d5","attributes":{"url":"https://cdn.holoviz.org/panel/1.10.0-rc.1/dist/bundled/theme/native.css"}}],"min_width":800,"margin":0,"sizing_mode":"stretch_width","align":"start","children":[{"type":"object","name":"Spacer","id":"6cb14b69-5395-4838-aaf9-f028f12b2e21","attributes":{"name":"HSpacer00466","stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  width: calc(min(40px, 300px));\n  height: calc(min(40px, 300px));\n  mask-size: calc(min(40px, 300px)) calc(min(40px, 300px));\n  -webkit-mask-size: calc(min(40px, 300px)) calc(min(40px, 300px));\n}",{"id":"65afb71a-ef19-4e6d-af27-86dd1b491343"},{"id":"1ba562e1-eabf-413f-b9ca-346e1d2a2371"},{"id":"12ad33de-05d8-427d-8b47-9eca027cc9d5"}],"min_width":0,"margin":0,"sizing_mode":"stretch_width","align":"start"}},{"type":"object","name":"Figure","id":"f44bdc37-c442-4a9f-bd83-47711a7000f7","attributes":{"width":800,"margin":[5,10],"sizing_mode":"fixed","align":"start","x_range":{"type":"object","name":"Range1d","id":"1d325201-3a81-4aa2-9872-5118f870405e","attributes":{"name":"Longitude","tags":[[["Longitude",null]],[]],"start":-18305461.163116198,"end":-7178598.205270726,"reset_start":-18305461.163116198,"reset_end":-7178598.205270726,"min_interval":5}},"y_range":{"type":"object","name":"Range1d","id":"2b8a7e23-9090-4695-aac8-20a7ab88eb0c","attributes":{"name":"Latitude","tags":[[["Latitude",null]],{"type":"map","entries":[["invert_yaxis",false],["autorange",false]]}],"start":2071346.0368991245,"end":6374247.949826251,"reset_start":2071346.0368991245,"reset_end":6374247.949826251,"min_interval":5}},"x_scale":{"type":"object","name":"LinearScale","id":"4793416a-856d-455c-9880-9c4aaf94dabb"},"y_scale":{"type":"object","name":"LinearScale","id":"726a4d85-8f78-4f01-ab50-3d88a74b0fc1"},"title":{"type":"object","name":"Title","id":"6fb3988f-fced-435f-9c72-7f97d357cdca","attributes":{"text_color":"black","text_font_size":"12pt"}},"renderers":[{"type":"object","name":"TileRenderer","id":"b0befe47-9ef9-43ac-b0af-950cc661f8c7","attributes":{"level":"underlay","tile_source":{"type":"object","name":"WMTSTileSource","id":"dc488411-6461-4f9c-8bb7-9d0d7bb95249","attributes":{"url":"https://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png","max_zoom":19,"attribution":"&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"}}}},{"type":"object","name":"GraphRenderer","id":"fea814b1-41c0-4dbc-9599-62ace2944210","attributes":{"layout_provider":{"type":"object","name":"StaticLayoutProvider","id":"121251c8-5344-4f78-847a-58ea47026b6a","attributes":{"graph_layout":{"type":"map","entries":[[3448,[-7904263.069462893,5215706.958883556]],[3453,[-13605579.558983115,4540129.067520557]],[3458,[-10543502.896406053,4764390.314095836]],[3462,[-12469118.918241002,3953092.857478156]],[3469,[-13622722.685826853,4525742.154224672]],[3473,[-10016160.40823481,4169644.6775437533]],[3484,[-13181117.943023413,4021083.935258325]],[3486,[-9111478.069765296,5073258.473143489]],[3488,[-9425176.483141623,4728664.370256388]],[3494,[-8256422.047251599,4967090.898013244]],[3520,[-8575797.201926498,4700508.254579336]],[3533,[-8922558.009252194,3008075.473383886]],[3536,[-12465333.586740257,4981180.449123685]],[3550,[-10613356.115824379,3501544.7402473274]],[3566,[-10606398.648041157,3458050.1539169997]],[3570,[-8931485.85450595,4937625.023099224]],[3576,[-8937909.1124328,2973490.2837085226]],[3577,[-13615375.388808018,6015672.955029508]],[3585,[-9606249.00026954,4824945.727388898]],[3621,[-10961608.31249353,3443751.1675762394]],[3626,[-8770584.211014979,4283792.587838361]],[3645,[-9278858.17569946,5192849.004159345]],[3646,[-9187554.145412814,3245885.2646424794]],[3670,[-10802220.971812963,3881614.019033747]],[3673,[-10872563.421042869,3528575.581266772]],[3678,[-10059942.688736247,4685738.547009269]],[3682,[-9398493.165869845,3980123.3662596527]],[3690,[-9648973.061058795,4317765.968269842]],[3697,[-8223459.852673642,4979533.872869575]],[3714,[-8622340.540038552,4713724.784588674]],[3717,[-9784604.622648641,5303938.716474583]],[3720,[-13647546.887745956,5714681.2120336145]],[3728,[-17579796.29892403,2429921.0768134072]],[3731,[-13045531.397794608,3859997.050710966]],[3747,[-9768552.846708754,5128976.884987811]],[3748,[-13573074.288054692,4489769.568318068]],[3751,[-11652144.672523815,4845864.938021945]],[3752,[-8375800.548727072,4847344.364975317]],[3759,[-9227483.999688677,4865651.808855591]],[3793,[-9100947.595164454,3065644.5566082457]],[3797,[-8213029.595985775,4959356.696949046]],[3817,[-13535448.58553147,4678133.714174448]],[3830,[-9785517.62103874,5157774.299280343]],[3849,[-8534675.76087676,4746827.318770409]],[3858,[-10377403.502509791,5602963.88634371]],[3861,[-10047474.960122619,3502701.576993557]],[3876,[-9010544.672511261,4193001.1475997716]],[3877,[-12818662.048354834,4311648.752429697]],[3878,[-9051276.266283803,3303219.9031648347]]]}}},"node_renderer":{"type":"object","name":"GlyphRenderer","id":"629ecda2-b2f3-4fce-b653-88ae7dfe0c6c","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"2ed6bc0d-8792-426a-8d36-c86bdad325d8","attributes":{"selected":{"type":"object","name":"Selection","id":"4aa3b7cc-899e-42ec-a9e2-adac46450a3d","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"ecd11c03-f037-4a78-b265-0954afa5077f"},"data":{"type":"map","entries":[["index",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAA/w3DsQoBARgA4N9oQClvcGfwDjyGusVgtNksliuyKLLqUoTNK3gBxWC1WwwGsfm++kaViLG5U+cuXVu4ce/Zi1cfvnz79WepGpHasm3Hrpk9+w4cmjtx5sKVW3cePHry5t2nH8u1iLoNE1Ob/gECVqJLxAAAAA=="},"shape":[49],"dtype":"int32","order":"little"}],["index_hover",["3448","3453","3458","3462","3469","3473","3484","3486","3488","3494","3520","3533","3536","3550","3566","3570","3576","3577","3585","3621","3626","3645","3646","3670","3673","3678","3682","3690","3697","3714","3717","3720","3728","3731","3747","3748","3751","3752","3759","3793","3797","3817","3830","3849","3858","3861","3876","3877","3878"]],["Name",["General Edward Lawrence Logan International Airport","Metropolitan Oakland International Airport","Kansas City International Airport","Phoenix Sky Harbor International Airport","San Francisco International Airport","Memphis International Airport","Los Angeles International Airport","Cleveland Hopkins International Airport","Cincinnati Northern Kentucky International Airport","Newark Liberty International Airport","Ronald Reagan Washington National Airport","Fort Lauderdale Hollywood International Airport","Salt Lake City International Airport","George Bush Intercontinental Houston Airport","William P Hobby Airport","Pittsburgh International Airport","Miami International Airport","Seattle Tacoma International Airport","Indianapolis International Airport","San Antonio International Airport","Raleigh Durham International Airport","Detroit Metropolitan Wayne County Airport","Tampa International Airport","Dallas Fort Worth International Airport","Austin Bergstrom International Airport","Lambert St Louis International Airport","Hartsfield Jackson Atlanta International Airport","Nashville International Airport","La Guardia Airport","Washington Dulles International Airport","General Mitchell International Airport","Portland International Airport","Honolulu International Airport","San Diego International Airport","Chicago Midway International Airport","Norman Y. Mineta San Jose International Airport","Denver International Airport","Philadelphia International Airport","Port Columbus International Airport","Southwest Florida International Airport","John F Kennedy International Airport","Sacramento International Airport","Chicago O'Hare International Airport","Baltimore/Washington International Thurgood Marshall Airport","Minneapolis-St Paul International/Wold-Chamberlain Airport","Louis Armstrong New Orleans International Airport","Charlotte Douglas International Airport","McCarran International Airport","Orlando International Airport"]],["City",["Boston","Oakland","Kansas City","Phoenix","San Francisco","Memphis","Los Angeles","Cleveland","Cincinnati","Newark","Washington","Fort Lauderdale","Salt Lake City","Houston","Houston","Pittsburgh","Miami","Seattle","Indianapolis","San Antonio","Raleigh-durham","Detroit","Tampa","Dallas-Fort Worth","Austin","St. Louis","Atlanta","Nashville","New York","Washington","Milwaukee","Portland","Honolulu","San Diego","Chicago","San Jose","Denver","Philadelphia","Columbus","Fort Myers","New York","Sacramento","Chicago","Baltimore","Minneapolis","New Orleans","Charlotte","Las Vegas","Orlando"]],["Connections",{"type":"ndarray","array":{"type":"bytes","data":"H4sIAAEAAAAA/12Quw0CMRBEtxSXsjHiJyDhIzgMJ0BIBHAS6WakhIRXikuhBEoANI8EJ08znh15bfY5KfsXZh04Ef0oRsbvifczeiyWIfkF/g6ivUJnMf7nlvKrDT30RZf8CL9Gr8S2EY0+m0s/buTZo12juY8BczP6+mKZkvu9l/94XeQ/D8yRD/7Dt/jky1U60ZP29LKnnejDL7W/AfZEFI2IAQAA"},"shape":[49],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"68804ff5-f1f5-4bf3-be46-716b69f78a2d","attributes":{"filter":{"type":"object","name":"AllIndices","id":"9cd9530a-cb9a-432e-83ae-f78e8d0fa472"}}},"glyph":{"type":"object","name":"Scatter","id":"4f7d9ae3-5ff8-4ea7-9c0c-5c2bbdb2601c","attributes":{"size":{"type":"value","value":15},"fill_color":{"type":"value","value":"#30a2da"},"hatch_color":{"type":"value","value":"#30a2da"}}},"nonselection_glyph":{"type":"object","name":"Scatter","id":"874ac958-31c2-453e-a972-d18785e5601b","attributes":{"size":{"type":"value","value":15},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"value","value":"#30a2da"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"value","value":"#30a2da"},"hatch_alpha":{"type":"value","value":0.2}}},"hover_glyph":{"type":"object","name":"Scatter","id":"25ee24d6-0240-4baf-9346-2c728e348870","attributes":{"size":{"type":"value","value":15},"fill_color":{"type":"value","value":"limegreen"},"hatch_color":{"type":"value","value":"#30a2da"}}},"muted_glyph":{"type":"object","name":"Scatter","id":"1c8122ed-3670-4a05-8fda-fdc637a40103","attributes":{"size":{"type":"value","value":15},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"value","value":"#30a2da"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"value","value":"#30a2da"},"hatch_alpha":{"type":"value","value":0.2}}}}},"edge_renderer":{"type":"object","name":"GlyphRenderer","id":"89c94a67-bb6f-42b9-819a-dd66259d0b22","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"e5e04cfc-cbde-4ef5-8aba-cb02666d3ad3","attributes":{"selected":{"type":"object","name":"Selection","id":"71694d55-ea81-4285-9077-61fb72fc400e","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"ae41b596-f861-4715-a61b-dd491bc35103"},"data":{"type":"map","entries":[["start",{"type":"ndarray","array":{"type":"bytes","data":"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"},"shape":[4684],"dtype":"int32","order":"little"}],["end",{"type":"ndarray","array":{"type":"bytes","data":"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"},"shape":[4684],"dtype":"int32","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"cd89db55-0843-4ecd-a214-c2b27b14a61b","attributes":{"filter":{"type":"object","name":"AllIndices","id":"3388e902-c405-4804-832c-1a687864b7c2"}}},"glyph":{"type":"object","name":"MultiLine","id":"0e492a81-c72e-4114-a460-7c42ce040f5d","attributes":{"line_alpha":{"type":"value","value":0.01}}},"selection_glyph":{"type":"object","name":"MultiLine","id":"806e8424-ba54-48c6-bc27-75adb952270f","attributes":{"line_alpha":{"type":"value","value":0.01}}},"nonselection_glyph":{"type":"object","name":"MultiLine","id":"bdfcfbf4-7d15-4324-a38b-cfdc7f78eb5e","attributes":{"line_alpha":{"type":"value","value":0.01}}},"hover_glyph":{"type":"object","name":"MultiLine","id":"f7b2fe57-bb98-4ae7-903c-c013f0f4411d","attributes":{"line_color":{"type":"value","value":"red"},"line_alpha":{"type":"value","value":0.01}}},"muted_glyph":{"type":"object","name":"MultiLine","id":"a7821661-3dbd-414e-8cd8-1d5cff694576","attributes":{"line_alpha":{"type":"value","value":0.2}}}}},"selection_policy":{"type":"object","name":"NodesAndLinkedEdges","id":"3d9a5307-6721-4164-9c9c-5785196b51d3"},"inspection_policy":{"type":"object","name":"NodesAndLinkedEdges","id":"f549a5ad-61bc-481d-8233-78d0683da9c5"}}}],"toolbar":{"type":"object","name":"Toolbar","id":"725dd542-0b3d-45ab-9ad1-0478e5c5c752","attributes":{"tools":[{"type":"object","name":"WheelZoomTool","id":"4a2e1563-ab75-403f-a7f9-d2baaa9f3c5f","attributes":{"renderers":"auto","zoom_on_axis":false}},{"type":"object","name":"BoxZoomTool","id":"9a3c78bd-6ac8-40f6-8bde-ada6b1bf3461","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"afd85c8c-bcaa-407a-9e65-35d524cb1d10","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1017","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1016","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}},"match_aspect":true}},{"type":"object","name":"HoverTool","id":"d57113ec-3b78-4731-b2f4-54e2b2dd3340","attributes":{"tags":["hv_created"],"renderers":[{"id":"fea814b1-41c0-4dbc-9599-62ace2944210"}],"tooltips":[["AirportID","@{index_hover}"],["Name","@{Name}"],["City","@{City}"],["Connections","@{Connections}"]],"sort_by":null}},{"type":"object","name":"SaveTool","id":"553520b4-3d5b-40c6-abcb-a41282ccd128"},{"type":"object","name":"PanTool","id":"008fcab9-52e2-4fe7-8534-617df565347c"},{"type":"object","name":"ResetTool","id":"5bc2bf9e-cbc0-43c3-8aef-1e5caa977619"},{"type":"object","name":"TapTool","id":"73d4d2f6-d022-4af3-84d5-39e8e48321dc","attributes":{"renderers":"auto"}}],"active_drag":{"id":"008fcab9-52e2-4fe7-8534-617df565347c"}}},"left":[{"type":"object","name":"LinearAxis","id":"430fde34-7658-4095-bd70-a51efcc31443","attributes":{"ticker":{"type":"object","name":"MercatorTicker","id":"231e45e6-f9e6-40c8-ba0f-390f56ba84d5","attributes":{"mantissas":[1,2,5],"dimension":"lat"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"1d49fe40-13cb-4cbe-b089-2a6bced93f1a","attributes":{"dimension":"lat"}},"axis_label":"Latitude","major_label_policy":{"type":"object","name":"AllLabels","id":"b90c03eb-df47-4fd5-a6a0-b64b6450e27e"}}}],"below":[{"type":"object","name":"LinearAxis","id":"e4d1817e-0dae-4e09-b6f2-e786964edd3b","attributes":{"ticker":{"type":"object","name":"MercatorTicker","id":"093afd5c-e224-48e3-962b-8ea9b57e8b02","attributes":{"mantissas":[1,2,5],"dimension":"lon"}},"formatter":{"type":"object","name":"MercatorTickFormatter","id":"638ce47c-8305-4115-8fd3-7700369296e3","attributes":{"dimension":"lon"}},"axis_label":"Longitude","major_label_policy":{"type":"object","name":"AllLabels","id":"c84686a5-a5ff-4a5a-9883-6c603fc22488"}}}],"center":[{"type":"object","name":"Grid","id":"b86f15aa-f448-4050-be32-642cceaa1712","attributes":{"axis":{"id":"e4d1817e-0dae-4e09-b6f2-e786964edd3b"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"f4257e1f-1c70-4796-81ad-ecbed66397ea","attributes":{"dimension":1,"axis":{"id":"430fde34-7658-4095-bd70-a51efcc31443"},"grid_line_color":null}}],"min_border_top":10,"min_border_bottom":10,"min_border_left":10,"min_border_right":10,"output_backend":"webgl"}},{"type":"object","name":"Spacer","id":"d440a10a-13fe-4c64-9aac-2bc03a305577","attributes":{"name":"HSpacer00467","stylesheets":["\n:host(.pn-loading):before, .pn-loading:before {\n  background-color: #c3c3c3;\n  width: calc(min(40px, 300px));\n  height: calc(min(40px, 300px));\n  mask-size: calc(min(40px, 300px)) calc(min(40px, 300px));\n  -webkit-mask-size: calc(min(40px, 300px)) calc(min(40px, 300px));\n}",{"id":"65afb71a-ef19-4e6d-af27-86dd1b491343"},{"id":"1ba562e1-eabf-413f-b9ca-346e1d2a2371"},{"id":"12ad33de-05d8-427d-8b47-9eca027cc9d5"}],"min_width":0,"margin":0,"sizing_mode":"stretch_width","align":"start"}}]}}],"defs":[{"type":"model","name":"ReactiveHTML1"},{"type":"model","name":"FlexBox1","properties":[{"name":"align_content","kind":"Any","default":"flex-start"},{"name":"align_items","kind":"Any","default":"flex-start"},{"name":"flex_direction","kind":"Any","default":"row"},{"name":"flex_wrap","kind":"Any","default":"wrap"},{"name":"gap","kind":"Any","default":""},{"name":"justify_content","kind":"Any","default":"flex-start"}]},{"type":"model","name":"FloatPanel1","properties":[{"name":"config","kind":"Any","default":{"type":"map"}},{"name":"contained","kind":"Any","default":true},{"name":"position","kind":"Any","default":"right-top"},{"name":"offsetx","kind":"Any","default":null},{"name":"offsety","kind":"Any","default":null},{"name":"theme","kind":"Any","default":"primary"},{"name":"status","kind":"Any","default":"normalized"}]},{"type":"model","name":"GridStack1","properties":[{"name":"ncols","kind":"Any","default":null},{"name":"nrows","kind":"Any","default":null},{"name":"allow_resize","kind":"Any","default":true},{"name":"allow_drag","kind":"Any","default":true},{"name":"state","kind":"Any","default":[]}]},{"type":"model","name":"drag1","properties":[{"name":"slider_width","kind":"Any","default":5},{"name":"slider_color","kind":"Any","default":"black"},{"name":"start","kind":"Any","default":0},{"name":"end","kind":"Any","default":100},{"name":"value","kind":"Any","default":50}]},{"type":"model","name":"click1","properties":[{"name":"terminal_output","kind":"Any","default":""},{"name":"debug_name","kind":"Any","default":""},{"name":"clears","kind":"Any","default":0}]},{"type":"model","name":"ReactiveESM1","properties":[{"name":"esm_constants","kind":"Any","default":{"type":"map"}}]},{"type":"model","name":"JSComponent1","properties":[{"name":"esm_constants","kind":"Any","default":{"type":"map"}}]},{"type":"model","name":"ReactComponent1","properties":[{"name":"use_shadow_dom","kind":"Any","default":true},{"name":"esm_constants","kind":"Any","default":{"type":"map"}}]},{"type":"model","name":"AnyWidgetComponent1","properties":[{"name":"use_shadow_dom","kind":"Any","default":true},{"name":"esm_constants","kind":"Any","default":{"type":"map"}}]},{"type":"model","name":"FastWrapper1","properties":[{"name":"object","kind":"Any","default":null},{"name":"style","kind":"Any","default":null}]},{"type":"model","name":"NotificationArea1","properties":[{"name":"js_events","kind":"Any","default":{"type":"map"}},{"name":"max_notifications","kind":"Any","default":5},{"name":"notifications","kind":"Any","default":[]},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0},{"name":"types","kind":"Any","default":[{"type":"map","entries":[["type","warning"],["background","#ffc107"],["icon",{"type":"map","entries":[["className","fas fa-exclamation-triangle"],["tagName","i"],["color","white"]]}]]},{"type":"map","entries":[["type","info"],["background","#007bff"],["icon",{"type":"map","entries":[["className","fas fa-info-circle"],["tagName","i"],["color","white"]]}]]}]}]},{"type":"model","name":"Notification","properties":[{"name":"background","kind":"Any","default":null},{"name":"duration","kind":"Any","default":3000},{"name":"icon","kind":"Any","default":null},{"name":"message","kind":"Any","default":""},{"name":"notification_type","kind":"Any","default":null},{"name":"_rendered","kind":"Any","default":false},{"name":"_destroyed","kind":"Any","default":false}]},{"type":"model","name":"TemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"BootstrapTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"TemplateEditor1","properties":[{"name":"layout","kind":"Any","default":[]}]},{"type":"model","name":"MaterialTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"request_value1","properties":[{"name":"fill","kind":"Any","default":"none"},{"name":"_synced","kind":"Any","default":null},{"name":"_request_sync","kind":"Any","default":0}]},{"type":"model","name":"holoviews.plotting.bokeh.raster.HoverModel","properties":[{"name":"xy","kind":"Any","default":null},{"name":"data","kind":"Any","default":null}]}]}};
+  var render_items = [{"docid":"9290f907-f0fc-4806-b25a-ca9de436fe1e","roots":{"5b823468-58fa-453c-b88c-356f4c7516d4":"fc68a93f-1aaf-417c-b9fb-e797a904eedb"},"root_ids":["5b823468-58fa-453c-b88c-356f4c7516d4"]}];
+  var docs = Object.values(docs_json)
+  if (!docs) {
+    return
+  }
+  const version = docs[0].version.replace('rc', '-rc.').replace('.dev', '-dev.')
+  async function embed_document(root) {
+    var Bokeh = get_bokeh(root)
+    await Bokeh.embed.embed_items_notebook(docs_json, render_items);
+    for (const render_item of render_items) {
+      for (const root_id of render_item.root_ids) {
+	const id_el = document.getElementById(root_id)
+	if (id_el.children.length && id_el.children[0].hasAttribute('data-root-id')) {
+	  const root_el = id_el.children[0]
+	  root_el.id = root_el.id + '-rendered'
+	  for (const child of root_el.children) {
+            // Ensure JupyterLab does not capture keyboard shortcuts
+            // see: https://jupyterlab.readthedocs.io/en/4.1.x/extension/notebook.html#keyboard-interaction-model
+	    child.setAttribute('data-lm-suppress-shortcuts', 'true')
+	  }
+	}
+      }
+    }
+  }
+  function get_bokeh(root) {
+    if (root.Bokeh === undefined) {
+      return null
+    } else if (root.Bokeh.version !== version) {
+      if (root.Bokeh.versions === undefined || !root.Bokeh.versions.has(version)) {
+	return null
+      }
+      return root.Bokeh.versions.get(version);
+    } else if (root.Bokeh.version === version) {
+      return root.Bokeh
+    }
+    return null
+  }
+  function is_loaded(root) {
+    var Bokeh = get_bokeh(root)
+    return (Bokeh != null && Bokeh.Panel !== undefined)
+  }
+  if (is_loaded(root)) {
+    embed_document(root);
+  } else {
+    var attempts = 0;
+    var timer = setInterval(function(root) {
+      if (is_loaded(root)) {
+        clearInterval(timer);
+        embed_document(root);
+      } else if (document.readyState == "complete") {
+        attempts++;
+        if (attempts > 200) {
+          clearInterval(timer);
+	  var Bokeh = get_bokeh(root)
+	  if (Bokeh == null || Bokeh.Panel == null) {
+            console.warn("Panel: ERROR: Unable to run Panel code because Bokeh or Panel library is missing");
+	  } else {
+	    console.warn("Panel: WARNING: Attempting to render but not all required libraries could be resolved.")
+	    embed_document(root)
+	  }
+        }
+      }
+    }, 25, root)
+  }
+})(window);</script></div></div>
+</div>
+</section>
+<div id="scroller-right">This web page was generated from a Jupyter notebook and not all interactivity will work on this website. <a href="https://raw.githubusercontent.com/holoviz/geoviews/main/examples/gallery/bokeh/airport_graph.ipynb">Right click to download and run locally</a> for full Python-backed interactivity.</div><hr class="docutils">
+<p><a class="reference external" href="https://raw.githubusercontent.com/holoviz/geoviews/main/examples/gallery/bokeh/airport_graph.ipynb">Download this notebook from GitHub (right-click to download).</a></p>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div id="pst-page-navigation-heading-2" class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-data">Define data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#plot">Plot</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/gallery/bokeh/airport_graph.rst.txt" rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2018 HoloViz Developers.
+      <br>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

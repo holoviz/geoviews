@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en" data-content_root="../" data-theme="light">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>geoviews.operation.resample module — GeoViews v1.16.0</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079">
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css">
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d">
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b">
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e">
+    <link rel="stylesheet" type="text/css" href="../_static/nbsite.css?v=d9d93254">
+    <link rel="stylesheet" type="text/css" href="../_static/notebook.css?v=19946987">
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css?v=0a3248cd">
+    <link rel="stylesheet" type="text/css" href="../_static/alert.css?v=c26666be">
+    <link rel="stylesheet" type="text/css" href="../_static/dataframe.css?v=a0f274c1">
+    <link rel="stylesheet" type="text/css" href="../_static/scroller.css?v=2dcde208">
+    <link rel="stylesheet" type="text/css" href="../_static/hv-sidebar-dropdown.css?v=3e2b0152">
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=2e948e39">
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf">
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf">
+
+    <script src="../_static/documentation_options.js?v=e2aa0a4e"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>
+    window.goatcounter = {
+        path: function(p) { return location.host + p }
+    }
+</script>
+    <script async="async" data-goatcounter="https://holoviz.goatcounter.com/count" src="../_static/js/goatcounter.js?v=f53f84b8"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference_manual/geoviews.operation.resample';</script>
+    <link rel="icon" href="../_static/favicon.ico">
+    <link rel="author" title="About these documents" href="../about.html">
+    <link rel="index" title="Index" href="../genindex.html">
+    <link rel="search" title="Search" href="../search.html">
+    <link rel="next" title="geoviews.plotting package" href="geoviews.plotting.html">
+    <link rel="prev" title="geoviews.operation.regrid module" href="geoviews.operation.regrid.html">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="docsearch:language" content="en">
+  <meta name="docsearch:version" content="1.16.0">
+    <meta name="docbuild:last-update" content="2026-10-24">
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="light">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/logo_horizontal.png" class="logo__image only-light" alt="GeoViews v1.16.0 - Home">
+    <img src="../_static/logo_horizontal.png" class="logo__image only-dark pst-js-only" alt="GeoViews v1.16.0 - Home">
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../index.html">
+    Home
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../gallery/index.html">
+    Gallery
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://examples.holoviz.org">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../developer_guide/index.html">
+    Developer Guide
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../about.html">
+    About
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark" title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/holoviz/geoviews" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/HoloViews" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-twitter-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.holoviz.org/c/geoviews" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/AXRHnJU6sP" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../index.html">
+    Home
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../gallery/index.html">
+    Gallery
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://examples.holoviz.org">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../developer_guide/index.html">
+    Developer Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../releases.html">
+    Releases
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../about.html">
+    About
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark" title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/holoviz/geoviews" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/HoloViews" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-twitter-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discourse.holoviz.org/c/geoviews" title="Discourse" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discourse fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discourse</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/AXRHnJU6sP" title="Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Discord</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><!-- Adapted from sidebar-nav-bs.html (1.15.2) with the following changes
+
+  - Commented out the tag that adds the "Section Navigation" title
+  - Call generate_toctree_html with startdepth=0
+
+The name has to end with "sidebar-nav-bs.html", as pydata-sphinx-theme otherwise
+renders it for every page an extra time to check whether it is empty.
+
+Please update this file when required when bumping the max pin of pydata-sphinx-theme.
+-->
+
+
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <!-- <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p> -->
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide/index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Projections.html">Projections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Geometries.html">Geometries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Gridded_Datasets_I.html">Gridded Datasets I</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Gridded_Datasets_II.html">Gridded Datasets II</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Working_with_Bokeh.html">Working with Bokeh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Resampling_Grids.html">Resampling Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Annotators.html">Annotating Geographic Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Using_Features_Offline.html">Using Features Offline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/Using_WMTS_Offline.html">Using WMTS Offline</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../gallery/index.html">Gallery</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="simple">
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference external" href="https://examples.holoviz.org">Examples</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="geoviews.annotators.html">annotators</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="geoviews.data.html">data</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.data.geom_dict.html">geoviews.data.geom_dict module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.data.geopandas.html">geoviews.data.geopandas module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.data.iris.html">geoviews.data.iris module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="geoviews.element.html">element</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.element.comparison.html">geoviews.element.comparison module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.element.geo.html">geoviews.element.geo module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.links.html">links</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="geoviews.models.html">models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.models.custom_tools.html">geoviews.models.custom_tools module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.models.wind_barb.html">geoviews.models.wind_barb module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="geoviews.operation.html">operation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="geoviews.operation.projection.html">geoviews.operation.projection module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.operation.regrid.html">geoviews.operation.regrid module</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">geoviews.operation.resample module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="geoviews.plotting.html">plotting</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="geoviews.plotting.bokeh.html">geoviews.plotting.bokeh package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html">geoviews.plotting.bokeh.callbacks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="geoviews.plotting.bokeh.chart.html">geoviews.plotting.bokeh.chart module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="geoviews.plotting.bokeh.plot.html">geoviews.plotting.bokeh.plot module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="geoviews.plotting.mpl.html">geoviews.plotting.mpl package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="geoviews.plotting.mpl.chart.html">geoviews.plotting.mpl.chart module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.plot.html">geoviews.plotting.plot module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="geoviews.plotting.bokeh.html">plotting.bokeh</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.bokeh.callbacks.html">geoviews.plotting.bokeh.callbacks module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.bokeh.chart.html">geoviews.plotting.bokeh.chart module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.bokeh.plot.html">geoviews.plotting.bokeh.plot module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="geoviews.plotting.mpl.html">plotting.matplotlib</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="geoviews.plotting.mpl.chart.html">geoviews.plotting.mpl.chart module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.streams.html">streams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geoviews.util.html">util</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+</div>
+</nav></div>
+        <div class="sidebar-primary-item">
+<div class="hv-sb-dd">
+  <div class="btn-group">
+    
+    <a href="https://holoviz.org" class="btn hv-sb-dd-value" target="_blank">HoloViz.org<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a>
+    
+    <button type="button" class="btn dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+      <span class="visually-hidden"></span>
+    </button>
+    <ul class="dropdown-menu">
+      
+      
+        <li><a class="dropdown-item" href="https://param.holoviz.org" target="_blank" title="Assembling objects from many different libraries into a layout or app, whether in a Jupyter notebook or in a standalone servable dashboard">Panel<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+        <li><a class="dropdown-item" href="https://hvplot.holoviz.org" target="_blank" title="Quickly return interactive HoloViews, GeoViews, or Panel objects from Pandas, Xarray, or other data structures">hvPlot<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+        <li><a class="dropdown-item" href="https://holoviews.org" target="_blank" title="Declarative objects for instantly visualizable data, building Bokeh plots from convenient high-level specifications">HoloViews<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+      
+      
+        <li><a class="dropdown-item" href="https://datashader.org" target="_blank" title="Rasterizing huge datasets quickly as fixed-size images">Datashader<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+        <li><a class="dropdown-item" href="https://param.holoviz.org" target="_blank" title="Make your Python code clearer and more reliable by declaring Parameters">Param<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+        <li><a class="dropdown-item" href="https://lumen.holoviz.org" target="_blank" title="Framework for visual analytics that allows users to build data-driven dashboards from a simple YAML specification">Lumen<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+        <li><a class="dropdown-item" href="https://colorcet.holoviz.org" target="_blank" title="A wide range of perceptually uniform continuous colormaps and perceptually based categorical color sets for use with the other libraries">Colorcet<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+      <li><hr class="dropdown-divider"></li>
+      
+      
+      <li><a class="dropdown-item" href="https://examples.holoviz.org" target="_blank" title=" Visualization-focused examples using HoloViz for specific topics ">Examples Gallery<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+      <li><a class="dropdown-item" href="https://blog.holoviz.org" target="_blank" title="HoloViz blog">Blog<i class="fa fa-external-link hv-icon" aria-hidden="true"></i></a></li>
+      
+      
+      
+    </ul>
+  </div>
+</div>
+</div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement" class="flat" data-ea-publisher="readthedocs" data-ea-type="readthedocs-sidebar" data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">API Reference Manual</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="geoviews.operation.html" class="nav-link">geoviews.operation package</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">geoviews.operation.resample module</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-geoviews.operation.resample">
+<span id="geoviews-operation-resample-module"></span><h1>geoviews.operation.resample module<a class="headerlink" href="#module-geoviews.operation.resample" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="geoviews.operation.resample.bounds_to_poly">
+<span class="sig-prename descclassname"><span class="pre">geoviews.operation.resample.</span></span><span class="sig-name descname"><span class="pre">bounds_to_poly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/main/geoviews/operation/resample.py#L43-L57"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.operation.resample.bounds_to_poly" title="Link to this definition">#</a></dt>
+<dd><p>Constructs a shapely Polygon from the provided bounds tuple.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>bounds</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">python:tuple</span></code></span></dt><dd><p>Tuple representing the (left, bottom, right, top) coordinates</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>polygon</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shapely.geometry.Polygon</span></code></span></dt><dd><p>Shapely Polygon geometry of the bounds</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geoviews.operation.resample.compute_zoom_level">
+<span class="sig-prename descclassname"><span class="pre">geoviews.operation.resample.</span></span><span class="sig-name descname"><span class="pre">compute_zoom_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/main/geoviews/operation/resample.py#L20-L40"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.operation.resample.compute_zoom_level" title="Link to this definition">#</a></dt>
+<dd><p>Computes a zoom level given a bounds polygon, a polygon of the
+overall domain and the number of zoom levels to divide the data
+into.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>bounds</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shapely.geometry.Polygon</span></code></span></dt><dd><p>Polygon representing the area of the current viewport</p>
+</dd>
+<dt><strong>domain</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shapely.geometry.Polygon</span></code></span></dt><dd><p>Polygon representing the overall bounding region of the data</p>
+</dd>
+<dt><strong>levels</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">python:int</span></code></span></dt><dd><p>Number of zoom levels to divide the domain into</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>zoom_level</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">python:int</span></code></span></dt><dd><p>Integer zoom level</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geoviews.operation.resample.find_geom">
+<span class="sig-prename descclassname"><span class="pre">geoviews.operation.resample.</span></span><span class="sig-name descname"><span class="pre">find_geom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geoms</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/main/geoviews/operation/resample.py#L11-L17"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.operation.resample.find_geom" title="Link to this definition">#</a></dt>
+<dd><p>Returns the index of a geometry in a list of geometries avoiding
+expensive equality checks of <cite>in</cite> operator.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="geoviews.operation.resample.resample_geometry">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">geoviews.operation.resample.</span></span><span class="sig-name descname"><span class="pre">resample_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preserve_topology</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">streams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/main/geoviews/operation/resample.py#L60-L227"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.operation.resample.resample_geometry" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://holoviews.org/reference_manual/holoviews.core.operation.html#holoviews.core.operation.Operation" title="(in HoloViews v1.23.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Operation</span></code></a></p>
+<p>This operation dynamically culls and resamples Path or Polygons
+elements based on the current zoom level. On first execution a
+RTree is created using the Sort-Tile-Recursive algorithm, which is
+used to query for geometries within the current viewport (defined
+by the x_range and y_range).</p>
+<p>Any geometries returned by the RTree query are tested to ensure
+their area is over the display_threshold, expressed as a fraction
+of the current viewport area. Any remaining polygons are
+simplified using the Douglas-Peucker algorithm, which eliminates
+vertices while ensuring that the curve does not diverge from the
+original curve by more than the tolerance. The tolerance is
+expressed as a fraction of the square root of the area of the
+current viewport.</p>
+<p>Once computed a simplified geometry is cached depending on the
+current zoom level. The number of valid zoom levels can be
+declared and are used to recursively subdivide the domain into
+smaller subregions.</p>
+<p>If requested the geometries can also be clipped to the current
+viewport which avoids having to render vertices that are not
+visible.</p>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#geoviews.operation.resample.resample_geometry.instance" title="geoviews.operation.resample.resample_geometry.instance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instance</span></code></a>(**params)</p></td>
+<td><p>Create and return an instance of this class.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Parameter Definitions</strong></p>
+<hr class="docutils">
+<p>Parameters inherited from:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://holoviews.org/reference_manual/holoviews.core.operation.html#holoviews.core.operation.Operation" title="(in HoloViews v1.23.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">holoviews.core.operation.Operation</span></code></a>: group, input_ranges, link_inputs</p>
+</div></blockquote>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">dynamic</span> <span class="pre">=</span> <span class="pre">Boolean(default=True,</span> <span class="pre">label='Dynamic')</span></code></dt><dd><p>Enables dynamic processing by default.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">streams</span> <span class="pre">=</span> <span class="pre">ClassSelector(class_=(&lt;class</span> <span class="pre">'dict'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'list'&gt;),</span> <span class="pre">default=[&lt;class</span> <span class="pre">'holoviews.streams.RangeXY'&gt;],</span> <span class="pre">label='Streams')</span></code></dt><dd><p>List or dictionary streams that are applied if dynamic=True,
+        allowing for dynamic interaction with the plot.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cache</span> <span class="pre">=</span> <span class="pre">Boolean(default=True,</span> <span class="pre">label='Cache')</span></code></dt><dd><p>Whether to cache simplified geometries depending on the zoom
+        level.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">clip</span> <span class="pre">=</span> <span class="pre">Boolean(default=False,</span> <span class="pre">label='Clip')</span></code></dt><dd><p>Whether to disable the cache and clip polygons
+        to current bounds.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">display_threshold</span> <span class="pre">=</span> <span class="pre">Number(default=0.0001,</span> <span class="pre">inclusive_bounds=(True,</span> <span class="pre">True),</span> <span class="pre">label='Display</span> <span class="pre">threshold')</span></code></dt><dd><p>The fraction of the current viewport covered by a geometry
+        before it is shown.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">preserve_topology</span> <span class="pre">=</span> <span class="pre">Boolean(default=False,</span> <span class="pre">label='Preserve</span> <span class="pre">topology')</span></code></dt><dd><p>Whether to preserve topology between geometries. If disabled
+        simplification can produce self-intersecting or otherwise
+        invalid geometries but will be much faster.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tolerance_factor</span> <span class="pre">=</span> <span class="pre">Number(default=0.002,</span> <span class="pre">inclusive_bounds=(True,</span> <span class="pre">True),</span> <span class="pre">label='Tolerance</span> <span class="pre">factor')</span></code></dt><dd><p>The tolerance distance for path simplification as a fraction
+        of the square root of the area of the current viewport.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">x_range</span> <span class="pre">=</span> <span class="pre">NumericTuple(allow_None=True,</span> <span class="pre">label='X</span> <span class="pre">range',</span> <span class="pre">length=2)</span></code></dt><dd><p>The x_range as a tuple of min and max x-value. Auto-ranges
+        if set to None.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">y_range</span> <span class="pre">=</span> <span class="pre">NumericTuple(allow_None=True,</span> <span class="pre">label='Y</span> <span class="pre">range',</span> <span class="pre">length=2)</span></code></dt><dd><p>The x_range as a tuple of min and max y-value. Auto-ranges
+        if set to None.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">zoom_levels</span> <span class="pre">=</span> <span class="pre">Integer(default=20,</span> <span class="pre">inclusive_bounds=(True,</span> <span class="pre">True),</span> <span class="pre">label='Zoom</span> <span class="pre">levels')</span></code></dt><dd><p>The number of zoom levels to cache.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="geoviews.operation.resample.resample_geometry.instance">
+<span class="sig-name descname"><span class="pre">instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/holoviz/geoviews/blob/main/geoviews/operation/resample.py#L158-L162"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#geoviews.operation.resample.resample_geometry.instance" title="Link to this definition">#</a></dt>
+<dd><p>Create and return an instance of this class.</p>
+<p>This method returns an instance of the <code class="xref py py-class docutils literal notranslate"><span class="pre">ParameterizedFunction</span></code> class,
+copying parameter values from any existing instance provided or initializing
+them with the specified <code class="docutils literal notranslate"><span class="pre">params</span></code>.</p>
+<p>This method is useful for obtaining a persistent object representation of
+a <code class="xref py py-class docutils literal notranslate"><span class="pre">ParameterizedFunction</span></code> without triggering its execution (<code class="docutils literal notranslate"><span class="pre">__call__</span></code>).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>**params</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">python:dict</span></code></span></dt><dd><p>Parameter values to initialize the instance with. If an existing instance
+is used, its parameters are copied and updated with the provided values.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ParameterizedFunction</span></code></dt><dd><p>An instance of the class with the specified or inherited parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>See <a class="reference external" href="https://param.holoviz.org/user_guide/ParameterizedFunctions.html">https://param.holoviz.org/user_guide/ParameterizedFunctions.html</a></p>
+<p class="rubric">Examples</p>
+<p>Create an instance with default parameters:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">param</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Scale</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">ParameterizedFunction</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">multiplier</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">Number</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">doc</span><span class="o">=</span><span class="s2">"The multiplier value."</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">Scale</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span><span class="o">.</span><span class="n">multiplier</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<p>Use the instance:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">10</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev" href="geoviews.operation.regrid.html" title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">geoviews.operation.regrid module</p>
+      </div>
+    </a>
+    <a class="right-next" href="geoviews.plotting.html" title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">geoviews.plotting package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div id="pst-page-navigation-heading-2" class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.operation.resample.bounds_to_poly"><code class="docutils literal notranslate"><span class="pre">bounds_to_poly()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.operation.resample.compute_zoom_level"><code class="docutils literal notranslate"><span class="pre">compute_zoom_level()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.operation.resample.find_geom"><code class="docutils literal notranslate"><span class="pre">find_geom()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.operation.resample.resample_geometry"><code class="docutils literal notranslate"><span class="pre">resample_geometry</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#geoviews.operation.resample.resample_geometry.instance"><code class="docutils literal notranslate"><span class="pre">resample_geometry.instance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference_manual/geoviews.operation.resample.rst.txt" rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2018 HoloViz Developers.
+      <br>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

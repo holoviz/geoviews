@@ -13,7 +13,7 @@ from holoviews.core.data import (
 )
 from holoviews.core.data.interface import DataError
 from holoviews.core.data.spatialpandas import get_value_array
-from holoviews.core.dimension import dimension_name
+from holoviews.core.dimension import Dimension, dimension_name
 from holoviews.core.util import isscalar, unique_array, unique_iterator
 from holoviews.element import Path
 
@@ -274,11 +274,27 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
             return float
 
     @classmethod
+    def _resolve_dimension(cls, dataset, dim):
+        """
+        Resolves a dimension spec to a Dimension of the dataset.
+
+        A Dimension built from a string spec (e.g. by a ``dim('name')``
+        expression) carries the name as its label, and Dimension equality
+        compares labels, so it would not match a dimension with a custom
+        label. Fall back to looking up the name, which matches both names
+        and labels.
+        """
+        resolved = dataset.get_dimension(dim)
+        if resolved is None and isinstance(dim, Dimension):
+            resolved = dataset.get_dimension(dim.name)
+        return resolved
+
+    @classmethod
     def isscalar(cls, dataset, dim, per_geom=False):
         """
         Tests if dimension is scalar in each subpath.
         """
-        dim = dataset.get_dimension(dim)
+        dim = cls._resolve_dimension(dataset, dim)
         geom_dims = cls.geom_dims(dataset)
         if dim in geom_dims:
             return False
@@ -286,12 +302,11 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
             return all(
                 isscalar(v) or len(list(unique_array(v))) == 1 for v in dataset.data[dim.name]
             )
-        dim = dataset.get_dimension(dim)
         return len(dataset.data[dim.name].unique()) == 1
 
     @classmethod
     def range(cls, dataset, dim):
-        dim = dataset.get_dimension(dim)
+        dim = cls._resolve_dimension(dataset, dim)
         geom_dims = cls.geom_dims(dataset)
         if dim in geom_dims:
             col = cls.geo_column(dataset.data)
@@ -374,7 +389,7 @@ class GeoPandasInterface(PandasAPI, MultiInterface):
 
     @classmethod
     def values(cls, dataset, dimension, expanded=True, flat=True, compute=True, keep_index=False):
-        dimension = dataset.get_dimension(dimension)
+        dimension = cls._resolve_dimension(dataset, dimension)
         geom_dims = dataset.interface.geom_dims(dataset)
         data = dataset.data
         isgeom = dimension in geom_dims

@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import sys
 from itertools import product
 
@@ -16,7 +16,7 @@ from holoviews.core.spaces import HoloMap
 def get_date_format(coord):
     def date_formatter(val, pos=None):
         date = coord.units.num2date(val)
-        date_format = Dimension.type_formatters.get(datetime.datetime, None)
+        date_format = Dimension.type_formatters.get(dt.datetime, None)
         if date_format:
             return date.strftime(date_format)
         else:

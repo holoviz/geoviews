@@ -9892,6 +9892,7 @@ packages:
   - spdlog >=1.17.0,<1.18.0a0
   - mbedtls >=4.0.0,<4.1.0a0
   license: Apache-2.0
+  license_family: APACHE
   run_exports:
     weak:
     - liblief >=1.0.0,<1.1.0a0
@@ -11824,6 +11825,7 @@ packages:
   - python_abi 3.14.* *_cp314
   - fmt >=12.1.0,<12.2.0a0
   license: Apache-2.0
+  license_family: APACHE
   run_exports:
     weak:
     - py-lief >=1.0.0,<1.1.0a0
@@ -12945,6 +12947,7 @@ packages:
   - _python_abi3_support 1.*
   - cpython >=3.11
   license: MIT
+  license_family: MIT
   run_exports: {}
   size: 409537
   timestamp: 1795364065533
@@ -14183,6 +14186,7 @@ packages:
   - python >=3.11
   - python
   license: MIT
+  license_family: MIT
   run_exports: {}
   size: 185343
   timestamp: 1795320425153
@@ -16834,6 +16838,7 @@ packages:
   - python-discovery >=1.6.1
   - python
   license: MIT
+  license_family: MIT
   run_exports: {}
   size: 4396442
   timestamp: 1795317166510
@@ -18951,6 +18956,7 @@ packages:
   - mbedtls >=4.0.0,<4.1.0a0
   - fmt >=12.1.0,<12.2.0a0
   license: Apache-2.0
+  license_family: APACHE
   run_exports:
     weak:
     - liblief >=1.0.0,<1.1.0a0
@@ -20773,6 +20779,7 @@ packages:
   - liblief >=1.0.0,<1.1.0a0
   - python_abi 3.14.* *_cp314
   license: Apache-2.0
+  license_family: APACHE
   run_exports:
     weak:
     - py-lief >=1.0.0,<1.1.0a0
@@ -21895,6 +21902,7 @@ packages:
   - _python_abi3_support 1.*
   - cpython >=3.11
   license: MIT
+  license_family: MIT
   run_exports: {}
   size: 411749
   timestamp: 1795364085649
@@ -23956,6 +23964,7 @@ packages:
   - mbedtls >=4.0.0,<4.1.0a0
   - spdlog >=1.17.0,<1.18.0a0
   license: Apache-2.0
+  license_family: APACHE
   run_exports:
     weak:
     - liblief >=1.0.0,<1.1.0a0
@@ -25720,6 +25729,7 @@ packages:
   - fmt >=12.1.0,<12.2.0a0
   - python_abi 3.14.* *_cp314
   license: Apache-2.0
+  license_family: APACHE
   run_exports:
     weak:
     - py-lief >=1.0.0,<1.1.0a0
@@ -26926,6 +26936,7 @@ packages:
   - _python_abi3_support 1.*
   - cpython >=3.11
   license: MIT
+  license_family: MIT
   run_exports: {}
   size: 382265
   timestamp: 1795364061828
